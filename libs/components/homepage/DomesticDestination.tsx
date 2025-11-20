@@ -65,7 +65,7 @@ export default function DomesticDestination() {
 		if (data) {
 			const searchFilter = JSON.parse(data);
 			searchFilter.search.location = location;
-
+			localStorage.setItem('searchFilter', JSON.stringify(searchFilter));
 			await router.push(
 				`/property?input=${JSON.stringify(searchFilter)}`,
 				`/property?input=${JSON.stringify(searchFilter)}`,

@@ -1,0 +1,649 @@
+#pc-wrap {
+	.search-page {
+		width: 100%;
+		display: flex;
+		justify-content: center;
+		font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+		.search-layout {
+			width: 1100px;
+			display: flex;
+			gap: 32px;
+			padding: 24px 0;
+
+			/* LEFT FILTER */
+			.filter-panel {
+				width: 280px;
+				position: sticky;
+				top: 20px; /* 스크롤 고정 시작 지점 */
+				align-self: flex-start;
+				flex-shrink: 0;
+				.map-card {
+					position: relative;
+					border-radius: 12px;
+					overflow: hidden;
+					margin-bottom: 24px;
+					.map-image {
+						width: 100%;
+						background: #e1e7f2;
+					}
+					.map-button {
+						position: absolute !important;
+						left: 50%;
+						top: 50%;
+						transform: translate(-50%, -50%);
+						border-radius: 6px;
+						padding: 6px 22px !important;
+						font-weight: 600 !important;
+					}
+				}
+				.filter-header {
+					display: flex;
+					align-items: center;
+					justify-content: space-between;
+					margin-bottom: 4px;
+					.filter-title {
+						font-size: 18px;
+						font-weight: 700;
+					}
+					.filter-reset {
+						font-size: 12px !important;
+						color: #b0b0b0 !important;
+						padding: 0 !important;
+						min-width: auto !important;
+						svg.rotate-once {
+							animation: spinOnce 0.5s ease;
+						}
+						@keyframes spinOnce {
+							0% {
+								transform: rotate(360deg);
+							}
+							50% {
+								transform: rotate(180deg);
+							}
+							100% {
+								transform: rotate(0deg);
+							}
+						}
+					}
+				}
+				.soldout-checkbox {
+					margin-top: 4px;
+					font-size: 14px;
+				}
+				.filter-divider {
+					margin: 16px 0;
+				}
+				.section {
+					margin-bottom: 24px;
+					.section-title {
+						font-size: 14px;
+						font-weight: 600;
+						margin-bottom: 8px;
+						margin-top: 10px;
+						.section-sub {
+							font-size: 12px;
+							font-weight: 400;
+							color: #999;
+							margin-left: 4px;
+						}
+						.roomtype-group .MuiFormControlLabel-root {
+							margin-bottom: -4px;
+							font-size: 14px;
+						}
+					}
+					.hashtag-list {
+						display: flex;
+						flex-wrap: wrap;
+						gap: 6px;
+						overflow: hidden;
+						max-height: 114px;
+						transition: max-height 1s ease;
+						.hashtag-chip {
+							border-radius: 10px !important;
+							font-size: 12px !important;
+							cursor: pointer;
+							.css-1dybbl5-MuiChip-label {
+								overflow: hidden;
+								text-overflow: ellipsis;
+								padding-left: 7px;
+								padding-right: 7px;
+								white-space: nowrap;
+							}
+						}
+						.hashtag-chip.active {
+							color: #0080ff;
+						}
+					}
+					.hashtag-list.active {
+						max-height: 265px;
+					}
+					.more-link {
+						margin-top: 6px !important;
+						padding: 0 !important;
+						font-size: 12px !important;
+						color: #0080ff !important;
+						min-width: auto !important;
+					}
+					.price-slider-wrapper {
+						padding: 0 4px 0 2px;
+					}
+					.price-range {
+						font-size: 15px;
+						color: #666;
+						margin-top: 4px;
+						font-weight: 600;
+					}
+					.rating-list {
+						display: flex;
+						flex-wrap: wrap;
+						gap: 8px;
+						overflow: hidden;
+						max-height: 114px;
+						transition: max-height 1s ease;
+						.rating-chip {
+							border-radius: 10px !important;
+							font-size: 13px !important;
+							cursor: pointer;
+							.css-1dybbl5-MuiChip-label {
+								overflow: hidden;
+								text-overflow: ellipsis;
+								padding-left: 10px;
+								padding-right: 10px;
+								white-space: nowrap;
+							}
+						}
+						.rating-chip.active {
+							color: #0080ff;
+						}
+					}
+				}
+			}
+			/* RIGHT RESULTS */
+			.results-panel {
+				flex: 1;
+				.results-header {
+					display: flex;
+					justify-content: space-between;
+					align-items: center;
+					margin-bottom: 16px;
+					.results-count {
+						font-size: 20px;
+						font-weight: 700;
+					}
+					.sort-button {
+						border-radius: 999px !important;
+						font-size: 13px !important;
+						padding: 4px 16px !important;
+					}
+					.sort-trigger {
+						text-transform: none !important;
+						border-radius: 8px !important;
+						padding: 10px 20px !important;
+						font-size: 16px !important;
+						border-color: #d0d0d0 !important;
+						color: #222 !important;
+						font-weight: 600;
+						.sort-arrow {
+							transition: transform 0.2s ease;
+						}
+						.sort-arrow.open {
+							transform: rotate(180deg);
+						}
+					}
+				}
+				.hotel-card {
+					border-radius: 12px !important;
+					overflow: hidden;
+					margin-bottom: 20px;
+					.hotel-card-inner {
+						display: flex;
+						.hotel-image {
+							max-width: 360px;
+							width: 360px;
+							height: 250px;
+							object-fit: cover;
+							transition: all 0.45s ease;
+						}
+						.hotel-image:hover {
+							transform: translateZ(40px) scale(1.05);
+							transform-style: preserve-3d;
+						}
+						.hotel-info {
+							flex: 1;
+							padding: 16px 20px 16px 20px !important;
+							.hotel-header-row {
+								display: flex;
+								justify-content: space-between;
+								gap: 12px;
+								.hotel-type {
+									font-size: 13px;
+									color: #777;
+									margin-bottom: 4px;
+								}
+								.hotel-title {
+									font-size: 18px;
+									font-weight: 700;
+								}
+								.hotel-location {
+									font-size: 13px;
+									color: #777;
+									margin-top: 4px;
+								}
+								.favorite-btn {
+									align-self: flex-start;
+									.popular-fav-icon.active {
+										color: #ff4d4f;
+									}
+								}
+							}
+							.hotel-rating-row {
+								display: flex;
+								align-items: center;
+								margin-top: 12px;
+								gap: 8px;
+								.rating-badge {
+									display: inline-flex;
+									align-items: center;
+									padding: 2px 8px;
+									border-radius: 999px;
+									background: #eeda22;
+									font-size: 13px;
+									font-weight: 600;
+									.rating-star {
+										margin-right: 2px;
+									}
+									.rating-score {
+										margin-left: 1px;
+									}
+								}
+								.rating-count {
+									font-size: 13px;
+									color: #777;
+								}
+							}
+							.hotel-checkin {
+								margin-top: 8px;
+								font-size: 13px;
+								color: #555;
+							}
+							.hotel-price-row {
+								display: flex;
+								justify-content: flex-end;
+								align-items: baseline;
+								gap: 6px;
+								margin-top: 16px;
+								.price-label {
+									font-size: 13px;
+									color: #777;
+								}
+
+								.price-value {
+									font-size: 20px;
+									font-weight: 700;
+									color: #222;
+								}
+							}
+							.price-warning {
+								text-align: right;
+								font-size: 12px;
+								color: #ff4d4f;
+								margin-top: 4px;
+							}
+						}
+					}
+				}
+				.result-divider {
+					margin-top: 16px;
+				}
+				.result-pagination {
+					margin-top: 30px;
+					width: 100%;
+					height: 50px;
+					justify-content: center;
+					align-items: center;
+					nav {
+						height: 100%;
+					}
+				}
+			}
+		}
+	}
+}
+
+.map-dialog {
+	padding: 0 !important;
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	width: 100%;
+	box-sizing: border-box;
+	font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+	/* 헤더 */
+	.map-dialog-header {
+		height: 56px;
+		padding: 0 24px;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		border-bottom: 1px solid #e5e5e5;
+		flex-shrink: 0;
+		.map-dialog-title {
+			font-size: 16px;
+			font-weight: 700;
+		}
+	}
+	/* 본문 */
+	.map-dialog-body {
+		flex: 1;
+		display: grid;
+		grid-template-columns: 280px 420px minmax(0, 1fr);
+		height: calc(100vh - 56px);
+		/* 공통 컬럼 */
+		.map-dialog-column {
+			height: 100%;
+			box-sizing: border-box;
+		}
+		/* 왼쪽 필터 */
+		.filter-column {
+			border-right: 1px solid #eeeeee;
+			padding: 16px 20px;
+			overflow-y: auto;
+			.filter-top {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				margin-bottom: 6px;
+				.filter-title {
+					font-size: 16px;
+					font-weight: 700;
+				}
+				.filter-reset {
+					font-size: 12px !important;
+					color: #b0b0b0 !important;
+					padding: 0 !important;
+					min-width: auto !important;
+					svg.rotate-once {
+						animation: spinOnce 0.5s ease;
+					}
+					@keyframes spinOnce {
+						0% {
+							transform: rotate(360deg);
+						}
+						50% {
+							transform: rotate(180deg);
+						}
+						100% {
+							transform: rotate(0deg);
+						}
+					}
+				}
+			}
+			.soldout-checkbox {
+				font-size: 14px;
+				margin-top: 4px;
+			}
+			.column-divider {
+				margin: 12px 0;
+			}
+			.section {
+				margin-bottom: 24px;
+				.hashtag-list {
+					display: flex;
+					flex-wrap: wrap;
+					gap: 6px;
+					overflow: hidden;
+					max-height: 114px;
+					transition: max-height 1s ease;
+					.hashtag-chip {
+						border-radius: 10px !important;
+						font-size: 12px !important;
+						cursor: pointer;
+						.css-1dybbl5-MuiChip-label {
+							overflow: hidden;
+							text-overflow: ellipsis;
+							padding-left: 7px;
+							padding-right: 7px;
+							white-space: nowrap;
+						}
+					}
+					.hashtag-chip.active {
+						color: #0080ff;
+					}
+				}
+				.hashtag-list.active {
+					max-height: 265px;
+				}
+				.more-link {
+					margin-top: 8px !important;
+					padding: 0 !important;
+					font-size: 12px !important;
+					color: #0080ff !important;
+					min-width: auto !important;
+				}
+				.section-title {
+					margin-top: 20px;
+					font-size: 14px;
+					font-weight: 600;
+					margin-bottom: 8px;
+					.roomtype-group .MuiFormControlLabel-root {
+						margin-bottom: -4px;
+						font-size: 14px;
+					}
+					.section-sub {
+						font-size: 12px;
+						font-weight: 400;
+						color: #999;
+						margin-left: 4px;
+					}
+					.hashtag-list {
+						display: flex;
+						flex-wrap: wrap;
+						gap: 8px;
+						.hashtag-chip {
+							border-radius: 999px !important;
+							font-size: 12px !important;
+						}
+					}
+				}
+				.price-slider-wrapper {
+					padding: 0 6px 0 2px;
+				}
+				.price-range {
+					font-size: 12px;
+					color: #666;
+					margin-top: 4px;
+				}
+				.rating-list {
+					display: flex;
+					flex-wrap: wrap;
+					gap: 5px;
+					overflow: hidden;
+					max-height: 100px;
+					transition: max-height 1s ease;
+					.rating-chip {
+						border-radius: 10px !important;
+						font-size: 13px !important;
+						cursor: pointer;
+						.css-1dybbl5-MuiChip-label {
+							overflow: hidden;
+							text-overflow: ellipsis;
+							padding-left: 8px;
+							padding-right: 8px;
+							white-space: nowrap;
+						}
+					}
+					.rating-chip.active {
+						color: #0080ff;
+					}
+				}
+			}
+		}
+		/* 가운데 리스트 */
+		.list-column {
+			border-right: 1px solid #eeeeee;
+			padding: 15px 5px;
+			display: flex;
+			flex-direction: column;
+			overflow-y: auto;
+			.list-header {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				flex-shrink: 0;
+				.results-count {
+					font-size: 16px;
+					font-weight: 700;
+				}
+				.sort-button {
+					border-radius: 999px !important;
+					font-size: 13px !important;
+					padding: 4px 14px !important;
+				}
+			}
+			.list-scroll {
+				margin-top: 12px;
+				overflow-y: auto;
+				padding-right: 4px;
+				/* 호텔 카드 */
+				.hotel-card {
+					border-radius: 12px !important;
+					overflow: hidden;
+					margin-bottom: 12px;
+					.hotel-card-inner {
+						display: flex;
+						height: 200px;
+						.hotel-image {
+							max-width: 160px;
+							width: 160px;
+							height: 200px;
+							object-fit: cover;
+							transition: all 0.45s ease;
+						}
+						.hotel-image:hover {
+							transform: translateZ(40px) scale(1.05);
+							transform-style: preserve-3d;
+						}
+						.hotel-info {
+							flex: 1;
+							padding: 1px 14px !important;
+							.hotel-header-row {
+								display: flex;
+								justify-content: space-between;
+								gap: 8px;
+								.hotel-type {
+									font-size: 13px;
+									color: #777;
+								}
+								.hotel-title {
+									font-size: 15px;
+									font-weight: 700;
+								}
+								.hotel-location {
+									font-size: 12px;
+									color: #777;
+									margin-top: 3px;
+								}
+								.favorite-btn {
+									align-self: flex-start;
+									.popular-fav-icon.active {
+										color: #ff4d4f;
+									}
+								}
+							}
+							.hotel-rating-row {
+								display: flex;
+								align-items: center;
+								margin-top: 8px;
+								gap: 8px;
+								.rating-badge {
+									display: inline-flex;
+									align-items: center;
+									padding: 2px 8px;
+									border-radius: 999px;
+									background: #f5d246;
+									font-size: 13px;
+									font-weight: 600;
+									.rating-star {
+										margin-right: 2px;
+									}
+									.rating-score {
+										margin-left: 1px;
+									}
+								}
+								.rating-count {
+									font-size: 12px;
+									color: #777;
+								}
+							}
+							.hotel-checkin {
+								margin-top: 6px;
+								font-size: 12px;
+								color: #555;
+							}
+							.hotel-badge {
+								margin-top: 6px;
+								font-size: 11px;
+								color: #888;
+							}
+							.hotel-price-row {
+								display: flex;
+								justify-content: flex-end;
+								align-items: baseline;
+								gap: 6px;
+								margin-top: 10px;
+								.price-label {
+									font-size: 12px;
+									color: #777;
+								}
+								.price-value {
+									font-size: 18px;
+									font-weight: 700;
+									color: #222;
+								}
+							}
+							.price-warning {
+								text-align: right;
+								font-size: 11px;
+								color: #ff4d4f;
+								margin-top: 2px;
+							}
+						}
+					}
+				}
+			}
+		}
+		/* 오른쪽 지도 */
+		.map-column {
+			padding: 8px;
+			.map-area {
+				width: 100%;
+				height: 100%;
+				border-radius: 8px;
+				overflow: hidden;
+				background: #e3edf9;
+				position: relative;
+				.kakao-map-root {
+					width: 100%;
+					height: 100%;
+					/* 지도 위 가격 말풍선 */
+					.kakao-price-marker {
+						padding: 9px 13px;
+						border-radius: 10px;
+						background: #ffffff;
+						border: 1px solid rgba(0, 0, 0, 0.12);
+						box-shadow: 0 2px 6px rgba(0, 0, 0, 0.16);
+						font-size: 15px;
+						font-weight: 600;
+						color: #222;
+						white-space: nowrap;
+						transition: all 0.3s ease;
+					}
+					.kakao-price-marker:hover {
+						background-color: #eaf4fd;
+						color: #f30a0a;
+					}
+				}
+			}
+		}
+	}
+}

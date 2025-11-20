@@ -42,6 +42,10 @@ export default function Document() {
 						'언제 어디서든 호텔을 예약하세요. Lunotel에서 최적의 가격으로 최고의 숙소를 만나보세요.'
 					}
 				/>
+				<script
+					src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=a9dcb056de3a62568e51f81a81fc6ba9&autoload=false"
+					type="text/javascript"
+				></script>
 			</Head>
 			<body>
 				<Main />

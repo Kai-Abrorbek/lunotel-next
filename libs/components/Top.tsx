@@ -2,6 +2,7 @@ import { withRouter } from 'next/router';
 import useDeviceDetect from '../hooks/useDeviceDetect';
 import { Box, Button, IconButton, Stack, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
+import Link from 'next/link';
 
 const Top = () => {
 	const device = useDeviceDetect();
@@ -13,7 +14,9 @@ const Top = () => {
 			<Stack className="navbar">
 				<Box className="header-container container">
 					{/* 로고 */}
-					<Typography className="header-logo">Lunotel.</Typography>
+					<Link href={'/'}>
+						<Typography className="header-logo">루나텔.</Typography>
+					</Link>
 
 					{/* 오른쪽 버튼들 */}
 					<Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>

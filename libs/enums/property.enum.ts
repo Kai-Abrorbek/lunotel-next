@@ -86,6 +86,33 @@ export enum PropertyAmenity {
 	GAMING_PC = 'GAMING_PC',
 }
 
+export enum PropertyAmenityKorean {
+	SAUNA = '사우나·찜질방',
+	SWIMMING_POOL = '수영장',
+	BARBECUE = '바비큐',
+	RESTAURANT = '레스토랑',
+	FINTESS = '피트니스',
+	WATER_PARK = '워터파크',
+	STALL = '매점',
+	KITCHEN = '취사가능',
+	DRYER = '드라이기',
+	DEHYDRATOR = '건조기',
+	WIFI = '와이파이',
+	NON_SMOKING = '금연',
+	TV = 'TV',
+	CONDITIONER = '에어컨',
+	SHOWER_ROOM = '샤워실',
+	FREE_PARKING = '무료 주차',
+	COFFEE_MACHINE = '커피 머신',
+	PARKING = '주차장',
+	ELEVATOR = '엘리베이터',
+	SPA = '스파',
+	TWIN_BED = '트윈베드',
+	KARAOKE = '노래방',
+	COUPLE_PC = '커플 PC',
+	GAMING_PC = '게이밍 PC',
+}
+
 export enum PropertyOtherAmenity {
 	BREAKFAST_PROVIDED = 'BREAKFAST PROVIDED',
 	FREE_PARKING = 'FREE PARKING',
@@ -95,4 +122,15 @@ export enum PropertyOtherAmenity {
 	PICK_UP_SERVICE = 'PICK-UP SERVICE',
 	SMOKING_ALLOWED = 'SMOKING ALLOWED',
 	LUGGAGE_STORAGE = 'LUGGAGE STORAGE AVAILABLE',
+}
+
+export enum PropertyOtherAmenityKorean {
+	BREAKFAST_PROVIDED = '조식 제공',
+	FREE_PARKING = '무료 주차',
+	PETS_ALLOWED = '반려동물 동반 가능',
+	SAUNA_JJIMJILBANG = '사우나·찜질방',
+	IN_ROOM_COOKING = '객실 내 취사 가능',
+	PICK_UP_SERVICE = '픽업 서비스',
+	SMOKING_ALLOWED = '흡연 가능',
+	LUGGAGE_STORAGE = '짐 보관 가능',
 }

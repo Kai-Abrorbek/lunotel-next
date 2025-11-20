@@ -54,8 +54,8 @@ export interface PIsearch {
 
 /** MAIN PROPERTY LIST QUERY */
 export interface PropertiesInquiry {
-	page: number;
-	limit: number;
+	page?: number;
+	limit?: number;
 	sort?: string;
 	direction?: Direction;
 	search?: PIsearch;
