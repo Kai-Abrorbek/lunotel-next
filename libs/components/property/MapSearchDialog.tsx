@@ -33,88 +33,6 @@ import { useRouter } from 'next/router';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import CheckIcon from '@mui/icons-material/Check';
 
-type HotelItem = {
-	id: number;
-	type: string;
-	name: string;
-	location: string;
-	rating: number;
-	ratingCount: number;
-	checkIn: string;
-	price: string;
-	warning?: string;
-	badge?: string;
-	imageUrl: string;
-};
-
-const HOTEL_LIST: HotelItem[] = [
-	{
-		id: 1,
-		type: '모텔',
-		name: '잠실 라운지 호텔 - LOUNGE',
-		location: '몽토르성(잠실역) 도보 5분',
-		rating: 9.9,
-		ratingCount: 4112,
-		checkIn: '숙박 14:00 체크인',
-		price: '223,000원/1박',
-		warning: '이 가격으로 남은 객실 1개',
-		badge: '25년 6월 새단장 오픈',
-		imageUrl: 'https://images.pexels.com/photos/189296/pexels-photo-189296.jpeg?auto=compress&cs=tinysrgb&w=800',
-	},
-	{
-		id: 2,
-		type: '모텔',
-		name: '잠실 NU호텔-종합운동장점',
-		location: '몽동춘로역 도보 5분',
-		rating: 8.9,
-		ratingCount: 4114,
-		checkIn: '숙박 13:00 체크인',
-		price: '151,666원/1박',
-		warning: '이 가격으로 남은 객실 1개',
-		badge: '넷플릭스 등 OTT 무료, 커플PC 2대, 드럼통',
-		imageUrl: 'https://images.pexels.com/photos/189296/pexels-photo-189296.jpeg?auto=compress&cs=tinysrgb&w=800',
-	},
-	{
-		id: 3,
-		type: '모텔',
-		name: '영등포 H-AVENUE',
-		location: '영등포역 도보 4분',
-		rating: 9.2,
-		ratingCount: 2420,
-		checkIn: '숙박 18:00 체크인',
-		price: '141,666원/1박',
-		warning: '이 가격으로 남은 객실 1개',
-		badge: '관악구 OTT 5성 추천 가성비 좋은 어쩌구',
-		imageUrl: 'https://images.pexels.com/photos/189296/pexels-photo-189296.jpeg?auto=compress&cs=tinysrgb&w=800',
-	},
-	{
-		id: 4,
-		type: '모텔',
-		name: '잠실 라운지 호텔 - LOUNGE',
-		location: '몽토르성(잠실역) 도보 5분',
-		rating: 9.9,
-		ratingCount: 4112,
-		checkIn: '숙박 14:00 체크인',
-		price: '223,000원/1박',
-		warning: '이 가격으로 남은 객실 1개',
-		badge: '25년 6월 새단장 오픈',
-		imageUrl: 'https://images.pexels.com/photos/189296/pexels-photo-189296.jpeg?auto=compress&cs=tinysrgb&w=800',
-	},
-	{
-		id: 5,
-		type: '모텔',
-		name: '잠실 라운지 호텔 - LOUNGE',
-		location: '몽토르성(잠실역) 도보 5분',
-		rating: 9.9,
-		ratingCount: 4112,
-		checkIn: '숙박 14:00 체크인',
-		price: '223,000원/1박',
-		warning: '이 가격으로 남은 객실 1개',
-		badge: '25년 6월 새단장 오픈',
-		imageUrl: 'https://images.pexels.com/photos/189296/pexels-photo-189296.jpeg?auto=compress&cs=tinysrgb&w=800',
-	},
-];
-
 const tags: PropertyAmenityKorean[] = Object.values(PropertyAmenityKorean);
 const otherTags: PropertyOtherAmenityKorean[] = Object.values(PropertyOtherAmenityKorean);
 const SORT_OPTIONS = [
@@ -162,17 +80,6 @@ const MapSearchDialog: React.FC<MapSearchDialogProps> = ({ open, onClose }) => {
 			const parsed = JSON.parse(raw);
 			setSearchFilter(parsed);
 		}
-		// const clickHandler = (event: MouseEvent) => {
-		// 	if (!locationRef?.current?.contains(event.target)) {
-		// 		setHeroCardOpen(false);
-		// 	}
-		// };
-
-		// document.addEventListener('mousedown', clickHandler);
-
-		// return () => {
-		// 	document.removeEventListener('mousedown', clickHandler);
-		// };
 	}, [raw]);
 
 	/**HANDLERS**/
