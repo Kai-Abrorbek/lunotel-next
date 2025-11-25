@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Box, Typography } from '@mui/material';
 import { PropertiesInquiry } from '../../types/property/property.input';
-import HeroCard from '../property/HeroCard';
+import HeroCard from '../common/HeroCard';
 
 interface HeroSearchProps {
 	initialInput: PropertiesInquiry;
@@ -13,10 +13,9 @@ const HeroSearch = (props: HeroSearchProps) => {
 	return (
 		<Box className="hero-section">
 			<Box className="hero-overlay" />
-
 			<Box className="hero-inner">
 				<Typography className="hero-title">국내부터 해외까지 루노텔</Typography>
-				<HeroCard initialInput={initialInput} />
+				<HeroCard initialInput={initialInput} refElement={null} />
 			</Box>
 		</Box>
 	);
@@ -32,7 +31,7 @@ function formatDate(date: Date, day: number = 0) {
 HeroSearch.defaultProps = {
 	initialInput: {
 		page: 1,
-		limit: 9,
+		limit: 10,
 		search: {
 			location: '',
 			checkInDate: formatDate(new Date(), 0),

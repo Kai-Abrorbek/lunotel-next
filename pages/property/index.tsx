@@ -44,8 +44,12 @@ const SORT_OPTIONS = [
 	{ value: 'PRICE_DESC', label: '높은가격순' },
 	{ value: 'DISTANCE_ASC', label: '거리순' },
 ];
+interface SearchResultPageProps {
+	initialInput: PropertiesInquiry;
+}
 
-const SearchResultPage = () => {
+const SearchResultPage = (props: SearchResultPageProps) => {
+	const { initialInput } = props;
 	const router = useRouter();
 	const [favoriteIds, setFavoriteIds] = useState<number[]>([]);
 	const [price, setPrice] = React.useState<[number, number]>([0, 500000]);
@@ -60,19 +64,21 @@ const SearchResultPage = () => {
 	const [value, setValue] = React.useState('RATING_DESC');
 	const [mapOpen, setMapOpen] = useState(false);
 	const [searchFilter, setSearchFilter] = useState<PropertiesInquiry>(
-		router?.query?.input ? JSON.parse(router?.query?.input as string) : null,
+		router?.query?.input ? JSON.parse(router?.query?.input as string) : initialInput,
 	);
-	const [total, setTotal] = useState<number>(10);
+	const [total, setTotal] = useState<number>(11);
 	const locationRef: any = useRef();
 	const raw = router.query.input;
+	const currentLabel = SORT_OPTIONS.find((o) => o.value === value)?.label ?? '정렬';
+	const open = Boolean(anchorEl);
 
 	/** LIFECYCLES **/
 	useEffect(() => {
-		if (router.query.input) {
-			const inputObj = JSON.parse(router?.query?.input as string);
-			setSearchFilter(inputObj);
-		}
-
+		if (typeof window === 'undefined') return;
+		const saved = localStorage.getItem('searchFilter');
+		if (!saved) return;
+		const parsed = JSON.parse(saved);
+		setSearchFilter(parsed);
 		setCurrentPage(searchFilter?.page === undefined ? 1 : searchFilter.page);
 	}, [router]);
 
@@ -81,17 +87,6 @@ const SearchResultPage = () => {
 			const parsed = JSON.parse(raw);
 			setSearchFilter(parsed);
 		}
-		// const clickHandler = (event: MouseEvent) => {
-		// 	if (!locationRef?.current?.contains(event.target)) {
-		// 		setHeroCardOpen(false);
-		// 	}
-		// };
-
-		// document.addEventListener('mousedown', clickHandler);
-
-		// return () => {
-		// 	document.removeEventListener('mousedown', clickHandler);
-		// };
 	}, [raw]);
 
 	/** HANDLERS **/
@@ -101,6 +96,7 @@ const SearchResultPage = () => {
 			scroll: false,
 		});
 
+		localStorage.setItem('searchFilter', JSON.stringify(searchFilter));
 		setCurrentPage(value);
 	};
 
@@ -119,19 +115,27 @@ const SearchResultPage = () => {
 		}, 500);
 	};
 
-	const open = Boolean(anchorEl);
 	const handleOpen = (e: React.MouseEvent<HTMLButtonElement>) => {
 		setAnchorEl(e.currentTarget);
 	};
 	const handleClose = () => setAnchorEl(null);
-
 	const handleSelect = (next: string) => {
 		setValue(next);
 		setAnchorEl(null);
 		// 여기서 API 호출 or 정렬 변경 로직 넣으면 됨
 	};
 
-	const currentLabel = SORT_OPTIONS.find((o) => o.value === value)?.label ?? '정렬';
+	const pushPropertyDetailHandler = (item: number, name: string) => {
+		if (searchFilter.search) searchFilter.search.propertyName = name;
+		localStorage.setItem('searchFilter', JSON.stringify(searchFilter));
+		router.push(
+			`/property/propertyId=${item}?input=${JSON.stringify(searchFilter)}`,
+			`/property/propertyId=${item}?input=${JSON.stringify(searchFilter)}`,
+			{
+				scroll: false,
+			},
+		);
+	};
 
 	return (
 		<Stack className="container">
@@ -320,7 +324,7 @@ const SearchResultPage = () => {
 						{/* header */}
 						<Box className="results-header">
 							<Typography className="results-count">
-								'{searchFilter?.search?.location}' 검색 결과 {total}개
+								{searchFilter.search?.location} 검색 결과 {total}개
 							</Typography>
 							<Button
 								variant="outlined"
@@ -367,7 +371,12 @@ const SearchResultPage = () => {
 						{[1, 2, 3, 4, 5, 6, 7].map((item) => {
 							const isFav = favoriteIds.includes(item);
 							return (
-								<Card key={item} className="hotel-card" elevation={1}>
+								<Card
+									key={item}
+									className="hotel-card"
+									elevation={1}
+									onClick={() => pushPropertyDetailHandler(item, '잠실 라운지 호텔 - LOUNGE')}
+								>
 									<Box className="hotel-card-inner">
 										<CardMedia
 											component="img"
@@ -384,11 +393,12 @@ const SearchResultPage = () => {
 												</Box>
 												<IconButton
 													className="favorite-btn"
-													onClick={() =>
+													onClick={(e) => {
+														e.stopPropagation();
 														setFavoriteIds((prev) =>
 															prev.includes(item) ? prev.filter((x) => x !== item) : [...prev, item],
-														)
-													}
+														);
+													}}
 												>
 													{isFav ? (
 														<FavoriteIcon className="popular-fav-icon active" />
@@ -434,6 +444,19 @@ const SearchResultPage = () => {
 			</Box>
 		</Stack>
 	);
+};
+
+SearchResultPage.defaultProps = {
+	initialInput: {
+		page: 1,
+		limit: 10,
+		search: {
+			location: undefined,
+			checkInDate: undefined,
+			checkOutDate: undefined,
+			personal: undefined,
+		},
+	},
 };
 
 export default OtherLayout(SearchResultPage);

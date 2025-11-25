@@ -5,8 +5,8 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Link from 'next/link';
 
 const Top = () => {
+	const user = false;
 	const device = useDeviceDetect();
-	console.log(device);
 	if (device === 'mobile') {
 		return <h1>MOBILe</h1>;
 	} else {
@@ -20,34 +20,69 @@ const Top = () => {
 
 					{/* 오른쪽 버튼들 */}
 					<Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-						<Button
-							variant="outlined"
-							sx={{
-								bgcolor: '#fafafa',
-								color: '#333',
-								borderRadius: '10px',
-								borderColor: '#ddd',
-								px: 2.5,
-								py: 1,
-							}}
-							size="large"
-						>
-							비회원 예약조회
-						</Button>
+						{!user ? (
+							<div>
+								{/* <Button
+									variant="outlined"
+									sx={{
+										bgcolor: '#fafafa',
+										color: '#333',
+										borderRadius: '10px',
+										borderColor: '#ddd',
+										px: 2.5,
+										py: 1,
+									}}
+									size="large"
+								>
+									비회원 예약조회
+								</Button> */}
 
-						<Button
-							variant="outlined"
-							sx={{
-								borderRadius: '10px',
-								borderColor: '#2196f3',
-								color: '#2196f3',
-								px: 2.5,
-								py: 1,
-							}}
-							size="large"
-						>
-							로그인/회원가입
-						</Button>
+								<Button
+									variant="outlined"
+									sx={{
+										borderRadius: '10px',
+										borderColor: '#2196f3',
+										color: '#2196f3',
+										px: 2.5,
+										py: 1,
+									}}
+									size="large"
+								>
+									USER NAME
+								</Button>
+							</div>
+						) : (
+							<div>
+								<Button
+									variant="outlined"
+									sx={{
+										bgcolor: '#fafafa',
+										color: '#333',
+										borderRadius: '10px',
+										borderColor: '#ddd',
+										px: 2.5,
+										py: 1,
+									}}
+									size="large"
+								>
+									비회원 예약조회
+								</Button>
+
+								<Button
+									variant="outlined"
+									sx={{
+										borderRadius: '10px',
+										borderColor: '#2196f3',
+										color: '#2196f3',
+										px: 2.5,
+										py: 1,
+									}}
+									size="large"
+								>
+									로그인/회원가입
+								</Button>
+							</div>
+						)}
 
 						<IconButton>
 							<MenuIcon sx={{ fontSize: 30 }} />

@@ -23,7 +23,6 @@ export default function Document() {
 					content="hotel,호텔예약,숙소검색,여행,예약,room booking,South Korea hotels,Lunotel,cheap hotels,best hotels,코리안 호텔,guesthouse,travel"
 				/>
 
-				<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 				{/* Open Graph (SNS 공유용)  */}
 				<meta property="og:type" content="website" />
 				<meta property="og:site_name" content="Lunotel" />
@@ -43,7 +42,7 @@ export default function Document() {
 					}
 				/>
 				<script
-					src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=a9dcb056de3a62568e51f81a81fc6ba9&autoload=false"
+					src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=a9dcb056de3a62568e51f81a81fc6ba9&autoload=false&libraries=services"
 					type="text/javascript"
 				></script>
 			</Head>

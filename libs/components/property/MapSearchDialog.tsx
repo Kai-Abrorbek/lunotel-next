@@ -378,11 +378,12 @@ const MapSearchDialog: React.FC<MapSearchDialogProps> = ({ open, onClose }) => {
 														</Box>
 														<IconButton
 															className="favorite-btn"
-															onClick={() =>
+															onClick={(e) => {
+																e.stopPropagation();
 																setFavoriteIds((prev) =>
 																	prev.includes(item) ? prev.filter((x) => x !== item) : [...prev, item],
-																)
-															}
+																);
+															}}
 														>
 															{isFav ? (
 																<FavoriteIcon className="popular-fav-icon active" />

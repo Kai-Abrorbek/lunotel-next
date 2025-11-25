@@ -5,50 +5,58 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { PropertiesInquiry } from '../types/property/property.input';
-import HeroCard from './property/HeroCard';
+import HeroCard from './common/HeroCard';
 
-export default function MiniHeader() {
-	const [searchFilter, setSearchFilter] = useState<PropertiesInquiry>();
-	const [heroCardOpen, setHeroCardOpen] = useState<boolean>(false);
-	const locationRef: any = useRef();
+interface MiniHeaderProps {
+	initialInput: PropertiesInquiry;
+}
 
+const MiniHeader = (props: MiniHeaderProps) => {
+	const { initialInput } = props;
 	const router = useRouter();
-	const raw = router.query.input;
+	const [searchFilter, setSearchFilter] = useState<PropertiesInquiry>(
+		router?.query?.input ? JSON.parse(router?.query?.input as string) : initialInput,
+	);
+	const [heroCardOpen, setHeroCardOpen] = useState<boolean>(false);
+	const refElement: any = useRef();
+	const WEEK_DAYS = ['일', '월', '화', '수', '목', '금', '토'];
+
+	const locationLabel = searchFilter?.search?.location;
+	const dateLabel = formatRangeLabel(
+		toDate(searchFilter?.search?.checkInDate),
+		toDate(searchFilter?.search?.checkOutDate),
+	);
+	const guestLabel = searchFilter?.search?.personal;
+	/** LIFESICLE **/
+	useEffect(() => {
+		if (typeof window === 'undefined') return;
+		const saved = localStorage.getItem('searchFilter');
+		if (!saved) return;
+		const parsed = JSON.parse(saved);
+		setSearchFilter(parsed);
+	}, [router]);
 
 	useEffect(() => {
-		if (typeof raw === 'string') {
-			const parsed = JSON.parse(raw);
-			setSearchFilter(parsed);
-		}
-
-		// const clickHandler = (event: MouseEvent) => {
-		// 	if (!locationRef?.current?.contains(event.target)) {
-		// 		setHeroCardOpen(false);
-		// 	}
-		// };
-
-		// document.addEventListener('mousedown', clickHandler);
-
-		// return () => {
-		// 	document.removeEventListener('mousedown', clickHandler);
-		// };
-	}, [raw]);
+		const clickHandler = (event: MouseEvent) => {
+			if (!refElement?.current?.contains(event.target)) {
+				setHeroCardOpen(false);
+			}
+		};
+		document.addEventListener('mousedown', clickHandler);
+		return () => {
+			document.removeEventListener('mousedown', clickHandler);
+		};
+	}, [refElement]);
 
 	/**HANDLERS**/
 	const openHeroCardHandler = () => {
 		setHeroCardOpen(true);
 	};
 
-	const WEEK_DAYS = ['일', '월', '화', '수', '목', '금', '토'];
-	const locationLabel = searchFilter?.search?.location;
 	function toDate(value: string | undefined): Date | undefined {
 		return value ? new Date(value) : undefined;
 	}
-	const dateLabel = formatRangeLabel(
-		toDate(searchFilter?.search?.checkInDate),
-		toDate(searchFilter?.search?.checkOutDate),
-	);
-	const guestLabel = searchFilter?.search?.personal;
+
 	function formatRangeLabel(checkIn: Date | undefined, checkOut: Date | undefined) {
 		if (!checkIn || !checkOut) return '날짜를 선택하세요';
 
@@ -62,10 +70,9 @@ export default function MiniHeader() {
 			checkOut,
 		)} (${nights}박)`;
 	}
-	/**HANDLERS**/
 
 	return (
-		<div style={{ borderBottom: '1px solid #b7aaaa3d', width: '100%', height: `${heroCardOpen ? '133px' : '77px'}` }}>
+		<div className={`other-top-header ${heroCardOpen ? 'active' : ''}`}>
 			<Stack
 				className="container"
 				style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: '100%' }}
@@ -78,7 +85,7 @@ export default function MiniHeader() {
 						</Link>
 					</Box>
 					{heroCardOpen ? (
-						<HeroCard initialInput={searchFilter!} />
+						<HeroCard initialInput={searchFilter!} refElement={refElement} />
 					) : (
 						<Box className="mini-header-center">
 							<Box className="mini-search-bar" onClick={openHeroCardHandler}>
@@ -105,4 +112,26 @@ export default function MiniHeader() {
 			</Stack>
 		</div>
 	);
+};
+
+function formatDate(date: Date, day: number = 0) {
+	const y = date.getFullYear();
+	const m = String(date.getMonth() + 1).padStart(2, '0');
+	const d = String(date.getDate() + day).padStart(2, '0');
+	return `${y}-${m}-${d}`;
 }
+
+MiniHeader.defaultProps = {
+	initialInput: {
+		page: 1,
+		limit: 10,
+		search: {
+			location: '',
+			checkInDate: formatDate(new Date(), 0),
+			checkOutDate: formatDate(new Date(), 1),
+			personal: 2,
+		},
+	},
+};
+
+export default MiniHeader;

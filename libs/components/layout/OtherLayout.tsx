@@ -21,9 +21,6 @@ const withLayoutOther = (Component: any) => {
 
 		/** HANDLERS **/
 
-		const handleState = (value: any) => {
-			console.log('자식 state:', value);
-		};
 		if (device == 'mobile') {
 			return (
 				<>
@@ -37,7 +34,7 @@ const withLayoutOther = (Component: any) => {
 						</Stack>
 
 						<Stack id={'main'}>
-							<Component onStateChange={handleState} {...props} />
+							<Component {...props} />
 						</Stack>
 
 						<Stack id={'footer'}>

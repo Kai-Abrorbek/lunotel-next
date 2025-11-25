@@ -42,10 +42,11 @@ function isSameDate(a: Date | undefined, b: Date | undefined) {
 
 interface HeroCardProps {
 	initialInput: PropertiesInquiry;
+	refElement: any;
 }
 
 const HeroCard = (props: HeroCardProps) => {
-	const { initialInput } = props;
+	const { initialInput, refElement } = props;
 	const router = useRouter();
 	const [searchFilter, setSearchFilter] = useState<PropertiesInquiry>(initialInput);
 	const today = new Date();
@@ -62,6 +63,7 @@ const HeroCard = (props: HeroCardProps) => {
 	const [showDatePicker, setShowDatePicker] = useState(false);
 	const [showGuestPicker, setShowGuestPicker] = useState(false);
 	const [showKeywordPanel, setShowKeywordPanel] = useState(false);
+	const [recentSearches, setRecentSearches] = useState<string[]>([]);
 	const [currentMonth, setCurrentMonth] = useState<Date>(() => {
 		const d = new Date();
 		return new Date(d.getFullYear(), d.getMonth(), 1);
@@ -70,7 +72,6 @@ const HeroCard = (props: HeroCardProps) => {
 		const d = new Date();
 		return new Date(d.getFullYear(), d.getMonth() + 1, 1);
 	});
-	const [recentSearches, setRecentSearches] = useState<string[]>([]);
 
 	function toDate(value: string | undefined): Date | undefined {
 		return value ? new Date(value) : undefined;
@@ -110,16 +111,60 @@ const HeroCard = (props: HeroCardProps) => {
 	}, [guestCount]);
 
 	useEffect(() => {
+		// TODO:  router change
 		if (searchFilter) {
 			localStorage.setItem('searchFilter', JSON.stringify(searchFilter));
 		}
 	}, [searchFilter]);
 	/** LIFESICLE **/
+
+	/**UTIL FANCTION**/
+
+	const changeMonth = (offset: number) => {
+		setCurrentMonth((prev) => {
+			const year = prev.getFullYear();
+			const month = prev.getMonth() + offset;
+			return new Date(year, month, 1);
+		});
+
+		setNextMonth((prev) => {
+			const year = prev.getFullYear();
+			const month = prev.getMonth() + offset;
+			return new Date(year, month, 1);
+		});
+	};
+
+	const buildCalendarCells = (monthDate: Date) => {
+		const year = monthDate.getFullYear();
+		const month = monthDate.getMonth();
+		const firstDay = new Date(year, month, 1);
+		const firstDow = firstDay.getDay();
+		const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+		const cells: (Date | null)[] = [];
+
+		for (let i = 0; i < firstDow; i++) cells.push(null);
+		for (let d = 1; d <= daysInMonth; d++) {
+			cells.push(new Date(year, month, d));
+		}
+		while (cells.length % 7 !== 0) cells.push(null);
+
+		return cells;
+	};
+
+	const inRange = (day: Date) => {
+		if (!checkIn || !checkOut) return false;
+		const t = day.getTime();
+		return t > checkIn.getTime() && t < checkOut.getTime();
+	};
+	/**UTIL FANCTION**/
+
 	/** HANDLER **/
 	const handleDayClick = useCallback(
 		async (day: Date) => {
 			if (!checkIn || (checkIn && checkOut)) {
 				setSearchFilter({
+					// router => change
 					...searchFilter,
 					search: {
 						...searchFilter.search,
@@ -159,63 +204,6 @@ const HeroCard = (props: HeroCardProps) => {
 		[searchFilter],
 	);
 
-	const changeMonth = (offset: number) => {
-		setCurrentMonth((prev) => {
-			const year = prev.getFullYear();
-			const month = prev.getMonth() + offset;
-			return new Date(year, month, 1);
-		});
-
-		setNextMonth((prev) => {
-			const year = prev.getFullYear();
-			const month = prev.getMonth() + offset;
-			return new Date(year, month, 1);
-		});
-	};
-
-	const buildCalendarCells = (monthDate: Date) => {
-		const year = monthDate.getFullYear();
-		const month = monthDate.getMonth();
-		const firstDay = new Date(year, month, 1);
-		const firstDow = firstDay.getDay();
-		const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-		const cells: (Date | null)[] = [];
-
-		for (let i = 0; i < firstDow; i++) cells.push(null);
-		for (let d = 1; d <= daysInMonth; d++) {
-			cells.push(new Date(year, month, d));
-		}
-		while (cells.length % 7 !== 0) cells.push(null);
-
-		return cells;
-	};
-
-	const inRange = (day: Date) => {
-		if (!checkIn || !checkOut) return false;
-		const t = day.getTime();
-		return t > checkIn.getTime() && t < checkOut.getTime();
-	};
-
-	const handleSearch = async (location: string | undefined) => {
-		if (!searchFilter.search?.location && !location) {
-			sweetErrorAlert('여행지를 선택해주세요!');
-		} else {
-			setSearchFilter({
-				...searchFilter,
-				search: {
-					...searchFilter.search,
-					location: location as PropertyLocation,
-				},
-			});
-			await router.push(
-				`/property?input=${JSON.stringify(searchFilter)}`,
-				`/property?input=${JSON.stringify(searchFilter)}`,
-			);
-			console.log(searchFilter);
-		}
-	};
-
 	const openKeywordPanel = () => {
 		setShowKeywordPanel(true);
 	};
@@ -247,8 +235,30 @@ const HeroCard = (props: HeroCardProps) => {
 		setRecentSearches([]);
 	};
 
+	const handleSearch = async (location: string | undefined) => {
+		if (!searchFilter.search?.location && !location) {
+			sweetErrorAlert('여행지를 선택해주세요!');
+		} else {
+			setSearchFilter({
+				...searchFilter,
+				search: {
+					...searchFilter.search,
+					location: location as PropertyLocation,
+				},
+			});
+			await router.push(
+				`/property?input=${JSON.stringify(searchFilter)}`,
+				`/property?input=${JSON.stringify(searchFilter)}`,
+				{
+					scroll: false,
+				},
+			);
+			console.log(searchFilter);
+		}
+	};
+
 	return (
-		<Box className="hero-card">
+		<Box className="hero-card" ref={refElement}>
 			{/* 탭 */}
 			<Box className="hero-tabs">
 				{TABS.map((tab) => (
