@@ -1,6 +1,10 @@
 // ReviewItem.tsx
 import React, { useState } from 'react';
-import { Box, Typography, Avatar, Button, Rating } from '@mui/material';
+import { Box, Typography, Avatar, Button, Rating, IconButton } from '@mui/material';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation } from 'swiper';
+import 'swiper/css';
+import 'swiper/css/navigation';
 
 type ReviewImage = {
 	id: number;
@@ -40,10 +44,15 @@ const ReviewItem: React.FC<ReviewItemProps> = ({
 	setReviewImgIndex,
 }) => {
 	const [expanded, setExpanded] = useState(false);
+	const [index, setIndex] = useState(0);
 
+	if (!images.length) return null;
+
+	const maxIndex = images.length - 1;
 	const shouldClamp = text.length > MAX_PREVIEW_LENGTH;
 	const displayText = !expanded && shouldClamp ? text.slice(0, MAX_PREVIEW_LENGTH) + '…' : text;
 
+	/** HANDLERS **/
 	const handleToggle = () => {
 		if (!shouldClamp) return;
 		setExpanded((prev) => !prev);
@@ -71,19 +80,28 @@ const ReviewItem: React.FC<ReviewItemProps> = ({
 				</Box>
 
 				{/* 사진 영역 */}
-				<Box className="review-item__images">
-					{images.slice(0, 3).map((img, idx) => (
-						<Box key={img.id} className="review-item__image">
-							<img
-								src={img.src}
-								alt={img.alt}
-								onClick={() => {
-									setOpenReviewImage(true);
-									setReviewImgIndex(idx);
-								}}
-							/>
-						</Box>
-					))}
+				<Box className="review-swiper">
+					<Swiper
+						modules={[Navigation]}
+						navigation
+						slidesPerView={4}
+						spaceBetween={10}
+						className="review-swiper__inner"
+					>
+						{images.map((img, idx) => (
+							<SwiperSlide key={img.id}>
+								<div
+									className="review-swiper__item"
+									onClick={() => {
+										setOpenReviewImage(true);
+										setReviewImgIndex(idx);
+									}}
+								>
+									<img src={img.src} alt={img.alt} />
+								</div>
+							</SwiperSlide>
+						))}
+					</Swiper>
 				</Box>
 
 				{/* 객실 이름 */}

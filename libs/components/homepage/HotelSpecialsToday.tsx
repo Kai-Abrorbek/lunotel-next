@@ -12,11 +12,8 @@ import { Navigation } from 'swiper';
 import 'swiper/css';
 import 'swiper/css/navigation';
 
-type CategoryKey = 'all' | 'motel' | 'hotel_resort' | 'pension' | 'premium' | 'camping' | 'home_villa' | 'guesthouse';
-
 interface Stay {
 	id: number;
-	categoryKey: CategoryKey;
 	categoryLabel: string;
 	name: string;
 	location: string;
@@ -32,7 +29,6 @@ interface Stay {
 const STAYS: Stay[] = [
 	{
 		id: 1,
-		categoryKey: 'hotel_resort',
 		categoryLabel: '블랙 · 특급 · 호텔',
 		name: '★당일특가★ 세인트존스 호텔',
 		location: '강릉시',
@@ -44,7 +40,6 @@ const STAYS: Stay[] = [
 	},
 	{
 		id: 2,
-		categoryKey: 'motel',
 		categoryLabel: '모텔',
 		name: '길동 MARI-마리',
 		location: '길동역',
@@ -57,7 +52,6 @@ const STAYS: Stay[] = [
 	},
 	{
 		id: 3,
-		categoryKey: 'hotel_resort',
 		categoryLabel: '가족호텔 · 호텔',
 		name: '★당일특가★ 체스터톤스 호텔',
 		location: '속초시',
@@ -70,7 +64,6 @@ const STAYS: Stay[] = [
 	},
 	{
 		id: 5,
-		categoryKey: 'motel',
 		categoryLabel: '모텔',
 		name: '구월 호텔반월',
 		location: '인천',
@@ -83,7 +76,6 @@ const STAYS: Stay[] = [
 	},
 	{
 		id: 6,
-		categoryKey: 'motel',
 		categoryLabel: '모텔',
 		name: '구월 호텔반월',
 		location: '인천',
@@ -96,7 +88,6 @@ const STAYS: Stay[] = [
 	},
 	{
 		id: 7,
-		categoryKey: 'motel',
 		categoryLabel: '모텔',
 		name: '구월 호텔반월',
 		location: '인천',
@@ -109,7 +100,6 @@ const STAYS: Stay[] = [
 	},
 	{
 		id: 8,
-		categoryKey: 'motel',
 		categoryLabel: '모텔',
 		name: '구월 호텔반월',
 		location: '인천',
@@ -122,7 +112,6 @@ const STAYS: Stay[] = [
 	},
 	{
 		id: 9,
-		categoryKey: 'motel',
 		categoryLabel: '모텔',
 		name: '구월 호텔반월',
 		location: '인천',
@@ -135,7 +124,6 @@ const STAYS: Stay[] = [
 	},
 	{
 		id: 10,
-		categoryKey: 'motel',
 		categoryLabel: '모텔',
 		name: '구월 호텔반월',
 		location: '인천',
@@ -151,10 +139,7 @@ const STAYS: Stay[] = [
 ];
 
 export default function HotelSpecialsToday() {
-	const [activeCategory, setActiveCategory] = useState<CategoryKey>('all');
 	const [favoriteIds, setFavoriteIds] = useState<number[]>([]);
-
-	const filteredStays = activeCategory === 'all' ? STAYS : STAYS.filter((s) => s.categoryKey === activeCategory);
 
 	const toggleFavorite = (id: number) => {
 		setFavoriteIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
@@ -191,7 +176,7 @@ export default function HotelSpecialsToday() {
 								1280: { slidesPerView: 4, spaceBetween: 24 },
 							}}
 						>
-							{filteredStays.map((stay) => {
+							{STAYS.map((stay) => {
 								const isFav = favoriteIds.includes(stay.id);
 								return (
 									<SwiperSlide key={stay.id}>

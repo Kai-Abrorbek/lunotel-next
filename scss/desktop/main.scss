@@ -3,6 +3,7 @@
 @import '/scss/desktop/room/room.scss';
 @import '/scss/desktop/login/login.scss';
 @import '/scss/desktop/reservation/check.scss';
+@import '/scss/desktop/mypage/mypage.scss';
 
 body {
 	-ms-overflow-style: none; /* for Internet Explorer, Edge */
@@ -514,6 +515,7 @@ body::-webkit-scrollbar {
 			display: flex;
 			justify-content: space-between;
 			background-color: #fafafa;
+			margin-top: 50px;
 			.footer-section {
 				display: flex;
 				flex-direction: column;

@@ -526,7 +526,6 @@
 			}
 		}
 		#section-reviews {
-			margin-bottom: 100px;
 			.review-item {
 				display: grid;
 				grid-template-columns: 220px minmax(0, 1fr);
@@ -577,6 +576,52 @@
 					display: flex;
 					flex-direction: column;
 					gap: 8px;
+
+					.review-swiper {
+						max-width: 750px;
+
+						&__inner {
+							width: 100%;
+							height: 180px;
+						}
+
+						&__item {
+							width: 100%;
+							height: 100%;
+							border-radius: 12px;
+							overflow: hidden;
+							cursor: pointer;
+
+							img {
+								width: 100%;
+								height: 100%;
+								object-fit: cover;
+								display: block;
+							}
+						}
+
+						.swiper-button-prev,
+						.swiper-button-next {
+							width: 28px;
+							height: 28px;
+							border-radius: 50%;
+							background: rgba(255, 255, 255, 0.95);
+							box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+
+							&::after {
+								font-size: 14px;
+								color: #555;
+							}
+						}
+
+						.swiper-button-prev {
+							left: -8px;
+						}
+
+						.swiper-button-next {
+							right: -8px;
+						}
+					}
 				}
 
 				&__meta {
@@ -673,6 +718,188 @@
 				height: 50px;
 				justify-content: center;
 				align-items: center;
+			}
+		}
+		#section-similar-rooms {
+			margin-bottom: 100px;
+			.hotelspecials-container {
+				width: 100%;
+				padding: 32px 32px 24px 32px;
+				.popular-header {
+					display: flex;
+					flex-direction: column;
+					margin-bottom: 18px;
+					.popular-title {
+						font-size: 22px;
+						font-weight: 600;
+					}
+					.popular-tabs {
+						margin-top: 15px;
+						display: flex;
+						gap: 10px;
+						.popular-tab {
+							font-size: 14px !important;
+							padding: 10px 18px !important;
+							border-radius: 999px !important;
+							border: 1px solid #e0e0e0 !important;
+							background-color: #ffffff !important;
+							color: #555 !important;
+							text-transform: none !important;
+							box-shadow: none !important;
+						}
+						.popular-tab.active {
+							background-color: #1976d2 !important;
+							color: #ffffff !important;
+							border-color: #1976d2 !important;
+						}
+					}
+				}
+				.hotelspecials-slider-wrapper {
+					position: relative;
+					.popular-swiper {
+						padding: 4px 8px 8px 0;
+						/* 카드 */
+						.popular-card {
+							background-color: #ffffff;
+							border-radius: 18px;
+							overflow: hidden;
+							box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+							display: flex;
+							flex-direction: column;
+
+							/* 이미지 */
+							.popular-image-wrapper {
+								position: relative;
+								width: 100%;
+								padding-top: 60%; /* 5:3 비율 정도 */
+								overflow: hidden;
+								.popular-image {
+									position: absolute;
+									inset: 0;
+									width: 100%;
+									height: 100%;
+									object-fit: cover;
+									transition: transform 0.65s ease;
+									overflow: hidden;
+								}
+								.popular-image-top {
+									position: absolute;
+									inset: 10px 10px auto 10px;
+									display: flex;
+									justify-content: space-between;
+									align-items: center;
+									.popular-chip {
+										background-color: rgba(0, 0, 0, 0.6) !important;
+										color: #ffffff !important;
+										font-size: 11px !important;
+										height: 22px !important;
+									}
+									.popular-fav-btn {
+										background-color: rgba(255, 255, 255, 0.9) !important;
+										width: 32px !important;
+										height: 32px !important;
+										.popular-fav-icon {
+											color: #bbbbbb;
+										}
+										.popular-fav-icon.active {
+											color: #ff4b5a;
+										}
+									}
+								}
+							}
+							.popular-image-wrapper:hover .popular-image {
+								transform: translateZ(40px) scale(1.1);
+								transform-style: preserve-3d;
+							}
+							/* 카드 정보 영역 */
+							.popular-info {
+								padding: 14px 14px 16px 14px;
+								.popular-category {
+									font-size: 12px;
+									color: #999999;
+									margin-bottom: 4px;
+								}
+								.popular-name {
+									font-size: 16px;
+									font-weight: 600;
+									margin-bottom: 4px;
+								}
+
+								.popular-location {
+									font-size: 13px;
+									color: #777777;
+									margin-bottom: 8px;
+								}
+								.popular-rating-row {
+									display: flex;
+									align-items: center;
+									gap: 8px;
+									margin-bottom: 6px;
+									.popular-rating-badge {
+										display: inline-flex;
+										align-items: center;
+										gap: 3px;
+										padding: 2px 6px;
+										border-radius: 6px;
+										background-color: #ffb300;
+										color: #ffffff;
+										font-size: 12px;
+										font-weight: 600;
+										.popular-rating-star {
+											font-size: 14px;
+										}
+										.popular-rating-score {
+											line-height: 1;
+										}
+									}
+									.popular-rating-count {
+										font-size: 12px;
+										color: #666666;
+									}
+								}
+								.popular-coupon-text {
+									font-size: 12px;
+									color: #999999;
+									margin-bottom: 3px;
+								}
+								.popular-price-row {
+									display: flex;
+									align-items: baseline;
+									gap: 8px;
+									.popular-price-current {
+										font-size: 18px;
+										font-weight: 700;
+									}
+									.popular-price-origin {
+										font-size: 13px;
+										color: #b0b0b0;
+										text-decoration: line-through;
+									}
+								}
+							}
+						}
+					}
+					.hotelspecials-arrow {
+						position: absolute !important;
+						top: 50%;
+						transform: translateY(-50%);
+						z-index: 10;
+						background-color: #ffffff !important;
+						box-shadow: 0 0 10px rgba(0, 0, 0, 0.12);
+						width: 36px;
+						height: 36px;
+					}
+					.hotelspecials-prev {
+						left: -10px;
+					}
+
+					.hotelspecials-next {
+						right: -10px;
+					}
+					.hotelspecials-arrow svg {
+						font-size: 18px;
+					}
+				}
 			}
 		}
 	}

@@ -25,31 +25,25 @@ const ReviewImageModal: React.FC<ImageGalleryModalProps> = ({ open, onClose, ima
 	const [tab, setTab] = useState<ImageCategory>('ALL');
 	const [currentIndex, setCurrentIndex] = useState(reviewImgIndex);
 
-	const filteredImages = useMemo(() => {
-		if (tab === 'ALL') return images;
-		return images.filter((img) => img.category === 'ROOM');
-	}, [images, tab]);
-
 	// 모달 열릴 때 index 초기화
 	useEffect(() => {
 		if (open) setCurrentIndex(reviewImgIndex);
 	}, [open, reviewImgIndex]);
 
 	const handlePrev = () => {
-		setCurrentIndex((prev) => (prev === 0 ? filteredImages.length - 1 : prev - 1));
+		setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
 	};
 
 	const handleNext = () => {
-		setCurrentIndex((prev) => (prev === filteredImages.length - 1 ? 0 : prev + 1));
+		setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
 	};
 
 	const handleThumbClick = (idx: number) => {
 		setCurrentIndex(idx);
 	};
 
-	if (!filteredImages.length) return null;
-	const active = filteredImages[currentIndex];
-
+	if (!images.length) return null;
+	const active = images[currentIndex];
 	return (
 		<Modal
 			aria-labelledby="spring-modal-title"
@@ -84,7 +78,7 @@ const ReviewImageModal: React.FC<ImageGalleryModalProps> = ({ open, onClose, ima
 				{/* 하단 썸네일 바 */}
 				<Box className="image-modal-thumbs-bar">
 					<Box className="image-modal-thumbs">
-						{filteredImages.map((img, idx) => (
+						{images.map((img, idx) => (
 							<button
 								key={img.id}
 								className={idx === currentIndex ? 'image-modal-thumb image-modal-thumb--active' : 'image-modal-thumb'}
@@ -95,7 +89,7 @@ const ReviewImageModal: React.FC<ImageGalleryModalProps> = ({ open, onClose, ima
 						))}
 					</Box>
 					<Box className="image-modal-counter">
-						대표 사진 {currentIndex + 1} / {filteredImages.length}
+						대표 사진 {currentIndex + 1} / {images.length}
 					</Box>
 				</Box>
 			</Box>

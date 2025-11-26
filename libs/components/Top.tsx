@@ -3,6 +3,7 @@ import useDeviceDetect from '../hooks/useDeviceDetect';
 import { Box, Button, IconButton, Stack, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import Link from 'next/link';
+import path from 'path';
 
 const Top = () => {
 	const router = useRouter();
@@ -22,7 +23,7 @@ const Top = () => {
 
 					{/* 오른쪽 버튼들 */}
 					<Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-						{user ? (
+						{user || pathName === 'mypage' ? (
 							<div>
 								<Button
 									variant="outlined"
