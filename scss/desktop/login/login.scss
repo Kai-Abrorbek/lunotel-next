@@ -1,0 +1,487 @@
+/* Auth3D.scss */
+@import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700,800,900');
+@import url('https://unicons.iconscout.com/release/v2.1.5/css/unicons.css');
+
+#pc-wrap {
+	.login-page {
+		min-height: 100vh;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: #ffffff;
+
+		&__card {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			width: 100%;
+			max-width: 420px;
+			padding: 40px 16px 60px;
+			box-sizing: border-box;
+		}
+
+		&__logo {
+			width: 100px;
+			height: 100px;
+		}
+
+		&__divider {
+			width: 240px;
+			margin: 8px 0;
+		}
+
+		.css-16cg59e-MuiTypography-root {
+			margin: 0;
+			font-weight: 600;
+			font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+			line-height: 1.5;
+			letter-spacing: 0.00938em;
+			letter-spacing: 0;
+			font-size: 16px;
+			color: #777;
+			margin-bottom: 24px;
+		}
+
+		&__buttons {
+			width: 100%;
+			max-width: 360px;
+			display: flex;
+			flex-direction: column;
+			gap: 10px;
+		}
+
+		&__btn {
+			justify-content: flex-start !important;
+			padding: 16px 16px !important;
+			border-radius: 12px !important;
+			font-size: 16px !important;
+			font-weight: 600 !important;
+			color: #222 !important;
+			box-shadow: none !important;
+
+			&-icon {
+				margin-right: 8px;
+				font-size: 20px;
+
+				&--text {
+					display: inline-flex;
+					align-items: center;
+					justify-content: center;
+					width: 18px;
+					height: 18px;
+					border-radius: 4px;
+					background: #03c75a;
+					color: #fff;
+					font-weight: 800;
+					font-size: 13px;
+					margin-right: 8px;
+				}
+			}
+
+			&--kakao {
+				background: #fee500 !important;
+			}
+
+			&--naver {
+				background: #03c75a !important;
+				color: #fff !important;
+			}
+
+			&--apple {
+				background: #000000 !important;
+				color: #ffffff !important;
+			}
+
+			&--facebook {
+				background: #1877f2 !important;
+				color: #ffffff !important;
+			}
+
+			&--google {
+				background: #ffffff !important;
+				border: 1px solid #ddd !important;
+			}
+
+			&--email {
+				background: #e6f2ff !important;
+				color: #1a73e8 !important;
+			}
+		}
+
+		&__business {
+			margin-top: 28px;
+			font-size: 12px;
+			color: #777;
+			text-decoration: underline;
+			cursor: pointer;
+		}
+	}
+}
+.auth3d-page {
+	font-family: 'Poppins', sans-serif;
+	font-weight: 300;
+	font-size: 15px;
+	line-height: 1.7;
+	color: #c4c3ca;
+	// background-color: #f9f9fd;
+	overflow-x: hidden;
+	min-height: 100vh;
+
+	/* ===== 기본 레이아웃 유틸 ===== */
+	.section {
+		position: relative;
+		width: 100%;
+		display: block;
+	}
+
+	.full-height {
+		min-height: 100vh;
+	}
+
+	.container {
+		width: 100%;
+		margin-left: auto;
+		margin-right: auto;
+		padding-left: 15px;
+		padding-right: 15px;
+		max-width: 1140px;
+	}
+
+	.row {
+		display: flex;
+		flex-wrap: wrap;
+	}
+
+	.col-12 {
+		flex: 0 0 100%;
+		max-width: 100%;
+	}
+
+	.close-btn {
+		position: relative;
+		top: -10px;
+		left: 48%;
+		width: 42px;
+		height: 42px;
+		border-radius: 50%;
+		background-color: rgba(255, 255, 255);
+		-webkit-backdrop-filter: blur(6px);
+		backdrop-filter: blur(6px);
+		border: 1px solid rgba(248, 239, 239, 0.25);
+		color: #ffffff;
+		font-size: 22px;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: all 200ms ease;
+		svg {
+			font-size: 40px;
+			color: #ff751f;
+		}
+	}
+
+	.close-btn:hover {
+		background: rgba(255, 255, 255, 0.35);
+		border-color: rgba(255, 255, 255, 0.6);
+		color: #000;
+		transform: scale(1.05);
+	}
+
+	.justify-content-center {
+		justify-content: center;
+	}
+
+	.align-self-center {
+		align-self: center;
+	}
+
+	.text-center {
+		text-align: center;
+	}
+
+	.mb-0 {
+		margin-bottom: 0 !important;
+	}
+
+	.mb-4 {
+		margin-bottom: 1.5rem !important;
+	}
+
+	.mt-2 {
+		margin-top: 0.5rem !important;
+	}
+
+	.mt-4 {
+		margin-top: 1.5rem !important;
+	}
+
+	.pb-3 {
+		padding-bottom: 1rem !important;
+	}
+
+	.pb-5 {
+		padding-bottom: 3rem !important;
+	}
+
+	.pt-5 {
+		padding-top: 3rem !important;
+	}
+
+	.py-5 {
+		padding-top: 3rem !important;
+		padding-bottom: 3rem !important;
+	}
+
+	@media (min-width: 576px) {
+		.pt-sm-2 {
+			padding-top: 0.5rem !important;
+		}
+	}
+
+	.mx-auto {
+		margin-left: auto !important;
+		margin-right: auto !important;
+	}
+
+	/* ===== 기본 텍스트 ===== */
+	a {
+		cursor: pointer;
+		transition: all 200ms linear;
+
+		&:hover {
+			text-decoration: none;
+		}
+	}
+
+	.link {
+		color: #c4c3ca;
+
+		&:hover {
+			color: #ffeba7;
+		}
+	}
+
+	p {
+		font-weight: 500;
+		font-size: 16px;
+		line-height: 1.7;
+	}
+
+	h4 {
+		font-weight: 600;
+		font-size: 35px;
+	}
+
+	h6 span {
+		padding: 11px 22px;
+		text-transform: uppercase;
+		font-weight: 700;
+		font-size: 25px;
+		color: #000000;
+	}
+
+	/* ===== 토글용 체크박스 ===== */
+	[type='checkbox']:checked,
+	[type='checkbox']:not(:checked) {
+		position: absolute;
+		left: -9999px;
+	}
+
+	.checkbox:checked + label,
+	.checkbox:not(:checked) + label {
+		position: relative;
+		display: block;
+		text-align: center;
+		width: 60px;
+		height: 16px;
+		border-radius: 8px;
+		padding: 0;
+		margin: 10px auto;
+		cursor: pointer;
+		background-color: #ffeba7;
+	}
+
+	.checkbox:checked + label::before,
+	.checkbox:not(:checked) + label::before {
+		position: absolute;
+		display: block;
+		width: 36px;
+		height: 36px;
+		border-radius: 50%;
+		color: #ffeba7;
+		background-color: #102770;
+		font-family: 'unicons';
+		content: '\eb4f';
+		z-index: 20;
+		top: -10px;
+		left: -10px;
+		line-height: 36px;
+		text-align: center;
+		font-size: 24px;
+		transition: all 0.5s ease;
+	}
+
+	.checkbox:checked + label::before {
+		transform: translateX(44px) rotate(-270deg);
+	}
+
+	/* ===== 3D 카드 ===== */
+	.card-3d-wrap {
+		position: relative;
+		width: 500px;
+		max-width: 100%;
+		height: 550px;
+		transform-style: preserve-3d;
+		perspective: 800px;
+		margin-top: 30px;
+	}
+
+	.card-3d-wrapper {
+		width: 100%;
+		height: 100%;
+		position: absolute;
+		top: 0;
+		left: 0;
+		transform-style: preserve-3d;
+		transition: all 600ms ease-out;
+		box-shadow: 0px 5px 29px #aeaeacab;
+		border-radius: 20px;
+	}
+
+	.card-front,
+	.card-back {
+		width: 100%;
+		height: 100%;
+		background-color: #ffe8cc;
+		background-image: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/1462889/pat.svg');
+		background-position: bottom center;
+		background-repeat: no-repeat;
+		background-size: 300%;
+		position: absolute;
+		border-radius: 6px;
+		left: 0;
+		top: 0;
+		transform-style: preserve-3d;
+		backface-visibility: hidden;
+	}
+
+	.card-back {
+		transform: rotateY(180deg);
+	}
+
+	.checkbox:checked ~ .card-3d-wrap .card-3d-wrapper {
+		transform: rotateY(180deg);
+	}
+
+	.center-wrap {
+		position: absolute;
+		width: 85%;
+		padding: 0 35px;
+		top: 50%;
+		left: 35px;
+		transform: translate3d(0, -50%, 35px) perspective(100px);
+		z-index: 20;
+		display: block;
+	}
+
+	/* ===== 폼 ===== */
+	.form-group {
+		position: relative;
+		display: block;
+		margin: 0;
+		padding: 0;
+	}
+
+	.form-style {
+		padding: 5px 30px;
+		padding-left: 55px;
+		height: 48px;
+		width: 100%;
+		font-weight: 500;
+		border-radius: 4px;
+		font-size: 14px;
+		line-height: 22px;
+		letter-spacing: 0.5px;
+		outline: none;
+		color: #000000;
+		background-color: #f3f4fc;
+		border: none;
+		transition: all 200ms linear;
+		box-shadow: 0 4px 8px 0 rgba(21, 21, 21, 0.2);
+
+		&:focus,
+		&:active {
+			border: none;
+			outline: none;
+			box-shadow: 0 4px 8px 0 rgba(21, 21, 21, 0.2);
+		}
+	}
+
+	.input-icon {
+		position: absolute;
+		top: 0;
+		left: 18px;
+		height: 48px;
+		font-size: 24px;
+		line-height: 48px;
+		text-align: left;
+		color: #a88612;
+		transition: all 200ms linear;
+	}
+
+	.form-group input::placeholder {
+		color: #c4c3ca;
+		opacity: 0.7;
+		transition: all 200ms linear;
+	}
+
+	.form-group input:focus::placeholder {
+		opacity: 0;
+		transition: all 200ms linear;
+	}
+
+	/* ===== 버튼 ===== */
+	.btn {
+		border-radius: 4px;
+		height: 44px;
+		font-size: 13px;
+		font-weight: 600;
+		text-transform: uppercase;
+		transition: all 200ms linear;
+		padding: 0 30px;
+		letter-spacing: 1px;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+		border: none;
+		background-color: #ff751f;
+		color: #01040d;
+		box-shadow: 0 8px 24px 0 rgba(255, 235, 167, 0.2);
+
+		&:active,
+		&:focus,
+		&:hover {
+			background-color: #102770;
+			color: #ffeba7;
+			box-shadow: 0 8px 24px 0 rgba(16, 39, 112, 0.2);
+		}
+	}
+
+	/* ===== 로고 (혹시 쓸 때 대비) ===== */
+	.logo {
+		position: absolute;
+		top: 30px;
+		right: 30px;
+		display: block;
+		z-index: 100;
+		transition: all 250ms linear;
+
+		img {
+			height: 26px;
+			width: auto;
+			display: block;
+		}
+	}
+}

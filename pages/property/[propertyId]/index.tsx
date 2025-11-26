@@ -279,7 +279,7 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 						return (
 							<Box key={room} className="room-card">
 								<Box className="room-card__image">
-									<img src={main.src} alt={main.alt} />
+									<img src={main.src} alt={main.alt} onClick={() => setOpen(true)} />
 									<Box className="room-card__count">65+</Box>
 								</Box>
 

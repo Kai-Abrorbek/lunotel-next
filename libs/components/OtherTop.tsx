@@ -81,7 +81,7 @@ const MiniHeader = (props: MiniHeaderProps) => {
 					{/* 로고 */}
 					<Box className="mini-header-left">
 						<Link href={'/'}>
-							<Typography className="mini-header-logo">루니텔.</Typography>
+							<img className="mini-header-logo" src="/img/logo.png" alt="" />
 						</Link>
 					</Box>
 					{heroCardOpen ? (
@@ -101,9 +101,11 @@ const MiniHeader = (props: MiniHeaderProps) => {
 				</Box>
 				<Stack className="mini-right-header">
 					<Box className="mini-header-right">
-						<Button className="mini-login-btn" variant="outlined">
-							로그인/회원가입
-						</Button>
+						<Link href={'/login'}>
+							<Button className="mini-login-btn" variant="outlined">
+								로그인/회원가입
+							</Button>
+						</Link>
 						<IconButton className="mini-menu-btn">
 							<MenuIcon />
 						</IconButton>

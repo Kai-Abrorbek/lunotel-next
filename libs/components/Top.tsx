@@ -1,10 +1,12 @@
-import { withRouter } from 'next/router';
+import { useRouter, withRouter } from 'next/router';
 import useDeviceDetect from '../hooks/useDeviceDetect';
 import { Box, Button, IconButton, Stack, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import Link from 'next/link';
 
 const Top = () => {
+	const router = useRouter();
+	const pathName = router.pathname.replace('/', '').trim();
 	const user = false;
 	const device = useDeviceDetect();
 	if (device === 'mobile') {
@@ -15,28 +17,13 @@ const Top = () => {
 				<Box className="header-container container">
 					{/* 로고 */}
 					<Link href={'/'}>
-						<Typography className="header-logo">루나텔.</Typography>
+						<img className="header-logo" src="/img/logo.png" alt="" />
 					</Link>
 
 					{/* 오른쪽 버튼들 */}
 					<Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-						{!user ? (
+						{user ? (
 							<div>
-								{/* <Button
-									variant="outlined"
-									sx={{
-										bgcolor: '#fafafa',
-										color: '#333',
-										borderRadius: '10px',
-										borderColor: '#ddd',
-										px: 2.5,
-										py: 1,
-									}}
-									size="large"
-								>
-									비회원 예약조회
-								</Button> */}
-
 								<Button
 									variant="outlined"
 									sx={{
@@ -49,6 +36,22 @@ const Top = () => {
 									size="large"
 								>
 									USER NAME
+								</Button>
+							</div>
+						) : pathName === 'login' ? (
+							<div>
+								<Button
+									variant="outlined"
+									sx={{
+										borderRadius: '10px',
+										borderColor: '#2196f3',
+										color: '#2196f3',
+										px: 2.5,
+										py: 1,
+									}}
+									size="large"
+								>
+									로그인/회원가입
 								</Button>
 							</div>
 						) : (
@@ -67,20 +70,21 @@ const Top = () => {
 								>
 									비회원 예약조회
 								</Button>
-
-								<Button
-									variant="outlined"
-									sx={{
-										borderRadius: '10px',
-										borderColor: '#2196f3',
-										color: '#2196f3',
-										px: 2.5,
-										py: 1,
-									}}
-									size="large"
-								>
-									로그인/회원가입
-								</Button>
+								<Link href={'/login'}>
+									<Button
+										variant="outlined"
+										sx={{
+											borderRadius: '10px',
+											borderColor: '#2196f3',
+											color: '#2196f3',
+											px: 2.5,
+											py: 1,
+										}}
+										size="large"
+									>
+										로그인/회원가입
+									</Button>
+								</Link>
 							</div>
 						)}
 

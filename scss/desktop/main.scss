@@ -1,6 +1,7 @@
-@import '/scss/desktop/homepage/homepage';
-@import '/scss/desktop/property/property';
-@import '/scss/desktop/room/room';
+@import '/scss/desktop/homepage/homepage.scss';
+@import '/scss/desktop/property/property.scss';
+@import '/scss/desktop/room/room.scss';
+@import '/scss/desktop/login/login.scss';
 
 body {
 	-ms-overflow-style: none; /* for Internet Explorer, Edge */
@@ -39,6 +40,7 @@ body::-webkit-scrollbar {
 			top: 0;
 			z-index: 9999;
 			background-color: #ffffff;
+			border-bottom: 1px solid #80808030;
 			.header-container {
 				height: 100%;
 				padding: 4px 4px;
@@ -46,9 +48,10 @@ body::-webkit-scrollbar {
 				flex-direction: row;
 				justify-content: space-between;
 				.header-logo {
-					font-size: 34px;
-					font-weight: 600;
-					color: #ff4b5a;
+					position: relative;
+					top: -40px;
+					width: 140px;
+					height: 150px;
 				}
 			}
 		}
@@ -80,9 +83,13 @@ body::-webkit-scrollbar {
 					display: flex;
 					align-items: center;
 					.mini-header-logo {
-						font-size: 24px;
-						font-weight: 800;
-						color: #ff4e5b;
+						width: 140px;
+						height: 150px;
+						position: relative;
+						top: -6px;
+						// font-size: 24px;
+						// font-weight: 800;
+						// color: #ff4e5b;
 					}
 				}
 				/* 가운데 검색바 */

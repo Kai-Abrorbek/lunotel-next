@@ -337,7 +337,7 @@
 		flex: 1;
 		display: grid;
 		grid-template-columns: 280px 420px minmax(0, 1fr);
-		height: calc(100vh - 56px);
+		height: calc(90vh - 56px);
 		/* 공통 컬럼 */
 		.map-dialog-column {
 			height: 100%;
