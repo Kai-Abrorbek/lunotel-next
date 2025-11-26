@@ -3,18 +3,21 @@ import useDeviceDetect from '../../hooks/useDeviceDetect';
 import Head from 'next/head';
 import Top from '../Top';
 import Footer from '../Footer';
-import { Stack } from '@mui/material';
+import { dividerClasses, Stack } from '@mui/material';
 import { userVar } from '../../../apollo/store';
 import { useReactiveVar } from '@apollo/client';
 import { getJwtToken, updateUserInfo } from '../../auth';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
+import { useRouter } from 'next/router';
 
 const withLayoutMain = (Component: any) => {
 	return (props: any) => {
 		const device = useDeviceDetect();
 		const user = useReactiveVar(userVar);
+		const router = useRouter();
+		const pathname = router.pathname.replace('/', '').trim();
 
 		/** LIFECYCLES **/
 		useEffect(() => {
@@ -61,10 +64,13 @@ const withLayoutMain = (Component: any) => {
 						<Stack id={'main'}>
 							<Component {...props} />
 						</Stack>
-
-						<Stack id={'footer'}>
-							<Footer />
-						</Stack>
+						{pathname === 'login' || pathname === 'reservation/check' ? (
+							<div></div>
+						) : (
+							<Stack id={'footer'}>
+								<Footer />
+							</Stack>
+						)}
 					</Stack>
 				</>
 			);

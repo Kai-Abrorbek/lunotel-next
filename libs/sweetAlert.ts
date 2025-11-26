@@ -129,3 +129,30 @@ export const sweetTopSmallSuccessAlert = async (
 		}
 	});
 };
+
+export const bubbleAlert = (msg: string): Promise<void> => {
+	return new Promise((resolve) => {
+		const id = `bubble_${Date.now()}`;
+		const div = document.createElement('div');
+		div.id = id;
+		div.className = 'bubble-alert';
+		div.textContent = msg;
+
+		document.body.appendChild(div);
+
+		// fade-in
+		setTimeout(() => {
+			div.classList.add('show');
+		}, 10);
+
+		// 2.2초 뒤 자동 제거
+		setTimeout(() => {
+			div.classList.remove('show');
+
+			setTimeout(() => {
+				div.remove();
+				resolve();
+			}, 300); // fade-out 시간
+		}, 2000);
+	});
+};

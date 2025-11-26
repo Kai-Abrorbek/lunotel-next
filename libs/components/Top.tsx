@@ -38,7 +38,7 @@ const Top = () => {
 									USER NAME
 								</Button>
 							</div>
-						) : pathName === 'login' ? (
+						) : pathName === 'login' || pathName === 'reservation/check' ? (
 							<div>
 								<Button
 									variant="outlined"
@@ -56,20 +56,23 @@ const Top = () => {
 							</div>
 						) : (
 							<div>
-								<Button
-									variant="outlined"
-									sx={{
-										bgcolor: '#fafafa',
-										color: '#333',
-										borderRadius: '10px',
-										borderColor: '#ddd',
-										px: 2.5,
-										py: 1,
-									}}
-									size="large"
-								>
-									비회원 예약조회
-								</Button>
+								<Link href={'/reservation/check'}>
+									<Button
+										variant="outlined"
+										sx={{
+											bgcolor: '#fafafa',
+											color: '#333',
+											borderRadius: '10px',
+											borderColor: '#ddd',
+											px: 2.5,
+											py: 1,
+										}}
+										size="large"
+									>
+										비회원 예약조회
+									</Button>
+								</Link>
+
 								<Link href={'/login'}>
 									<Button
 										variant="outlined"

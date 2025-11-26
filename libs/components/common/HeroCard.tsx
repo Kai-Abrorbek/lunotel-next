@@ -10,7 +10,7 @@ import PlaceIcon from '@mui/icons-material/Place';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { PropertiesInquiry } from '../../types/property/property.input';
 import { PropertyLocation } from '../../enums/property.enum';
-import { sweetErrorAlert } from '../../sweetAlert';
+import { bubbleAlert } from '../../sweetAlert';
 import { useRouter } from 'next/router';
 
 type TabKey = 'domestic' | 'overseas' | 'package';
@@ -55,6 +55,7 @@ const HeroCard = (props: HeroCardProps) => {
 	const locationRef: any = useRef();
 	const dateRef: any = useRef();
 	const pesonalRef: any = useRef();
+	const [locationInput, setLocationInput] = useState<string>('');
 	const [activeTab, setActiveTab] = useState<TabKey>('domestic');
 	const [propertyLocation, setPropertyLocation] = useState<PropertyLocation[]>(Object.values(PropertyLocation));
 	const [checkIn, setCheckIn] = useState<Date | undefined>(toDate(initialInput.search?.checkInDate));
@@ -237,7 +238,7 @@ const HeroCard = (props: HeroCardProps) => {
 
 	const handleSearch = async (location: string | undefined) => {
 		if (!searchFilter.search?.location && !location) {
-			sweetErrorAlert('여행지를 선택해주세요!');
+			await bubbleAlert('여행지를 선택해주세요!');
 		} else {
 			setSearchFilter({
 				...searchFilter,
@@ -279,21 +280,39 @@ const HeroCard = (props: HeroCardProps) => {
 				<Box className="hero-field-wrapper">
 					<Box className="hero-field hero-field-keyword" onClick={openKeywordPanel}>
 						<SearchIcon className="hero-field-icon" />
-						<InputBase
-							className="hero-input"
-							placeholder="여행지나 숙소를 검색해보세요."
-							value={searchFilter?.search?.location}
-							onChange={(e) =>
-								setSearchFilter({
-									...searchFilter,
-									search: {
-										...searchFilter.search,
-										location: e.target.value as PropertyLocation,
-									},
-								})
-							}
-							onFocus={openKeywordPanel}
-						/>
+						<div className="input-base-wrapper">
+							<InputBase
+								className="hero-input"
+								placeholder="여행지나 숙소를 검색해보세요."
+								value={searchFilter?.search?.location}
+								onChange={(e) =>
+									setSearchFilter({
+										...searchFilter,
+										search: {
+											...searchFilter.search,
+											location: e.target.value as PropertyLocation,
+										},
+									})
+								}
+								onFocus={openKeywordPanel}
+							/>
+							{searchFilter?.search?.location && (
+								<button
+									className="clear-btn"
+									onClick={() =>
+										setSearchFilter({
+											...searchFilter,
+											search: {
+												...searchFilter.search,
+												location: '' as PropertyLocation,
+											},
+										})
+									}
+								>
+									×
+								</button>
+							)}
+						</div>
 					</Box>
 
 					{showKeywordPanel && (

@@ -1,0 +1,270 @@
+#pc-wrap {
+	.guest-lookup-page {
+		min-height: 100vh;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: radial-gradient(circle at top, #eff0f6, #f7f7f7 55%, #f1f2f7 100%);
+		padding: 32px 16px;
+		box-sizing: border-box;
+
+		.guest-lookup-wrapper {
+			width: 100%;
+			max-width: 880px;
+		}
+
+		.guest-lookup-card {
+			border-radius: 24px !important;
+			padding: 28px 32px 24px;
+			background: #fffaf4 !important;
+			box-shadow: 0 20px 40px rgba(0, 0, 0, 0.28), 0 0 0 1px rgba(255, 232, 204, 0.9) !important;
+			box-sizing: border-box;
+		}
+
+		/* 헤더 */
+		.guest-lookup-header {
+			display: flex;
+			align-items: center;
+			gap: 18px;
+			margin-bottom: 16px;
+		}
+
+		.guest-lookup-icon-circle {
+			width: 52px;
+			height: 52px;
+			border-radius: 18px;
+			background: #fff3e0;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color: #ff751f;
+
+			svg {
+				font-size: 26px;
+			}
+		}
+
+		.guest-lookup-title {
+			font-size: 22px !important;
+			font-weight: 700 !important;
+			color: #262626;
+			margin-bottom: 4px !important;
+		}
+
+		.guest-lookup-sub {
+			font-size: 13px !important;
+			color: #757575;
+		}
+
+		/* 구분선 */
+		.guest-lookup-divider {
+			margin: 8px 0 18px !important;
+			border-color: rgba(0, 0, 0, 0.06) !important;
+		}
+
+		/* 폼 */
+		.guest-lookup-form {
+			display: flex;
+			flex-direction: column;
+			gap: 14px;
+		}
+
+		.guest-lookup-row {
+			display: grid;
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			gap: 14px;
+		}
+
+		.guest-field {
+			display: flex;
+			flex-direction: column;
+			gap: 6px;
+		}
+
+		.guest-label {
+			font-size: 13px;
+			font-weight: 600;
+			color: #333;
+			display: inline-flex;
+			align-items: center;
+			gap: 4px;
+		}
+
+		.required-dot {
+			width: 6px;
+			height: 6px;
+			border-radius: 999px;
+			background: #ff4d4f;
+			display: inline-block;
+		}
+
+		/* MUI TextField 커스텀 */
+		.guest-input {
+			.MuiOutlinedInput-root {
+				border-radius: 12px;
+				background: #f8f6ff;
+				padding-left: 6px;
+				transition: box-shadow 0.2s ease, transform 0.12s ease, background 0.2s ease;
+
+				fieldset {
+					border-color: rgba(0, 0, 0, 0.08);
+				}
+
+				&:hover fieldset {
+					border-color: rgba(0, 0, 0, 0.2);
+				}
+
+				&.Mui-focused {
+					background: #ffffff;
+					transform: translateY(-1px);
+					box-shadow: 0 0 0 1px rgba(255, 117, 31, 0.5), 0 10px 22px rgba(255, 117, 31, 0.25);
+
+					fieldset {
+						border-color: #ff751f;
+					}
+				}
+
+				input {
+					padding-left: 0;
+					font-size: 14px;
+					color: #333;
+
+					&::placeholder {
+						color: #b0b0b0;
+					}
+				}
+			}
+			.clear-btn {
+				background: #dad5d599;
+				border: none;
+				cursor: pointer;
+				font-size: 18px;
+				color: #bbb;
+				padding: 0 6px;
+				display: flex;
+				align-items: center;
+				border-radius: 48%;
+				&:hover {
+					color: #888;
+				}
+			}
+		}
+
+		/* 입력 아이콘 (startAdornment) */
+		.guest-input-icon {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			width: 32px;
+			color: #ff9b3f;
+
+			svg {
+				font-size: 18px;
+			}
+		}
+
+		/* 도움 텍스트 */
+		.guest-lookup-help {
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			margin-top: 4px;
+			font-size: 12px;
+			color: #757575;
+		}
+
+		.guest-help-icon {
+			font-size: 16px !important;
+			color: #ff9b3f;
+		}
+
+		/* 버튼 영역 */
+		.guest-lookup-actions {
+			margin-top: 10px;
+		}
+
+		.guest-submit-btn {
+			border-radius: 999px !important;
+			padding: 9px 16px !important;
+			background: linear-gradient(135deg, #ff751f, #ff9d42) !important;
+			color: #ffffff !important;
+			box-shadow: 0 12px 24px rgba(255, 117, 31, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.7) inset !important;
+			text-transform: none !important;
+			font-weight: 600 !important;
+			font-size: 14px !important;
+
+			&:hover {
+				filter: brightness(1.03);
+				transform: translateY(-1px);
+				box-shadow: 0 16px 30px rgba(255, 117, 31, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.9) inset !important;
+			}
+		}
+
+		/* 결과 박스 */
+		.guest-result-placeholder {
+			margin-top: 20px;
+			padding: 14px 18px 12px;
+			border-radius: 14px;
+			background: #fff7ea;
+			border: 1px dashed rgba(255, 141, 51, 0.6);
+		}
+
+		.guest-result-title {
+			font-size: 13px !important;
+			font-weight: 700 !important;
+			color: #bf651f;
+			margin-bottom: 8px !important;
+		}
+
+		.guest-result-row {
+			display: flex;
+			justify-content: space-between;
+			gap: 12px;
+			font-size: 12px;
+			padding: 2px 0;
+
+			&.last {
+				margin-top: 4px;
+			}
+
+			.label {
+				color: #a66f32;
+				min-width: 80px;
+			}
+
+			.value {
+				color: #5c3b18;
+				text-align: right;
+				flex: 1;
+
+				.sub {
+					margin-left: 4px;
+					color: #b58a54;
+					font-size: 11px;
+				}
+
+				&.highlight {
+					font-weight: 700;
+					color: #e06a00;
+				}
+
+				&.status {
+					font-weight: 600;
+					color: #1a7f3c; // 결제완료 느낌
+				}
+			}
+		}
+
+		/* 반응형 */
+		@media (max-width: 640px) {
+			.guest-lookup-card {
+				padding: 20px 18px 18px;
+				border-radius: 18px !important;
+			}
+
+			.guest-lookup-row {
+				grid-template-columns: minmax(0, 1fr);
+			}
+		}
+	}
+}

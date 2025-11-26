@@ -2,6 +2,7 @@
 @import '/scss/desktop/property/property.scss';
 @import '/scss/desktop/room/room.scss';
 @import '/scss/desktop/login/login.scss';
+@import '/scss/desktop/reservation/check.scss';
 
 body {
 	-ms-overflow-style: none; /* for Internet Explorer, Edge */
@@ -582,5 +583,34 @@ body::-webkit-scrollbar {
 	p {
 		color: #bdbdbd;
 		text-align: center;
+	}
+}
+
+.bubble-alert {
+	position: absolute;
+	top: 24%;
+	right: 67%;
+	display: inline-block;
+	padding: 8px 14px;
+	background: #333;
+	color: #fff;
+	border-radius: 6px;
+	font-size: 13px;
+	font-weight: 500;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+	white-space: nowrap;
+	z-index: 1000;
+
+	/* 아래의 삼각형 꼬리 */
+	&::after {
+		content: '';
+		position: absolute;
+		bottom: -6px; /* 꼬리 위치 */
+		left: 14px; /* 왼쪽 기준 위치 */
+		width: 0;
+		height: 0;
+		border-left: 6px solid transparent;
+		border-right: 6px solid transparent;
+		border-top: 6px solid #333;
 	}
 }
