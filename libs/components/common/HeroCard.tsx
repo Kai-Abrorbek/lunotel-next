@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Box, Typography, Button, InputBase, Stack } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
@@ -28,11 +28,13 @@ function formatRangeLabel(checkIn: Date | undefined, checkOut: Date | undefined)
 
 	const nights = (checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24);
 
-	const fm = (d: Date) => (d.getMonth() + 1).toString().padStart(2, '0');
-	const fd = (d: Date) => d.getDate().toString().padStart(2, '0');
-	const fw = (d: Date) => WEEK_DAYS[d.getDay()];
+	const fmonth = (d: Date) => (d.getMonth() + 1).toString().padStart(2, '0');
+	const fday = (d: Date) => d.getDate().toString().padStart(2, '0');
+	const fweek = (d: Date) => WEEK_DAYS[d.getDay()];
 
-	return `${fm(checkIn)}.${fd(checkIn)} ${fw(checkIn)} - ${fm(checkOut)}.${fd(checkOut)} ${fw(checkOut)} (${nights}박)`;
+	return `${fmonth(checkIn)}.${fday(checkIn)} ${fweek(checkIn)} - ${fmonth(checkOut)}.${fday(checkOut)} ${fweek(
+		checkOut,
+	)} (${nights}박)`;
 }
 
 function isSameDate(a: Date | undefined, b: Date | undefined) {
@@ -49,9 +51,10 @@ const HeroCard = (props: HeroCardProps) => {
 	const { initialInput, refElement } = props;
 	const router = useRouter();
 	const [searchFilter, setSearchFilter] = useState<PropertiesInquiry>(initialInput);
-	const today = new Date();
-	const tomorrow = new Date(today);
-	tomorrow.setDate(today.getDate() + 1);
+	const today = useMemo(() => {
+		const d = new Date();
+		return new Date(d.getFullYear(), d.getMonth(), d.getDate()); // 00:00
+	}, []);
 	const locationRef: any = useRef();
 	const dateRef: any = useRef();
 	const pesonalRef: any = useRef();
@@ -158,6 +161,12 @@ const HeroCard = (props: HeroCardProps) => {
 		const t = day.getTime();
 		return t > checkIn.getTime() && t < checkOut.getTime();
 	};
+
+	function isPastDate(day: Date | null, baseMonth: Date) {
+		if (!day) return false;
+		const cellDate = new Date(baseMonth.getFullYear(), baseMonth.getMonth(), day.getDate());
+		return cellDate < today;
+	}
 	/**UTIL FANCTION**/
 
 	/** HANDLER **/
@@ -199,6 +208,7 @@ const HeroCard = (props: HeroCardProps) => {
 				});
 				setShowDatePicker(true);
 				setShowKeywordPanel(false);
+				setShowGuestPicker(true);
 				setCheckOut(day);
 			}
 		},
@@ -254,7 +264,6 @@ const HeroCard = (props: HeroCardProps) => {
 					scroll: false,
 				},
 			);
-			console.log(searchFilter);
 		}
 	};
 
@@ -435,18 +444,18 @@ const HeroCard = (props: HeroCardProps) => {
 								const isStart = isSameDate(day, checkIn);
 								const isEnd = isSameDate(day, checkOut);
 								const inSelectedRange = inRange(day);
-
+								const isPastDay = isPastDate(day, currentMonth);
 								const classes = [
 									'hero-datepicker-cell',
 									isStart ? 'start' : '',
 									isEnd ? 'end' : '',
 									inSelectedRange ? 'in-range' : '',
+									isPastDay ? 'past-day' : '',
 								]
 									.filter(Boolean)
 									.join(' ');
-
 								return (
-									<button key={day.toISOString()} className={classes} onClick={() => handleDayClick(day)}>
+									<button key={day.toISOString()} className={classes} onClick={() => !isPastDay && handleDayClick(day)}>
 										{day.getDate()}
 									</button>
 								);
@@ -481,18 +490,19 @@ const HeroCard = (props: HeroCardProps) => {
 								const isStart = isSameDate(day, checkIn);
 								const isEnd = isSameDate(day, checkOut);
 								const inSelectedRange = inRange(day);
-
+								const isPastDay = isPastDate(day, nextMonth);
 								const classes = [
 									'hero-datepicker-cell',
 									isStart ? 'start' : '',
 									isEnd ? 'end' : '',
 									inSelectedRange ? 'in-range' : '',
+									isPastDay ? 'past-day' : '',
 								]
 									.filter(Boolean)
 									.join(' ');
 
 								return (
-									<button key={day.toISOString()} className={classes} onClick={() => handleDayClick(day)}>
+									<button key={day.toISOString()} className={classes} onClick={() => !isPastDay && handleDayClick(day)}>
 										{day.getDate()}
 									</button>
 								);

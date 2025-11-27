@@ -64,7 +64,10 @@ const withLayoutMain = (Component: any) => {
 						<Stack id={'main'}>
 							<Component {...props} />
 						</Stack>
-						{pathname === 'login' || pathname === 'reservation/check' || pathname === 'mypage' ? (
+						{pathname === 'login' ||
+						pathname === 'reservation/check' ||
+						pathname === 'mypage' ||
+						pathname === 'mypage/host' ? (
 							<div></div>
 						) : (
 							<Stack id={'footer'}>

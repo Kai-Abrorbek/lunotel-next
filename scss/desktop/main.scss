@@ -1,9 +1,10 @@
-@import '/scss/desktop/homepage/homepage.scss';
-@import '/scss/desktop/property/property.scss';
-@import '/scss/desktop/room/room.scss';
-@import '/scss/desktop/login/login.scss';
-@import '/scss/desktop/reservation/check.scss';
-@import '/scss/desktop/mypage/mypage.scss';
+@import './homepage/homepage.scss';
+@import './property/property.scss';
+@import './room/room.scss';
+@import './login/login.scss';
+@import './reservation/check.scss';
+@import './mypage/user/mypage.scss';
+@import './mypage/host/hostpage.scss';
 
 body {
 	-ms-overflow-style: none; /* for Internet Explorer, Edge */

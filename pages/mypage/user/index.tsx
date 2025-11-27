@@ -2,12 +2,12 @@
 import React, { useState } from 'react';
 import { Box, Button, Paper, Divider, Stack } from '@mui/material';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import LayoutHome from '../../libs/components/layout/LayoutHome';
-import ReservationHistory from '../../libs/components/mypage/ReservationHistory';
-import RoomResultCard from '../../libs/components/mypage/RoomResultCard';
-import PointPage from '../../libs/components/mypage/PointPage';
-import MyInfoPage from '../../libs/components/mypage/MyInfoPage';
-import SettingsPage from '../../libs/components/mypage/SettingsPage';
+import LayoutHome from '../../../libs/components/layout/LayoutHome';
+import ReservationHistory from '../../../libs/components/mypage/user/ReservationHistory';
+import RoomResultCard from '../../../libs/components/mypage/user/RoomResultCard';
+import PointPage from '../../../libs/components/mypage/user/PointPage';
+import MyInfoPage from '../../../libs/components/mypage/user/MyInfoPage';
+import SettingsPage from '../../../libs/components/mypage/user/SettingsPage';
 
 const MyReservationsPage: React.FC = () => {
 	const [menu, setManu] = useState<string>('reservation-details');
