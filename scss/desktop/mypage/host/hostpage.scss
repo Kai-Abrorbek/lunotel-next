@@ -1,889 +1,1247 @@
-.host-layout {
-	margin-top: 83px;
-	display: flex;
-	height: 90vh;
-	width: 100%;
-	background: #f6f7fb;
-	border-radius: 10px;
-	border: 1px solid #80808026;
-	&__content {
-		flex: 1;
-		padding: 30px 40px;
-		overflow-y: auto;
-		width: 100%;
-	}
-
-	.sidebar {
-		width: 280px;
-		height: 100%;
-		background: linear-gradient(174deg, rgb(14 144 147 / 85%) 0%, rgb(6 69 46) 100%);
-		color: #fff;
-		padding: 24px 0;
+#pc-wrap {
+	.host-layout {
+		margin-top: 83px;
 		display: flex;
-		flex-direction: column;
+		height: 90vh;
+		width: 100%;
+		background: #f6f7fb;
 		border-radius: 10px;
-		&__title {
-			font-size: 18px;
-			font-weight: 600;
-			padding-left: 20px;
-			margin-bottom: 20px;
+		border: 1px solid #80808026;
+		&__content {
+			flex: 1;
+			padding: 30px 40px;
+			overflow-y: auto;
+			width: 100%;
 		}
 
-		&__menu {
+		.sidebar {
+			width: 280px;
+			height: 100%;
+			background: linear-gradient(174deg, rgb(14 144 147 / 85%) 0%, rgb(6 69 46) 100%);
+			color: #fff;
+			padding: 24px 0;
 			display: flex;
 			flex-direction: column;
-			gap: 4px;
-		}
-
-		&__menu-item {
-			padding: 12px 20px;
-			font-size: 15px;
-			color: #cbd5e1; // grayish text
-			cursor: pointer;
 			border-radius: 10px;
-			transition: 0.2s ease;
-
-			&:hover {
-				border-radius: 10px;
-				background: #1f2937; /* hover color */
-				color: #fff;
+			&__title {
+				font-size: 18px;
+				font-weight: 600;
+				padding-left: 20px;
+				margin-bottom: 20px;
 			}
 
-			&.active {
+			&__menu {
+				display: flex;
+				flex-direction: column;
+				gap: 4px;
+			}
+
+			&__menu-item {
+				padding: 12px 20px;
+				font-size: 15px;
+				color: #cbd5e1; // grayish text
+				cursor: pointer;
 				border-radius: 10px;
-				background: #374151; /* selected background */
-				color: #fff;
+				transition: 0.2s ease;
+
+				&:hover {
+					border-radius: 10px;
+					background: #1f2937; /* hover color */
+					color: #fff;
+				}
+
+				&.active {
+					border-radius: 10px;
+					background: #374151; /* selected background */
+					color: #fff;
+					font-weight: 500;
+				}
+			}
+		}
+		.dashboard {
+			display: flex;
+			flex-direction: column;
+			gap: 20px;
+
+			&__header {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+			}
+
+			&__title {
+				font-size: 24px;
+				font-weight: 600;
+				color: #111827;
+			}
+
+			&__stats {
+				display: grid;
+				grid-template-columns: repeat(4, minmax(0, 1fr));
+				gap: 20px;
+			}
+
+			&__stat-card {
+				background: #ffffff;
+				border-radius: 10px;
+				padding: 18px 22px;
+				box-shadow: 0 3px 6px rgba(15, 23, 42, 0.3);
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+			}
+
+			&__stat-label {
+				font-size: 13px;
+				color: #6b7280;
+				margin-bottom: 6px;
+			}
+
+			&__stat-value {
+				font-size: 22px;
+				font-weight: 500;
+				color: #111827;
+
+				&--bold {
+					font-weight: 600;
+				}
+			}
+
+			&__divider {
+				border: none;
+				border-top: 1px solid #e5e7eb;
+				margin: 10px 0 0;
+			}
+
+			&__main-row {
+				display: grid;
+				grid-template-columns: minmax(0, 3fr) minmax(260px, 1fr);
+				gap: 24px;
+				align-items: flex-start;
+			}
+
+			&__reservations {
+				display: flex;
+				flex-direction: column;
+				gap: 12px;
+			}
+
+			&__section-title {
+				font-size: 16px;
+				font-weight: 600;
+				color: #111827;
+			}
+
+			&__reservation-list {
+				display: flex;
+				flex-direction: column;
+				gap: 12px;
+
+				.reservation-card {
+					background: #ffffff;
+					border-radius: 10px;
+					padding: 16px 22px;
+					box-shadow: 0 1px 2px rgba(15, 23, 42, 0.3);
+					display: flex;
+					align-items: center;
+					justify-content: space-between;
+
+					&__left {
+						display: flex;
+						align-items: center;
+						gap: 16px;
+					}
+
+					&__avatar {
+						width: 40px;
+						height: 40px;
+						border-radius: 9999px;
+						background: #e5e7eb;
+						display: flex;
+						align-items: center;
+						justify-content: center;
+						color: #4b5563;
+						font-weight: 600;
+					}
+
+					&__info {
+						display: flex;
+						flex-direction: column;
+						gap: 6px;
+					}
+
+					&__name {
+						font-size: 15px;
+						font-weight: 600;
+						color: #111827;
+					}
+
+					&__room {
+						font-size: 13px;
+						color: #6b7280;
+					}
+
+					&__dates {
+						display: flex;
+						gap: 40px;
+						margin-top: 4px;
+					}
+
+					&__date-item {
+						display: flex;
+						flex-direction: column;
+						gap: 2px;
+					}
+
+					&__date-label {
+						font-size: 12px;
+						color: #9ca3af;
+					}
+
+					&__date-value {
+						font-size: 13px;
+						color: #4b5563;
+					}
+
+					&__status-wrap {
+						display: flex;
+						align-items: flex-start;
+					}
+
+					&__status {
+						font-size: 12px;
+						padding: 6px 12px;
+						border-radius: 10px;
+						background: #e0ecff;
+						color: #2563eb;
+						font-weight: 500;
+					}
+				}
+			}
+
+			&__quick-actions {
+				display: flex;
+				flex-direction: column;
+				gap: 12px;
+
+				.quick-card {
+					background: #ffffff;
+					border-radius: 10px;
+					padding: 18px 20px;
+					box-shadow: 0 1px 2px rgba(15, 23, 42, 0.6);
+					display: flex;
+					flex-direction: column;
+					gap: 0;
+
+					&__item {
+						border: none;
+						outline: none;
+						background: transparent;
+						padding: 6px 0;
+						display: flex;
+						align-items: center;
+						gap: 10px;
+						font-size: 14px;
+						color: #2563eb;
+						cursor: pointer;
+					}
+
+					&__icon {
+						font-size: 16px;
+
+						&--square {
+							font-size: 14px;
+						}
+					}
+
+					&__text {
+						font-size: 14px;
+					}
+
+					&__divider {
+						height: 1px;
+						background: #e5e7eb;
+						margin: 6px 0;
+					}
+				}
+			}
+		}
+		.calendar-page {
+			display: flex;
+			flex-direction: column;
+			gap: 20px;
+
+			&__header {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+			}
+
+			&__title {
+				font-size: 22px;
+				font-weight: 600;
+				color: #111827;
+			}
+
+			&__room-select {
+				width: 250px;
+				// MUI Select가 꽉 차게
+				.MuiInputBase-root {
+					background-color: #ffffff;
+					font-size: 14px;
+				}
+			}
+
+			&__card {
+				background: #ffffff;
+				border-radius: 12px;
+				padding: 24px 28px 28px;
+				box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+			}
+
+			&__card-header {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				margin-bottom: 24px;
+				height: 40px;
+			}
+
+			&__month-label {
+				font-size: 18px;
+				font-weight: 600;
+				color: #111827;
+				text-align: center;
+			}
+
+			&__nav-button {
+				font-size: 15px;
+				text-transform: none;
+				padding: 8px 16px;
+				border-radius: 8px;
+				border-color: #e5e7eb;
+				color: #111827;
+				background-color: #ffffff;
+
+				&:hover {
+					border-color: #d1d5db;
+					background-color: #f9fafb;
+				}
+			}
+
+			&__weekday-row {
+				display: grid;
+				grid-template-columns: repeat(7, minmax(0, 1fr));
+				margin-bottom: 10px;
+				padding: 0 4px;
+			}
+
+			&__weekday {
+				text-align: center;
+				font-size: 13px;
+				color: #6b7280;
+
+				&--sun {
+					color: #ef4444;
+				}
+
+				&--sat {
+					color: #2563eb;
+				}
+			}
+
+			&__grid {
+				display: grid;
+				grid-template-columns: repeat(7, minmax(0, 1fr));
+				grid-auto-rows: 72px;
+				gap: 6px;
+			}
+
+			&__cell {
+				background-color: #ffffff;
+				border-radius: 8px;
+				border: 1px solid #e5e7eb;
+				padding: 6px 8px;
+				font-size: 13px;
+				color: #111827;
+				cursor: pointer;
+				display: flex;
+				align-items: flex-start;
+				justify-content: flex-start;
+				transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+
+				&:hover {
+					border-color: #d1d5db;
+					box-shadow: 0 0 0 1px rgba(148, 163, 184, 0.3);
+				}
+
+				&--empty {
+					cursor: default;
+					background-color: #ffffff;
+					// 빈 칸이지만 테두리는 유지
+				}
+
+				&--reserved {
+					background: var(--resv-bg, #fee2e2);
+					border-color: var(--resv-border, #fca5a5);
+					color: var(--resv-text, #b91c1c);
+				}
+
+				&--in-range {
+					background-color: #fcf2cc;
+					border-color: #facc15;
+					box-shadow: 0 0 0 1px rgba(250, 204, 21, 0.5);
+				}
+
+				&--past {
+					color: #dadada;
+				}
+			}
+
+			&__cell-day {
 				font-weight: 500;
 			}
 		}
-	}
-	.dashboard {
-		display: flex;
-		flex-direction: column;
-		gap: 20px;
+		.rooms-page {
+			background-color: #f4f6fb;
+			min-height: 100vh;
+			font-family: 'Pretendard', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
+			&__header {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				margin-bottom: 24px;
+				.css-19iogpu-MuiTypography-root {
+					font-weight: 700 !important;
+					font-size: 23px;
+				}
+				&__title {
+					font-weight: 700 !important;
+				}
+			}
+			&__add-button {
+				text-transform: none !important;
+				border-radius: 10px !important;
+				padding: 8px 20px !important;
+				font-weight: 600 !important;
+				color: white;
+				background-color: #ee4c06 !important;
+			}
+			&__tabs {
+				display: flex;
+				margin-bottom: 24px;
+				justify-content: space-between;
+				align-items: center;
+				div {
+					display: flex;
+					gap: 5px;
+				}
+				.search-box {
+					display: flex;
+					align-items: center;
+					gap: 6px;
+
+					.search-input {
+						width: 260px;
+						padding: 8px 14px;
+						border: 1px solid #d1d5db;
+						border-radius: 8px;
+						font-size: 14px;
+						transition: 0.15s;
+
+						&:focus {
+							border-color: #2563eb;
+							box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+							outline: none;
+						}
+					}
+
+					.search-btn {
+						background: #2563eb;
+						color: white;
+						padding: 7px 30px;
+						border: none;
+						border-radius: 8px;
+						font-size: 14px;
+						font-weight: 600;
+						cursor: pointer;
+						transition: 0.15s;
+
+						&:hover {
+							background: #1d4ed8;
+						}
+					}
+				}
+				/* 탭 */
+				.rooms-tab {
+					padding: 7px 14px;
+					border-radius: 10px;
+					border: 1px solid #e5e7eb;
+					background-color: #ffffff;
+					font-size: 14px;
+					cursor: pointer;
+					color: #6b7280;
+					transition: all 0.15s ease;
+
+					&--active {
+						border-color: #2563eb;
+						background-color: rgba(37, 99, 235, 0.06);
+						color: #2563eb;
+						font-weight: 600;
+					}
+				}
+			}
+
+			&__grid {
+				display: grid;
+				grid-template-columns: repeat(3, minmax(305px, 1fr));
+				gap: 24px;
+				/* 카드 */
+				.room-card {
+					background-color: #ffffff;
+					border-radius: 18px;
+					box-shadow: 0 10px 30px rgba(15, 23, 42, 0.1);
+					overflow: hidden;
+					display: flex;
+					flex-direction: column;
+					max-height: 410px;
+					&__image {
+						height: 180px;
+						display: flex;
+						align-items: center;
+						justify-content: center;
+						border-radius: 18px 18px 0 0;
+
+						// &--bed {
+						// 	background: linear-gradient(135deg, #4338ca, #2563eb);
+						// }
+
+						// &--wave {
+						// 	background: linear-gradient(135deg, #0369a1, #22c55e);
+						// }
+
+						// &--building {
+						// 	background: linear-gradient(135deg, #e11d48, #f97316);
+						// }
+					}
+
+					&__image-icon {
+						font-size: 64px !important;
+						color: #f9fafb;
+					}
+
+					&__body {
+						padding: 9px 20px 0px;
+						display: flex;
+						flex-direction: column;
+						gap: 4px;
+						max-height: 225px;
+					}
+
+					&__header {
+						display: flex;
+						justify-content: space-between;
+						align-items: flex-start;
+						gap: 8px;
+					}
+
+					&__code {
+						font-weight: 700;
+						font-size: 16px;
+						margin-bottom: 2px;
+					}
+
+					&__name {
+						font-size: 13px;
+						color: #6b7280;
+					}
+
+					&__status {
+						padding: 4px 10px;
+						border-radius: 999px;
+						font-size: 12px;
+						font-weight: 600;
+						white-space: nowrap;
+
+						&--available {
+							background-color: #defce7;
+							color: #15803d;
+						}
+
+						&--occupied {
+							background-color: #e0e7ff;
+							color: #3730a3;
+						}
+
+						&--cleaning {
+							background-color: #fef3c7;
+							color: #92400e;
+						}
+
+						&--maintenance {
+							background-color: #fee2e2;
+							color: #b91c1c;
+						}
+					}
+
+					&__current-stay {
+						padding: 3px 12px;
+						border-radius: 6px;
+						background-color: #e0f2fe;
+						font-size: 11px;
+					}
+
+					&__stay-line {
+						display: flex;
+						gap: 4px;
+					}
+
+					&__stay-label {
+						color: #64748b;
+						font-weight: 500;
+					}
+
+					&__stay-value {
+						color: #0f172a;
+						font-weight: 600;
+					}
+
+					&__meta {
+						margin-top: 4px;
+						font-size: 12px;
+
+						&-row {
+							display: flex;
+							justify-content: space-between;
+							color: #9ca3af;
+
+							&--bold {
+								margin-top: 2px;
+								color: #111827;
+								font-weight: 600;
+							}
+						}
+					}
+
+					&__amenities {
+						display: flex;
+						flex-wrap: nowrap;
+						gap: 4px;
+						margin-top: 6px;
+						overflow: hidden;
+					}
+
+					&__amenity-chip {
+						font-size: 11px !important;
+						height: 22px !important;
+						border-radius: 999px !important;
+						background-color: #f3f4f6 !important;
+						color: #4b5563 !important;
+					}
+
+					&__footer {
+						display: flex;
+						justify-content: space-between;
+						align-items: flex-end;
+						margin-bottom: 10px;
+					}
+
+					&__price-label {
+						font-size: 12px;
+						color: #9ca3af;
+					}
+
+					&__price-value {
+						display: block;
+						margin-top: 2px;
+						font-weight: 700;
+						font-size: 18px;
+					}
+
+					&__actions {
+						display: flex;
+						gap: 8px;
+					}
+
+					&__calendar-btn {
+						text-transform: none !important;
+						border-radius: 999px !important;
+						font-size: 12px !important;
+						padding: 4px 12px !important;
+					}
+
+					&__reserve-btn {
+						text-transform: none !important;
+						border-radius: 10px !important;
+						font-size: 14px !important;
+						padding: 7px 15px !important;
+						background-color: #f6510a !important;
+						color: white;
+						font-weight: 600;
+					}
+				}
+			}
+
+			.rooms-page__pagination {
+				margin-top: 30px;
+				width: 100%;
+				height: 50px;
+				align-items: center;
+				justify-content: center;
+			}
+		}
+	}
+
+	/* ===== 예약 달력 모달 ===== */
+	.css-1ohskrp-MuiPaper-root-MuiDialog-paper {
+		top: 35px;
+	}
+	.room-calendar-dialog {
+		border-radius: 16px !important;
+		overflow: hidden;
+	}
+
+	.room-calendar {
+		padding: 24px 28px 20px;
+		min-height: 768px;
 		&__header {
 			display: flex;
-			align-items: center;
 			justify-content: space-between;
+			align-items: flex-start;
+			margin-bottom: 16px;
 		}
 
-		&__title {
-			font-size: 24px;
-			font-weight: 600;
-			color: #111827;
+		&__room-code {
+			font-size: 18px;
+			font-weight: 700;
 		}
 
-		&__stats {
-			display: grid;
-			grid-template-columns: repeat(4, minmax(0, 1fr));
-			gap: 20px;
-		}
-
-		&__stat-card {
-			background: #ffffff;
-			border-radius: 10px;
-			padding: 18px 22px;
-			box-shadow: 0 3px 6px rgba(15, 23, 42, 0.3);
-			display: flex;
-			flex-direction: column;
-			justify-content: center;
-		}
-
-		&__stat-label {
+		&__room-subtitle {
+			margin-top: 4px;
 			font-size: 13px;
-			color: #6b7280;
-			margin-bottom: 6px;
+			color: #9ca3af;
 		}
 
-		&__stat-value {
-			font-size: 22px;
-			font-weight: 500;
-			color: #111827;
+		&__month-nav {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 16px;
+			margin-bottom: 16px;
+		}
 
-			&--bold {
+		&__month-btn {
+			text-transform: none !important;
+			border-radius: 999px !important;
+			font-size: 13px !important;
+			padding: 4px 12px !important;
+			display: flex;
+			align-items: center;
+			gap: 4px;
+		}
+
+		&__month-label {
+			font-weight: 700;
+			font-size: 16px;
+		}
+
+		&__weekdays {
+			display: grid;
+			grid-template-columns: repeat(7, 1fr);
+			margin-bottom: 8px;
+			font-size: 13px;
+			text-align: center;
+			color: #9ca3af;
+		}
+
+		&__weekday {
+			padding: 6px 0;
+		}
+
+		&__grid {
+			display: grid;
+			grid-template-columns: repeat(7, 1fr);
+			gap: 8px;
+			margin-bottom: 20px;
+			max-height: 540px;
+			min-height: 447px;
+		}
+
+		&__cell {
+			height: 86px;
+			border-radius: 12px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 16px;
+			background-color: #ffffff;
+			border: 1px solid #e5e7eb;
+			padding: 6px 8px;
+			color: #111827;
+			cursor: pointer;
+			transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+			&--empty {
+				border: none;
+				background: transparent;
+				cursor: default;
+			}
+
+			&--today {
+				border-color: #2563eb;
+				box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.4);
+				font-weight: 700;
+				color: #2563eb;
+			}
+
+			&--reserved {
+				background-color: #f97316;
+				border-color: #ea580c;
+				color: #ffffff;
+				font-weight: 600;
+			}
+
+			&--past {
+				color: #e4e0e0;
+				font-weight: 600;
+			}
+
+			&--start {
+				background-color: #f97316;
+				border-color: #ea580c;
+				color: #ffffff;
+				font-weight: 600;
+			}
+
+			&--range {
+				background-color: #f5bc94;
+				border-color: #ea580c;
+				color: #ffffff;
+				font-weight: 600;
+			}
+
+			&--end {
+				background-color: #f97316;
+				border-color: #ea580c;
+				color: #ffffff;
 				font-weight: 600;
 			}
 		}
 
-		&__divider {
-			border: none;
+		&__legend {
 			border-top: 1px solid #e5e7eb;
-			margin: 10px 0 0;
-		}
-
-		&__main-row {
-			display: grid;
-			grid-template-columns: minmax(0, 3fr) minmax(260px, 1fr);
-			gap: 24px;
-			align-items: flex-start;
-		}
-
-		&__reservations {
-			display: flex;
-			flex-direction: column;
-			gap: 12px;
-		}
-
-		&__section-title {
-			font-size: 16px;
-			font-weight: 600;
-			color: #111827;
-		}
-
-		&__reservation-list {
-			display: flex;
-			flex-direction: column;
-			gap: 12px;
-
-			.reservation-card {
-				background: #ffffff;
-				border-radius: 10px;
-				padding: 16px 22px;
-				box-shadow: 0 1px 2px rgba(15, 23, 42, 0.3);
-				display: flex;
-				align-items: center;
-				justify-content: space-between;
-
-				&__left {
-					display: flex;
-					align-items: center;
-					gap: 16px;
-				}
-
-				&__avatar {
-					width: 40px;
-					height: 40px;
-					border-radius: 9999px;
-					background: #e5e7eb;
-					display: flex;
-					align-items: center;
-					justify-content: center;
-					color: #4b5563;
-					font-weight: 600;
-				}
-
-				&__info {
-					display: flex;
-					flex-direction: column;
-					gap: 6px;
-				}
-
-				&__name {
-					font-size: 15px;
-					font-weight: 600;
-					color: #111827;
-				}
-
-				&__room {
-					font-size: 13px;
-					color: #6b7280;
-				}
-
-				&__dates {
-					display: flex;
-					gap: 40px;
-					margin-top: 4px;
-				}
-
-				&__date-item {
-					display: flex;
-					flex-direction: column;
-					gap: 2px;
-				}
-
-				&__date-label {
-					font-size: 12px;
-					color: #9ca3af;
-				}
-
-				&__date-value {
-					font-size: 13px;
-					color: #4b5563;
-				}
-
-				&__status-wrap {
-					display: flex;
-					align-items: flex-start;
-				}
-
-				&__status {
-					font-size: 12px;
-					padding: 6px 12px;
-					border-radius: 10px;
-					background: #e0ecff;
-					color: #2563eb;
-					font-weight: 500;
-				}
-			}
-		}
-
-		&__quick-actions {
-			display: flex;
-			flex-direction: column;
-			gap: 12px;
-
-			.quick-card {
-				background: #ffffff;
-				border-radius: 10px;
-				padding: 18px 20px;
-				box-shadow: 0 1px 2px rgba(15, 23, 42, 0.6);
-				display: flex;
-				flex-direction: column;
-				gap: 0;
-
-				&__item {
-					border: none;
-					outline: none;
-					background: transparent;
-					padding: 6px 0;
-					display: flex;
-					align-items: center;
-					gap: 10px;
-					font-size: 14px;
-					color: #2563eb;
-					cursor: pointer;
-				}
-
-				&__icon {
-					font-size: 16px;
-
-					&--square {
-						font-size: 14px;
-					}
-				}
-
-				&__text {
-					font-size: 14px;
-				}
-
-				&__divider {
-					height: 1px;
-					background: #e5e7eb;
-					margin: 6px 0;
-				}
-			}
-		}
-	}
-	.calendar-page {
-		display: flex;
-		flex-direction: column;
-		gap: 20px;
-
-		&__header {
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
-		}
-
-		&__title {
-			font-size: 22px;
-			font-weight: 600;
-			color: #111827;
-		}
-
-		&__room-select {
-			width: 250px;
-			// MUI Select가 꽉 차게
-			.MuiInputBase-root {
-				background-color: #ffffff;
-				font-size: 14px;
-			}
-		}
-
-		&__card {
-			background: #ffffff;
-			border-radius: 12px;
-			padding: 24px 28px 28px;
-			box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
-		}
-
-		&__card-header {
+			padding-top: 12px;
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
-			margin-bottom: 24px;
-			height: 40px;
-		}
-
-		&__month-label {
-			font-size: 18px;
-			font-weight: 600;
-			color: #111827;
-			text-align: center;
-		}
-
-		&__nav-button {
-			font-size: 15px;
-			text-transform: none;
-			padding: 8px 16px;
-			border-radius: 8px;
-			border-color: #e5e7eb;
-			color: #111827;
-			background-color: #ffffff;
-
-			&:hover {
-				border-color: #d1d5db;
-				background-color: #f9fafb;
-			}
-		}
-
-		&__weekday-row {
-			display: grid;
-			grid-template-columns: repeat(7, minmax(0, 1fr));
-			margin-bottom: 10px;
-			padding: 0 4px;
-		}
-
-		&__weekday {
-			text-align: center;
 			font-size: 13px;
 			color: #6b7280;
-
-			&--sun {
-				color: #ef4444;
-			}
-
-			&--sat {
-				color: #2563eb;
+			div {
+				display: flex;
+				flex-direction: row;
+				gap: 10px;
 			}
 		}
 
-		&__grid {
-			display: grid;
-			grid-template-columns: repeat(7, minmax(0, 1fr));
-			grid-auto-rows: 72px;
+		&__legend-title {
+			font-weight: 600;
+			margin-right: 4px;
+		}
+
+		&__legend-item {
+			display: flex;
+			align-items: center;
 			gap: 6px;
 		}
 
-		&__cell {
-			background-color: #ffffff;
-			border-radius: 8px;
-			border: 1px solid #e5e7eb;
-			padding: 6px 8px;
-			font-size: 13px;
-			color: #111827;
-			cursor: pointer;
-			display: flex;
-			align-items: flex-start;
-			justify-content: flex-start;
-			transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
-
-			&:hover {
-				border-color: #d1d5db;
-				box-shadow: 0 0 0 1px rgba(148, 163, 184, 0.3);
-			}
-
-			&--empty {
-				cursor: default;
-				background-color: #ffffff;
-				// 빈 칸이지만 테두리는 유지
-			}
+		&__legend-dot {
+			width: 14px;
+			height: 14px;
+			border-radius: 4px;
+			border: 1px solid transparent;
 
 			&--reserved {
-				background: var(--resv-bg, #fee2e2);
-				border-color: var(--resv-border, #fca5a5);
-				color: var(--resv-text, #b91c1c);
+				background-color: #f97316;
+				border-color: #ea580c;
 			}
 
-			&--in-range {
-				background-color: #fcf2cc;
-				border-color: #facc15;
-				box-shadow: 0 0 0 1px rgba(250, 204, 21, 0.5);
+			&--today {
+				background-color: #2563eb;
+				border-color: #1d4ed8;
 			}
 
-			&--past {
-				color: #dadada;
+			&--available {
+				background-color: #ffffff;
+				border-color: #d1d5db;
 			}
 		}
 
-		&__cell-day {
-			font-weight: 500;
-		}
-	}
-	.rooms-page {
-		background-color: #f4f6fb;
-		min-height: 100vh;
-		font-family: 'Pretendard', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-
-		&__header {
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
-			margin-bottom: 24px;
-			.css-19iogpu-MuiTypography-root {
-				font-weight: 700 !important;
-				font-size: 23px;
-			}
-			&__title {
-				font-weight: 700 !important;
-			}
-		}
 		&__add-button {
 			text-transform: none !important;
 			border-radius: 10px !important;
-			padding: 8px 20px !important;
+			padding: 12px 20px !important;
 			font-weight: 600 !important;
 			color: white;
 			background-color: #ee4c06 !important;
 		}
-		&__tabs {
+		.css-guvl2y-MuiButtonBase-root-MuiButton-root {
+			color: white;
+		}
+	}
+
+	.reservation-page-contanier {
+		.header-actions {
 			display: flex;
-			margin-bottom: 24px;
 			justify-content: space-between;
 			align-items: center;
-			div {
-				display: flex;
-				gap: 5px;
-			}
-			.search-box {
-				display: flex;
-				align-items: center;
-				gap: 6px;
+			margin-bottom: 24px;
 
-				.search-input {
-					width: 260px;
-					padding: 8px 14px;
-					border: 1px solid #d1d5db;
-					border-radius: 8px;
-					font-size: 14px;
-					transition: 0.15s;
-
-					&:focus {
-						border-color: #2563eb;
-						box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
-						outline: none;
-					}
-				}
-
-				.search-btn {
-					background: #2563eb;
-					color: white;
-					padding: 7px 30px;
-					border: none;
-					border-radius: 8px;
-					font-size: 14px;
-					font-weight: 600;
-					cursor: pointer;
-					transition: 0.15s;
-
-					&:hover {
-						background: #1d4ed8;
-					}
-				}
-			}
-			/* 탭 */
-			.rooms-tab {
-				padding: 7px 14px;
-				border-radius: 10px;
-				border: 1px solid #e5e7eb;
-				background-color: #ffffff;
+			.btn {
+				padding: 10px 20px;
+				border-radius: 8px;
 				font-size: 14px;
+				font-weight: 500;
 				cursor: pointer;
-				color: #6b7280;
-				transition: all 0.15s ease;
+				border: none;
+				display: inline-flex;
+				align-items: center;
+				gap: 8px;
+			}
 
-				&--active {
-					border-color: #2563eb;
-					background-color: rgba(37, 99, 235, 0.06);
-					color: #2563eb;
+			.btn-primary {
+				background-color: #2563eb;
+				color: white;
+			}
+		}
+		/* 총 통계 영역 */
+		.stats-grid-3 {
+			display: grid;
+			grid-template-columns: repeat(3, 1fr);
+			gap: 16px;
+			margin-bottom: 32px;
+		}
+
+		.stat-card {
+			background: white;
+			border-radius: 12px;
+			padding: 20px 20px;
+			text-align: center;
+			border: 1px solid #e5e7eb;
+			box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+
+			.stat-label {
+				font-size: 14px;
+				color: #6b7280;
+				margin-bottom: 4px;
+			}
+
+			.stat-value {
+				font-size: 24px;
+				font-weight: bold;
+				color: #1f2937;
+			}
+
+			/* 검색 + 상태 필터 */
+			.search-filter-row {
+				display: flex;
+				gap: 12px;
+				margin-bottom: 20px;
+
+				.search-wrapper {
+					flex: 1;
+					position: relative;
+
+					.search-icon {
+						position: absolute;
+						left: 12px;
+						top: 50%;
+						transform: translateY(-50%);
+						color: #9ca3af;
+					}
+
+					.search-input-with-icon {
+						width: 100%;
+						padding: 10px 16px 10px 40px;
+						border: 1px solid #e5e7eb;
+						border-radius: 8px;
+						font-size: 14px;
+					}
+				}
+
+				.filter-select {
+					padding: 10px 16px;
+					border: 1px solid #e5e7eb;
+					border-radius: 8px;
+					font-size: 14px;
+					background: white;
+					cursor: pointer;
+					min-width: 150px;
+				}
+			}
+
+			/* 예약 item 목록 */
+			.reservation-item {
+				padding: 16px;
+				background: white;
+				border-radius: 8px;
+				cursor: pointer;
+				margin-bottom: 12px;
+				border: 1px solid #e5e7eb;
+				transition: all 0.2s;
+
+				&:hover {
+					box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+					transform: translateY(-2px);
+				}
+
+				.reservation-item-header {
+					display: flex;
+					justify-content: space-between;
+					align-items: center;
+					margin-bottom: 12px;
+
+					.reservation-id {
+						font-weight: 600;
+						color: #2563eb;
+						font-size: 14px;
+					}
+					/* 예약 상태 표시 */
+					.status-badge {
+						font-size: 12px;
+						padding: 4px 12px;
+						border-radius: 9999px;
+
+						&.status-confirmed {
+							background-color: #dbeafe;
+							color: #1e40af;
+						}
+
+						&.status-checked-in {
+							background-color: #d1fae5;
+							color: #065f46;
+						}
+
+						&.status-pending {
+							background-color: #fef3c7;
+							color: #92400e;
+						}
+
+						&.status-completed {
+							background-color: #f3f4f6;
+							color: #374151;
+						}
+
+						&.status-cancelled {
+							background-color: #fee2e2;
+							color: #991b1b;
+						}
+					}
+				}
+				.reservation-item-body {
+					display: flex;
+					align-items: center;
+					gap: 16px;
+
+					.reservation-avatar {
+						width: 56px;
+						height: 56px;
+						border-radius: 50%;
+						background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+						display: flex;
+						align-items: center;
+						justify-content: center;
+						color: white;
+						font-size: 24px;
+						font-weight: 600;
+						flex-shrink: 0;
+					}
+
+					.reservation-item-info {
+						flex: 1;
+
+						.reservation-guest-name {
+							font-size: 16px;
+							font-weight: 600;
+							color: #1f2937;
+							margin-bottom: 4px;
+						}
+
+						.reservation-room-info {
+							font-size: 13px;
+							color: #6b7280;
+							margin-bottom: 8px;
+						}
+
+						.reservation-dates {
+							display: flex;
+							align-items: center;
+							gap: 8px;
+							font-size: 13px;
+							color: #6b7280;
+
+							.date-separator {
+								color: #9ca3af;
+							}
+						}
+					}
+
+					.reservation-item-actions {
+						display: flex;
+						flex-direction: column;
+						gap: 8px;
+						align-items: flex-end;
+
+						.reservation-amount {
+							font-size: 20px;
+							font-weight: 700;
+							color: #1f2937;
+						}
+					}
+				}
+			}
+			/* 빈 상태 */
+			.empty-state {
+				text-align: center;
+				padding: 60px 20px;
+
+				.empty-state-icon {
+					font-size: 64px;
+					margin-bottom: 16px;
+					opacity: 0.5;
+				}
+
+				.empty-state-title {
+					font-size: 18px;
 					font-weight: 600;
+					color: #1f2937;
+				}
+
+				.empty-state-text {
+					font-size: 14px;
+					color: #6b7280;
 				}
 			}
 		}
+		/* 상세 모달 */
+		.modal-overlay {
+			position: fixed;
+			inset: 0;
+			background-color: rgba(0, 0, 0, 0.5);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			z-index: 1000;
+			.modal-content {
+				background: white;
+				padding: 24px;
+				border-radius: 12px;
+				width: 90%;
+				max-width: 700px;
+				max-height: 80vh;
+				overflow: auto;
+				box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
 
-		&__grid {
-			display: grid;
-			grid-template-columns: repeat(3, minmax(305px, 1fr));
-			gap: 24px;
-			/* 카드 */
-			.room-card {
-				background-color: #ffffff;
-				border-radius: 18px;
-				box-shadow: 0 10px 30px rgba(15, 23, 42, 0.1);
-				overflow: hidden;
-				display: flex;
-				flex-direction: column;
-				max-height: 410px;
-				&__image {
-					height: 180px;
-					display: flex;
-					align-items: center;
-					justify-content: center;
-					border-radius: 18px 18px 0 0;
-
-					// &--bed {
-					// 	background: linear-gradient(135deg, #4338ca, #2563eb);
-					// }
-
-					// &--wave {
-					// 	background: linear-gradient(135deg, #0369a1, #22c55e);
-					// }
-
-					// &--building {
-					// 	background: linear-gradient(135deg, #e11d48, #f97316);
-					// }
-				}
-
-				&__image-icon {
-					font-size: 64px !important;
-					color: #f9fafb;
-				}
-
-				&__body {
-					padding: 9px 20px 0px;
-					display: flex;
-					flex-direction: column;
-					gap: 4px;
-					max-height: 225px;
-				}
-
-				&__header {
+				.modal-header {
 					display: flex;
 					justify-content: space-between;
-					align-items: flex-start;
-					gap: 8px;
-				}
+					align-items: center;
+					margin-bottom: 20px;
 
-				&__code {
-					font-weight: 700;
-					font-size: 16px;
-					margin-bottom: 2px;
-				}
-
-				&__name {
-					font-size: 13px;
-					color: #6b7280;
-				}
-
-				&__status {
-					padding: 4px 10px;
-					border-radius: 999px;
-					font-size: 12px;
-					font-weight: 600;
-					white-space: nowrap;
-
-					&--available {
-						background-color: #defce7;
-						color: #15803d;
-					}
-
-					&--occupied {
-						background-color: #e0e7ff;
-						color: #3730a3;
-					}
-
-					&--cleaning {
-						background-color: #fef3c7;
-						color: #92400e;
-					}
-
-					&--maintenance {
-						background-color: #fee2e2;
-						color: #b91c1c;
+					.close-btn {
+						padding: 8px;
+						background: #f3f4f6;
+						border: none;
+						border-radius: 6px;
+						cursor: pointer;
+						font-size: 18px;
+						color: #6b7280;
 					}
 				}
 
-				&__current-stay {
-					padding: 3px 12px;
-					border-radius: 6px;
-					background-color: #e0f2fe;
-					font-size: 11px;
-				}
+				.modal-info-section {
+					background: #f9fafb;
+					border-radius: 8px;
+					padding: 16px;
+					margin-bottom: 16px;
 
-				&__stay-line {
-					display: flex;
-					gap: 4px;
-				}
+					.modal-info-title {
+						font-size: 14px;
+						font-weight: 600;
+						color: #6b7280;
+						margin-bottom: 12px;
+					}
 
-				&__stay-label {
-					color: #64748b;
-					font-weight: 500;
-				}
-
-				&__stay-value {
-					color: #0f172a;
-					font-weight: 600;
-				}
-
-				&__meta {
-					margin-top: 4px;
-					font-size: 12px;
-
-					&-row {
+					.modal-info-row {
 						display: flex;
 						justify-content: space-between;
-						color: #9ca3af;
+						padding: 8px 0;
+						border-bottom: 1px solid #e5e7eb;
 
-						&--bold {
-							margin-top: 2px;
-							color: #111827;
-							font-weight: 600;
+						&:last-child {
+							border-bottom: none;
+						}
+
+						.modal-info-label {
+							font-size: 14px;
+							color: #6b7280;
+						}
+
+						.modal-info-value {
+							font-size: 14px;
+							color: #1f2937;
+							font-weight: 500;
 						}
 					}
 				}
 
-				&__amenities {
+				.modal-total {
+					background: #eff6ff;
+					border: 1px solid #bfdbfe;
+					border-radius: 8px;
+					padding: 16px;
+					margin: 20px 0;
+
+					.modal-total-row {
+						display: flex;
+						justify-content: space-between;
+						align-items: center;
+					}
+
+					.modal-total-label {
+						font-size: 16px;
+						color: #1e40af;
+						font-weight: 600;
+					}
+
+					.modal-total-value {
+						font-size: 28px;
+						color: #1e40af;
+						font-weight: 700;
+					}
+				}
+
+				.modal-actions {
 					display: flex;
-					flex-wrap: nowrap;
-					gap: 4px;
-					margin-top: 6px;
-					overflow: hidden;
-				}
+					gap: 12px;
 
-				&__amenity-chip {
-					font-size: 11px !important;
-					height: 22px !important;
-					border-radius: 999px !important;
-					background-color: #f3f4f6 !important;
-					color: #4b5563 !important;
-				}
+					.btn {
+						flex: 1;
+						padding: 10px 16px;
+						border-radius: 8px;
+						cursor: pointer;
 
-				&__footer {
-					display: flex;
-					justify-content: space-between;
-					align-items: flex-end;
-					margin-bottom: 10px;
-				}
+						&.btn-secondary {
+							background: white;
+							border: 1px solid #e5e7eb;
+						}
 
-				&__price-label {
-					font-size: 12px;
-					color: #9ca3af;
-				}
-
-				&__price-value {
-					display: block;
-					margin-top: 2px;
-					font-weight: 700;
-					font-size: 18px;
-				}
-
-				&__actions {
-					display: flex;
-					gap: 8px;
-				}
-
-				&__calendar-btn {
-					text-transform: none !important;
-					border-radius: 999px !important;
-					font-size: 12px !important;
-					padding: 4px 12px !important;
-				}
-
-				&__reserve-btn {
-					text-transform: none !important;
-					border-radius: 10px !important;
-					font-size: 14px !important;
-					padding: 7px 15px !important;
-					background-color: #f6510a !important;
-					color: white;
-					font-weight: 600;
+						&.btn-danger {
+							background: #ef4444;
+							color: white;
+						}
+					}
 				}
 			}
 		}
-
-		.rooms-page__pagination {
-			margin-top: 30px;
-			width: 100%;
-			height: 50px;
-			align-items: center;
-			justify-content: center;
-		}
-	}
-}
-
-/* ===== 예약 달력 모달 ===== */
-.css-1ohskrp-MuiPaper-root-MuiDialog-paper {
-	top: 35px;
-}
-.room-calendar-dialog {
-	border-radius: 16px !important;
-	overflow: hidden;
-}
-
-.room-calendar {
-	padding: 24px 28px 20px;
-	min-height: 768px;
-	&__header {
-		display: flex;
-		justify-content: space-between;
-		align-items: flex-start;
-		margin-bottom: 16px;
-	}
-
-	&__room-code {
-		font-size: 18px;
-		font-weight: 700;
-	}
-
-	&__room-subtitle {
-		margin-top: 4px;
-		font-size: 13px;
-		color: #9ca3af;
-	}
-
-	&__month-nav {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		gap: 16px;
-		margin-bottom: 16px;
-	}
-
-	&__month-btn {
-		text-transform: none !important;
-		border-radius: 999px !important;
-		font-size: 13px !important;
-		padding: 4px 12px !important;
-		display: flex;
-		align-items: center;
-		gap: 4px;
-	}
-
-	&__month-label {
-		font-weight: 700;
-		font-size: 16px;
-	}
-
-	&__weekdays {
-		display: grid;
-		grid-template-columns: repeat(7, 1fr);
-		margin-bottom: 8px;
-		font-size: 13px;
-		text-align: center;
-		color: #9ca3af;
-	}
-
-	&__weekday {
-		padding: 6px 0;
-	}
-
-	&__grid {
-		display: grid;
-		grid-template-columns: repeat(7, 1fr);
-		gap: 8px;
-		margin-bottom: 20px;
-		max-height: 540px;
-		min-height: 447px;
-	}
-
-	&__cell {
-		height: 86px;
-		border-radius: 12px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		font-size: 16px;
-		background-color: #ffffff;
-		border: 1px solid #e5e7eb;
-		padding: 6px 8px;
-		color: #111827;
-		cursor: pointer;
-		transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
-		&--empty {
-			border: none;
-			background: transparent;
-			cursor: default;
-		}
-
-		&--today {
-			border-color: #2563eb;
-			box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.4);
-			font-weight: 700;
-			color: #2563eb;
-		}
-
-		&--reserved {
-			background-color: #f97316;
-			border-color: #ea580c;
-			color: #ffffff;
-			font-weight: 600;
-		}
-
-		&--past {
-			color: #e4e0e0;
-			font-weight: 600;
-		}
-
-		&--start {
-			background-color: #f97316;
-			border-color: #ea580c;
-			color: #ffffff;
-			font-weight: 600;
-		}
-
-		&--range {
-			background-color: #f5bc94;
-			border-color: #ea580c;
-			color: #ffffff;
-			font-weight: 600;
-		}
-
-		&--end {
-			background-color: #f97316;
-			border-color: #ea580c;
-			color: #ffffff;
-			font-weight: 600;
-		}
-	}
-
-	&__legend {
-		border-top: 1px solid #e5e7eb;
-		padding-top: 12px;
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		font-size: 13px;
-		color: #6b7280;
-		div {
-			display: flex;
-			flex-direction: row;
-			gap: 10px;
-		}
-	}
-
-	&__legend-title {
-		font-weight: 600;
-		margin-right: 4px;
-	}
-
-	&__legend-item {
-		display: flex;
-		align-items: center;
-		gap: 6px;
-	}
-
-	&__legend-dot {
-		width: 14px;
-		height: 14px;
-		border-radius: 4px;
-		border: 1px solid transparent;
-
-		&--reserved {
-			background-color: #f97316;
-			border-color: #ea580c;
-		}
-
-		&--today {
-			background-color: #2563eb;
-			border-color: #1d4ed8;
-		}
-
-		&--available {
-			background-color: #ffffff;
-			border-color: #d1d5db;
-		}
-	}
-
-	&__add-button {
-		text-transform: none !important;
-		border-radius: 10px !important;
-		padding: 12px 20px !important;
-		font-weight: 600 !important;
-		color: white;
-		background-color: #ee4c06 !important;
-	}
-	.css-guvl2y-MuiButtonBase-root-MuiButton-root {
-		color: white;
 	}
 }

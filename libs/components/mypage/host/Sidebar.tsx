@@ -1,3 +1,4 @@
+import { Button } from '@mui/material';
 import React from 'react';
 
 interface SidebarProps {
@@ -15,8 +16,6 @@ const menuItems = [
 	{ id: 'reviews', label: 'Reviews' },
 	{ id: 'notifications', label: 'Notifications' },
 	{ id: 'customer-inquiry', label: 'Customer Inquiry' },
-	{ id: 'staff-role', label: 'Staff / Role Management' },
-	{ id: 'notice-faq', label: 'Notice / FAQ' },
 ];
 
 export default function Sidebar({ active, setActive }: SidebarProps) {
@@ -34,6 +33,22 @@ export default function Sidebar({ active, setActive }: SidebarProps) {
 						{item.label}
 					</div>
 				))}
+
+				<div
+					style={{
+						width: '100',
+						height: '40px',
+						display: 'flex',
+						justifyContent: 'center',
+						alignItems: 'center',
+						position: 'relative',
+						top: '50%',
+					}}
+				>
+					<Button style={{ width: '80%', height: '100%' }} variant="contained">
+						로그아웃
+					</Button>
+				</div>
 			</nav>
 		</aside>
 	);

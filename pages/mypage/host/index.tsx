@@ -4,6 +4,12 @@ import HostDashboard from '../../../libs/components/mypage/host/HostDashboard';
 import CalendarPage from './CalendarPage';
 import LayoutHome from '../../../libs/components/layout/LayoutHome';
 import RoomsPage from '../../../libs/components/mypage/host/RoomsPage';
+import ReservationsPage from '../../../libs/components/mypage/host/ReservationsPage';
+import PropertySettingsPage from '../../../libs/components/mypage/host/PropertySettingsPage';
+import RevenuePage from '../../../libs/components/mypage/host/RevenuePage';
+import ReviewsPage from '../../../libs/components/mypage/host/ReviewsPage';
+import NotificationsPage from '../../../libs/components/mypage/host/NotificationsPage';
+import CustomerInquiryPage from '../../../libs/components/mypage/host/CustomerInquiryPage';
 
 const HostMyPage = () => {
 	const [active, setActive] = useState('dashboard');
@@ -16,6 +22,18 @@ const HostMyPage = () => {
 				return <CalendarPage />;
 			case 'rooms':
 				return <RoomsPage />;
+			case 'reservations':
+				return <ReservationsPage />;
+			case 'property-settings':
+				return <PropertySettingsPage />;
+			case 'revenue':
+				return <RevenuePage />;
+			case 'reviews':
+				return <ReviewsPage />;
+			case 'notifications':
+				return <NotificationsPage />;
+			case 'customer-inquiry':
+				return <CustomerInquiryPage />;
 		}
 	};
 
