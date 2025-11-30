@@ -24,6 +24,7 @@ import { Navigation } from 'swiper';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
+import Link from 'next/link';
 
 export type GalleryImage = {
 	id: number;
@@ -454,9 +455,11 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 											<Box className="room-card__price-right">
 												<span className="final-price">{'27,500원'}</span>
 												<span className="per-night">/1실</span>
-												<Button variant="contained" className="room-card__button room-card__button--day">
-													대실 예약
-												</Button>
+												<Link href={'/reservation/checkout'}>
+													<Button variant="contained" className="room-card__button room-card__button--day">
+														대실 예약
+													</Button>
+												</Link>
 											</Box>
 										</Box>
 									</Box>

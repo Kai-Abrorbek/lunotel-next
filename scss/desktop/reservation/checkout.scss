@@ -1,0 +1,288 @@
+#pc-wrap {
+	.reservation-page {
+		padding: 32px 0;
+	}
+
+	.reservation-layout {
+		display: flex;
+		gap: 32px;
+		align-items: flex-start;
+		margin-top: 100px;
+	}
+
+	.reservation-main {
+		flex: 1;
+	}
+
+	.reservation-sidebar {
+		width: 340px;
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+	}
+
+	.reservation-title {
+		font-weight: 700;
+		margin-bottom: 24px;
+	}
+
+	.section {
+		margin-bottom: 32px;
+	}
+
+	.section--half {
+		max-width: 40%;
+	}
+
+	.section-header {
+		display: flex;
+		align-items: baseline;
+		gap: 8px;
+		margin-bottom: 16px;
+	}
+
+	.section-title {
+		font-size: 16px;
+		font-weight: 600;
+	}
+
+	.section-sub {
+		font-size: 13px;
+		color: #6b7280;
+	}
+
+	.time-chip-wrap {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+	}
+
+	.time-chip {
+		min-width: 70px;
+		border-radius: 999px !important;
+		border-color: #d1e3ff;
+		color: #2563eb;
+		background-color: #f3f8ff;
+		font-size: 13px;
+	}
+
+	.time-chip--selected {
+		background-color: #2563eb;
+		color: #fff;
+		border-color: #2563eb;
+	}
+
+	.field-group {
+		border-radius: 20px;
+		margin-top: 16px;
+	}
+	.css-h8zr3f-MuiInputBase-root-MuiOutlinedInput-root,
+	.css-3pvwa8-MuiInputBase-root-MuiOutlinedInput-root {
+		border-radius: 10px;
+	}
+
+	.field-label {
+		font-size: 14px;
+		margin-bottom: 6px;
+	}
+
+	.field-help {
+		margin-top: 6px;
+		font-size: 12px;
+		color: #9ca3af;
+	}
+
+	.visit-method-wrap {
+		display: flex;
+		gap: 8px;
+		margin-top: 8px;
+		height: 40px;
+	}
+
+	.visit-btn {
+		flex: 1;
+		border-radius: 15px !important;
+		border: 1px solid #e5e7eb !important;
+		font-size: 13px !important;
+		color: #4b5563 !important;
+		background-color: #fff !important;
+	}
+
+	.visit-btn--active {
+		border-color: #1d4ed8 !important;
+		color: #1d4ed8 !important;
+		background-color: #e0edff !important;
+	}
+
+	.divider-lg {
+		margin: 24px 0;
+	}
+
+	/* 할인 */
+	.discount-row {
+		display: flex;
+		gap: 12px;
+		align-items: flex-end;
+		margin-top: 16px;
+	}
+
+	.discount-field {
+		flex: 1;
+	}
+
+	.discount-btn {
+		min-width: 92px;
+		height: 36px;
+		border-radius: 8px !important;
+		border: 1px solid #e5e7eb !important;
+		font-size: 13px !important;
+		color: #374151 !important;
+		background-color: #fff !important;
+	}
+
+	/* 결제 수단 */
+	.payment-grid {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 8px;
+		margin-top: 16px;
+		width: 80%;
+	}
+
+	.payment-chip {
+		border-radius: 10px !important;
+		border: 1px solid #e5e7eb !important;
+		font-size: 14px !important;
+		padding: 9px 18px !important;
+		color: #374151 !important;
+		background-color: #fff !important;
+		justify-content: center;
+	}
+
+	.payment-chip--selected {
+		border-color: #2563eb !important;
+		background-color: #e0edff !important;
+		color: #1d4ed8 !important;
+	}
+
+	.remember-check {
+		margin-top: 8px;
+		span {
+			font-size: 12px;
+		}
+	}
+
+	/* 사이드바 - 객실 카드 */
+	.room-card {
+		border-radius: 18px !important;
+	}
+
+	.room-title {
+		font-size: 15px;
+		font-weight: 700;
+		margin-bottom: 12px;
+	}
+
+	.room-info {
+		display: flex;
+		gap: 12px;
+		flex-direction: column;
+		height: 220px;
+		justify-content: space-between;
+		align-items: center;
+		gap: 20px;
+	}
+
+	.room-thumb {
+		width: 95%;
+		height: 73%;
+		border-radius: 12px;
+		background-color: #e5e7eb;
+		flex-shrink: 0;
+	}
+
+	.room-meta {
+		flex: 1;
+	}
+
+	.room-meta-row {
+		display: flex;
+		font-size: 13px;
+		margin-bottom: 4px;
+	}
+
+	.room-meta-label {
+		width: 40px;
+		color: #9ca3af;
+	}
+
+	.room-meta-value {
+		color: #374151;
+		font-size: 12px;
+		margin-left: 20px;
+	}
+
+	/* 결제 정보 카드 */
+	.payment-card {
+		border-radius: 18px !important;
+	}
+
+	.payment-row {
+		display: flex;
+		justify-content: space-between;
+		font-size: 14px;
+		margin-bottom: 8px;
+	}
+
+	.payment-label {
+		color: #6b7280;
+	}
+
+	.payment-value {
+		color: #111827;
+	}
+
+	.payment-row.total {
+		margin-top: 12px;
+	}
+
+	.payment-total {
+		color: #ef4444;
+		font-weight: 700;
+	}
+
+	.divider-sm {
+		margin: 12px 0;
+	}
+
+	.agree-wrap {
+		margin: 12px 0 8px;
+		span {
+			font-size: 13px;
+		}
+	}
+
+	.pay-button {
+		margin-top: 4px !important;
+		background-color: #2563eb !important;
+		color: #fff !important;
+		font-weight: 600 !important;
+		padding: 10px 16px !important;
+		border-radius: 10px !important;
+	}
+
+	.mb-16 {
+		margin-bottom: 16px;
+	}
+
+	/* 반응형 */
+	@media (max-width: 960px) {
+		.reservation-layout {
+			flex-direction: column;
+		}
+
+		.reservation-sidebar {
+			width: 100%;
+		}
+	}
+}

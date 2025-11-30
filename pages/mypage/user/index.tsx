@@ -1,6 +1,6 @@
 // MyReservationsPage.tsx
 import React, { useState } from 'react';
-import { Box, Button, Paper, Divider, Stack } from '@mui/material';
+import { Box, Button, Paper, Divider, Stack, dividerClasses } from '@mui/material';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import LayoutHome from '../../../libs/components/layout/LayoutHome';
 import ReservationHistory from '../../../libs/components/mypage/user/ReservationHistory';
@@ -8,10 +8,11 @@ import RoomResultCard from '../../../libs/components/mypage/user/RoomResultCard'
 import PointPage from '../../../libs/components/mypage/user/PointPage';
 import MyInfoPage from '../../../libs/components/mypage/user/MyInfoPage';
 import SettingsPage from '../../../libs/components/mypage/user/SettingsPage';
+import Link from 'next/link';
 
 const MyReservationsPage: React.FC = () => {
 	const [menu, setManu] = useState<string>('reservation-details');
-
+	const user = { name: 'KAi', type: 'host' };
 	const renderPage = () => {
 		switch (menu) {
 			case 'reservation-details':
@@ -32,7 +33,11 @@ const MyReservationsPage: React.FC = () => {
 			<Box className="my-res-page">
 				<Box className="my-res-inner">
 					{/* LEFT SIDE MENU */}
-					<Paper className="my-res-side-menu" elevation={0}>
+					<Paper
+						className="my-res-side-menu"
+						elevation={0}
+						style={{ height: `${user.type === 'host' ? '338px' : ''}` }}
+					>
 						<Stack className="my-res-side-menu-list">
 							<Box className="my-res-side-menu-box " onClick={() => setManu('reservation-details')}>
 								<Button className={`my-res-side-menu-item ${menu === 'reservation-details' ? 'active' : ''}`}>
@@ -61,6 +66,16 @@ const MyReservationsPage: React.FC = () => {
 								<ChevronRightIcon />
 							</Box>
 							<Divider />
+							{user.type === 'host' ? (
+								<Link href={'/mypage/host'}>
+									<Box className="my-res-side-menu-box " onClick={() => setManu('dashboard')}>
+										<Button className={`my-res-side-menu-item ${menu === 'settings' ? 'active' : ''}`}>대시보드</Button>
+										<ChevronRightIcon />
+									</Box>
+								</Link>
+							) : (
+								''
+							)}
 						</Stack>
 					</Paper>
 

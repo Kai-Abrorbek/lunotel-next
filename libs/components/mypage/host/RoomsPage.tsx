@@ -15,6 +15,8 @@ import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
+import AddReservationModal from './ReservationForm';
+import AddRoomModal from './AddRoomModal';
 
 type RoomStatus = 'available' | 'occupied' | 'cleaning' | 'maintenance';
 
@@ -177,6 +179,8 @@ const RoomsPage: React.FC = () => {
 	const [calendarOpenRoomId, setCalendarOpenRoomId] = useState<string | null>(null);
 	const [checkIn, setCheckIn] = useState<Date | null>(null);
 	const [checkOut, setCheckOut] = useState<Date | null>(null);
+	const [isOpen, setIsOpen] = useState(false);
+	const [isOpenAddRoom, setIsOpenAddRoom] = useState(false);
 	const [calendarMonth, setCalendarMonth] = useState<Date>(() => {
 		const d = new Date();
 		return new Date(d.getFullYear(), d.getMonth(), 1);
@@ -315,12 +319,10 @@ const RoomsPage: React.FC = () => {
 	return (
 		<Box className="rooms-page">
 			<Box className="rooms-page__header">
-				<Typography variant="h5" className="rooms-page__title">
+				<Typography variant="h2" className="rooms-page__title">
 					Rooms
 				</Typography>
-				<Button variant="contained" className="rooms-page__add-button">
-					+ 객실 추가
-				</Button>
+				<AddRoomModal isOpen={isOpenAddRoom} setIsOpen={setIsOpenAddRoom} />
 			</Box>
 
 			<Box className="rooms-page__tabs">
@@ -515,7 +517,7 @@ const RoomsPage: React.FC = () => {
 						</Box>
 
 						<Box className="room-calendar__legend">
-							<div>
+							<div style={{ display: 'flex', flexDirection: 'row', gap: '10px' }}>
 								<span className="room-calendar__legend-title">범례</span>
 								<div className="room-calendar__legend-item">
 									<span className="room-calendar__legend-dot room-calendar__legend-dot--reserved" />
@@ -530,9 +532,7 @@ const RoomsPage: React.FC = () => {
 									<span>예약 가능</span>
 								</div>
 							</div>
-							<Button variant="contained" className="room-calendar__add-button">
-								+ 객실 추가
-							</Button>
+							{checkIn && checkOut ? <AddReservationModal isOpen={isOpen} setIsOpen={setIsOpen} /> : ''}
 						</Box>
 					</DialogContent>
 				)}

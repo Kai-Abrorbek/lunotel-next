@@ -327,7 +327,7 @@
 			}
 
 			&__title {
-				font-size: 22px;
+				font-size: 24px;
 				font-weight: 600;
 				color: #111827;
 			}
@@ -466,6 +466,8 @@
 					font-size: 23px;
 				}
 				&__title {
+					font-size: 24px;
+					font-weight: 600;
 					font-weight: 700 !important;
 				}
 			}
@@ -740,557 +742,552 @@
 				justify-content: center;
 			}
 		}
-	}
-
-	/* ===== 예약 달력 모달 ===== */
-	.css-1ohskrp-MuiPaper-root-MuiDialog-paper {
-		top: 35px;
-	}
-	.room-calendar-dialog {
-		border-radius: 16px !important;
-		overflow: hidden;
-	}
-
-	.room-calendar {
-		padding: 24px 28px 20px;
-		min-height: 768px;
-		&__header {
-			display: flex;
-			justify-content: space-between;
-			align-items: flex-start;
-			margin-bottom: 16px;
-		}
-
-		&__room-code {
-			font-size: 18px;
-			font-weight: 700;
-		}
-
-		&__room-subtitle {
-			margin-top: 4px;
-			font-size: 13px;
-			color: #9ca3af;
-		}
-
-		&__month-nav {
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			gap: 16px;
-			margin-bottom: 16px;
-		}
-
-		&__month-btn {
-			text-transform: none !important;
-			border-radius: 999px !important;
-			font-size: 13px !important;
-			padding: 4px 12px !important;
-			display: flex;
-			align-items: center;
-			gap: 4px;
-		}
-
-		&__month-label {
-			font-weight: 700;
-			font-size: 16px;
-		}
-
-		&__weekdays {
-			display: grid;
-			grid-template-columns: repeat(7, 1fr);
-			margin-bottom: 8px;
-			font-size: 13px;
-			text-align: center;
-			color: #9ca3af;
-		}
-
-		&__weekday {
-			padding: 6px 0;
-		}
-
-		&__grid {
-			display: grid;
-			grid-template-columns: repeat(7, 1fr);
-			gap: 8px;
-			margin-bottom: 20px;
-			max-height: 540px;
-			min-height: 447px;
-		}
-
-		&__cell {
-			height: 86px;
-			border-radius: 12px;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			font-size: 16px;
-			background-color: #ffffff;
-			border: 1px solid #e5e7eb;
-			padding: 6px 8px;
-			color: #111827;
-			cursor: pointer;
-			transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
-			&--empty {
-				border: none;
-				background: transparent;
-				cursor: default;
-			}
-
-			&--today {
-				border-color: #2563eb;
-				box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.4);
-				font-weight: 700;
-				color: #2563eb;
-			}
-
-			&--reserved {
-				background-color: #f97316;
-				border-color: #ea580c;
-				color: #ffffff;
-				font-weight: 600;
-			}
-
-			&--past {
-				color: #e4e0e0;
-				font-weight: 600;
-			}
-
-			&--start {
-				background-color: #f97316;
-				border-color: #ea580c;
-				color: #ffffff;
-				font-weight: 600;
-			}
-
-			&--range {
-				background-color: #f5bc94;
-				border-color: #ea580c;
-				color: #ffffff;
-				font-weight: 600;
-			}
-
-			&--end {
-				background-color: #f97316;
-				border-color: #ea580c;
-				color: #ffffff;
-				font-weight: 600;
-			}
-		}
-
-		&__legend {
-			border-top: 1px solid #e5e7eb;
-			padding-top: 12px;
-			display: flex;
-			align-items: center;
-			justify-content: space-between;
-			font-size: 13px;
-			color: #6b7280;
-			div {
+		.reservation-page-contanier {
+			.header-actions {
 				display: flex;
-				flex-direction: row;
-				gap: 10px;
-			}
-		}
-
-		&__legend-title {
-			font-weight: 600;
-			margin-right: 4px;
-		}
-
-		&__legend-item {
-			display: flex;
-			align-items: center;
-			gap: 6px;
-		}
-
-		&__legend-dot {
-			width: 14px;
-			height: 14px;
-			border-radius: 4px;
-			border: 1px solid transparent;
-
-			&--reserved {
-				background-color: #f97316;
-				border-color: #ea580c;
-			}
-
-			&--today {
-				background-color: #2563eb;
-				border-color: #1d4ed8;
-			}
-
-			&--available {
-				background-color: #ffffff;
-				border-color: #d1d5db;
-			}
-		}
-
-		&__add-button {
-			text-transform: none !important;
-			border-radius: 10px !important;
-			padding: 12px 20px !important;
-			font-weight: 600 !important;
-			color: white;
-			background-color: #ee4c06 !important;
-		}
-		.css-guvl2y-MuiButtonBase-root-MuiButton-root {
-			color: white;
-		}
-	}
-
-	.reservation-page-contanier {
-		.header-actions {
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
-			margin-bottom: 24px;
-
-			.btn {
-				padding: 10px 20px;
-				border-radius: 8px;
-				font-size: 14px;
-				font-weight: 500;
-				cursor: pointer;
-				border: none;
-				display: inline-flex;
+				justify-content: space-between;
 				align-items: center;
-				gap: 8px;
+				margin-bottom: 24px;
+				.page-title {
+					font-size: 24px;
+				}
+				.btn {
+					padding: 10px 20px;
+					border-radius: 8px;
+					font-size: 14px;
+					font-weight: 500;
+					cursor: pointer;
+					border: none;
+					display: inline-flex;
+					align-items: center;
+					gap: 8px;
+				}
+
+				.btn-primary {
+					background-color: #2563eb;
+					color: white;
+				}
+			}
+			/* 총 통계 영역 */
+			.stats-grid-3 {
+				display: grid;
+				grid-template-columns: repeat(3, 1fr);
+				gap: 16px;
+				margin-bottom: 32px;
 			}
 
-			.btn-primary {
-				background-color: #2563eb;
-				color: white;
-			}
-		}
-		/* 총 통계 영역 */
-		.stats-grid-3 {
-			display: grid;
-			grid-template-columns: repeat(3, 1fr);
-			gap: 16px;
-			margin-bottom: 32px;
-		}
+			.stat-card {
+				background: white;
+				border-radius: 12px;
+				padding: 20px 20px;
+				text-align: center;
+				border: 1px solid #e5e7eb;
+				box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 
-		.stat-card {
-			background: white;
-			border-radius: 12px;
-			padding: 20px 20px;
-			text-align: center;
-			border: 1px solid #e5e7eb;
-			box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+				.stat-label {
+					font-size: 14px;
+					color: #6b7280;
+					margin-bottom: 4px;
+				}
 
-			.stat-label {
-				font-size: 14px;
-				color: #6b7280;
-				margin-bottom: 4px;
-			}
+				.stat-value {
+					font-size: 24px;
+					font-weight: bold;
+					color: #1f2937;
+				}
 
-			.stat-value {
-				font-size: 24px;
-				font-weight: bold;
-				color: #1f2937;
-			}
+				/* 검색 + 상태 필터 */
+				.search-filter-row {
+					display: flex;
+					gap: 12px;
+					margin-bottom: 20px;
 
-			/* 검색 + 상태 필터 */
-			.search-filter-row {
-				display: flex;
-				gap: 12px;
-				margin-bottom: 20px;
+					.search-wrapper {
+						flex: 1;
+						position: relative;
 
-				.search-wrapper {
-					flex: 1;
-					position: relative;
+						.search-icon {
+							position: absolute;
+							left: 12px;
+							top: 50%;
+							transform: translateY(-50%);
+							color: #9ca3af;
+						}
 
-					.search-icon {
-						position: absolute;
-						left: 12px;
-						top: 50%;
-						transform: translateY(-50%);
-						color: #9ca3af;
+						.search-input-with-icon {
+							width: 100%;
+							padding: 10px 16px 10px 40px;
+							border: 1px solid #e5e7eb;
+							border-radius: 8px;
+							font-size: 14px;
+						}
 					}
 
-					.search-input-with-icon {
-						width: 100%;
-						padding: 10px 16px 10px 40px;
+					.filter-select {
+						padding: 10px 16px;
 						border: 1px solid #e5e7eb;
 						border-radius: 8px;
 						font-size: 14px;
+						background: white;
+						cursor: pointer;
+						min-width: 150px;
 					}
 				}
 
-				.filter-select {
-					padding: 10px 16px;
-					border: 1px solid #e5e7eb;
-					border-radius: 8px;
-					font-size: 14px;
+				/* 예약 item 목록 */
+				.reservation-item {
+					padding: 16px;
 					background: white;
+					border-radius: 8px;
 					cursor: pointer;
-					min-width: 150px;
-				}
-			}
-
-			/* 예약 item 목록 */
-			.reservation-item {
-				padding: 16px;
-				background: white;
-				border-radius: 8px;
-				cursor: pointer;
-				margin-bottom: 12px;
-				border: 1px solid #e5e7eb;
-				transition: all 0.2s;
-
-				&:hover {
-					box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-					transform: translateY(-2px);
-				}
-
-				.reservation-item-header {
-					display: flex;
-					justify-content: space-between;
-					align-items: center;
 					margin-bottom: 12px;
+					border: 1px solid #e5e7eb;
+					transition: all 0.2s;
 
-					.reservation-id {
-						font-weight: 600;
-						color: #2563eb;
-						font-size: 14px;
+					&:hover {
+						box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+						transform: translateY(-2px);
 					}
-					/* 예약 상태 표시 */
-					.status-badge {
-						font-size: 12px;
-						padding: 4px 12px;
-						border-radius: 9999px;
 
-						&.status-confirmed {
-							background-color: #dbeafe;
-							color: #1e40af;
+					.reservation-item-header {
+						display: flex;
+						justify-content: space-between;
+						align-items: center;
+						margin-bottom: 12px;
+
+						.reservation-id {
+							font-weight: 600;
+							color: #2563eb;
+							font-size: 14px;
 						}
+						/* 예약 상태 표시 */
+						.status-badge {
+							font-size: 12px;
+							padding: 4px 12px;
+							border-radius: 9999px;
 
-						&.status-checked-in {
-							background-color: #d1fae5;
-							color: #065f46;
-						}
+							&.status-confirmed {
+								background-color: #dbeafe;
+								color: #1e40af;
+							}
 
-						&.status-pending {
-							background-color: #fef3c7;
-							color: #92400e;
-						}
+							&.status-checked-in {
+								background-color: #d1fae5;
+								color: #065f46;
+							}
 
-						&.status-completed {
-							background-color: #f3f4f6;
-							color: #374151;
-						}
+							&.status-pending {
+								background-color: #fef3c7;
+								color: #92400e;
+							}
 
-						&.status-cancelled {
-							background-color: #fee2e2;
-							color: #991b1b;
+							&.status-completed {
+								background-color: #f3f4f6;
+								color: #374151;
+							}
+
+							&.status-cancelled {
+								background-color: #fee2e2;
+								color: #991b1b;
+							}
 						}
 					}
-				}
-				.reservation-item-body {
-					display: flex;
-					align-items: center;
-					gap: 16px;
-
-					.reservation-avatar {
-						width: 56px;
-						height: 56px;
-						border-radius: 50%;
-						background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+					.reservation-item-body {
 						display: flex;
 						align-items: center;
-						justify-content: center;
-						color: white;
-						font-size: 24px;
-						font-weight: 600;
-						flex-shrink: 0;
-					}
+						gap: 16px;
 
-					.reservation-item-info {
-						flex: 1;
-
-						.reservation-guest-name {
-							font-size: 16px;
-							font-weight: 600;
-							color: #1f2937;
-							margin-bottom: 4px;
-						}
-
-						.reservation-room-info {
-							font-size: 13px;
-							color: #6b7280;
-							margin-bottom: 8px;
-						}
-
-						.reservation-dates {
+						.reservation-avatar {
+							width: 56px;
+							height: 56px;
+							border-radius: 50%;
+							background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 							display: flex;
 							align-items: center;
-							gap: 8px;
-							font-size: 13px;
-							color: #6b7280;
+							justify-content: center;
+							color: white;
+							font-size: 24px;
+							font-weight: 600;
+							flex-shrink: 0;
+						}
 
-							.date-separator {
-								color: #9ca3af;
+						.reservation-item-info {
+							flex: 1;
+
+							.reservation-guest-name {
+								font-size: 16px;
+								font-weight: 600;
+								color: #1f2937;
+								margin-bottom: 4px;
+							}
+
+							.reservation-room-info {
+								font-size: 13px;
+								color: #6b7280;
+								margin-bottom: 8px;
+							}
+
+							.reservation-dates {
+								display: flex;
+								align-items: center;
+								gap: 8px;
+								font-size: 13px;
+								color: #6b7280;
+
+								.date-separator {
+									color: #9ca3af;
+								}
+							}
+						}
+
+						.reservation-item-actions {
+							display: flex;
+							flex-direction: column;
+							gap: 8px;
+							align-items: flex-end;
+
+							.reservation-amount {
+								font-size: 20px;
+								font-weight: 700;
+								color: #1f2937;
+							}
+						}
+					}
+				}
+				/* 빈 상태 */
+				.empty-state {
+					text-align: center;
+					padding: 60px 20px;
+
+					.empty-state-icon {
+						font-size: 64px;
+						margin-bottom: 16px;
+						opacity: 0.5;
+					}
+
+					.empty-state-title {
+						font-size: 18px;
+						font-weight: 600;
+						color: #1f2937;
+					}
+
+					.empty-state-text {
+						font-size: 14px;
+						color: #6b7280;
+					}
+				}
+			}
+			/* 상세 모달 */
+			.modal-overlay {
+				position: fixed;
+				inset: 0;
+				background-color: rgba(0, 0, 0, 0.5);
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				z-index: 1000;
+				.modal-content {
+					background: white;
+					padding: 24px;
+					border-radius: 12px;
+					width: 90%;
+					max-width: 700px;
+					max-height: 80vh;
+					overflow: auto;
+					box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+
+					.modal-header {
+						display: flex;
+						justify-content: space-between;
+						align-items: center;
+						margin-bottom: 20px;
+
+						.close-btn {
+							padding: 8px;
+							background: #f3f4f6;
+							border: none;
+							border-radius: 6px;
+							cursor: pointer;
+							font-size: 18px;
+							color: #6b7280;
+						}
+					}
+
+					.modal-info-section {
+						background: #f9fafb;
+						border-radius: 8px;
+						padding: 16px;
+						margin-bottom: 16px;
+
+						.modal-info-title {
+							font-size: 14px;
+							font-weight: 600;
+							color: #6b7280;
+							margin-bottom: 12px;
+						}
+
+						.modal-info-row {
+							display: flex;
+							justify-content: space-between;
+							padding: 8px 0;
+							border-bottom: 1px solid #e5e7eb;
+
+							&:last-child {
+								border-bottom: none;
+							}
+
+							.modal-info-label {
+								font-size: 14px;
+								color: #6b7280;
+							}
+
+							.modal-info-value {
+								font-size: 14px;
+								color: #1f2937;
+								font-weight: 500;
 							}
 						}
 					}
 
-					.reservation-item-actions {
-						display: flex;
-						flex-direction: column;
-						gap: 8px;
-						align-items: flex-end;
-
-						.reservation-amount {
-							font-size: 20px;
-							font-weight: 700;
-							color: #1f2937;
-						}
-					}
-				}
-			}
-			/* 빈 상태 */
-			.empty-state {
-				text-align: center;
-				padding: 60px 20px;
-
-				.empty-state-icon {
-					font-size: 64px;
-					margin-bottom: 16px;
-					opacity: 0.5;
-				}
-
-				.empty-state-title {
-					font-size: 18px;
-					font-weight: 600;
-					color: #1f2937;
-				}
-
-				.empty-state-text {
-					font-size: 14px;
-					color: #6b7280;
-				}
-			}
-		}
-		/* 상세 모달 */
-		.modal-overlay {
-			position: fixed;
-			inset: 0;
-			background-color: rgba(0, 0, 0, 0.5);
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			z-index: 1000;
-			.modal-content {
-				background: white;
-				padding: 24px;
-				border-radius: 12px;
-				width: 90%;
-				max-width: 700px;
-				max-height: 80vh;
-				overflow: auto;
-				box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-
-				.modal-header {
-					display: flex;
-					justify-content: space-between;
-					align-items: center;
-					margin-bottom: 20px;
-
-					.close-btn {
-						padding: 8px;
-						background: #f3f4f6;
-						border: none;
-						border-radius: 6px;
-						cursor: pointer;
-						font-size: 18px;
-						color: #6b7280;
-					}
-				}
-
-				.modal-info-section {
-					background: #f9fafb;
-					border-radius: 8px;
-					padding: 16px;
-					margin-bottom: 16px;
-
-					.modal-info-title {
-						font-size: 14px;
-						font-weight: 600;
-						color: #6b7280;
-						margin-bottom: 12px;
-					}
-
-					.modal-info-row {
-						display: flex;
-						justify-content: space-between;
-						padding: 8px 0;
-						border-bottom: 1px solid #e5e7eb;
-
-						&:last-child {
-							border-bottom: none;
-						}
-
-						.modal-info-label {
-							font-size: 14px;
-							color: #6b7280;
-						}
-
-						.modal-info-value {
-							font-size: 14px;
-							color: #1f2937;
-							font-weight: 500;
-						}
-					}
-				}
-
-				.modal-total {
-					background: #eff6ff;
-					border: 1px solid #bfdbfe;
-					border-radius: 8px;
-					padding: 16px;
-					margin: 20px 0;
-
-					.modal-total-row {
-						display: flex;
-						justify-content: space-between;
-						align-items: center;
-					}
-
-					.modal-total-label {
-						font-size: 16px;
-						color: #1e40af;
-						font-weight: 600;
-					}
-
-					.modal-total-value {
-						font-size: 28px;
-						color: #1e40af;
-						font-weight: 700;
-					}
-				}
-
-				.modal-actions {
-					display: flex;
-					gap: 12px;
-
-					.btn {
-						flex: 1;
-						padding: 10px 16px;
+					.modal-total {
+						background: #eff6ff;
+						border: 1px solid #bfdbfe;
 						border-radius: 8px;
-						cursor: pointer;
+						padding: 16px;
+						margin: 20px 0;
 
-						&.btn-secondary {
-							background: white;
-							border: 1px solid #e5e7eb;
+						.modal-total-row {
+							display: flex;
+							justify-content: space-between;
+							align-items: center;
 						}
 
-						&.btn-danger {
-							background: #ef4444;
-							color: white;
+						.modal-total-label {
+							font-size: 16px;
+							color: #1e40af;
+							font-weight: 600;
+						}
+
+						.modal-total-value {
+							font-size: 28px;
+							color: #1e40af;
+							font-weight: 700;
+						}
+					}
+
+					.modal-actions {
+						display: flex;
+						gap: 12px;
+
+						.btn {
+							flex: 1;
+							padding: 10px 16px;
+							border-radius: 8px;
+							cursor: pointer;
+
+							&.btn-secondary {
+								background: white;
+								border: 1px solid #e5e7eb;
+							}
+
+							&.btn-danger {
+								background: #ef4444;
+								color: white;
+							}
 						}
 					}
 				}
 			}
 		}
+	}
+}
+
+/* ===== 예약 달력 모달 ===== */
+.css-1ohskrp-MuiPaper-root-MuiDialog-paper {
+	top: 35px;
+}
+.room-calendar-dialog {
+	border-radius: 16px !important;
+	overflow: hidden;
+}
+.room-calendar {
+	padding: 24px 28px 20px;
+	min-height: 768px;
+	&__header {
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-start;
+		margin-bottom: 16px;
+	}
+
+	&__room-code {
+		font-size: 18px;
+		font-weight: 700;
+	}
+
+	&__room-subtitle {
+		margin-top: 4px;
+		font-size: 13px;
+		color: #9ca3af;
+	}
+
+	&__month-nav {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 16px;
+		margin-bottom: 16px;
+	}
+
+	&__month-btn {
+		text-transform: none !important;
+		border-radius: 999px !important;
+		font-size: 13px !important;
+		padding: 4px 12px !important;
+		display: flex;
+		align-items: center;
+		gap: 4px;
+	}
+
+	&__month-label {
+		font-weight: 700;
+		font-size: 16px;
+	}
+
+	&__weekdays {
+		display: grid;
+		grid-template-columns: repeat(7, 1fr);
+		margin-bottom: 8px;
+		font-size: 13px;
+		text-align: center;
+		color: #9ca3af;
+	}
+
+	&__weekday {
+		padding: 6px 0;
+	}
+
+	&__grid {
+		display: grid;
+		grid-template-columns: repeat(7, 1fr);
+		gap: 8px;
+		margin-bottom: 20px;
+		max-height: 540px;
+		min-height: 447px;
+	}
+
+	&__cell {
+		height: 86px;
+		border-radius: 12px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 16px;
+		background-color: #ffffff;
+		border: 1px solid #e5e7eb;
+		padding: 6px 8px;
+		color: #111827;
+		cursor: pointer;
+		transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+		&--empty {
+			border: none;
+			background: transparent;
+			cursor: default;
+		}
+
+		&--today {
+			border-color: #2563eb;
+			box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.4);
+			font-weight: 700;
+			color: #2563eb;
+		}
+
+		&--reserved {
+			background-color: #f97316;
+			border-color: #ea580c;
+			color: #ffffff;
+			font-weight: 600;
+		}
+
+		&--past {
+			color: #e4e0e0;
+			font-weight: 600;
+		}
+
+		&--start {
+			background-color: #f97316;
+			border-color: #ea580c;
+			color: #ffffff;
+			font-weight: 600;
+		}
+
+		&--range {
+			background-color: #f5bc94;
+			border-color: #ea580c;
+			color: #ffffff;
+			font-weight: 600;
+		}
+
+		&--end {
+			background-color: #f97316;
+			border-color: #ea580c;
+			color: #ffffff;
+			font-weight: 600;
+		}
+	}
+
+	&__legend {
+		border-top: 1px solid #e5e7eb;
+		padding-top: 12px;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		font-size: 13px;
+		color: #6b7280;
+	}
+
+	&__legend-title {
+		font-weight: 600;
+		margin-right: 4px;
+	}
+
+	&__legend-item {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+	}
+
+	&__legend-dot {
+		width: 14px;
+		height: 14px;
+		border-radius: 4px;
+		border: 1px solid transparent;
+
+		&--reserved {
+			background-color: #f97316;
+			border-color: #ea580c;
+		}
+
+		&--today {
+			background-color: #2563eb;
+			border-color: #1d4ed8;
+		}
+
+		&--available {
+			background-color: #ffffff;
+			border-color: #d1d5db;
+		}
+	}
+
+	&__add-button {
+		text-transform: none !important;
+		border-radius: 10px !important;
+		padding: 12px 20px !important;
+		font-weight: 600 !important;
+		color: white;
+		background-color: #ee4c06 !important;
+	}
+	.css-guvl2y-MuiButtonBase-root-MuiButton-root {
+		color: white;
 	}
 }

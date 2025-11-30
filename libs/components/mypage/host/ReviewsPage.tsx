@@ -124,7 +124,7 @@ const ReviewsPage = () => {
 		<Box className="reviews-page">
 			{/* 제목 */}
 			<Typography component="h1" className="reviews-page__title">
-				리뷰
+				Reviews
 			</Typography>
 
 			{/* 평점 요약 */}

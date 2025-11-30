@@ -20,7 +20,7 @@ const menuItems: MenuItem[] = [
 	{ id: 'rooms', label: 'Rooms', icon: '🏨' },
 	{ id: 'revenue', label: 'Revenue', icon: '💰' },
 	{ id: 'reviews', label: 'Reviews', icon: '⭐' },
-	{ id: 'settings', label: 'Settings', icon: '⚙️' },
+	{ id: 'customer-inquiry', label: 'Customer Inquiry', icon: '🗨️' },
 ];
 
 export default function Sidebar({ active, setActive }: SidebarProps) {

@@ -160,10 +160,7 @@ const ReservationsPage: NextPage = () => {
 	return (
 		<div className="reservation-page-contanier">
 			<div className="header-actions">
-				<h2 className="page-title">Reservations</h2>
-				<button className="btn btn-primary">
-					<span>+</span> New Reservation
-				</button>
+				<h1 className="page-title">Reservations</h1>
 			</div>
 
 			<div className="stats-grid stats-grid-3">
