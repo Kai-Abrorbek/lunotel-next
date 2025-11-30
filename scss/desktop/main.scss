@@ -208,8 +208,31 @@ body::-webkit-scrollbar {
 									color: #a0a0a0;
 									margin-right: 8px;
 								}
+								.input-base-wrapper {
+									position: relative;
+									width: 100%;
+								}
 								.hero-input {
 									width: 100%;
+									padding-right: 30px; // X 버튼 공간 확보
+								}
+								.clear-btn {
+									position: absolute;
+									right: 6px;
+									top: 50%;
+									transform: translateY(-50%);
+									border: none;
+									background: transparent;
+									font-size: 18px;
+									color: #aaa;
+									cursor: pointer;
+									padding: 0;
+
+									&:hover {
+										color: #666;
+									}
+								}
+								.hero-input {
 									height: 30px;
 									font-size: 16px;
 								}
