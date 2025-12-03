@@ -13,7 +13,6 @@ import {
 } from '@mui/material';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
 import AddReservationModal from './ReservationForm';
 import AddRoomModal from './AddRoomModal';
@@ -38,8 +37,8 @@ interface Room {
 
 interface RoomReservation {
 	roomId: string;
-	checkIn: string; // YYYY-MM-DD
-	checkOut: string; // YYYY-MM-DD (checkout 당일은 제외)
+	checkIn: string;
+	checkOut: string;
 }
 
 const ROOMS: Room[] = [
@@ -320,7 +319,7 @@ const RoomsPage: React.FC = () => {
 		<Box className="rooms-page">
 			<Box className="rooms-page__header">
 				<Typography variant="h2" className="rooms-page__title">
-					Rooms
+					객실
 				</Typography>
 				<AddRoomModal isOpen={isOpenAddRoom} setIsOpen={setIsOpenAddRoom} />
 			</Box>
@@ -419,6 +418,14 @@ const RoomsPage: React.FC = () => {
 									<span className="room-card__price-value">${room.price}</span>
 								</div>
 								<div className="room-card__actions">
+									<Button
+										onClick={() => handleOpenCalendar(room)}
+										variant="contained"
+										size="large"
+										className="room-card__reserve-btn"
+									>
+										수정
+									</Button>
 									{room.status !== 'maintenance' && (
 										<Button
 											onClick={() => handleOpenCalendar(room)}

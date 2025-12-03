@@ -70,7 +70,7 @@ const RevenuePage: React.FC = () => {
 			{/* 헤더 */}
 			<Box className="revenue-page__header">
 				<Typography component="h2" className="revenue-page__title">
-					Revenue
+					매출 현황
 				</Typography>
 
 				<Box className="revenue-page__period-tabs">

@@ -136,7 +136,7 @@ export default function CalendarPage() {
 		<Box className="calendar-page">
 			{/* 상단 제목 + 셀렉트 */}
 			<Box className="calendar-page__header">
-				<Typography className="calendar-page__title">Calendar</Typography>
+				<Typography className="calendar-page__title">달력</Typography>
 
 				<FormControl size="small" className="calendar-page__room-select">
 					<Select value={selectedRoom} onChange={(e) => setSelectedRoom(e.target.value as string)}>

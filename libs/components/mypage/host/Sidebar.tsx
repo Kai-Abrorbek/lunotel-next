@@ -21,14 +21,14 @@ const menuItems: MenuItem[] = [
 	{ id: 'revenue', label: 'Revenue', icon: '💰' },
 	{ id: 'reviews', label: 'Reviews', icon: '⭐' },
 	{ id: 'customer-inquiry', label: 'Customer Inquiry', icon: '🗨️' },
-	{ id: 'notifications', label: 'Notifications', icon: '🔔' },
+	{ id: 'notifications', label: 'Notifications', icon: '🔔', badge: 3 },
 ];
 
 export default function Sidebar({ active, setActive }: SidebarProps) {
 	return (
 		<div className="sidebar">
 			<div className="logo">
-				<div className="logo-title">PRESTIGE</div>
+				<div className="logo-title">LunoTel</div>
 				<div className="logo-subtitle">Hotel Management</div>
 			</div>
 			<nav>

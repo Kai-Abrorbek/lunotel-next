@@ -24,16 +24,16 @@ const HostMyPage = () => {
 				return <CalendarPage />;
 			case 'rooms':
 				return <RoomsPage />;
-			case 'property-settings':
-				return <PropertySettingsPage />;
 			case 'revenue':
 				return <RevenuePage />;
 			case 'reviews':
 				return <ReviewsPage />;
-			case 'notifications':
-				return <NotificationsPage />;
 			case 'customer-inquiry':
 				return <CustomerInquiryPage />;
+			case 'property-settings':
+				return <PropertySettingsPage />;
+			case 'notifications':
+				return <NotificationsPage />;
 		}
 	};
 

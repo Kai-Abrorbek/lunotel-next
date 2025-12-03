@@ -124,45 +124,45 @@ export default function NotificationsPage() {
 	return (
 		<div className="notifications-container">
 			<div className="page-header">
-				<h1 className="page-title">Notifications</h1>
+				<h1 className="page-title">알림</h1>
 				<div className="header-actions">
 					<button className="btn btn-secondary" onClick={markAllAsRead}>
-						✓ Mark All as Read
+						✓ 모두 읽음으로 표시
 					</button>
-					<button className="btn btn-primary">⚙️ Settings</button>
+					<button className="btn btn-primary">⚙️ 설정</button>
 				</div>
 			</div>
 
 			<div className="stats-grid">
 				<div className="stat-card">
-					<div className="stat-label">Total Notifications</div>
+					<div className="stat-label">총 알림</div>
 					<div className="stat-value">{notifications.length}</div>
 				</div>
 				<div className="stat-card">
-					<div className="stat-label">Unread</div>
+					<div className="stat-label">읽히지 않는</div>
 					<div className="stat-value">{unreadCount}</div>
 				</div>
 				<div className="stat-card">
-					<div className="stat-label">Today</div>
+					<div className="stat-label">오늘</div>
 					<div className="stat-value">{todayCount}</div>
 				</div>
 			</div>
 
 			<div className="filter-tabs">
 				<button className={`filter-tab ${filter === 'all' ? 'active' : ''}`} onClick={() => setFilter('all')}>
-					All
+					전체
 				</button>
 				<button className={`filter-tab ${filter === 'unread' ? 'active' : ''}`} onClick={() => setFilter('unread')}>
-					Unread ({unreadCount})
+					읽지 않는 ({unreadCount})
 				</button>
 				<button className={`filter-tab ${filter === 'read' ? 'active' : ''}`} onClick={() => setFilter('read')}>
-					Read
+					읽음
 				</button>
 				<button
 					className={`filter-tab ${filter === 'important' ? 'active' : ''}`}
 					onClick={() => setFilter('important')}
 				>
-					Important
+					중요한
 				</button>
 			</div>
 
@@ -186,7 +186,7 @@ export default function NotificationsPage() {
 								<div className="notification-content">
 									<div className="notification-title">
 										{notif.title}
-										{notif.isImportant && <span className="important-badge">! Important</span>}
+										{notif.isImportant && <span className="important-badge">! 중요한</span>}
 									</div>
 									<div className="notification-description">{notif.description}</div>
 								</div>
@@ -211,7 +211,7 @@ export default function NotificationsPage() {
 												markAsRead(notif.id);
 											}}
 										>
-											Mark as Read
+											읽음으로 표시
 										</button>
 									)}
 									<button
@@ -221,7 +221,7 @@ export default function NotificationsPage() {
 											deleteNotification(notif.id);
 										}}
 									>
-										Delete
+										삭제
 									</button>
 								</div>
 							</div>
@@ -231,8 +231,8 @@ export default function NotificationsPage() {
 			) : (
 				<div className="empty-state">
 					<div className="empty-state-icon">🔔</div>
-					<div className="empty-state-title">No notifications</div>
-					<div className="empty-state-text">You're all caught up! Check back later for updates.</div>
+					<div className="empty-state-title">알림 없습니다</div>
+					<div className="empty-state-text">모두 완료되었습니다! 나중에 다시 확인해주세요.</div>
 				</div>
 			)}
 		</div>
