@@ -7,6 +7,7 @@
 @import './mypage/user/mypage.scss';
 @import './mypage/host/hostpage.scss';
 @import './mypage/host/hostpageside.scss';
+@import './mypage/host/property-management.scss';
 
 body {
 	-ms-overflow-style: none; /* for Internet Explorer, Edge */
@@ -640,5 +641,122 @@ body::-webkit-scrollbar {
 		border-left: 6px solid transparent;
 		border-right: 6px solid transparent;
 		border-top: 6px solid #333;
+	}
+}
+
+.MuiBackdrop-root {
+	opacity: 0;
+}
+
+.member-menu.active {
+	display: block;
+}
+.member-menu {
+	display: none;
+	position: absolute;
+	top: 74px;
+	left: 78%;
+	font-family: -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Pretendard', sans-serif;
+
+	&__card {
+		width: 280px;
+		border-radius: 16px;
+		padding: 16px 0;
+		box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+		border: 1px solid #f1f3f5;
+	}
+
+	&__header {
+		display: flex;
+		align-items: center;
+		padding: 0 20px 12px;
+		cursor: pointer;
+		border-bottom: 1px solid #8080802b;
+	}
+
+	&__avatar {
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+		background: #ffe8e8;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin-right: 8px;
+		font-size: 22px;
+	}
+
+	&__profile {
+		display: flex;
+		flex-direction: column;
+	}
+
+	&__nickname {
+		font-size: 14px;
+		font-weight: 600;
+		color: #212529;
+		margin-bottom: 2px;
+	}
+
+	&__grade {
+		font-size: 12px;
+		color: #ff5b5b;
+	}
+
+	&__grade-label {
+		font-weight: 600;
+	}
+
+	&__grade-sub {
+		margin-left: 4px;
+		color: #ff6b6b;
+	}
+
+	&__section {
+		padding: 4px 0;
+		&--border {
+			border-top: 1px solid #f1f3f5;
+			border-bottom: 1px solid #f1f3f5;
+			margin-top: 4px;
+			margin-bottom: 4px;
+		}
+
+		&--border-top {
+			border-top: 1px solid #f1f3f5;
+			margin-top: 4px;
+		}
+
+		&--last {
+			margin-top: 4px;
+			padding-bottom: 4px;
+		}
+	}
+
+	&__item {
+		width: 100%;
+		text-align: left;
+		padding: 8px 20px;
+		font-size: 13px;
+		border: none;
+		background: transparent;
+		color: #212529;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+
+		&:hover {
+			background: #dadbdd;
+		}
+
+		&--logout {
+			color: #868e96;
+		}
+
+		&--with-badge {
+			.member-menu__badge {
+				margin-left: 8px;
+			}
+		}
 	}
 }

@@ -14,7 +14,7 @@ import {
 	InputAdornment,
 } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
-import LayoutHome from '../../../libs/components/layout/LayoutHome';
+import LayoutHome from '../../libs/components/layout/LayoutHome';
 
 const TIME_SLOTS = [
 	'12:00',

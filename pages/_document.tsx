@@ -45,6 +45,7 @@ export default function Document() {
 					src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=a9dcb056de3a62568e51f81a81fc6ba9&autoload=false&libraries=services"
 					type="text/javascript"
 				></script>
+				<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js" />
 			</Head>
 			<body>
 				<Main />

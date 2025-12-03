@@ -72,7 +72,7 @@ export default function AddReservationModal(props: AddReservationModalProps) {
 	};
 
 	return (
-		<div className="">
+		<div className="add-reservation-modal">
 			<button className="trigger-btn" onClick={() => setIsOpen(true)}>
 				➕ 예약
 			</button>

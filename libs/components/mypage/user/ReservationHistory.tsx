@@ -1,5 +1,7 @@
-import { Box, Button, Divider, Paper, Tab, Tabs, Typography } from '@mui/material';
+import { Box, Button, Divider, Paper, Stack, Tab, Tabs, Typography } from '@mui/material';
+import Link from 'next/link';
 import React, { useMemo, useState } from 'react';
+import ReviewPage from './ReviewPage';
 
 type TripStatus = 'upcoming' | 'completed' | 'canceled';
 type TripType = 'domestic' | 'overseas' | 'package';
@@ -84,6 +86,7 @@ const ReservationHistory = () => {
 	const filtered = useMemo(() => MOCK_RESERVATIONS.filter((r) => r.type === tab), [tab]);
 	const upcoming = filtered.filter((r) => r.status === 'upcoming');
 	const history = filtered.filter((r) => r.status === 'completed' || r.status === 'canceled');
+	const [openReview, setOpenReview] = useState<boolean>(false);
 
 	const handleTabChange = (_: React.SyntheticEvent, value: TabValue) => {
 		setTab(value);
@@ -121,19 +124,23 @@ const ReservationHistory = () => {
 					) : (
 						<Box>
 							{upcoming.map((r) => (
-								<Box key={r.id} className="my-res-item">
-									<Box className="my-res-item-info">
-										<Typography className="my-res-item-title">{r.title}</Typography>
-										<Typography className="my-res-item-meta">
-											{r.dateRange} · {r.location} · {r.guestCount}명
-										</Typography>
+								<Stack className="my-res-item-box">
+									<Box className="my-res-item-img" src="/img/서울.jfif" component={'img'}></Box>
+									<Box key={r.id} className="my-res-item">
+										<Box className="my-res-item-info">
+											<Typography className="my-res-item-title">{r.title}</Typography>
+											<Typography className="my-res-item-meta">{r.dateRange}</Typography>
+											<Typography className="my-res-item-meta">
+												{r.location} · {r.guestCount}명
+											</Typography>
+										</Box>
 									</Box>
-									<Box className="my-res-item-actions">
-										<Button variant="outlined" size="small" className="my-res-item-btn">
-											예약 상세
-										</Button>
+									<Box className="my-res-item-btn">
+										<Link href={'#'}>
+											<Button variant="outlined">상세 보기</Button>
+										</Link>
 									</Box>
-								</Box>
+								</Stack>
 							))}
 						</Box>
 					)}
@@ -151,24 +158,40 @@ const ReservationHistory = () => {
 						{history.map((r, idx) => (
 							<React.Fragment key={r.id}>
 								{idx > 0 && <Divider />}
-								<Box className="my-res-history-item">
-									<Box>
-										<Typography className="my-res-history-item-title">{r.title}</Typography>
-										<Typography className="my-res-history-item-meta">
-											{r.dateRange} · {r.location} · {r.guestCount}명
-										</Typography>
+								<Stack className="my-res-history-box">
+									<Box className="my-res-history-item-img" src="/img/서울.jfif" component={'img'}></Box>
+									<Box className="my-res-history-item">
+										<Box className="my-res-history-item-info">
+											<Typography className="my-res-history-item-title">{r.title}</Typography>
+											<Typography className="my-res-history-item-meta">{r.dateRange}</Typography>
+											<Typography className="my-res-history-item-meta">
+												{r.location} · {r.guestCount}명
+											</Typography>
+										</Box>
+										<Box className="my-res-history-item-btns">
+											<Typography
+												className={
+													'my-res-history-status ' +
+													(r.status === 'completed'
+														? 'my-res-history-status--completed'
+														: 'my-res-history-status--canceled')
+												}
+											>
+												{r.status === 'completed' ? '이용완료' : '예약취소'}
+											</Typography>
+											{r.status === 'completed' ? (
+												<Box>
+													<Button className="add-review-btn" onClick={() => setOpenReview(true)} variant="outlined">
+														리뷰 작성
+													</Button>
+													<ReviewPage isOpen={openReview} setIsOpen={setOpenReview} />
+												</Box>
+											) : (
+												''
+											)}
+										</Box>
 									</Box>
-									<Typography
-										className={
-											'my-res-history-status ' +
-											(r.status === 'completed'
-												? 'my-res-history-status--completed'
-												: 'my-res-history-status--canceled')
-										}
-									>
-										{r.status === 'completed' ? '이용완료' : '예약취소'}
-									</Typography>
-								</Box>
+								</Stack>
 							</React.Fragment>
 						))}
 					</Paper>

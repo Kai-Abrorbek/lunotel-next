@@ -1,17 +1,19 @@
 import { useRouter, withRouter } from 'next/router';
 import useDeviceDetect from '../hooks/useDeviceDetect';
-import { Box, Button, IconButton, Stack, Typography } from '@mui/material';
+import { Box, Button, Drawer, IconButton, Stack, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import Link from 'next/link';
-import path from 'path';
+import MemberQuickMenu from './common/MemberQuickMenu';
+import { useState } from 'react';
 
 const Top = () => {
 	const router = useRouter();
+	const [openMenu, setOpenMenu] = useState<boolean>(false);
 	const pathName = router.pathname.replace('/', '').trim();
 	const user = false;
 	const device = useDeviceDetect();
 	if (device === 'mobile') {
-		return <h1>MOBILe</h1>;
+		return <h1>MOBILE</h1>;
 	} else {
 		return (
 			<Stack className="navbar">
@@ -24,7 +26,7 @@ const Top = () => {
 					{/* 오른쪽 버튼들 */}
 					<Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
 						{user || pathName === 'mypage' ? (
-							<div>
+							<Link href={'/mypage/user'}>
 								<Button
 									variant="outlined"
 									sx={{
@@ -38,9 +40,9 @@ const Top = () => {
 								>
 									USER NAME
 								</Button>
-							</div>
+							</Link>
 						) : pathName === 'login' || pathName === 'reservation/check' ? (
-							<div>
+							<Link href={'/login'}>
 								<Button
 									variant="outlined"
 									sx={{
@@ -54,7 +56,7 @@ const Top = () => {
 								>
 									로그인/회원가입
 								</Button>
-							</div>
+							</Link>
 						) : (
 							<div>
 								<Link href={'/reservation/check'}>
@@ -92,9 +94,10 @@ const Top = () => {
 							</div>
 						)}
 
-						<IconButton>
+						<IconButton onClick={() => setOpenMenu(!openMenu)}>
 							<MenuIcon sx={{ fontSize: 30 }} />
 						</IconButton>
+						<MemberQuickMenu open={openMenu} setOpen={setOpenMenu} />
 					</Box>
 				</Box>
 			</Stack>

@@ -1,6 +1,6 @@
 // MyReservationsPage.tsx
-import React, { useState } from 'react';
-import { Box, Button, Paper, Divider, Stack, dividerClasses } from '@mui/material';
+import React from 'react';
+import { Box, Button, Paper, Divider, Stack } from '@mui/material';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import LayoutHome from '../../../libs/components/layout/LayoutHome';
 import ReservationHistory from '../../../libs/components/mypage/user/ReservationHistory';
@@ -9,12 +9,15 @@ import PointPage from '../../../libs/components/mypage/user/PointPage';
 import MyInfoPage from '../../../libs/components/mypage/user/MyInfoPage';
 import SettingsPage from '../../../libs/components/mypage/user/SettingsPage';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 const MyReservationsPage: React.FC = () => {
-	const [menu, setManu] = useState<string>('reservation-details');
+	const router = useRouter();
+	const category = router.query.category ?? 'reservation-details';
 	const user = { name: 'KAi', type: 'host' };
+
 	const renderPage = () => {
-		switch (menu) {
+		switch (category) {
 			case 'reservation-details':
 				return <ReservationHistory />;
 			case 'my-favorits':
@@ -39,37 +42,53 @@ const MyReservationsPage: React.FC = () => {
 						style={{ height: `${user.type === 'host' ? '338px' : ''}` }}
 					>
 						<Stack className="my-res-side-menu-list">
-							<Box className="my-res-side-menu-box " onClick={() => setManu('reservation-details')}>
-								<Button className={`my-res-side-menu-item ${menu === 'reservation-details' ? 'active' : ''}`}>
-									예약 내역
-								</Button>
-								<ChevronRightIcon />
-							</Box>
+							<Link href={'/mypage/user?category=reservation-details'}>
+								<Box className="my-res-side-menu-box ">
+									<Button className={`my-res-side-menu-item ${category === 'reservation-details' ? 'active' : ''}`}>
+										예약 내역
+									</Button>
+									<ChevronRightIcon />
+								</Box>
+							</Link>
 							<Divider />
-							<Box className="my-res-side-menu-box " onClick={() => setManu('my-favorits')}>
-								<Button className={`my-res-side-menu-item ${menu === 'my-favorits' ? 'active' : ''}`}>찜 목록</Button>
-								<ChevronRightIcon />
-							</Box>
+							<Link href={'/mypage/user?category=my-favorits'}>
+								<Box className="my-res-side-menu-box ">
+									<Button className={`my-res-side-menu-item ${category === 'my-favorits' ? 'active' : ''}`}>
+										찜 목록
+									</Button>
+									<ChevronRightIcon />
+								</Box>
+							</Link>
 							<Divider />
-							<Box className="my-res-side-menu-box " onClick={() => setManu('points')}>
-								<Button className={`my-res-side-menu-item ${menu === 'points' ? 'active' : ''}`}>포인트</Button>
-								<ChevronRightIcon />
-							</Box>
+							<Link href={'/mypage/user?category=points'}>
+								<Box className="my-res-side-menu-box ">
+									<Button className={`my-res-side-menu-item ${category === 'points' ? 'active' : ''}`}>포인트</Button>
+									<ChevronRightIcon />
+								</Box>
+							</Link>
 							<Divider />
-							<Box className="my-res-side-menu-box " onClick={() => setManu('my-info')}>
-								<Button className={`my-res-side-menu-item ${menu === 'my-info' ? 'active' : ''}`}>내 정보 관리</Button>
-								<ChevronRightIcon />
-							</Box>
+							<Link href={'/mypage/user?category=my-info'}>
+								<Box className="my-res-side-menu-box ">
+									<Button className={`my-res-side-menu-item ${category === 'my-info' ? 'active' : ''}`}>
+										내 정보 관리
+									</Button>
+									<ChevronRightIcon />
+								</Box>
+							</Link>
 							<Divider />
-							<Box className="my-res-side-menu-box " onClick={() => setManu('settings')}>
-								<Button className={`my-res-side-menu-item ${menu === 'settings' ? 'active' : ''}`}>설정</Button>
-								<ChevronRightIcon />
-							</Box>
+							<Link href={'/mypage/user?category=settings'}>
+								<Box className="my-res-side-menu-box ">
+									<Button className={`my-res-side-menu-item ${category === 'settings' ? 'active' : ''}`}>설정</Button>
+									<ChevronRightIcon />
+								</Box>
+							</Link>
 							<Divider />
 							{user.type === 'host' ? (
-								<Link href={'/mypage/host'}>
-									<Box className="my-res-side-menu-box " onClick={() => setManu('dashboard')}>
-										<Button className={`my-res-side-menu-item ${menu === 'settings' ? 'active' : ''}`}>대시보드</Button>
+								<Link href={'/mypage/property-management'}>
+									<Box className="my-res-side-menu-box ">
+										<Button className={`my-res-side-menu-item ${category === 'settings' ? 'active' : ''}`}>
+											숙소 관리
+										</Button>
 										<ChevronRightIcon />
 									</Box>
 								</Link>

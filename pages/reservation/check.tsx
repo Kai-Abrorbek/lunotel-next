@@ -5,7 +5,7 @@ import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import PhoneIphoneOutlinedIcon from '@mui/icons-material/PhoneIphoneOutlined';
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
-import LayoutHome from '../../../libs/components/layout/LayoutHome';
+import LayoutHome from '../../libs/components/layout/LayoutHome';
 
 const mockReservation = {
 	propertyName: '루나호텔 해운대',

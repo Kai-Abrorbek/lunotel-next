@@ -26,7 +26,8 @@ const LoginPage: React.FC = () => {
 					{/* 버튼 영역 */}
 					<Box className="login-page__buttons">
 						<Button fullWidth className="login-page__btn login-page__btn--kakao">
-							<ChatBubbleOutlineIcon className="login-page__btn-icon" />
+							<span className="login-page__btn-icon">💬</span>
+							{/* <ChatBubbleOutlineIcon className="login-page__btn-icon" /> */}
 							<span>카카오로 시작하기</span>
 						</Button>
 

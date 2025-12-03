@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Box, Typography, Button, IconButton, Stack } from '@mui/material';
+import { Box, Typography, Button, IconButton, Stack, Drawer } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import MenuIcon from '@mui/icons-material/Menu';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { PropertiesInquiry } from '../types/property/property.input';
 import HeroCard from './common/HeroCard';
+import MemberQuickMenu from './common/MemberQuickMenu';
 
 interface MiniHeaderProps {
 	initialInput: PropertiesInquiry;
@@ -14,6 +15,8 @@ interface MiniHeaderProps {
 const MiniHeader = (props: MiniHeaderProps) => {
 	const { initialInput } = props;
 	const router = useRouter();
+	const user = true;
+	const [openMenu, setOpenMenu] = useState<boolean>(false);
 	const [searchFilter, setSearchFilter] = useState<PropertiesInquiry>(
 		router?.query?.input ? JSON.parse(router?.query?.input as string) : initialInput,
 	);
@@ -27,6 +30,7 @@ const MiniHeader = (props: MiniHeaderProps) => {
 		toDate(searchFilter?.search?.checkOutDate),
 	);
 	const guestLabel = searchFilter?.search?.personal;
+
 	/** LIFESICLE **/
 	useEffect(() => {
 		if (typeof window === 'undefined') return;
@@ -99,18 +103,35 @@ const MiniHeader = (props: MiniHeaderProps) => {
 						</Box>
 					)}
 				</Box>
-				<Stack className="mini-right-header">
-					<Box className="mini-header-right">
-						<Link href={'/login'}>
-							<Button className="mini-login-btn" variant="outlined">
-								로그인/회원가입
-							</Button>
-						</Link>
-						<IconButton className="mini-menu-btn">
-							<MenuIcon />
-						</IconButton>
-					</Box>
-				</Stack>
+				{!user ? (
+					<Stack className="mini-right-header">
+						<Box className="mini-header-right">
+							<Link href={'/login'}>
+								<Button className="mini-login-btn" variant="outlined">
+									로그인/회원가입
+								</Button>
+							</Link>
+							<IconButton className="mini-menu-btn" onClick={() => setOpenMenu(!openMenu)}>
+								<MenuIcon />
+							</IconButton>
+							<MemberQuickMenu open={openMenu} setOpen={setOpenMenu} />
+						</Box>
+					</Stack>
+				) : (
+					<Stack className="mini-right-header">
+						<Box className="mini-header-right">
+							<Link href={'/mypage/user'}>
+								<Button className="mini-login-btn" variant="outlined">
+									USER
+								</Button>
+							</Link>
+							<IconButton className="mini-menu-btn" onClick={() => setOpenMenu(!openMenu)}>
+								<MenuIcon />
+							</IconButton>
+							<MemberQuickMenu open={openMenu} setOpen={setOpenMenu} />
+						</Box>
+					</Stack>
+				)}
 			</Stack>
 		</div>
 	);

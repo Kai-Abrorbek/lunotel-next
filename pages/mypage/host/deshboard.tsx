@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Sidebar from '../../../libs/components/mypage/host/Sidebar';
 import HostDashboard from '../../../libs/components/mypage/host/HostDashboard';
-import CalendarPage from './CalendarPage';
+import CalendarPage from '../../../libs/components/mypage/host/CalendarPage';
 import LayoutHome from '../../../libs/components/layout/LayoutHome';
 import RoomsPage from '../../../libs/components/mypage/host/RoomsPage';
 import ReservationsPage from '../../../libs/components/mypage/host/ReservationsPage';
