@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Typography, Card, CardContent, Button, TextField } from '@mui/material';
 
 interface Review {
@@ -13,84 +13,86 @@ interface Review {
 	response?: string;
 }
 
+const allReviews: Review[] = [
+	{
+		id: 'REV-001',
+		guest: 'John Doe',
+		rating: 5,
+		date: '2024-11-20',
+		room: 'R102',
+		roomType: 'Deluxe Double Room',
+		comment:
+			'Absolutely wonderful stay! The room was immaculate, the staff was incredibly friendly and helpful. The location is perfect and the amenities exceeded our expectations. Will definitely return!',
+		verified: true,
+		response:
+			'Thank you so much for your kind words! We are thrilled to hear you enjoyed your stay and look forward to welcoming you back soon!',
+	},
+	{
+		id: 'REV-002',
+		guest: 'Maria Kim',
+		rating: 5,
+		date: '2024-11-18',
+		room: 'R202',
+		roomType: 'Oceanview Suite',
+		comment:
+			'The ocean view was breathtaking! Woke up to beautiful sunrises every morning. The suite was spacious and luxurious. Highly recommend!',
+		verified: true,
+	},
+	{
+		id: 'REV-003',
+		guest: 'Daniel Choi',
+		rating: 4,
+		date: '2024-11-15',
+		room: 'R302',
+		roomType: 'Standard Twin',
+		comment:
+			'Great value for money. Room was clean and comfortable. Only minor issue was the WiFi was a bit slow, but overall a pleasant experience.',
+		verified: true,
+		response:
+			'Thank you for your feedback! We have recently upgraded our WiFi system to provide faster speeds for all our guests.',
+	},
+	{
+		id: 'REV-004',
+		guest: 'Sarah Park',
+		rating: 5,
+		date: '2024-11-12',
+		room: 'R401',
+		roomType: 'Premium King',
+		comment:
+			'Perfect for a romantic getaway! The room was beautifully decorated, very clean, and the jacuzzi was amazing. The staff went above and beyond to make our anniversary special.',
+		verified: true,
+	},
+	{
+		id: 'REV-005',
+		guest: 'Alice Johnson',
+		rating: 4,
+		date: '2024-11-10',
+		room: 'R101',
+		roomType: 'Deluxe Double Room',
+		comment:
+			'Comfortable stay with excellent service. The breakfast buffet was delicious with lots of variety. Would have given 5 stars but the AC was a bit noisy.',
+		verified: false,
+	},
+	{
+		id: 'REV-006',
+		guest: 'Bob Smith',
+		rating: 3,
+		date: '2024-11-08',
+		room: 'R201',
+		roomType: 'Oceanview Suite',
+		comment:
+			'Room was nice but there was some construction noise during our stay. Staff was apologetic and offered a partial refund which we appreciated.',
+		verified: true,
+		response:
+			'We sincerely apologize for the inconvenience. The construction is now complete and we would love to welcome you back for a better experience.',
+	},
+];
+
 const ReviewsPage = () => {
 	const [filterRating, setFilterRating] = useState<'all' | '1' | '2' | '3' | '4' | '5'>('all');
 	const [searchTerm, setSearchTerm] = useState('');
-
-	const allReviews: Review[] = [
-		{
-			id: 'REV-001',
-			guest: 'John Doe',
-			rating: 5,
-			date: '2024-11-20',
-			room: 'R102',
-			roomType: 'Deluxe Double Room',
-			comment:
-				'Absolutely wonderful stay! The room was immaculate, the staff was incredibly friendly and helpful. The location is perfect and the amenities exceeded our expectations. Will definitely return!',
-			verified: true,
-			response:
-				'Thank you so much for your kind words! We are thrilled to hear you enjoyed your stay and look forward to welcoming you back soon!',
-		},
-		{
-			id: 'REV-002',
-			guest: 'Maria Kim',
-			rating: 5,
-			date: '2024-11-18',
-			room: 'R202',
-			roomType: 'Oceanview Suite',
-			comment:
-				'The ocean view was breathtaking! Woke up to beautiful sunrises every morning. The suite was spacious and luxurious. Highly recommend!',
-			verified: true,
-		},
-		{
-			id: 'REV-003',
-			guest: 'Daniel Choi',
-			rating: 4,
-			date: '2024-11-15',
-			room: 'R302',
-			roomType: 'Standard Twin',
-			comment:
-				'Great value for money. Room was clean and comfortable. Only minor issue was the WiFi was a bit slow, but overall a pleasant experience.',
-			verified: true,
-			response:
-				'Thank you for your feedback! We have recently upgraded our WiFi system to provide faster speeds for all our guests.',
-		},
-		{
-			id: 'REV-004',
-			guest: 'Sarah Park',
-			rating: 5,
-			date: '2024-11-12',
-			room: 'R401',
-			roomType: 'Premium King',
-			comment:
-				'Perfect for a romantic getaway! The room was beautifully decorated, very clean, and the jacuzzi was amazing. The staff went above and beyond to make our anniversary special.',
-			verified: true,
-		},
-		{
-			id: 'REV-005',
-			guest: 'Alice Johnson',
-			rating: 4,
-			date: '2024-11-10',
-			room: 'R101',
-			roomType: 'Deluxe Double Room',
-			comment:
-				'Comfortable stay with excellent service. The breakfast buffet was delicious with lots of variety. Would have given 5 stars but the AC was a bit noisy.',
-			verified: false,
-		},
-		{
-			id: 'REV-006',
-			guest: 'Bob Smith',
-			rating: 3,
-			date: '2024-11-08',
-			room: 'R201',
-			roomType: 'Oceanview Suite',
-			comment:
-				'Room was nice but there was some construction noise during our stay. Staff was apologetic and offered a partial refund which we appreciated.',
-			verified: true,
-			response:
-				'We sincerely apologize for the inconvenience. The construction is now complete and we would love to welcome you back for a better experience.',
-		},
-	];
+	const [replyOpenId, setReplyOpenId] = useState<string | null>(null);
+	const [replyText, setReplyText] = useState('');
 
 	const renderStars = (rating: number) => (
 		<span className="reviews-page__stars">
@@ -119,6 +121,15 @@ const ReviewsPage = () => {
 			percentage: (count / allReviews.length) * 100,
 		};
 	});
+
+	const handleSubmitReply = (reviewId: string) => {
+		const targetReview = allReviews.filter((review) => review.id === reviewId);
+		targetReview[0].response = replyText;
+		console.log('답글 제출:', { reviewId, replyText });
+		// TODO: 여기서 API 호출 후 리스트 다시 fetch / 상태 업데이트
+		setReplyText('');
+		setReplyOpenId(null);
+	};
 
 	return (
 		<Box className="reviews-page">
@@ -229,16 +240,63 @@ const ReviewsPage = () => {
 									<Button variant="outlined" className="reviews-page__review-action-btn">
 										👍 도움돼요
 									</Button>
-									<Button variant="outlined" className="reviews-page__review-action-btn">
+									<Button
+										variant="outlined"
+										className="reviews-page__review-action-btn"
+										onClick={() => {
+											if (replyOpenId === review.id) {
+												setReplyOpenId(null);
+												setReplyText('');
+											} else {
+												setReplyOpenId(review.id);
+												setReplyText(review.response ?? '');
+											}
+										}}
+									>
 										💬 답글 달기
 									</Button>
 								</Box>
 							</Box>
 
+							{/* 호스트 기존 답변 표시 */}
 							{review.response && (
 								<Box className="reviews-page__review-response">
 									<div className="reviews-page__review-response-header">🏨 호스트 답변</div>
 									<div className="reviews-page__review-response-text">{review.response}</div>
+								</Box>
+							)}
+
+							{/* ✅ 이 카드에만 보이는 인라인 답글 입력 영역 */}
+							{replyOpenId === review.id && (
+								<Box className="reviews-page__reply-section">
+									<div className="reviews-page__reply-header">🏨 호스트 답변 작성</div>
+									<TextField
+										multiline
+										minRows={3}
+										fullWidth
+										placeholder="답글을 입력하세요..."
+										value={replyText}
+										onChange={(e) => setReplyText(e.target.value)}
+										className="reviews-page__reply-textfield"
+									/>
+									<Box className="reviews-page__reply-actions">
+										<Button
+											variant="outlined"
+											onClick={() => {
+												setReplyOpenId(null);
+												setReplyText('');
+											}}
+										>
+											취소
+										</Button>
+										<Button
+											variant="contained"
+											onClick={() => handleSubmitReply(review.id)}
+											disabled={!replyText.trim()}
+										>
+											답글 등록
+										</Button>
+									</Box>
 								</Box>
 							)}
 						</CardContent>
