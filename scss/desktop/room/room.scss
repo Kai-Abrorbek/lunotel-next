@@ -85,7 +85,6 @@
 			padding: 9px 18px !important;
 		}
 	}
-
 	.property-detail-main {
 		position: relative;
 		top: 100px;
@@ -524,6 +523,70 @@
 			}
 		}
 		#section-reviews {
+			.reviews-page__header {
+				display: flex;
+				justify-content: space-between;
+				align-items: flex-end;
+				padding: 16px 0 8px;
+				.reviews-page__header-left {
+					display: flex;
+					align-items: center;
+					gap: 6px;
+					font-size: 18px;
+					color: #6b7280;
+				}
+
+				.reviews-page__header-star {
+					color: #facc15;
+					font-size: 18px;
+				}
+
+				.reviews-page__header-title {
+					font-weight: 500;
+					color: #111827;
+				}
+
+				.reviews-page__header-score {
+					font-weight: 700;
+					margin-left: 2px;
+				}
+
+				.reviews-page__header-meta {
+					margin-left: 8px;
+					font-size: 13px;
+					color: #9ca3af;
+				}
+
+				.reviews-page__header-right {
+					display: flex;
+					align-items: center;
+				}
+
+				.reviews-page__sort-trigger {
+					padding: 0;
+					min-width: auto;
+					font-size: 14px;
+					color: #111827;
+					text-transform: none;
+				}
+
+				.reviews-page__sort-icon {
+					margin-right: 4px;
+					font-size: 18px;
+				}
+
+				.reviews-page__sort-label {
+					text-decoration: underline;
+					text-underline-offset: 2px;
+				}
+
+				.reviews-page__header-divider {
+					border: none;
+					border-bottom: 1px solid #e5e7eb;
+					margin: 0 0 16px;
+				}
+			}
+
 			.review-item {
 				display: grid;
 				grid-template-columns: 220px minmax(0, 1fr);
@@ -1022,5 +1085,28 @@
 		font-size: 12px;
 		color: #666;
 		text-align: right;
+	}
+}
+
+.reviews-page__sort-menu-item {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	min-width: 160px;
+	padding: 8px 14px !important;
+	.reviews-page__sort-menu-text {
+		font-size: 14px;
+		color: #374151; // 기본 (회색)
+		font-weight: 400;
+	}
+
+	.reviews-page__sort-menu-text--active {
+		color: #2563eb; // 파란색
+		font-weight: 600;
+	}
+
+	.reviews-page__sort-menu-check {
+		color: #2563eb;
+		font-size: 18px;
 	}
 }

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import OtherLayout from '../../../libs/components/layout/OtherLayout';
 import { PropertiesInquiry } from '../../../libs/types/property/property.input';
 import { useRouter } from 'next/router';
-import { Box, Button, Chip, IconButton, Pagination, Stack, Typography } from '@mui/material';
+import { Box, Button, Chip, IconButton, Menu, MenuItem, Pagination, Stack, Typography } from '@mui/material';
 import RoomStickyBar from '../../../libs/components/room/RoomStickyBar';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -21,7 +21,8 @@ import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper';
-
+import SwapVertIcon from '@mui/icons-material/SwapVert';
+import CheckIcon from '@mui/icons-material/Check';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import Link from 'next/link';
@@ -259,6 +260,111 @@ const STAYS: Stay[] = [
 	// 필요하면 더 추가
 ];
 
+const sampleReviews = [
+	{
+		id: 'REV-101',
+		guest: 'James Kim',
+		rating: 5,
+		date: '2024-12-01',
+		room: 'R203',
+		roomType: 'Deluxe Double Room',
+		verified: true,
+		comment: '최고의 숙박이었어요! 직원들 친절하고 방도 완전 깨끗했습니다.',
+		response: '좋은 리뷰 감사합니다! 더 편안한 숙박 되도록 항상 노력하겠습니다.',
+	},
+	{
+		id: 'REV-102',
+		guest: 'Sophie Lee',
+		rating: 3,
+		date: '2024-12-03',
+		room: 'R104',
+		roomType: 'Standard Twin',
+		verified: false,
+		comment: '전체적으로 무난했지만 방음이 좀 아쉬웠어요.',
+	},
+	{
+		id: 'REV-103',
+		guest: 'Daniel Park',
+		rating: 4,
+		date: '2024-11-29',
+		room: 'R402',
+		roomType: 'Oceanview Suite',
+		verified: true,
+		comment: '뷰가 정말 최고예요. 조식도 괜찮았습니다.',
+	},
+	{
+		id: 'REV-104',
+		guest: 'Emily Choi',
+		rating: 2,
+		date: '2024-12-02',
+		room: 'R305',
+		roomType: 'Standard Twin',
+		verified: true,
+		comment: '침대가 너무 딱딱했고 난방이 약했어요.',
+	},
+	{
+		id: 'REV-105',
+		guest: 'Michael Stone',
+		rating: 5,
+		date: '2024-11-27',
+		room: 'R501',
+		roomType: 'Premium King',
+		verified: true,
+		comment: '기념일로 갔는데 케이크 서비스까지 주셔서 감동했습니다!',
+		response: '소중한 날 함께할 수 있어 영광입니다.',
+	},
+	{
+		id: 'REV-106',
+		guest: 'Anna Kim',
+		rating: 1,
+		date: '2024-12-04',
+		room: 'R101',
+		roomType: 'Standard Double',
+		verified: false,
+		comment: '청결 상태가 많이 아쉬웠습니다. 다시 방문하기는 어려울 것 같아요.',
+	},
+	{
+		id: 'REV-107',
+		guest: 'Ryan Lee',
+		rating: 4,
+		date: '2024-12-04',
+		room: 'R303',
+		roomType: 'Deluxe Double Room',
+		verified: true,
+		comment: '적당한 가격에 만족스러운 시설이었습니다.',
+	},
+	{
+		id: 'REV-108',
+		guest: 'Olivia Park',
+		rating: 3,
+		date: '2024-11-30',
+		room: 'R212',
+		roomType: 'Oceanview Suite',
+		verified: true,
+		comment: '뷰는 좋았지만 체크인이 너무 오래 걸렸어요.',
+	},
+	{
+		id: 'REV-109',
+		guest: 'Henry Yoon',
+		rating: 5,
+		date: '2024-12-05',
+		room: 'R601',
+		roomType: 'Premium Suite',
+		verified: true,
+		comment: '시설, 직원 친절도, 위치 모두 완벽했습니다.',
+	},
+	{
+		id: 'REV-110',
+		guest: 'Jessica Han',
+		rating: 2,
+		date: '2024-11-25',
+		room: 'R105',
+		roomType: 'Standard Double',
+		verified: false,
+		comment: '욕실이 너무 오래돼서 불편했습니다.',
+	},
+];
+
 interface PropertyDetailPageProps {
 	initialInput: PropertiesInquiry;
 }
@@ -277,6 +383,18 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 	const [searchFilter, setSearchFilter] = useState<PropertiesInquiry>(
 		router?.query?.input ? JSON.parse(router?.query?.input as string) : initialInput,
 	);
+
+	const [sortOption, setSortOption] = useState<'recommended' | 'recent' | 'high' | 'low'>('recommended');
+	const [sortAnchorEl, setSortAnchorEl] = useState<null | HTMLElement>(null);
+	const isSortMenuOpen = Boolean(sortAnchorEl);
+
+	const sortLabelMap = {
+		recommended: '추천순',
+		recent: '최신순',
+		high: '평점 높은순',
+		low: '평점 낮은순',
+	} as const;
+
 	const main = GALLERY_IMAGES[0];
 	const thumbs = GALLERY_IMAGES.slice(1, 5); // 오른쪽 4개
 	const totalCount = GALLERY_IMAGES.length; // 오른쪽 4개
@@ -304,6 +422,22 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 	const toggleFavorite = (id: number) => {
 		setFavoriteRooms((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
 	};
+
+	const sortedReviews = [...sampleReviews].sort((a, b) => {
+		switch (sortOption) {
+			case 'recent':
+				return new Date(b.date).getTime() - new Date(a.date).getTime();
+			case 'high':
+				return b.rating - a.rating;
+			case 'low':
+				return a.rating - b.rating;
+			case 'recommended':
+			default:
+				// 추천순: 일단 평점↓, 날짜↓ 정도로
+				if (b.rating !== a.rating) return b.rating - a.rating;
+				return new Date(b.date).getTime() - new Date(a.date).getTime();
+		}
+	});
 
 	return (
 		<Stack className="container">
@@ -521,30 +655,98 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 					<PropertyLocationMap address="서울 강동구 길동 387-7" />
 				</section>
 				<section id="section-reviews">
+					<Box className="reviews-page__header">
+						<Box className="reviews-page__header-left">
+							<span className="reviews-page__header-star">★</span>
+							<span className="reviews-page__header-title">
+								리얼 리뷰 <span className="reviews-page__header-score">{9.1}</span>
+							</span>
+							<span className="reviews-page__header-meta">
+								{sampleReviews.length.toLocaleString()}명 평가 · {sampleReviews.length.toLocaleString()}개 리뷰
+							</span>
+						</Box>
+
+						<Box className="reviews-page__header-right">
+							<Button
+								className="reviews-page__sort-trigger"
+								onClick={(e) => setSortAnchorEl(e.currentTarget)}
+								disableRipple
+							>
+								<SwapVertIcon fontSize="small" className="reviews-page__sort-icon" />
+								<span className="reviews-page__sort-label">{sortLabelMap[sortOption]}</span>
+							</Button>
+
+							<Menu
+								anchorEl={sortAnchorEl}
+								open={isSortMenuOpen}
+								onClose={() => setSortAnchorEl(null)}
+								anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+								transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+							>
+								{(
+									[
+										{ key: 'recommended', label: '추천순' },
+										{ key: 'recent', label: '최신순' },
+										{ key: 'high', label: '평점 높은순' },
+										{ key: 'low', label: '평점 낮은순' },
+									] as const
+								).map((item) => (
+									<MenuItem
+										key={item.key}
+										onClick={() => {
+											setSortOption(item.key);
+											setSortAnchorEl(null);
+										}}
+										className="reviews-page__sort-menu-item"
+									>
+										<span
+											className={
+												sortOption === item.key
+													? 'reviews-page__sort-menu-text reviews-page__sort-menu-text--active'
+													: 'reviews-page__sort-menu-text'
+											}
+										>
+											{item.label}
+										</span>
+										{sortOption === item.key && (
+											<CheckIcon fontSize="small" className="reviews-page__sort-menu-check" />
+										)}
+									</MenuItem>
+								))}
+							</Menu>
+						</Box>
+					</Box>
+					<hr className="reviews-page__header-divider" />
 					<ReviewImageModal
 						images={reviewImages}
 						open={openReviewImage}
 						onClose={() => setOpenReviewImage(false)}
 						reviewImgIndex={reviewImgIndex}
 					/>
-					{[1, 2, 3, 4].map((review) => {
-						return (
-							<ReviewItem
-								key={review}
-								nickname="마롱이주인"
-								statsText="리뷰 37 · 사진 58 · 장소 34"
-								rating={5}
-								writtenAgo="1개월 전"
-								roomName="A-타입(카운터에서 A타입 꼭 말씀해주세요, OTT 시청가능)"
-								text="길동 마리호텔! 예전에도 들렀던 적 있었는데 이번에도 근처 방문할 일이 생겨서 또 숙박했습니다. 욕조도 있고 침대나 방도 큼직한데 가격이 항상 착한 것 같아요. 주변에 해장할만한 맛집도 많고 지하철역이나 버스정류장도 가까워서 교통도 잘 좋습니다. 사장님도 친절하시고 방 컨디션이나 청소 상태도 마음에 들었습니다. 아 티비도 엄청 큽니다. 다음에도 서울 올 일 있으면 여기로 예약 잡을 것 같습니다. 추천드립니다."
-								replyText="저희 숙소를 이용해주셔서 진심으로 감사드립니다. 자주 오셔서 편히 쉬시고 가실 수 있도록 항상 꼼꼼하게 객실 관리를 해놓겠습니다. 앞으로도 많은 이용 부탁드리겠습니다."
-								replyAgo="1개월 전"
-								images={reviewImages}
-								setOpenReviewImage={setOpenReviewImage}
-								setReviewImgIndex={setReviewImgIndex}
-							/>
-						);
-					})}
+					{sortedReviews.length !== 0 ? (
+						sortedReviews.map((review) => {
+							return (
+								<ReviewItem
+									key={review.id}
+									nickname={review.guest}
+									statsText="리뷰 37 · 사진 58 · 장소 34"
+									rating={review.rating}
+									writtenAgo={review.date}
+									roomName={review.roomType}
+									text={review.comment}
+									replyText={review.response}
+									replyAgo={'1개월 전'}
+									images={reviewImages}
+									setOpenReviewImage={setOpenReviewImage}
+									setReviewImgIndex={setReviewImgIndex}
+								/>
+							);
+						})
+					) : (
+						<div className="no-data">
+							<img src="/img/no-data3.webp" alt="" />
+						</div>
+					)}
 
 					<Stack className="reviews-pagination">
 						<Pagination
@@ -639,7 +841,6 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 											);
 										})}
 									</Swiper>
-
 									<IconButton className="hotelspecials-arrow hotelspecials-next">
 										<ArrowForwardIosIcon />
 									</IconButton>
