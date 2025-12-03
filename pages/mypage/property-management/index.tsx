@@ -281,7 +281,7 @@ const PropertyManagementPage = () => {
 											<Button variant="outlined" size="small" className="property-card__action-btn">
 												수정
 											</Button>
-											<Link href={`/mypage/host/deshboard?propertyId=${property.name}`}>
+											<Link href={`/mypage/property-management/deshboard?propertyId=${property.name}`}>
 												<Button
 													variant="contained"
 													size="small"

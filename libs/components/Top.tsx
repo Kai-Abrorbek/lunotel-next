@@ -1,6 +1,6 @@
 import { useRouter, withRouter } from 'next/router';
 import useDeviceDetect from '../hooks/useDeviceDetect';
-import { Box, Button, Drawer, IconButton, Stack, Typography } from '@mui/material';
+import { Badge, Box, Button, Drawer, IconButton, Stack, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import Link from 'next/link';
 import MemberQuickMenu from './common/MemberQuickMenu';
@@ -95,7 +95,21 @@ const Top = () => {
 						)}
 
 						<IconButton onClick={() => setOpenMenu(!openMenu)}>
-							<MenuIcon sx={{ fontSize: 30 }} />
+							<Badge
+								badgeContent={3} // 알림 개수
+								color="error" // 빨간색 뱃지
+								overlap="circular"
+								sx={{
+									'& .MuiBadge-badge': {
+										fontSize: '13px', // 글씨 크기
+										height: '18px', // 뱃지 높이
+										minWidth: '18px', // 뱃지 최소 너비
+										padding: '0 4px', // 내부 여백
+									},
+								}}
+							>
+								<MenuIcon sx={{ fontSize: 30 }} />
+							</Badge>
 						</IconButton>
 						<MemberQuickMenu open={openMenu} setOpen={setOpenMenu} />
 					</Box>

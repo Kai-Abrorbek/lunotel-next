@@ -7,11 +7,14 @@ import { userVar } from '../../../apollo/store';
 import { useReactiveVar } from '@apollo/client';
 import { getJwtToken, updateUserInfo } from '../../auth';
 import OtherTop from '../OtherTop';
+import { useRouter } from 'next/router';
 
 const withLayoutOther = (Component: any) => {
 	return (props: any) => {
 		const device = useDeviceDetect();
 		const user = useReactiveVar(userVar);
+		const router = useRouter();
+		const pathname = router.pathname.replace('/', '').trim();
 
 		/** LIFECYCLES **/
 		useEffect(() => {
@@ -59,9 +62,15 @@ const withLayoutOther = (Component: any) => {
 							<Component {...props} />
 						</Stack>
 
-						<Stack id={'footer'}>
-							<Footer />
-						</Stack>
+						{pathname === 'login' ||
+						pathname === 'reservation/check' ||
+						pathname === 'mypage/property-management/deshboard' ? (
+							<div></div>
+						) : (
+							<Stack id={'footer'}>
+								<Footer />
+							</Stack>
+						)}
 					</Stack>
 				</>
 			);

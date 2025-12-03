@@ -10,6 +10,7 @@ import MyInfoPage from '../../../libs/components/mypage/user/MyInfoPage';
 import SettingsPage from '../../../libs/components/mypage/user/SettingsPage';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import NotificationsPage from '../../../libs/components/mypage/user/NotificationsPage';
 
 const MyReservationsPage: React.FC = () => {
 	const router = useRouter();
@@ -28,6 +29,8 @@ const MyReservationsPage: React.FC = () => {
 				return <MyInfoPage />;
 			case 'settings':
 				return <SettingsPage />;
+			case 'notifications':
+				return <NotificationsPage />;
 		}
 	};
 
@@ -39,7 +42,7 @@ const MyReservationsPage: React.FC = () => {
 					<Paper
 						className="my-res-side-menu"
 						elevation={0}
-						style={{ height: `${user.type === 'host' ? '338px' : ''}` }}
+						style={{ height: `${user.type === 'host' ? '391px' : '339px'}` }}
 					>
 						<Stack className="my-res-side-menu-list">
 							<Link href={'/mypage/user?category=reservation-details'}>
@@ -79,6 +82,15 @@ const MyReservationsPage: React.FC = () => {
 							<Link href={'/mypage/user?category=settings'}>
 								<Box className="my-res-side-menu-box ">
 									<Button className={`my-res-side-menu-item ${category === 'settings' ? 'active' : ''}`}>설정</Button>
+									<ChevronRightIcon />
+								</Box>
+							</Link>
+							<Divider />
+							<Link href={'/mypage/user?category=notifications'}>
+								<Box className="my-res-side-menu-box ">
+									<Button className={`my-res-side-menu-item ${category === 'notifications' ? 'active' : ''}`}>
+										알림
+									</Button>
 									<ChevronRightIcon />
 								</Box>
 							</Link>

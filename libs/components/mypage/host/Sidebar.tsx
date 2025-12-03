@@ -21,6 +21,7 @@ const menuItems: MenuItem[] = [
 	{ id: 'revenue', label: 'Revenue', icon: '💰' },
 	{ id: 'reviews', label: 'Reviews', icon: '⭐' },
 	{ id: 'customer-inquiry', label: 'Customer Inquiry', icon: '🗨️' },
+	{ id: 'notifications', label: 'Notifications', icon: '🔔' },
 ];
 
 export default function Sidebar({ active, setActive }: SidebarProps) {
@@ -45,21 +46,6 @@ export default function Sidebar({ active, setActive }: SidebarProps) {
 					</div>
 				))}
 			</nav>
-			<div
-				style={{
-					width: '100',
-					height: '40px',
-					display: 'flex',
-					justifyContent: 'center',
-					alignItems: 'center',
-					position: 'relative',
-					top: '30%',
-				}}
-			>
-				<Button style={{ width: '70%', height: '100%', color: 'white', fontWeight: '600' }} variant="contained">
-					로그아웃
-				</Button>
-			</div>
 		</div>
 	);
 }
