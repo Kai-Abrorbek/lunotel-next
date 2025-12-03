@@ -14,7 +14,8 @@ import {
 	InputAdornment,
 } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
-import LayoutHome from '../../libs/components/layout/LayoutHome';
+import LayoutHome from '../../../libs/components/layout/LayoutHome';
+import { useRouter } from 'next/router';
 
 const TIME_SLOTS = [
 	'12:00',
@@ -52,7 +53,8 @@ const ReservationCheckoutPage = () => {
 	const [visitMethod, setVisitMethod] = useState<'walk' | 'car'>('walk');
 	const [paymentMethod, setPaymentMethod] = useState<string>('카카오페이');
 	const [agreeAll, setAgreeAll] = useState(false);
-
+	const router = useRouter();
+	const query = router.query.staytype;
 	const roomPrice = 25000;
 	const discount = 0;
 	const totalPrice = roomPrice - discount;
@@ -67,24 +69,26 @@ const ReservationCheckoutPage = () => {
 					</Typography>
 
 					{/* 이용시간 */}
-					<Box className="section">
-						<Box className="section-header">
-							<Typography className="section-title">이용시간</Typography>
-							<Typography className="section-sub">최대 8시간 이용 가능</Typography>
+					{query === 'stay' && (
+						<Box className="section">
+							<Box className="section-header">
+								<Typography className="section-title">이용시간</Typography>
+								<Typography className="section-sub">최대 8시간 이용 가능</Typography>
+							</Box>
+							<Box className="time-chip-wrap">
+								{TIME_SLOTS.map((time) => (
+									<Button
+										key={time}
+										variant="outlined"
+										className={'time-chip' + (selectedTime === time ? ' time-chip--selected' : '')}
+										onClick={() => setSelectedTime(time)}
+									>
+										{time}
+									</Button>
+								))}
+							</Box>
 						</Box>
-						<Box className="time-chip-wrap">
-							{TIME_SLOTS.map((time) => (
-								<Button
-									key={time}
-									variant="outlined"
-									className={'time-chip' + (selectedTime === time ? ' time-chip--selected' : '')}
-									onClick={() => setSelectedTime(time)}
-								>
-									{time}
-								</Button>
-							))}
-						</Box>
-					</Box>
+					)}
 
 					{/* 예약자 정보 (폭 50%) */}
 					<Box className="section section--half">

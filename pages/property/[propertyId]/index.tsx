@@ -564,6 +564,12 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 					</Box>
 				</section>
 				<section id="section-rooms">
+					{[1, 2, 3, 4, 5, 6].length !== 0 && (
+						<div className="no-data">
+							<h1>검색 결과가 없어요.</h1>
+							<p>'asdd'에 대한 철자를 확인하거나 긴 문구는 띄어쓰기를 해보세요.</p>
+						</div>
+					)}
 					{[1, 2, 3, 4, 5, 6].map((room) => {
 						return (
 							<Box key={room} className="room-card">
@@ -589,7 +595,7 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 											<Box className="room-card__price-right">
 												<span className="final-price">{'27,500원'}</span>
 												<span className="per-night">/1실</span>
-												<Link href={'/reservation/checkout'}>
+												<Link href={`/reservation/checkout?roomId=${room}&staytype=stay`}>
 													<Button variant="contained" className="room-card__button room-card__button--day">
 														대실 예약
 													</Button>
@@ -611,9 +617,11 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 											<Box className="room-card__price-right">
 												<span className="final-price">{'71,000원'}</span>
 												<span className="per-night">/1박</span>
-												<Button variant="contained" className="room-card__button room-card__button--stay">
-													숙박 예약
-												</Button>
+												<Link href={`/reservation/checkout?roomId=${room}&staytype=overnight`}>
+													<Button variant="contained" className="room-card__button room-card__button--stay">
+														숙박 예약
+													</Button>
+												</Link>
 											</Box>
 										</Box>
 									</Box>

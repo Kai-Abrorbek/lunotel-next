@@ -367,78 +367,89 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 							</Menu>
 						</Box>
 
-						{/* card */}
-						{[1, 2, 3, 4, 5, 6, 7].map((item) => {
-							const isFav = favoriteIds.includes(item);
-							return (
-								<Card
-									key={item}
-									className="hotel-card"
-									elevation={1}
-									onClick={() => pushPropertyDetailHandler(item, '잠실 라운지 호텔 - LOUNGE')}
-								>
-									<Box className="hotel-card-inner">
-										<CardMedia
-											component="img"
-											image="https://images.pexels.com/photos/189296/pexels-photo-189296.jpeg?auto=compress&cs=tinysrgb&w=800" // 여기 나중에 실제 이미지로 교체
-											alt="room"
-											className="hotel-image"
-										/>
-										<CardContent className="hotel-info">
-											<Box className="hotel-header-row">
-												<Box>
-													<Typography className="hotel-type">모텔</Typography>
-													<Typography className="hotel-title">잠실 라운지 호텔 - LOUNGE</Typography>
-													<Typography className="hotel-location">몽토르성(잠실역) 도보 5분</Typography>
-												</Box>
-												<IconButton
-													className="favorite-btn"
-													onClick={(e) => {
-														e.stopPropagation();
-														setFavoriteIds((prev) =>
-															prev.includes(item) ? prev.filter((x) => x !== item) : [...prev, item],
-														);
-													}}
-												>
-													{isFav ? (
-														<FavoriteIcon className="popular-fav-icon active" />
-													) : (
-														<FavoriteBorderIcon className="popular-fav-icon" />
-													)}
-												</IconButton>
+						<Box className="hotel-card-box">
+							{[1, 2, 3, 4, 5, 6, 7].length !== 0 ? (
+								[1, 2, 3, 4, 5, 6, 7].map((item) => {
+									const isFav = favoriteIds.includes(item);
+									return (
+										<Card
+											key={item}
+											className="hotel-card"
+											elevation={1}
+											onClick={() => pushPropertyDetailHandler(item, '잠실 라운지 호텔 - LOUNGE')}
+										>
+											<Box className="hotel-card-inner">
+												<CardMedia
+													component="img"
+													image="https://images.pexels.com/photos/189296/pexels-photo-189296.jpeg?auto=compress&cs=tinysrgb&w=800" // 여기 나중에 실제 이미지로 교체
+													alt="room"
+													className="hotel-image"
+												/>
+												<CardContent className="hotel-info">
+													<Box className="hotel-header-row">
+														<Box>
+															<Typography className="hotel-type">모텔</Typography>
+															<Typography className="hotel-title">잠실 라운지 호텔 - LOUNGE</Typography>
+															<Typography className="hotel-location">몽토르성(잠실역) 도보 5분</Typography>
+														</Box>
+														<IconButton
+															className="favorite-btn"
+															onClick={(e) => {
+																e.stopPropagation();
+																setFavoriteIds((prev) =>
+																	prev.includes(item) ? prev.filter((x) => x !== item) : [...prev, item],
+																);
+															}}
+														>
+															{isFav ? (
+																<FavoriteIcon className="popular-fav-icon active" />
+															) : (
+																<FavoriteBorderIcon className="popular-fav-icon" />
+															)}
+														</IconButton>
+													</Box>
+
+													<Box className="hotel-rating-row">
+														<Box className="rating-badge">
+															<StarIcon className="rating-star" fontSize="small" />
+															<span className="rating-score">9.9</span>
+														</Box>
+														<Typography className="rating-count">411명 평가</Typography>
+													</Box>
+
+													<Typography className="hotel-checkin">숙박 14:00 체크인</Typography>
+
+													<Box className="hotel-price-row">
+														<Typography className="price-label">쿠폰 적용 시</Typography>
+														<Typography className="price-value">221,666원/1박</Typography>
+													</Box>
+													<Typography className="price-warning">이 가격으로 남은 객실 1개</Typography>
+												</CardContent>
 											</Box>
+										</Card>
+									);
+								})
+							) : (
+								<div className="no-data">
+									<h1>검색 결과가 없어요.</h1>
+									<p>'asdd'에 대한 철자를 확인하거나 긴 문구는 띄어쓰기를 해보세요.</p>
+								</div>
+							)}
+						</Box>
 
-											<Box className="hotel-rating-row">
-												<Box className="rating-badge">
-													<StarIcon className="rating-star" fontSize="small" />
-													<span className="rating-score">9.9</span>
-												</Box>
-												<Typography className="rating-count">411명 평가</Typography>
-											</Box>
-
-											<Typography className="hotel-checkin">숙박 14:00 체크인</Typography>
-
-											<Box className="hotel-price-row">
-												<Typography className="price-label">쿠폰 적용 시</Typography>
-												<Typography className="price-value">221,666원/1박</Typography>
-											</Box>
-											<Typography className="price-warning">이 가격으로 남은 객실 1개</Typography>
-										</CardContent>
-									</Box>
-								</Card>
-							);
-						})}
-
-						<Divider className="result-divider" />
-						<Stack className="result-pagination">
-							<Pagination
-								count={Math.ceil(total / searchFilter?.limit!) || 1}
-								page={currentPage}
-								shape="circular"
-								color="primary"
-								onChange={paginationHandler}
-							/>
-						</Stack>
+						{[1, 2, 3, 4, 5].length !== 0 ? (
+							<Stack className="result-pagination">
+								<Pagination
+									count={Math.ceil(total / searchFilter?.limit!) || 1}
+									page={currentPage}
+									shape="circular"
+									color="primary"
+									onChange={paginationHandler}
+								/>
+							</Stack>
+						) : (
+							''
+						)}
 					</Box>
 				</Box>
 			</Box>

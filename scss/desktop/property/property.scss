@@ -191,103 +191,106 @@
 						}
 					}
 				}
-				.hotel-card {
-					border-radius: 12px !important;
-					overflow: hidden;
-					margin-bottom: 20px;
-					.hotel-card-inner {
-						display: flex;
-						.hotel-image {
-							max-width: 360px;
-							width: 360px;
-							height: 250px;
-							object-fit: cover;
-							transition: all 0.45s ease;
-						}
-						.hotel-image:hover {
-							transform: translateZ(40px) scale(1.05);
-							transform-style: preserve-3d;
-						}
-						.hotel-info {
-							flex: 1;
-							padding: 16px 20px 16px 20px !important;
-							.hotel-header-row {
-								display: flex;
-								justify-content: space-between;
-								gap: 12px;
-								.hotel-type {
-									font-size: 13px;
-									color: #777;
-									margin-bottom: 4px;
+				.hotel-card-box {
+					margin-top: 20px;
+					.hotel-card {
+						border-radius: 12px !important;
+						overflow: hidden;
+						margin-bottom: 20px;
+						.hotel-card-inner {
+							display: flex;
+							.hotel-image {
+								max-width: 360px;
+								width: 360px;
+								height: 250px;
+								object-fit: cover;
+								transition: all 0.45s ease;
+							}
+							.hotel-image:hover {
+								transform: translateZ(40px) scale(1.05);
+								transform-style: preserve-3d;
+							}
+							.hotel-info {
+								flex: 1;
+								padding: 16px 20px 16px 20px !important;
+								.hotel-header-row {
+									display: flex;
+									justify-content: space-between;
+									gap: 12px;
+									.hotel-type {
+										font-size: 13px;
+										color: #777;
+										margin-bottom: 4px;
+									}
+									.hotel-title {
+										font-size: 18px;
+										font-weight: 700;
+									}
+									.hotel-location {
+										font-size: 13px;
+										color: #777;
+										margin-top: 4px;
+									}
+									.favorite-btn {
+										align-self: flex-start;
+										.popular-fav-icon.active {
+											color: #ff4d4f;
+										}
+									}
 								}
-								.hotel-title {
-									font-size: 18px;
-									font-weight: 700;
+								.hotel-rating-row {
+									display: flex;
+									align-items: center;
+									margin-top: 12px;
+									gap: 8px;
+									.rating-badge {
+										display: inline-flex;
+										align-items: center;
+										padding: 2px 8px;
+										border-radius: 999px;
+										background: #eeda22;
+										font-size: 13px;
+										font-weight: 600;
+										.rating-star {
+											margin-right: 2px;
+										}
+										.rating-score {
+											margin-left: 1px;
+										}
+									}
+									.rating-count {
+										font-size: 13px;
+										color: #777;
+									}
 								}
-								.hotel-location {
+								.hotel-checkin {
+									margin-top: 8px;
 									font-size: 13px;
-									color: #777;
+									color: #555;
+								}
+								.hotel-price-row {
+									display: flex;
+									justify-content: flex-end;
+									align-items: baseline;
+									gap: 6px;
+									margin-top: 16px;
+									.price-label {
+										font-size: 13px;
+										color: #777;
+									}
+
+									.price-value {
+										font-size: 20px;
+										font-weight: 700;
+										color: #222;
+									}
+								}
+								.price-warning {
+									text-align: right;
+									font-size: 12px;
+									color: #ff4d4f;
 									margin-top: 4px;
 								}
-								.favorite-btn {
-									align-self: flex-start;
-									.popular-fav-icon.active {
-										color: #ff4d4f;
-									}
-								}
-							}
-							.hotel-rating-row {
-								display: flex;
-								align-items: center;
-								margin-top: 12px;
-								gap: 8px;
-								.rating-badge {
-									display: inline-flex;
-									align-items: center;
-									padding: 2px 8px;
-									border-radius: 999px;
-									background: #eeda22;
-									font-size: 13px;
-									font-weight: 600;
-									.rating-star {
-										margin-right: 2px;
-									}
-									.rating-score {
-										margin-left: 1px;
-									}
-								}
-								.rating-count {
-									font-size: 13px;
-									color: #777;
-								}
-							}
-							.hotel-checkin {
-								margin-top: 8px;
-								font-size: 13px;
-								color: #555;
-							}
-							.hotel-price-row {
-								display: flex;
-								justify-content: flex-end;
-								align-items: baseline;
-								gap: 6px;
-								margin-top: 16px;
-								.price-label {
-									font-size: 13px;
-									color: #777;
-								}
-
-								.price-value {
-									font-size: 20px;
-									font-weight: 700;
-									color: #222;
-								}
-							}
-							.price-warning {
-								text-align: right;
-								font-size: 12px;
-								color: #ff4d4f;
-								margin-top: 4px;
 							}
 						}
 					}
