@@ -4,7 +4,8 @@ import SearchIcon from '@mui/icons-material/Search';
 import StarIcon from '@mui/icons-material/Star';
 import LayoutHome from '../../../libs/components/layout/LayoutHome';
 import Link from 'next/link';
-import AddPropertyModal from '../../../libs/components/mypage/host/AddPropertyModal';
+import AddPropertyModal from '../../../libs/components/mypage/property-management/AddPropertyModal';
+import PropertyUpdateModal from '../../../libs/components/mypage/property-management/PropertyUpdateData ';
 
 type PropertyStatus = '운영중' | '대기중' | '중지';
 
@@ -27,6 +28,8 @@ const PropertyManagementPage = () => {
 	const [selectedTab, setSelectedTab] = useState<TabKey>('all');
 	const [searchTerm, setSearchTerm] = useState('');
 	const [addPropertyOpen, setAddPropertyOpen] = useState<boolean>(false);
+	const [updatePropertyOpen, setUpdatePropertyOpen] = useState<boolean>(false);
+	const [selectedPropertyId, setSelectedPropertyId] = useState<number | null>(null);
 	const [properties] = useState<Property[]>([
 		{
 			id: 1,
@@ -129,6 +132,10 @@ const PropertyManagementPage = () => {
 	const waitingCount = properties.filter((p) => p.status === '대기중').length;
 	const stoppedCount = properties.filter((p) => p.status === '중지').length;
 
+	const handleOpenUpdatePropertyModal = (propertyId: number) => {
+		setUpdatePropertyOpen(true);
+		setSelectedPropertyId(propertyId);
+	};
 	return (
 		<Box className="property-page">
 			{/* 메인 컨테이너 */}
@@ -275,10 +282,15 @@ const PropertyManagementPage = () => {
 										</Box>
 
 										<Box className="property-card__actions">
-											{/* <Button variant="outlined" size="small" className="property-card__action-btn">
-												상세보기
-											</Button> */}
 											<Button variant="outlined" size="small" className="property-card__action-btn">
+												상세보기
+											</Button>
+											<Button
+												onClick={() => handleOpenUpdatePropertyModal(property.id)}
+												variant="outlined"
+												size="small"
+												className="property-card__action-btn"
+											>
 												수정
 											</Button>
 											<Link href={`/mypage/property-management/deshboard?propertyId=${property.name}`}>
@@ -295,6 +307,13 @@ const PropertyManagementPage = () => {
 								</Box>
 							</Grid>
 						))}
+						<PropertyUpdateModal
+							isOpen={updatePropertyOpen}
+							setIsOpen={setUpdatePropertyOpen}
+							selectedPropertyId={selectedPropertyId!}
+							setSelectedPropertyId={setSelectedPropertyId}
+						/>
+						!
 					</Grid>
 				) : (
 					<Paper elevation={0} className="property-page__empty">

@@ -5,7 +5,6 @@ import CalendarPage from '../../../libs/components/mypage/host/CalendarPage';
 import LayoutHome from '../../../libs/components/layout/LayoutHome';
 import RoomsPage from '../../../libs/components/mypage/host/RoomsPage';
 import ReservationsPage from '../../../libs/components/mypage/host/ReservationsPage';
-import PropertySettingsPage from '../../../libs/components/mypage/host/PropertySettingsPage';
 import RevenuePage from '../../../libs/components/mypage/host/RevenuePage';
 import ReviewsPage from '../../../libs/components/mypage/host/ReviewsPage';
 import NotificationsPage from '../../../libs/components/mypage/host/NotificationsPage';
@@ -30,8 +29,6 @@ const HostMyPage = () => {
 				return <ReviewsPage />;
 			case 'customer-inquiry':
 				return <CustomerInquiryPage />;
-			case 'property-settings':
-				return <PropertySettingsPage />;
 			case 'notifications':
 				return <NotificationsPage />;
 		}

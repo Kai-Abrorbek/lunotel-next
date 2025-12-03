@@ -15,7 +15,7 @@ import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import CloseIcon from '@mui/icons-material/Close';
 import AddReservationModal from './ReservationForm';
-import AddRoomModal from './AddRoomModal';
+import AddRoomModal from './RoomAddAndUpdateModal';
 
 type RoomStatus = 'available' | 'occupied' | 'cleaning' | 'maintenance';
 
@@ -178,8 +178,10 @@ const RoomsPage: React.FC = () => {
 	const [calendarOpenRoomId, setCalendarOpenRoomId] = useState<string | null>(null);
 	const [checkIn, setCheckIn] = useState<Date | null>(null);
 	const [checkOut, setCheckOut] = useState<Date | null>(null);
-	const [isOpen, setIsOpen] = useState(false);
-	const [isOpenAddRoom, setIsOpenAddRoom] = useState(false);
+	const [isOpen, setIsOpen] = useState<boolean>(false);
+	const [isOpenAddRoom, setIsOpenAddRoom] = useState<boolean>(false);
+	const [isOpenModalType, setIsOpenModalType] = useState<string>('');
+	const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
 	const [calendarMonth, setCalendarMonth] = useState<Date>(() => {
 		const d = new Date();
 		return new Date(d.getFullYear(), d.getMonth(), 1);
@@ -315,13 +317,39 @@ const RoomsPage: React.FC = () => {
 		setCalendarMonth((prev) => new Date(prev.getFullYear(), prev.getMonth() + 1, 1));
 	};
 
+	const handleOpenAddAndUpdateRoomModal = (type: string, roomId: string | null) => {
+		if (type === 'add') {
+			setIsOpenAddRoom(true);
+			setIsOpenModalType(type);
+		} else {
+			setIsOpenAddRoom(true);
+			setIsOpenModalType(type);
+			setSelectedRoomId(roomId);
+		}
+	};
+
 	return (
 		<Box className="rooms-page">
 			<Box className="rooms-page__header">
 				<Typography variant="h2" className="rooms-page__title">
 					객실
 				</Typography>
-				<AddRoomModal isOpen={isOpenAddRoom} setIsOpen={setIsOpenAddRoom} />
+				<Button
+					onClick={() => handleOpenAddAndUpdateRoomModal('add', null)}
+					variant="contained"
+					size="large"
+					className="rooms-page__add-button"
+				>
+					+ 객실 추가
+				</Button>
+				<AddRoomModal
+					isOpen={isOpenAddRoom}
+					setIsOpen={setIsOpenAddRoom}
+					isOpenModalType={isOpenModalType}
+					setIsOpenModalType={setIsOpenModalType}
+					selectedRoomId={selectedRoomId!}
+					setSelectedRoomId={setSelectedRoomId}
+				/>
 			</Box>
 
 			<Box className="rooms-page__tabs">
@@ -419,7 +447,7 @@ const RoomsPage: React.FC = () => {
 								</div>
 								<div className="room-card__actions">
 									<Button
-										onClick={() => handleOpenCalendar(room)}
+										onClick={() => handleOpenAddAndUpdateRoomModal('update', room.id)}
 										variant="contained"
 										size="large"
 										className="room-card__reserve-btn"

@@ -99,6 +99,7 @@ const AddPropertyModal = ({ open, onClose }: PropertyRegistrationModalProps) => 
 					geocoder.addressSearch(address, (result: any, status: any) => {
 						if (status === window.kakao.maps.services.Status.OK) {
 							const { x, y } = result[0]; // x: lng, y: lat
+							console.log('좌표', x, y);
 							handleChange('lat', y);
 							handleChange('lng', x);
 						}
