@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Box, Typography, Button, IconButton, Stack, Drawer } from '@mui/material';
+import { Box, Typography, Button, IconButton, Stack, Drawer, Badge } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import MenuIcon from '@mui/icons-material/Menu';
 import Link from 'next/link';
@@ -111,8 +111,22 @@ const MiniHeader = (props: MiniHeaderProps) => {
 									로그인/회원가입
 								</Button>
 							</Link>
-							<IconButton className="mini-menu-btn" onClick={() => setOpenMenu(!openMenu)}>
-								<MenuIcon />
+							<IconButton onClick={() => setOpenMenu(!openMenu)}>
+								<Badge
+									badgeContent={3} // 알림 개수
+									color="error" // 빨간색 뱃지
+									overlap="circular"
+									sx={{
+										'& .MuiBadge-badge': {
+											fontSize: '13px', // 글씨 크기
+											height: '18px', // 뱃지 높이
+											minWidth: '18px', // 뱃지 최소 너비
+											padding: '0 4px', // 내부 여백
+										},
+									}}
+								>
+									<MenuIcon sx={{ fontSize: 30 }} />
+								</Badge>
 							</IconButton>
 							<MemberQuickMenu open={openMenu} setOpen={setOpenMenu} />
 						</Box>
@@ -125,8 +139,22 @@ const MiniHeader = (props: MiniHeaderProps) => {
 									USER
 								</Button>
 							</Link>
-							<IconButton className="mini-menu-btn" onClick={() => setOpenMenu(!openMenu)}>
-								<MenuIcon />
+							<IconButton onClick={() => setOpenMenu(!openMenu)}>
+								<Badge
+									badgeContent={3} // 알림 개수
+									color="error" // 빨간색 뱃지
+									overlap="circular"
+									sx={{
+										'& .MuiBadge-badge': {
+											fontSize: '13px', // 글씨 크기
+											height: '18px', // 뱃지 높이
+											minWidth: '18px', // 뱃지 최소 너비
+											padding: '0 4px', // 내부 여백
+										},
+									}}
+								>
+									<MenuIcon sx={{ fontSize: 30 }} />
+								</Badge>
 							</IconButton>
 							<MemberQuickMenu open={openMenu} setOpen={setOpenMenu} />
 						</Box>

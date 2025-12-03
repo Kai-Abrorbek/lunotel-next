@@ -18,12 +18,12 @@ const HostMyPage = () => {
 		switch (active) {
 			case 'dashboard':
 				return <HostDashboard />;
+			case 'reservations':
+				return <ReservationsPage />;
 			case 'calendar':
 				return <CalendarPage />;
 			case 'rooms':
 				return <RoomsPage />;
-			case 'reservations':
-				return <ReservationsPage />;
 			case 'property-settings':
 				return <PropertySettingsPage />;
 			case 'revenue':

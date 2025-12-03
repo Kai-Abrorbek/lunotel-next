@@ -160,20 +160,20 @@ const ReservationsPage: NextPage = () => {
 	return (
 		<div className="reservation-page-contanier">
 			<div className="header-actions">
-				<h1 className="page-title">Reservations</h1>
+				<h1 className="page-title">예약 현황</h1>
 			</div>
 
 			<div className="stats-grid stats-grid-3">
 				<div className="stat-card">
-					<p className="stat-label">Total Reservations</p>
+					<p className="stat-label">총 예약수</p>
 					<p className="stat-value">{allReservations.length}</p>
 				</div>
 				<div className="stat-card">
-					<p className="stat-label">Total Revenue</p>
+					<p className="stat-label">총 수익</p>
 					<p className="stat-value">${totalRevenue.toLocaleString()}</p>
 				</div>
 				<div className="stat-card">
-					<p className="stat-label">Pending Check-ins</p>
+					<p className="stat-label">보류 중인 체크인</p>
 					<p className="stat-value">{statusCounts.confirmed}</p>
 				</div>
 			</div>
@@ -191,10 +191,10 @@ const ReservationsPage: NextPage = () => {
 						/>
 					</div>
 					<select className="filter-select" value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
-						<option value="all">All Status ({statusCounts.all})</option>
-						<option value="confirmed">Confirmed ({statusCounts.confirmed})</option>
-						<option value="checked-in">Checked-in ({statusCounts['checked-in']})</option>
-						<option value="pending">Pending ({statusCounts.pending})</option>
+						<option value="all">전체 ({statusCounts.all})</option>
+						<option value="confirmed">확인됨 ({statusCounts.confirmed})</option>
+						<option value="checked-in">체크인 ({statusCounts['checked-in']})</option>
+						<option value="pending">보류 중 ({statusCounts.pending})</option>
 					</select>
 				</div>
 
@@ -219,12 +219,12 @@ const ReservationsPage: NextPage = () => {
 											<span>{r.checkIn}</span>
 											<span className="date-separator">→</span>
 											<span>{r.checkOut}</span>
-											<span>({r.nights} nights)</span>
+											<span>({r.nights} 박)</span>
 										</div>
 									</div>
 									<div className="reservation-item-actions">
 										<div className="reservation-amount">${r.amount.toLocaleString()}</div>
-										<div className="reservation-room-info">{r.guests} guests</div>
+										<div className="reservation-room-info">{r.guests} 명</div>
 									</div>
 								</div>
 							</div>
@@ -233,8 +233,8 @@ const ReservationsPage: NextPage = () => {
 				) : (
 					<div className="empty-state">
 						<div className="empty-state-icon">🔍</div>
-						<div className="empty-state-title">No reservations found</div>
-						<div className="empty-state-text">Try adjusting your search or filter criteria</div>
+						<div className="empty-state-title">예약이 없습니다</div>
+						<div className="empty-state-text">검색 또는 필터 기준을 조정해 보세요.</div>
 					</div>
 				)}
 			</div>
@@ -244,7 +244,7 @@ const ReservationsPage: NextPage = () => {
 					<div className="modal-content" onClick={(e) => e.stopPropagation()}>
 						<div className="modal-header">
 							<div>
-								<h3>Reservation Details</h3>
+								<h3>예약 세부 정보</h3>
 								<p className="reservation-id">{selectedReservation.id}</p>
 							</div>
 							<button className="close-btn" onClick={() => setSelectedReservation(null)}>
@@ -253,59 +253,59 @@ const ReservationsPage: NextPage = () => {
 						</div>
 
 						<div className="modal-info-section">
-							<div className="modal-info-title">Guest Information</div>
+							<div className="modal-info-title">고객 정보</div>
 							<div className="modal-info-row">
-								<span className="modal-info-label">Name</span>
+								<span className="modal-info-label">이름</span>
 								<span className="modal-info-value">{selectedReservation.guest}</span>
 							</div>
 							<div className="modal-info-row">
-								<span className="modal-info-label">Email</span>
+								<span className="modal-info-label">이메일</span>
 								<span className="modal-info-value">{selectedReservation.email}</span>
 							</div>
 							<div className="modal-info-row">
-								<span className="modal-info-label">Phone</span>
+								<span className="modal-info-label">전화번호</span>
 								<span className="modal-info-value">{selectedReservation.phone}</span>
 							</div>
 							<div className="modal-info-row">
-								<span className="modal-info-label">Number of Guests</span>
-								<span className="modal-info-value">{selectedReservation.guests} guests</span>
+								<span className="modal-info-label">손님 수</span>
+								<span className="modal-info-value">{selectedReservation.guests} 명</span>
 							</div>
 						</div>
 
 						<div className="modal-info-section">
-							<div className="modal-info-title">Stay Details</div>
+							<div className="modal-info-title">숙박 세부 정보</div>
 							<div className="modal-info-row">
-								<span className="modal-info-label">Room</span>
+								<span className="modal-info-label">방</span>
 								<span className="modal-info-value">
 									{selectedReservation.room} - {selectedReservation.roomType}
 								</span>
 							</div>
 							<div className="modal-info-row">
-								<span className="modal-info-label">Check-in</span>
+								<span className="modal-info-label">체크인</span>
 								<span className="modal-info-value">{selectedReservation.checkIn}</span>
 							</div>
 							<div className="modal-info-row">
-								<span className="modal-info-label">Check-out</span>
+								<span className="modal-info-label">체크아웃</span>
 								<span className="modal-info-value">{selectedReservation.checkOut}</span>
 							</div>
 							<div className="modal-info-row">
-								<span className="modal-info-label">Duration</span>
-								<span className="modal-info-value">{selectedReservation.nights} nights</span>
+								<span className="modal-info-label">지속</span>
+								<span className="modal-info-value">{selectedReservation.nights} 박</span>
 							</div>
 						</div>
 
 						<div className="modal-info-section">
-							<div className="modal-info-title">Booking Information</div>
+							<div className="modal-info-title">예약 정보</div>
 							<div className="modal-info-row">
-								<span className="modal-info-label">Booking Date</span>
+								<span className="modal-info-label">예약 날짜</span>
 								<span className="modal-info-value">{selectedReservation.bookingDate}</span>
 							</div>
 							<div className="modal-info-row">
-								<span className="modal-info-label">Booking Channel</span>
+								<span className="modal-info-label">예약 채널</span>
 								<span className="modal-info-value">{selectedReservation.channel}</span>
 							</div>
 							<div className="modal-info-row">
-								<span className="modal-info-label">Status</span>
+								<span className="modal-info-label">상태</span>
 								<span className={`status-badge ${getStatusInfo(selectedReservation.status).class}`}>
 									{getStatusInfo(selectedReservation.status).label}
 								</span>
@@ -314,14 +314,14 @@ const ReservationsPage: NextPage = () => {
 
 						<div className="modal-total">
 							<div className="modal-total-row">
-								<span className="modal-total-label">Total Amount</span>
+								<span className="modal-total-label">총액</span>
 								<span className="modal-total-value">${selectedReservation.amount.toLocaleString()}</span>
 							</div>
 						</div>
 
 						<div className="modal-actions">
-							<button className="btn btn-secondary">Edit Reservation</button>
-							<button className="btn btn-danger">Cancel Reservation</button>
+							<button className="btn btn-secondary">예약 편집</button>
+							<button className="btn btn-danger">예약 취소</button>
 						</div>
 					</div>
 				</div>

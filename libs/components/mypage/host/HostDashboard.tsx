@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import React from 'react';
 
 type StatItem = {
@@ -12,14 +13,14 @@ type Reservation = {
 	roomType: string;
 	checkIn: string;
 	checkOut: string;
-	status: 'Confirmed';
+	status: '확인됨';
 };
 
 const stats: StatItem[] = [
-	{ id: 'checkins', label: "Today's Check-ins", value: '12' },
-	{ id: 'checkouts', label: "Today's Check-outs", value: '8' },
-	{ id: 'reservations', label: "Today's Reservations", value: '5' },
-	{ id: 'revenue', label: 'Revenue This Week', value: '$24,580' },
+	{ id: 'checkins', label: '오늘의 체크인', value: '12' },
+	{ id: 'checkouts', label: '오늘의 체크아웃', value: '8' },
+	{ id: 'reservations', label: '오늘의 예약', value: '5' },
+	{ id: 'revenue', label: '이번 주 수익', value: '$24,580' },
 ];
 
 const reservations: Reservation[] = [
@@ -29,7 +30,7 @@ const reservations: Reservation[] = [
 		roomType: 'Deluxe Double Room',
 		checkIn: '2024-02-12',
 		checkOut: '2024-02-14',
-		status: 'Confirmed',
+		status: '확인됨',
 	},
 	{
 		id: 2,
@@ -37,7 +38,7 @@ const reservations: Reservation[] = [
 		roomType: 'Oceanview Suite',
 		checkIn: '2024-02-13',
 		checkOut: '2024-02-15',
-		status: 'Confirmed',
+		status: '확인됨',
 	},
 	{
 		id: 3,
@@ -45,7 +46,7 @@ const reservations: Reservation[] = [
 		roomType: 'Standard Twin',
 		checkIn: '2024-02-12',
 		checkOut: '2024-02-13',
-		status: 'Confirmed',
+		status: '확인됨',
 	},
 ];
 
@@ -53,7 +54,7 @@ export default function HostDashboard() {
 	return (
 		<div className="dashboard">
 			<div className="dashboard__header">
-				<h1 className="dashboard__title">Dashboard</h1>
+				<h1 className="dashboard__title">대시보드</h1>
 			</div>
 
 			<section className="dashboard__stats">
@@ -72,7 +73,7 @@ export default function HostDashboard() {
 			<section className="dashboard__main-row">
 				{/* 왼쪽: Recent Reservations */}
 				<div className="dashboard__reservations">
-					<h2 className="dashboard__section-title">Recent Reservations</h2>
+					<h2 className="dashboard__section-title">최근 예약</h2>
 
 					<div className="dashboard__reservation-list">
 						{reservations.map((r) => (
@@ -85,11 +86,11 @@ export default function HostDashboard() {
 
 										<div className="reservation-card__dates">
 											<div className="reservation-card__date-item">
-												<span className="reservation-card__date-label">Check-in</span>
+												<span className="reservation-card__date-label">체크인</span>
 												<span className="reservation-card__date-value">{r.checkIn}</span>
 											</div>
 											<div className="reservation-card__date-item">
-												<span className="reservation-card__date-label">Check-out</span>
+												<span className="reservation-card__date-label">체크아웃</span>
 												<span className="reservation-card__date-value">{r.checkOut}</span>
 											</div>
 										</div>
@@ -106,20 +107,22 @@ export default function HostDashboard() {
 
 				{/* 오른쪽: Quick Actions */}
 				<div className="dashboard__quick-actions">
-					<h2 className="dashboard__section-title">Quick Actions</h2>
+					<h2 className="dashboard__section-title">빠른 작업</h2>
 
 					<div className="quick-card">
-						<button className="quick-card__item">
-							<span className="quick-card__icon">＋</span>
-							<span className="quick-card__text">Add Reservation</span>
-						</button>
-
+						<Link href={''}>
+							<button className="quick-card__item">
+								<span className="quick-card__icon">＋</span>
+								<span className="quick-card__text">객실 추가</span>
+							</button>
+						</Link>
 						<div className="quick-card__divider" />
-
-						<button className="quick-card__item">
-							<span className="quick-card__icon quick-card__icon--square">▦</span>
-							<span className="quick-card__text">View Calendar</span>
-						</button>
+						<Link href={''}>
+							<button className="quick-card__item">
+								<span className="quick-card__icon quick-card__icon--square">▦</span>
+								<span className="quick-card__text">달력 보기</span>
+							</button>
+						</Link>
 					</div>
 				</div>
 			</section>
