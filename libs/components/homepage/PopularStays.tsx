@@ -1,6 +1,6 @@
 // PopularStays.tsx
-import { useState } from 'react';
-import { Box, Typography, Button, IconButton, Chip, Stack } from '@mui/material';
+import { useMemo, useState } from 'react';
+import { Box, Typography, Button, IconButton, Chip, Stack, listItemTextClasses } from '@mui/material';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import StarIcon from '@mui/icons-material/Star';
@@ -11,13 +11,12 @@ import { Navigation } from 'swiper';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
-import { PropertyTypeKorean } from '../../enums/property.enum';
-
-type CategoryKey = 'all' | 'motel' | 'hotel_resort' | 'pension' | 'premium' | 'camping' | 'home_villa' | 'guesthouse';
+import { PropertyType, PropertyTypeKorean } from '../../enums/property.enum';
+import { PropertiesInquiry } from '../../types/property/property.input';
 
 interface Stay {
 	id: number;
-	categoryKey: PropertyTypeKorean;
+	categoryKey: PropertyType;
 	categoryLabel: string;
 	name: string;
 	location: string;
@@ -30,12 +29,13 @@ interface Stay {
 	imageUrl: string;
 }
 
-const CATEGORIES: PropertyTypeKorean[] = Object.values(PropertyTypeKorean);
+const CATEGORIES_K: PropertyTypeKorean[] = Object.values(PropertyTypeKorean);
+const CATEGORIES_EN: PropertyType[] = Object.values(PropertyType);
 
 const STAYS: Stay[] = [
 	{
 		id: 1,
-		categoryKey: PropertyTypeKorean.POLL_VILLA,
+		categoryKey: PropertyType.POLL_VILLA,
 		categoryLabel: '블랙 · 특급 · 호텔',
 		name: '★당일특가★ 세인트존스 호텔',
 		location: '강릉시',
@@ -47,7 +47,7 @@ const STAYS: Stay[] = [
 	},
 	{
 		id: 2,
-		categoryKey: PropertyTypeKorean.MOTEL,
+		categoryKey: PropertyType.MOTEL,
 		categoryLabel: '모텔',
 		name: '길동 MARI-마리',
 		location: '길동역',
@@ -60,7 +60,7 @@ const STAYS: Stay[] = [
 	},
 	{
 		id: 3,
-		categoryKey: PropertyTypeKorean.HOTEL,
+		categoryKey: PropertyType.HOTEL,
 		categoryLabel: '가족호텔 · 호텔',
 		name: '★당일특가★ 체스터톤스 호텔',
 		location: '속초시',
@@ -73,7 +73,7 @@ const STAYS: Stay[] = [
 	},
 	{
 		id: 5,
-		categoryKey: PropertyTypeKorean.MOTEL,
+		categoryKey: PropertyType.MOTEL,
 		categoryLabel: '모텔',
 		name: '구월 호텔반월',
 		location: '인천',
@@ -86,7 +86,7 @@ const STAYS: Stay[] = [
 	},
 	{
 		id: 6,
-		categoryKey: PropertyTypeKorean.MOTEL,
+		categoryKey: PropertyType.MOTEL,
 		categoryLabel: '모텔',
 		name: '구월 호텔반월',
 		location: '인천',
@@ -99,7 +99,7 @@ const STAYS: Stay[] = [
 	},
 	{
 		id: 7,
-		categoryKey: PropertyTypeKorean.MOTEL,
+		categoryKey: PropertyType.MOTEL,
 		categoryLabel: '모텔',
 		name: '구월 호텔반월',
 		location: '인천',
@@ -112,7 +112,7 @@ const STAYS: Stay[] = [
 	},
 	{
 		id: 8,
-		categoryKey: PropertyTypeKorean.MOTEL,
+		categoryKey: PropertyType.MOTEL,
 		categoryLabel: '모텔',
 		name: '구월 호텔반월',
 		location: '인천',
@@ -125,7 +125,7 @@ const STAYS: Stay[] = [
 	},
 	{
 		id: 9,
-		categoryKey: PropertyTypeKorean.MOTEL,
+		categoryKey: PropertyType.MOTEL,
 		categoryLabel: '모텔',
 		name: '구월 호텔반월',
 		location: '인천',
@@ -138,7 +138,7 @@ const STAYS: Stay[] = [
 	},
 	{
 		id: 10,
-		categoryKey: PropertyTypeKorean.HOTEL,
+		categoryKey: PropertyType.HOTEL,
 		categoryLabel: '모텔',
 		name: '구월 호텔반월',
 		location: '인천',
@@ -153,11 +153,17 @@ const STAYS: Stay[] = [
 	// 필요하면 더 추가
 ];
 
-export default function PopularStays() {
-	const [activeCategory, setActiveCategory] = useState<PropertyTypeKorean>(PropertyTypeKorean.ALL);
-	const [favoriteIds, setFavoriteIds] = useState<number[]>([]);
+interface PopularStaysProps {
+	initialInput: PropertiesInquiry;
+}
 
-	const filteredStays = activeCategory === '천제' ? STAYS : STAYS.filter((s) => s.categoryKey === activeCategory);
+const PopularStays = (props: PopularStaysProps) => {
+	const { initialInput } = props;
+	const [activeCategory, setActiveCategory] = useState<PropertyType>(PropertyType.ALL);
+	const [favoriteIds, setFavoriteIds] = useState<number[]>([]);
+	const filteredStays = useMemo(() => {
+		return activeCategory === 'ALL' ? STAYS : STAYS.filter((s) => s.categoryKey === activeCategory);
+	}, [activeCategory, STAYS]);
 
 	const toggleFavorite = (id: number) => {
 		setFavoriteIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
@@ -171,13 +177,13 @@ export default function PopularStays() {
 					<Typography className="popular-title">인기 추천 숙소</Typography>
 
 					<Box className="popular-tabs">
-						{CATEGORIES.map((c) => (
+						{CATEGORIES_EN.map((c, idx) => (
 							<Button
 								key={c}
 								className={`popular-tab ${activeCategory === c ? 'active' : ''}`}
 								onClick={() => setActiveCategory(c)}
 							>
-								{c}
+								{CATEGORIES_K[idx]}
 							</Button>
 						))}
 					</Box>
@@ -269,4 +275,16 @@ export default function PopularStays() {
 			</Box>
 		</Stack>
 	);
-}
+};
+
+PopularStays.defaultProps = {
+	initialInput: {
+		page: 1,
+		limit: 15,
+		sort: 'propertyLikes',
+		direction: 'DESC',
+		search: {},
+	},
+};
+
+export default PopularStays;
