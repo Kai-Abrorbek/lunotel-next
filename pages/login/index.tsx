@@ -1,16 +1,32 @@
 import React, { useState } from 'react';
 import { Box, Button, Divider, Stack, Typography } from '@mui/material';
-import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
-import AppleIcon from '@mui/icons-material/Apple';
-import FacebookIcon from '@mui/icons-material/Facebook';
 import GoogleIcon from '@mui/icons-material/Google';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import LayoutHome from '../../libs/components/layout/LayoutHome';
 import LoginModal from '../../libs/components/auth/LoginModal';
+import { signIn, signOut, useSession } from 'next-auth/react';
 
 const LoginPage: React.FC = () => {
 	const [open, setOpen] = useState<boolean>(false);
 
+	const handleGoogleLogin = () => {
+		signIn('google', { callbackUrl: '/' });
+	};
+
+	const handleKakaoLogin = () => {
+		signIn('kakao', { callbackUrl: '/' });
+	};
+
+	const handleNaverLogin = () => {
+		signIn('naver', { callbackUrl: '/' });
+	};
+
+	const handleNaverLogOut = () => {
+		signOut({ callbackUrl: '/' });
+	};
+
+	const { data: session } = useSession();
+	console.log(session);
 	return (
 		<Stack className="container">
 			<Box className="login-page">
@@ -25,23 +41,22 @@ const LoginPage: React.FC = () => {
 
 					{/* 버튼 영역 */}
 					<Box className="login-page__buttons">
-						<Button fullWidth className="login-page__btn login-page__btn--kakao">
+						<Button fullWidth className="login-page__btn login-page__btn--kakao" onClick={handleKakaoLogin}>
 							<span className="login-page__btn-icon">💬</span>
-							{/* <ChatBubbleOutlineIcon className="login-page__btn-icon" /> */}
 							<span>카카오로 시작하기</span>
 						</Button>
 
-						<Button fullWidth className="login-page__btn login-page__btn--naver">
+						<Button fullWidth className="login-page__btn login-page__btn--naver" onClick={handleNaverLogin}>
 							<span className="login-page__btn-icon login-page__btn-icon--text">N</span>
 							<span>네이버로 시작하기</span>
 						</Button>
 
-						<Button fullWidth className="login-page__btn login-page__btn--google">
+						<Button fullWidth className="login-page__btn login-page__btn--google" onClick={handleGoogleLogin}>
 							<GoogleIcon className="login-page__btn-icon" />
 							<span>구글로 시작하기</span>
 						</Button>
 
-						<Button fullWidth className="login-page__btn login-page__btn--email">
+						<Button fullWidth className="login-page__btn login-page__btn--email" onClick={handleNaverLogOut}>
 							<MailOutlineIcon className="login-page__btn-icon" />
 							<span>이메일로 시작하기</span>
 						</Button>

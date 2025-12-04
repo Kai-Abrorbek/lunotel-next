@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Box, Typography, Button, InputBase, Stack } from '@mui/material';
+import { Box, Button, InputBase, Stack } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
@@ -58,7 +58,6 @@ const HeroCard = (props: HeroCardProps) => {
 	const locationRef: any = useRef();
 	const dateRef: any = useRef();
 	const pesonalRef: any = useRef();
-	const [locationInput, setLocationInput] = useState<string>('');
 	const [activeTab, setActiveTab] = useState<TabKey>('domestic');
 	const [propertyLocation, setPropertyLocation] = useState<PropertyLocation[]>(Object.values(PropertyLocation));
 	const [checkIn, setCheckIn] = useState<Date | undefined>(toDate(initialInput.search?.checkInDate));
@@ -105,17 +104,6 @@ const HeroCard = (props: HeroCardProps) => {
 	}, []);
 
 	useEffect(() => {
-		setSearchFilter({
-			...searchFilter,
-			search: {
-				...searchFilter.search,
-				personal: guestCount,
-			},
-		});
-	}, [guestCount]);
-
-	useEffect(() => {
-		// TODO:  router change
 		if (searchFilter) {
 			localStorage.setItem('searchFilter', JSON.stringify(searchFilter));
 		}
@@ -123,7 +111,6 @@ const HeroCard = (props: HeroCardProps) => {
 	/** LIFESICLE **/
 
 	/**UTIL FANCTION**/
-
 	const changeMonth = (offset: number) => {
 		setCurrentMonth((prev) => {
 			const year = prev.getFullYear();
@@ -170,11 +157,10 @@ const HeroCard = (props: HeroCardProps) => {
 	/**UTIL FANCTION**/
 
 	/** HANDLER **/
-	const handleDayClick = useCallback(
+	const handleSelectDay = useCallback(
 		async (day: Date) => {
 			if (!checkIn || (checkIn && checkOut)) {
 				setSearchFilter({
-					// router => change
 					...searchFilter,
 					search: {
 						...searchFilter.search,
@@ -215,17 +201,13 @@ const HeroCard = (props: HeroCardProps) => {
 		[searchFilter],
 	);
 
-	const openKeywordPanel = () => {
-		setShowKeywordPanel(true);
-	};
-
 	const handleSelectKeyword = useCallback(
 		async (word: string) => {
 			setSearchFilter({
 				...searchFilter,
 				search: {
 					...searchFilter.search,
-					location: word as PropertyLocation,
+					location: (word as PropertyLocation) || String,
 				},
 			});
 			setShowDatePicker(true);
@@ -238,6 +220,49 @@ const HeroCard = (props: HeroCardProps) => {
 		[searchFilter],
 	);
 
+	const handleGuestCount = useCallback(
+		async (count: number) => {
+			if (count > 0) {
+				setGuestCount((prev) => Math.ceil(prev + count));
+				setSearchFilter({
+					...searchFilter,
+					search: {
+						...searchFilter.search,
+						personal: guestCount,
+					},
+				});
+			} else if (count < 0 && guestCount > 1) {
+				setGuestCount((prev) => Math.ceil(prev + count));
+				setSearchFilter({
+					...searchFilter,
+					search: {
+						...searchFilter.search,
+						personal: guestCount,
+					},
+				});
+			}
+		},
+		[searchFilter],
+	);
+
+	const pushSearchHandler = async () => {
+		try {
+			if (!searchFilter.search?.location) {
+				await bubbleAlert('여행지를 선택해주세요!');
+			} else {
+				await router.push(
+					`/property?input=${JSON.stringify(searchFilter)}`,
+					`/property?input=${JSON.stringify(searchFilter)}`,
+					{
+						scroll: false,
+					},
+				);
+			}
+		} catch (err: any) {
+			console.log('ERROR : pushSearchHandler', err);
+		}
+	};
+
 	const handleRemoveRecent = (word: string) => {
 		setRecentSearches((prev) => prev.filter((w) => w !== word));
 	};
@@ -246,25 +271,8 @@ const HeroCard = (props: HeroCardProps) => {
 		setRecentSearches([]);
 	};
 
-	const handleSearch = async (location: string | undefined) => {
-		if (!searchFilter.search?.location && !location) {
-			await bubbleAlert('여행지를 선택해주세요!');
-		} else {
-			setSearchFilter({
-				...searchFilter,
-				search: {
-					...searchFilter.search,
-					location: location as PropertyLocation,
-				},
-			});
-			await router.push(
-				`/property?input=${JSON.stringify(searchFilter)}`,
-				`/property?input=${JSON.stringify(searchFilter)}`,
-				{
-					scroll: false,
-				},
-			);
-		}
+	const openKeywordPanel = () => {
+		setShowKeywordPanel(true);
 	};
 
 	return (
@@ -405,7 +413,7 @@ const HeroCard = (props: HeroCardProps) => {
 				</Box>
 
 				{/* 검색 버튼 */}
-				<Button className="hero-search-button" onClick={() => handleSearch(searchFilter.search?.location)}>
+				<Button className="hero-search-button" onClick={pushSearchHandler}>
 					검색
 				</Button>
 			</Box>
@@ -455,7 +463,11 @@ const HeroCard = (props: HeroCardProps) => {
 									.filter(Boolean)
 									.join(' ');
 								return (
-									<button key={day.toISOString()} className={classes} onClick={() => !isPastDay && handleDayClick(day)}>
+									<button
+										key={day.toISOString()}
+										className={classes}
+										onClick={() => !isPastDay && handleSelectDay(day)}
+									>
 										{day.getDate()}
 									</button>
 								);
@@ -502,7 +514,11 @@ const HeroCard = (props: HeroCardProps) => {
 									.join(' ');
 
 								return (
-									<button key={day.toISOString()} className={classes} onClick={() => !isPastDay && handleDayClick(day)}>
+									<button
+										key={day.toISOString()}
+										className={classes}
+										onClick={() => !isPastDay && handleSelectDay(day)}
+									>
 										{day.getDate()}
 									</button>
 								);
@@ -521,7 +537,7 @@ const HeroCard = (props: HeroCardProps) => {
 							<button
 								onClick={(e) => {
 									e.stopPropagation();
-									setGuestCount((c) => Math.max(1, c - 1));
+									handleGuestCount(-1);
 								}}
 							>
 								-
@@ -530,7 +546,7 @@ const HeroCard = (props: HeroCardProps) => {
 							<button
 								onClick={(e) => {
 									e.stopPropagation();
-									setGuestCount((c) => c + 1);
+									handleGuestCount(1);
 								}}
 							>
 								+

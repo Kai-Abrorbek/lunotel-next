@@ -1501,10 +1501,9 @@
 							background: #3b82f6;
 							border-radius: 50%;
 						}
-
 						.notification-header {
 							display: flex;
-							align-items: start;
+							align-items: flex-start;
 							gap: 16px;
 							.notification-icon {
 								width: 48px;

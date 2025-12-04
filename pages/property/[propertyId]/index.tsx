@@ -564,7 +564,7 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 					</Box>
 				</section>
 				<section id="section-rooms">
-					{[1, 2, 3, 4, 5, 6].length !== 0 && (
+					{[1, 2, 3, 4, 5, 6].length === 0 && (
 						<div className="no-data">
 							<h1>검색 결과가 없어요.</h1>
 							<p>'asdd'에 대한 철자를 확인하거나 긴 문구는 띄어쓰기를 해보세요.</p>
