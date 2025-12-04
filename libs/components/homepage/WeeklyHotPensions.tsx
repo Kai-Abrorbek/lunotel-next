@@ -8,9 +8,9 @@ import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper';
-
 import 'swiper/css';
 import 'swiper/css/navigation';
+import { PropertiesInquiry } from '../../types/property/property.input';
 
 type CategoryKey = 'all' | 'motel' | 'hotel_resort' | 'pension' | 'premium' | 'camping' | 'home_villa' | 'guesthouse';
 
@@ -150,9 +150,14 @@ const STAYS: Stay[] = [
 	// 필요하면 더 추가
 ];
 
-export default function WeeklyHotPensions() {
-	const [favoriteIds, setFavoriteIds] = useState<number[]>([]);
+interface WeeklyHotPensionsProps {
+	initialInput: PropertiesInquiry;
+}
 
+const WeeklyHotPensions = (props: WeeklyHotPensionsProps) => {
+	const { initialInput } = props;
+	const [hotPensions, setHotPensions] = useState<PropertiesInquiry[]>([]);
+	const [favoriteIds, setFavoriteIds] = useState<number[]>([]);
 	const toggleFavorite = (id: number) => {
 		setFavoriteIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
 	};
@@ -251,4 +256,18 @@ export default function WeeklyHotPensions() {
 			</Box>
 		</Stack>
 	);
-}
+};
+
+WeeklyHotPensions.defaultProps = {
+	initialInput: {
+		page: 1,
+		limit: 20,
+		sort: 'propertyViews',
+		direction: 'DESC',
+		search: {
+			propertyType: 'PENSION',
+		},
+	},
+};
+
+export default WeeklyHotPensions;

@@ -34,12 +34,12 @@ export interface PricesRange {
 /** SEARCH FILTER FOR MAIN PROPERTY LIST */
 export interface PIsearch {
 	memberId?: string;
+	propertyType?: PropertyType;
 	propertyName?: string;
 	location?: PropertyLocation;
 	checkInDate?: string;
 	checkOutDate?: string;
 	personal?: number;
-	type?: PropertyType;
 	propertyStarsList?: number[];
 	amenityList?: PropertyAmenity[];
 	otherAmenityList?: PropertyOtherAmenity[];
