@@ -1,6 +1,6 @@
 // PopularStays.tsx
 import { useState } from 'react';
-import { Box, Typography, Button, IconButton, Chip, Stack } from '@mui/material';
+import { Box, Typography, IconButton, Chip, Stack } from '@mui/material';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import StarIcon from '@mui/icons-material/Star';
@@ -8,7 +8,7 @@ import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper';
-
+import { PropertiesInquiry } from '../../types/property/property.input';
 import 'swiper/css';
 import 'swiper/css/navigation';
 
@@ -138,9 +138,13 @@ const STAYS: Stay[] = [
 	// 필요하면 더 추가
 ];
 
-export default function HotelSpecialsToday() {
+interface HotelSpecialsTodayProps {
+	initialInput: PropertiesInquiry;
+}
+const HotelSpecialsToday = (props: HotelSpecialsTodayProps) => {
+	const { initialInput } = props;
+	const [hotelspecials, setHotelSpecials] = useState<PropertiesInquiry[]>([]);
 	const [favoriteIds, setFavoriteIds] = useState<number[]>([]);
-
 	const toggleFavorite = (id: number) => {
 		setFavoriteIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
 	};
@@ -237,4 +241,16 @@ export default function HotelSpecialsToday() {
 			</Box>
 		</Stack>
 	);
-}
+};
+
+HotelSpecialsToday.defaultProps = {
+	initialInput: {
+		page: 1,
+		limit: 20,
+		sort: 'createdAt',
+		direction: 'DESC',
+		search: {},
+	},
+};
+
+export default HotelSpecialsToday;

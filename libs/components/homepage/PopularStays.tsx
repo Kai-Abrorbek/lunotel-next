@@ -159,6 +159,7 @@ interface PopularStaysProps {
 
 const PopularStays = (props: PopularStaysProps) => {
 	const { initialInput } = props;
+	const [popularStays, setPopularStays] = useState<PropertiesInquiry[]>([]);
 	const [activeCategory, setActiveCategory] = useState<PropertyType>(PropertyType.ALL);
 	const [favoriteIds, setFavoriteIds] = useState<number[]>([]);
 	const filteredStays = useMemo(() => {
@@ -280,7 +281,7 @@ const PopularStays = (props: PopularStaysProps) => {
 PopularStays.defaultProps = {
 	initialInput: {
 		page: 1,
-		limit: 15,
+		limit: 20,
 		sort: 'propertyLikes',
 		direction: 'DESC',
 		search: {},
