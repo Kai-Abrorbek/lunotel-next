@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import OtherLayout from '../../../libs/components/layout/OtherLayout';
 import { PropertiesInquiry } from '../../../libs/types/property/property.input';
 import { useRouter } from 'next/router';
@@ -26,6 +26,8 @@ import CheckIcon from '@mui/icons-material/Check';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import Link from 'next/link';
+import { CommentsInquiry } from '../../../libs/types/comment/comment.input';
+import { Direction } from '../../../libs/enums/common.enum';
 
 export type GalleryImage = {
 	id: number;
@@ -57,7 +59,7 @@ const GALLERY_IMAGES: GalleryImage[] = [
 	},
 	{
 		id: 5,
-		src: 'https://images.unsplash.com/photo-1551776235-dde6d4829808?auto=format&fit=crop&w=800&q=80',
+		src: 'https://images.unsplash.com/photo-1560448075-bb485b067938?auto=format&fit=crop&w=800&q=80',
 		alt: '욕실과 욕조가 있는 호텔',
 	},
 ];
@@ -92,45 +94,6 @@ const reviewImages = [
 		id: 5,
 		src: 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=800&q=80',
 		alt: '조명 켜진 호텔 침대',
-	},
-];
-
-const IMAGES: GalleryImage[] = [
-	{
-		id: 1,
-		src: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1600&q=80',
-		alt: 'PC 객실',
-		category: 'ROOM',
-	},
-	{
-		id: 2,
-		src: 'https://images.unsplash.com/photo-1505691723518-36a5ac3be353?auto=format&fit=crop&w=1600&q=80',
-		alt: '침대 객실',
-		category: 'ROOM',
-	},
-	{
-		id: 3,
-		src: 'https://images.unsplash.com/photo-1505691723518-36a5ac3be353?auto=format&fit=crop&w=1600&q=80',
-		alt: '침대 객실',
-		category: 'ROOM',
-	},
-	{
-		id: 4,
-		src: 'https://images.unsplash.com/photo-1505691723518-36a5ac3be353?auto=format&fit=crop&w=1600&q=80',
-		alt: '침대 객실',
-		category: 'ROOM',
-	},
-	{
-		id: 5,
-		src: 'https://images.unsplash.com/photo-1505691723518-36a5ac3be353?auto=format&fit=crop&w=1600&q=80',
-		alt: '침대 객실',
-		category: 'ROOM',
-	},
-	{
-		id: 6,
-		src: 'https://images.unsplash.com/photo-1505691723518-36a5ac3be353?auto=format&fit=crop&w=1600&q=80',
-		alt: '침대 객실',
-		category: 'ROOM',
 	},
 ];
 
@@ -369,30 +332,42 @@ interface PropertyDetailPageProps {
 	initialInput: PropertiesInquiry;
 }
 type TabKey = 'overview' | 'rooms' | 'amenities' | 'location' | 'reviews';
+type CommnetTypes = 'recommended' | 'createdAt' | 'commentRating_DESC' | 'commentRating_ASC';
 
 const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 	const { initialInput } = props;
+	const router = useRouter();
+	const propertyId = router.query.propertyId?.slice(router.query.propertyId.length - 1) as string;
 	const [open, setOpen] = useState(false);
 	const [openReviewImage, setOpenReviewImage] = useState(false);
 	const [initialIndex, setInitialIndex] = useState<number>(0);
 	const [reviewImgIndex, setReviewImgIndex] = useState<number>(0);
 	const [activeTab, setActiveTab] = useState<TabKey>('rooms');
-	const router = useRouter();
 	const [favoriteIds, setFavoriteIds] = useState<boolean>(false);
 	const [favoriteRooms, setFavoriteRooms] = useState<number[]>([]);
+	const [sortOption, setSortOption] = useState<CommnetTypes>('recommended');
+	const [sortAnchorEl, setSortAnchorEl] = useState<null | HTMLElement>(null);
+	const isSortMenuOpen = Boolean(sortAnchorEl);
+	const [currentPage, setCurrentPage] = useState<number>(1);
+	const [total, setTotal] = useState<number>(20);
+	const [targetCommnetsInput, setTargetCommnetsInput] = useState<CommentsInquiry>({
+		page: 1,
+		limit: 10,
+		sort: 'recommended',
+		direction: Direction.DESC,
+		search: {
+			commentRefId: propertyId!,
+		},
+	});
 	const [searchFilter, setSearchFilter] = useState<PropertiesInquiry>(
 		router?.query?.input ? JSON.parse(router?.query?.input as string) : initialInput,
 	);
 
-	const [sortOption, setSortOption] = useState<'recommended' | 'recent' | 'high' | 'low'>('recommended');
-	const [sortAnchorEl, setSortAnchorEl] = useState<null | HTMLElement>(null);
-	const isSortMenuOpen = Boolean(sortAnchorEl);
-
 	const sortLabelMap = {
 		recommended: '추천순',
-		recent: '최신순',
-		high: '평점 높은순',
-		low: '평점 낮은순',
+		createdAt: '최신순',
+		commentRating_DESC: '평점 높은순',
+		commentRating_ASC: '평점 낮은순',
 	} as const;
 
 	const main = GALLERY_IMAGES[0];
@@ -401,10 +376,9 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 	/** LIFECYCLES **/
 
 	useEffect(() => {
-		if (typeof window === 'undefined') return;
-		const data = localStorage.getItem('searchFilter');
-		if (data) {
-			setSearchFilter(JSON.parse(data));
+		if (router.query.input) {
+			const inputObj = JSON.parse(router?.query?.input as string);
+			setSearchFilter(inputObj);
 		}
 	}, [router]);
 
@@ -425,11 +399,11 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 
 	const sortedReviews = [...sampleReviews].sort((a, b) => {
 		switch (sortOption) {
-			case 'recent':
+			case 'createdAt':
 				return new Date(b.date).getTime() - new Date(a.date).getTime();
-			case 'high':
+			case 'commentRating_DESC':
 				return b.rating - a.rating;
-			case 'low':
+			case 'commentRating_ASC':
 				return a.rating - b.rating;
 			case 'recommended':
 			default:
@@ -439,13 +413,22 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 		}
 	});
 
+	const handlePaginationChange = async (event: ChangeEvent<unknown>, value: number) => {
+		targetCommnetsInput.page = value;
+		setTargetCommnetsInput({
+			...targetCommnetsInput,
+			page: value,
+		});
+		setCurrentPage(value);
+	};
+
 	return (
 		<Stack className="container">
 			<ImageGalleryModal
 				open={open}
 				onClose={() => setOpen(false)}
 				title="길동 MARI-마리"
-				images={IMAGES}
+				images={GALLERY_IMAGES}
 				initialIndex={initialIndex}
 			/>
 			{/* 상단 헤더 / 갤러리 등 */}
@@ -480,11 +463,17 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 										alt={img.alt}
 										onClick={() => {
 											setOpen(true);
-											setInitialIndex(idx);
+											setInitialIndex(idx + 1);
 										}}
 									/>
 									{idx === thumbs.length - 1 && totalCount && (
-										<Box className="property-gallery__more">
+										<Box
+											className="property-gallery__more"
+											onClick={() => {
+												setOpen(true);
+												setInitialIndex(idx + 1);
+											}}
+										>
 											<Typography component="span">{totalCount}+</Typography>
 										</Box>
 									)}
@@ -687,21 +676,27 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 							<Menu
 								anchorEl={sortAnchorEl}
 								open={isSortMenuOpen}
-								onClose={() => setSortAnchorEl(null)}
+								onClose={(e) => {
+									setSortAnchorEl(null);
+								}}
 								anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
 								transformOrigin={{ vertical: 'top', horizontal: 'right' }}
 							>
 								{(
 									[
 										{ key: 'recommended', label: '추천순' },
-										{ key: 'recent', label: '최신순' },
-										{ key: 'high', label: '평점 높은순' },
-										{ key: 'low', label: '평점 낮은순' },
+										{ key: 'createdAt', label: '최신순' },
+										{ key: 'commentRating_DESC', label: '평점 높은순' },
+										{ key: 'commentRating_ASC', label: '평점 낮은순' },
 									] as const
 								).map((item) => (
 									<MenuItem
 										key={item.key}
 										onClick={() => {
+											setTargetCommnetsInput({
+												...targetCommnetsInput,
+												sort: item.key,
+											});
 											setSortOption(item.key);
 											setSortAnchorEl(null);
 										}}
@@ -758,11 +753,11 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 
 					<Stack className="reviews-pagination">
 						<Pagination
-							count={Math.ceil(5 / 11) || 1}
-							page={1}
+							count={Math.ceil(total / targetCommnetsInput.limit)}
+							page={currentPage}
 							shape="circular"
 							color="primary"
-							// onChange={paginationHandler}
+							onChange={handlePaginationChange}
 						/>
 					</Stack>
 				</section>

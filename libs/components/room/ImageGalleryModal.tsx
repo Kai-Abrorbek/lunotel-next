@@ -22,7 +22,7 @@ interface ImageGalleryModalProps {
 	initialIndex?: number;
 }
 
-const ImageGalleryModal: React.FC<ImageGalleryModalProps> = ({ open, onClose, title, images, initialIndex = 0 }) => {
+const ImageGalleryModal: React.FC<ImageGalleryModalProps> = ({ open, onClose, title, images, initialIndex = 1 }) => {
 	const [tab, setTab] = useState<ImageCategory>('ALL');
 	const [currentIndex, setCurrentIndex] = useState(initialIndex);
 

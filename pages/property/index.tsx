@@ -392,8 +392,8 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 		if (searchFilter.search) searchFilter.search.propertyName = name;
 		localStorage.setItem('searchFilter', JSON.stringify(searchFilter));
 		router.push(
-			`/property/propertyId=${item}?input=${JSON.stringify(searchFilter)}`,
-			`/property/propertyId=${item}?input=${JSON.stringify(searchFilter)}`,
+			`/property/propertyId=${item}?input=${JSON.stringify({ ...searchFilter })}`,
+			`/property/propertyId=${item}?input=${JSON.stringify({ ...searchFilter })}`,
 			{
 				scroll: false,
 			},

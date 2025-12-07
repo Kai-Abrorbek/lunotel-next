@@ -6,13 +6,13 @@ export interface CommentInput {
 	commentRating: number;
 	commentContent: string;
 	commentImages?: [string];
-	commentRefId: String;
-	commentTargetId: String;
-	memberId?: String;
+	commentRefId: String; // propertyId
+	commentTargetId?: String; // roomId
+	memberId: String;
 }
 
 interface CISearch {
-	commentRefId?: String;
+	commentRefId: string;
 }
 
 export interface CommentsInquiry {
