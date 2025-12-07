@@ -5,6 +5,7 @@ import HeroCard from '../common/HeroCard';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, EffectCoverflow } from 'swiper';
 import 'swiper/css';
+import property from '../../../pages/property';
 interface HeroSearchProps {
 	initialInput: PropertiesInquiry;
 }
@@ -17,7 +18,7 @@ const HERO_IMAGES = [
 
 const HeroSearch = (props: HeroSearchProps) => {
 	const { initialInput } = props;
-
+	const [heroCardOpen, setHeroCardOpen] = useState<boolean>(false);
 	return (
 		<Box className="hero-section">
 			<Swiper
@@ -38,7 +39,7 @@ const HeroSearch = (props: HeroSearchProps) => {
 			<Box className="hero-overlay" />
 			<Box className="hero-inner">
 				<Typography className="hero-title">국내부터 해외까지 루노텔</Typography>
-				<HeroCard initialInput={initialInput} refElement={null} />
+				<HeroCard setHeroCardOpen={setHeroCardOpen} initialInput={initialInput} refElement={null} />
 			</Box>
 		</Box>
 	);
@@ -55,11 +56,13 @@ HeroSearch.defaultProps = {
 	initialInput: {
 		page: 1,
 		limit: 10,
+		sort: 'createdAt',
 		search: {
 			location: '',
 			checkInDate: formatDate(new Date(), 0),
 			checkOutDate: formatDate(new Date(), 1),
 			personal: 2,
+			propertyType: 'ALL',
 		},
 	},
 };

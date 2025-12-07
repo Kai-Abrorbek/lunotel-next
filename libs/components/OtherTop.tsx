@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 import { PropertiesInquiry } from '../types/property/property.input';
 import HeroCard from './common/HeroCard';
 import MemberQuickMenu from './common/MemberQuickMenu';
+import property from '../../pages/property';
 
 interface MiniHeaderProps {
 	initialInput: PropertiesInquiry;
@@ -30,7 +31,6 @@ const MiniHeader = (props: MiniHeaderProps) => {
 		toDate(searchFilter?.search?.checkOutDate),
 	);
 	const guestLabel = searchFilter?.search?.personal;
-
 	/** LIFESICLE **/
 	useEffect(() => {
 		if (typeof window === 'undefined') return;
@@ -89,7 +89,7 @@ const MiniHeader = (props: MiniHeaderProps) => {
 						</Link>
 					</Box>
 					{heroCardOpen ? (
-						<HeroCard initialInput={searchFilter!} refElement={refElement} />
+						<HeroCard initialInput={searchFilter!} refElement={refElement} setHeroCardOpen={setHeroCardOpen} />
 					) : (
 						<Box className="mini-header-center">
 							<Box className="mini-search-bar" onClick={openHeroCardHandler}>
@@ -176,11 +176,13 @@ MiniHeader.defaultProps = {
 	initialInput: {
 		page: 1,
 		limit: 10,
+		sort: 'createdAt',
 		search: {
 			location: '',
 			checkInDate: formatDate(new Date(), 0),
 			checkOutDate: formatDate(new Date(), 1),
 			personal: 2,
+			propertyType: 'ALL',
 		},
 	},
 };

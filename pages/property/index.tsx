@@ -29,7 +29,12 @@ import OtherLayout from '../../libs/components/layout/OtherLayout';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { PropertiesInquiry } from '../../libs/types/property/property.input';
 import { useRouter } from 'next/router';
-import { PropertyAmenityKorean, PropertyOtherAmenityKorean } from '../../libs/enums/property.enum';
+import {
+	PropertyAmenityKorean,
+	PropertyOtherAmenityKorean,
+	PropertyType,
+	PropertyTypeKorean,
+} from '../../libs/enums/property.enum';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import CheckIcon from '@mui/icons-material/Check';
 import MapSearchDialog from '../../libs/components/property/MapSearchDialog';
@@ -37,12 +42,12 @@ import MapSearchDialog from '../../libs/components/property/MapSearchDialog';
 const tags: PropertyAmenityKorean[] = Object.values(PropertyAmenityKorean);
 const otherTags: PropertyOtherAmenityKorean[] = Object.values(PropertyOtherAmenityKorean);
 const SORT_OPTIONS = [
-	{ value: 'RECOMMEND', label: '추천순' },
-	{ value: 'RATING_DESC', label: '평점높은순' },
-	{ value: 'REVIEW_DESC', label: '리뷰많은순' },
-	{ value: 'PRICE_ASC', label: '낮은가격순' },
-	{ value: 'PRICE_DESC', label: '높은가격순' },
-	{ value: 'DISTANCE_ASC', label: '거리순' },
+	{ value: 'createdAt', label: '추천순' },
+	{ value: 'propertyRank', label: '평점높은순' },
+	{ value: 'propertyComments', label: '리뷰많은순' },
+	{ value: 'propertyPrice_DESC', label: '낮은가격순' },
+	{ value: 'propertyRank_ASC', label: '높은가격순' },
+	{ value: 'propertyReservations', label: '거리순' },
 ];
 interface SearchResultPageProps {
 	initialInput: PropertiesInquiry;
@@ -68,41 +73,77 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 	);
 	const [total, setTotal] = useState<number>(11);
 	const locationRef: any = useRef();
-	const raw = router.query.input;
 	const currentLabel = SORT_OPTIONS.find((o) => o.value === value)?.label ?? '정렬';
 	const open = Boolean(anchorEl);
 
 	/** LIFECYCLES **/
 	useEffect(() => {
-		if (typeof window === 'undefined') return;
-		const saved = localStorage.getItem('searchFilter');
-		if (!saved) return;
-		const parsed = JSON.parse(saved);
-		setSearchFilter(parsed);
-		setCurrentPage(searchFilter?.page === undefined ? 1 : searchFilter.page);
+		if (router.query.input) {
+			const inputObj = JSON.parse(router?.query?.input as string);
+			setSearchFilter(inputObj);
+			setCurrentPage(inputObj.page);
+		}
 	}, [router]);
 
 	useEffect(() => {
-		if (typeof raw === 'string') {
-			const parsed = JSON.parse(raw);
-			setSearchFilter(parsed);
+		if (searchFilter?.search.propertyStarsList?.length === 0) {
+			delete searchFilter.search.propertyStarsList;
+			router.push(
+				`/property?input=${JSON.stringify({
+					...searchFilter,
+					search: {
+						...searchFilter.search,
+					},
+				})}`,
+				`/property?input=${JSON.stringify({
+					...searchFilter,
+					search: {
+						...searchFilter.search,
+					},
+				})}`,
+				{ scroll: false },
+			);
 		}
-	}, [raw]);
 
+		if (searchFilter?.search.amenityList?.length === 0) {
+			delete searchFilter.search.amenityList;
+			router.push(
+				`/property?input=${JSON.stringify({
+					...searchFilter,
+					search: {
+						...searchFilter.search,
+					},
+				})}`,
+				`/property?input=${JSON.stringify({
+					...searchFilter,
+					search: {
+						...searchFilter.search,
+					},
+				})}`,
+				{ scroll: false },
+			);
+		}
+
+		if (searchFilter?.search.otherAmenityList?.length === 0) {
+			delete searchFilter.search.otherAmenityList;
+			router.push(
+				`/property?input=${JSON.stringify({
+					...searchFilter,
+					search: {
+						...searchFilter.search,
+					},
+				})}`,
+				`/property?input=${JSON.stringify({
+					...searchFilter,
+					search: {
+						...searchFilter.search,
+					},
+				})}`,
+				{ scroll: false },
+			);
+		}
+	}, [searchFilter]);
 	/** HANDLERS **/
-	const paginationHandler = (e: any, value: number) => {
-		searchFilter.page = value;
-		router.push(`/property?input=${JSON.stringify(searchFilter)}`, `/property?input=${JSON.stringify(searchFilter)}`, {
-			scroll: false,
-		});
-
-		localStorage.setItem('searchFilter', JSON.stringify(searchFilter));
-		setCurrentPage(value);
-	};
-
-	const selectPropertyType = (value: any) => {
-		console.log(value);
-	};
 
 	const resetSearchFilter = () => {
 		setSpin(true);
@@ -115,14 +156,236 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 		}, 500);
 	};
 
+	const handleClose = () => setAnchorEl(null);
+
 	const handleOpen = (e: React.MouseEvent<HTMLButtonElement>) => {
 		setAnchorEl(e.currentTarget);
 	};
-	const handleClose = () => setAnchorEl(null);
-	const handleSelect = (next: string) => {
+
+	const paginationHandler = (e: any, value: number) => {
+		searchFilter.page = value;
+		router.push(
+			`/property?input=${JSON.stringify({
+				...searchFilter,
+				search: {
+					...searchFilter.search,
+					propertyType: value,
+				},
+			})}`,
+			`/property?input=${JSON.stringify({
+				...searchFilter,
+				search: {
+					...searchFilter.search,
+					propertyType: value,
+				},
+			})}`,
+			{
+				scroll: false,
+			},
+		);
+
+		// localStorage.setItem('searchFilter', JSON.stringify({ ...searchFilter, page: value }));
+		// setCurrentPage(value);
+	};
+
+	const selectPropertyTypeHandler = (value: any) => {
+		router.push(
+			`/property?input=${JSON.stringify({
+				...searchFilter,
+				search: {
+					...searchFilter.search,
+					propertyType: value,
+				},
+			})}`,
+			`/property?input=${JSON.stringify({
+				...searchFilter,
+				search: {
+					...searchFilter.search,
+					propertyType: value,
+				},
+			})}`,
+			{
+				scroll: false,
+			},
+		);
+	};
+
+	const selectSortTypeHandler = (next: string) => {
 		setValue(next);
 		setAnchorEl(null);
-		// 여기서 API 호출 or 정렬 변경 로직 넣으면 됨
+		router.push(
+			`/property?input=${JSON.stringify({
+				...searchFilter,
+				sort: next,
+			})}`,
+			`/property?input=${JSON.stringify({
+				...searchFilter,
+				sort: next,
+			})}`,
+			{
+				scroll: false,
+			},
+		);
+	};
+
+	const selectRangePriceHandler = (price: number[]) => {
+		router.push(
+			`/property?input=${JSON.stringify({
+				...searchFilter,
+				search: {
+					...searchFilter.search,
+					pricesRange: {
+						start: price[0],
+						end: price[1],
+					},
+				},
+			})}`,
+			`/property?input=${JSON.stringify({
+				...searchFilter,
+				search: {
+					...searchFilter.search,
+					pricesRange: {
+						start: price[0],
+						end: price[1],
+					},
+				},
+			})}`,
+			{
+				scroll: false,
+			},
+		);
+	};
+
+	const selectStarsHandler = (star: number, selected: boolean) => {
+		if (!selected) {
+			router.push(
+				`/property?input=${JSON.stringify({
+					...searchFilter,
+					search: {
+						...searchFilter.search,
+						propertyStarsList: [...(searchFilter.search.propertyStarsList || []), star],
+					},
+				})}`,
+				`/property?input=${JSON.stringify({
+					...searchFilter,
+					search: {
+						...searchFilter.search,
+						propertyStarsList: [...(searchFilter.search.propertyStarsList || []), star],
+					},
+				})}`,
+				{
+					scroll: false,
+				},
+			);
+		} else if (selected) {
+			router.push(
+				`/property?input=${JSON.stringify({
+					...searchFilter,
+					search: {
+						...searchFilter.search,
+						propertyStarsList: searchFilter?.search?.propertyStarsList?.filter((item: number) => item !== star),
+					},
+				})}`,
+				`/property?input=${JSON.stringify({
+					...searchFilter,
+					search: {
+						...searchFilter.search,
+						propertyStarsList: searchFilter?.search?.propertyStarsList?.filter((item: number) => item !== star),
+					},
+				})}`,
+				{
+					scroll: false,
+				},
+			);
+		}
+	};
+
+	const selectAmenityListHandler = (amenity: string, selected: boolean) => {
+		if (!selected) {
+			router.push(
+				`/property?input=${JSON.stringify({
+					...searchFilter,
+					search: {
+						...searchFilter.search,
+						amenityList: [...(searchFilter.search.amenityList || []), amenity],
+					},
+				})}`,
+				`/property?input=${JSON.stringify({
+					...searchFilter,
+					search: {
+						...searchFilter.search,
+						amenityList: [...(searchFilter.search.amenityList || []), amenity],
+					},
+				})}`,
+				{
+					scroll: false,
+				},
+			);
+		} else if (selected) {
+			router.push(
+				`/property?input=${JSON.stringify({
+					...searchFilter,
+					search: {
+						...searchFilter.search,
+						amenityList: searchFilter?.search?.amenityList?.filter((item: string) => item !== amenity),
+					},
+				})}`,
+				`/property?input=${JSON.stringify({
+					...searchFilter,
+					search: {
+						...searchFilter.search,
+						amenityList: searchFilter?.search?.amenityList?.filter((item: string) => item !== amenity),
+					},
+				})}`,
+				{
+					scroll: false,
+				},
+			);
+		}
+	};
+
+	const selectOtehrAmenityListHandler = (otherAmenity: string, selected: boolean) => {
+		if (!selected) {
+			router.push(
+				`/property?input=${JSON.stringify({
+					...searchFilter,
+					search: {
+						...searchFilter.search,
+						otherAmenityList: [...(searchFilter.search.otherAmenityList || []), otherAmenity],
+					},
+				})}`,
+				`/property?input=${JSON.stringify({
+					...searchFilter,
+					search: {
+						...searchFilter.search,
+						otherAmenityList: [...(searchFilter.search.otherAmenityList || []), otherAmenity],
+					},
+				})}`,
+				{
+					scroll: false,
+				},
+			);
+		} else if (selected) {
+			router.push(
+				`/property?input=${JSON.stringify({
+					...searchFilter,
+					search: {
+						...searchFilter.search,
+						otherAmenityList: searchFilter?.search?.otherAmenityList?.filter((item: string) => item !== otherAmenity),
+					},
+				})}`,
+				`/property?input=${JSON.stringify({
+					...searchFilter,
+					search: {
+						...searchFilter.search,
+						otherAmenityList: searchFilter?.search?.otherAmenityList?.filter((item: string) => item !== otherAmenity),
+					},
+				})}`,
+				{
+					scroll: false,
+				},
+			);
+		}
 	};
 
 	const pushPropertyDetailHandler = (item: number, name: string) => {
@@ -169,17 +432,21 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 						<Box className="section">
 							<Typography className="section-title">숙소유형</Typography>
 							<RadioGroup
-								defaultValue="all"
+								defaultValue="ALL"
 								className="roomtype-group"
-								onChange={(e) => selectPropertyType(e.target.value)}
+								onChange={(e) => selectPropertyTypeHandler(e.target.value)}
 							>
-								<FormControlLabel value="all" control={<Radio size="small" />} label="전체" />
-								<FormControlLabel value="motel" control={<Radio size="small" />} label="모텔" />
-								<FormControlLabel value="hotel" control={<Radio size="small" />} label="호텔·리조트" />
-								<FormControlLabel value="pension" control={<Radio size="small" />} label="펜션" />
-								<FormControlLabel value="homevilla" control={<Radio size="small" />} label="홈&빌라" />
-								<FormControlLabel value="camping" control={<Radio size="small" />} label="캠핑" />
-								<FormControlLabel value="guest" control={<Radio size="small" />} label="게하·한옥" />
+								{Object.values(PropertyType).map((type, idx) => {
+									const type_krName = Object.values(PropertyTypeKorean)[idx];
+									return (
+										<FormControlLabel
+											key={idx}
+											value={`${type}`}
+											control={<Radio size="small" />}
+											label={`${type_krName}`}
+										/>
+									);
+								})}
 							</RadioGroup>
 						</Box>
 
@@ -194,6 +461,7 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 									onChange={(_, newValue) => {
 										if (Array.isArray(newValue)) {
 											setPrice(newValue as [number, number]);
+											selectRangePriceHandler(newValue as [number, number]);
 										}
 									}}
 									min={0}
@@ -218,22 +486,24 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 													key={rating}
 													label={rating + '성급'}
 													className="rating-chip active"
-													onClick={() =>
+													onClick={() => {
+														selectStarsHandler(rating, isInc);
 														setSelectRatingIds((prev) =>
 															prev.includes(rating) ? prev.filter((x) => x !== rating) : [...prev, rating],
-														)
-													}
+														);
+													}}
 												/>
 											) : (
 												<Chip
 													key={rating}
 													label={rating + '성급'}
 													className="rating-chip"
-													onClick={() =>
+													onClick={() => {
+														selectStarsHandler(rating, isInc);
 														setSelectRatingIds((prev) =>
 															prev.includes(rating) ? prev.filter((x) => x !== rating) : [...prev, rating],
-														)
-													}
+														);
+													}}
 												/>
 											)}
 										</div>
@@ -254,22 +524,24 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 													key={tag}
 													label={'#' + tag}
 													className="hashtag-chip active"
-													onClick={() =>
+													onClick={() => {
+														selectAmenityListHandler(tag, isInc);
 														setSelectTagIds((prev) =>
 															prev.includes(tag) ? prev.filter((x) => x !== tag) : [...prev, tag],
-														)
-													}
+														);
+													}}
 												/>
 											) : (
 												<Chip
 													key={tag}
 													label={'#' + tag}
 													className="hashtag-chip"
-													onClick={() =>
+													onClick={() => {
+														selectAmenityListHandler(tag, isInc);
 														setSelectTagIds((prev) =>
 															prev.includes(tag) ? prev.filter((x) => x !== tag) : [...prev, tag],
-														)
-													}
+														);
+													}}
 												/>
 											)}
 										</div>
@@ -291,22 +563,24 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 													key={tag}
 													label={'#' + tag}
 													className="hashtag-chip active"
-													onClick={() =>
+													onClick={() => {
+														selectOtehrAmenityListHandler(tag, isInc);
 														setSelectOtherTagIds((prev) =>
 															prev.includes(tag) ? prev.filter((x) => x !== tag) : [...prev, tag],
-														)
-													}
+														);
+													}}
 												/>
 											) : (
 												<Chip
 													key={tag}
 													label={'#' + tag}
 													className="hashtag-chip"
-													onClick={() =>
+													onClick={() => {
+														selectOtehrAmenityListHandler(tag, isInc);
 														setSelectOtherTagIds((prev) =>
 															prev.includes(tag) ? prev.filter((x) => x !== tag) : [...prev, tag],
-														)
-													}
+														);
+													}}
 												/>
 											)}
 										</div>
@@ -347,7 +621,7 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 									return (
 										<MenuItem
 											key={opt.value}
-											onClick={() => handleSelect(opt.value)}
+											onClick={() => selectSortTypeHandler(opt.value)}
 											selected={selected}
 											className="sort-menu-item"
 										>
@@ -461,11 +735,13 @@ SearchResultPage.defaultProps = {
 	initialInput: {
 		page: 1,
 		limit: 10,
+		sort: 'createdAt',
 		search: {
-			location: undefined,
-			checkInDate: undefined,
-			checkOutDate: undefined,
-			personal: undefined,
+			location: '',
+			checkInDate: '',
+			checkOutDate: '',
+			personal: '',
+			propertyType: 'ALL',
 		},
 	},
 };

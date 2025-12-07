@@ -45,10 +45,11 @@ function isSameDate(a: Date | undefined, b: Date | undefined) {
 interface HeroCardProps {
 	initialInput: PropertiesInquiry;
 	refElement: any;
+	setHeroCardOpen: (v: boolean) => void;
 }
 
 const HeroCard = (props: HeroCardProps) => {
-	const { initialInput, refElement } = props;
+	const { initialInput, refElement, setHeroCardOpen } = props;
 	const router = useRouter();
 	const [searchFilter, setSearchFilter] = useState<PropertiesInquiry>(initialInput);
 	const today = useMemo(() => {
@@ -62,7 +63,6 @@ const HeroCard = (props: HeroCardProps) => {
 	const [propertyLocation, setPropertyLocation] = useState<PropertyLocation[]>(Object.values(PropertyLocation));
 	const [checkIn, setCheckIn] = useState<Date | undefined>(toDate(initialInput.search?.checkInDate));
 	const [checkOut, setCheckOut] = useState<Date | undefined>(toDate(initialInput.search?.checkOutDate));
-	const [guestCount, setGuestCount] = useState(2);
 	const [showDatePicker, setShowDatePicker] = useState(false);
 	const [showGuestPicker, setShowGuestPicker] = useState(false);
 	const [showKeywordPanel, setShowKeywordPanel] = useState(false);
@@ -157,6 +157,26 @@ const HeroCard = (props: HeroCardProps) => {
 	/**UTIL FANCTION**/
 
 	/** HANDLER **/
+	const handleSelectKeyword = useCallback(
+		async (word: string) => {
+			setRecentSearches((prev) => {
+				const updated = [word, ...prev.filter((w) => w !== word)];
+				return updated.slice(0, 4);
+			});
+
+			setSearchFilter({
+				...searchFilter,
+				search: {
+					...searchFilter.search,
+					location: (word as PropertyLocation) || String,
+				},
+			});
+			setShowDatePicker(true);
+			setShowKeywordPanel(false);
+		},
+		[searchFilter],
+	);
+
 	const handleSelectDay = useCallback(
 		async (day: Date) => {
 			if (!checkIn || (checkIn && checkOut)) {
@@ -192,7 +212,7 @@ const HeroCard = (props: HeroCardProps) => {
 						checkOutDate: formatDate(day),
 					},
 				});
-				setShowDatePicker(true);
+				setShowDatePicker(false);
 				setShowKeywordPanel(false);
 				setShowGuestPicker(true);
 				setCheckOut(day);
@@ -201,45 +221,18 @@ const HeroCard = (props: HeroCardProps) => {
 		[searchFilter],
 	);
 
-	const handleSelectKeyword = useCallback(
-		async (word: string) => {
-			setSearchFilter({
-				...searchFilter,
-				search: {
-					...searchFilter.search,
-					location: (word as PropertyLocation) || String,
-				},
-			});
-			setShowDatePicker(true);
-			setShowKeywordPanel(false);
-			setRecentSearches((prev) => {
-				const updated = [word, ...prev.filter((w) => w !== word)];
-				return updated.slice(0, 4);
-			});
-		},
-		[searchFilter],
-	);
-
 	const handleGuestCount = useCallback(
 		async (count: number) => {
 			if (count > 0) {
-				setGuestCount((prev) => Math.ceil(prev + count));
-				setSearchFilter({
-					...searchFilter,
-					search: {
-						...searchFilter.search,
-						personal: guestCount,
-					},
-				});
-			} else if (count < 0 && guestCount > 1) {
-				setGuestCount((prev) => Math.ceil(prev + count));
-				setSearchFilter({
-					...searchFilter,
-					search: {
-						...searchFilter.search,
-						personal: guestCount,
-					},
-				});
+				setSearchFilter((prev) => ({
+					...prev,
+					search: { ...prev.search, personal: prev.search?.personal! + Math.ceil(+count) },
+				}));
+			} else if (count < 0 && searchFilter.search?.personal! > 1) {
+				setSearchFilter((prev) => ({
+					...prev,
+					search: { ...prev.search, personal: prev.search?.personal! + Math.ceil(+count) },
+				}));
 			}
 		},
 		[searchFilter],
@@ -251,13 +244,14 @@ const HeroCard = (props: HeroCardProps) => {
 				await bubbleAlert('여행지를 선택해주세요!');
 			} else {
 				await router.push(
-					`/property?input=${JSON.stringify(searchFilter)}`,
-					`/property?input=${JSON.stringify(searchFilter)}`,
+					`/property?input=${JSON.stringify({ ...searchFilter })}`,
+					`/property?input=${JSON.stringify({ ...searchFilter })}`,
 					{
 						scroll: false,
 					},
 				);
 			}
+			setHeroCardOpen(false);
 		} catch (err: any) {
 			console.log('ERROR : pushSearchHandler', err);
 		}
@@ -409,7 +403,7 @@ const HeroCard = (props: HeroCardProps) => {
 					}}
 				>
 					<PersonOutlineIcon className="hero-field-icon" />
-					<span className="hero-field-text">인원 {guestCount}</span>
+					<span className="hero-field-text">인원 {searchFilter.search?.personal}</span>
 				</Box>
 
 				{/* 검색 버튼 */}
@@ -542,7 +536,7 @@ const HeroCard = (props: HeroCardProps) => {
 							>
 								-
 							</button>
-							<span>{guestCount}</span>
+							<span>{searchFilter.search?.personal}</span>
 							<button
 								onClick={(e) => {
 									e.stopPropagation();

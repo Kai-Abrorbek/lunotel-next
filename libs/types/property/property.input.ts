@@ -54,7 +54,7 @@ export interface PropertiesInquiry {
 	limit?: number;
 	sort?: string;
 	direction?: Direction;
-	search?: PIsearch;
+	search: PIsearch;
 }
 
 /** SINGLE PROPERTY */
