@@ -28,6 +28,8 @@ import 'swiper/css/navigation';
 import Link from 'next/link';
 import { CommentsInquiry } from '../../../libs/types/comment/comment.input';
 import { Direction } from '../../../libs/enums/common.enum';
+import { ReservationInput } from '../../../libs/types/reservation/reservation.input';
+import property from '..';
 
 export type GalleryImage = {
 	id: number;
@@ -422,6 +424,30 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 		setCurrentPage(value);
 	};
 
+	const handlePushReservationPage = (roomId: string, stayPlan: string, stayPlanId: string) => {
+		// 나중에 room 자체를 가겨와서 data 거내기
+		const reservationInput: ReservationInput = {
+			propertyId: propertyId,
+			roomTypeId: roomId,
+			stayPlanId: stayPlanId,
+			reservationCheckIn: searchFilter.search.checkInDate,
+			reservationCheckOut: searchFilter.search.checkOutDate,
+			reservationCheckInAt: '15:00',
+			reservationCheckOutAt: '11:00',
+			stayPlan: stayPlan,
+			propertyName: 'propertyName',
+			memberInfo: {
+				guestName: '',
+				guestPhone: '',
+			},
+		};
+
+		router.push(
+			`/reservation/checkout?input=${JSON.stringify({
+				...reservationInput,
+			})}`,
+		);
+	};
 	return (
 		<Stack className="container">
 			<ImageGalleryModal
@@ -584,11 +610,13 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 											<Box className="room-card__price-right">
 												<span className="final-price">{'27,500원'}</span>
 												<span className="per-night">/1실</span>
-												<Link href={`/reservation/checkout?roomId=${room}&staytype=stay`}>
-													<Button variant="contained" className="room-card__button room-card__button--day">
-														대실 예약
-													</Button>
-												</Link>
+												<Button
+													variant="contained"
+													className="room-card__button room-card__button--day"
+													onClick={() => handlePushReservationPage(String(room), 'stay', '13asdas1dasd1dasdd')}
+												>
+													대실 예약
+												</Button>
 											</Box>
 										</Box>
 									</Box>
@@ -606,11 +634,13 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 											<Box className="room-card__price-right">
 												<span className="final-price">{'71,000원'}</span>
 												<span className="per-night">/1박</span>
-												<Link href={`/reservation/checkout?roomId=${room}&staytype=overnight`}>
-													<Button variant="contained" className="room-card__button room-card__button--stay">
-														숙박 예약
-													</Button>
-												</Link>
+												<Button
+													variant="contained"
+													className="room-card__button room-card__button--stay"
+													onClick={() => handlePushReservationPage(String(room), 'overnight', 'asd1f3asdas1dasd1dasdd')}
+												>
+													숙박 예약
+												</Button>
 											</Box>
 										</Box>
 									</Box>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { use, useEffect, useState } from 'react';
 import {
 	Container,
 	Box,
@@ -16,24 +16,8 @@ import {
 import ClearIcon from '@mui/icons-material/Clear';
 import LayoutHome from '../../../libs/components/layout/LayoutHome';
 import { useRouter } from 'next/router';
-
-const TIME_SLOTS = [
-	'12:00',
-	'12:30',
-	'13:00',
-	'13:30',
-	'14:00',
-	'14:30',
-	'15:00',
-	'15:30',
-	'16:00',
-	'16:30',
-	'17:00',
-	'17:30',
-	'18:00',
-	'18:30',
-	'19:00',
-];
+import { sweetBasicAlert, sweetTopSmallSuccessAlert } from '../../../libs/sweetAlert';
+import { ReservationInput } from '../../../libs/types/reservation/reservation.input';
 
 const PAYMENT_METHODS = [
 	'카카오페이',
@@ -46,18 +30,92 @@ const PAYMENT_METHODS = [
 	'휴대폰 결제',
 	'간편 계좌이체',
 ];
-const ReservationCheckoutPage = () => {
-	const [selectedTime, setSelectedTime] = useState<string>('12:00');
+const WEEK_DAYS = ['일', '월', '화', '수', '목', '금', '토'];
+const fweek = (d: Date) => WEEK_DAYS[d.getDay()];
+const formatToMD = (dateStr: string) => {
+	const [, month, day] = dateStr.split('-');
+	return `${month}.${day}`;
+};
+interface ReservationCheckoutPageProps {
+	initialInput: ReservationInput;
+}
+function changeStrTimeToNumber(time: string): number {
+	return time.split(':').map(Number)[0] * 3600 + time.split(':').map(Number)[1] * 60;
+}
+const ReservationCheckoutPage = (props: ReservationCheckoutPageProps) => {
+	const { initialInput } = props;
+	const router = useRouter();
+	const [selectedTimeStart, setSelectedTimeStart] = useState<string>('09:00');
+	const [checkInTime, setCheckInTime] = useState<number>(changeStrTimeToNumber('12:00'));
+	const [checkOutTime, setCheckOutTime] = useState<number>(changeStrTimeToNumber('20:00'));
+	const [searchFilter, setSearchFilter] = useState<ReservationInput>(
+		router?.query?.input ? JSON.parse(router.query.input as string) : initialInput,
+	);
 	const [guestName, setGuestName] = useState('');
-	const [phone, setPhone] = useState('010-8210-8335');
+	const [guestPhone, setGuestPhone] = useState('');
 	const [visitMethod, setVisitMethod] = useState<'walk' | 'car'>('walk');
 	const [paymentMethod, setPaymentMethod] = useState<string>('카카오페이');
 	const [agreeAll, setAgreeAll] = useState(false);
-	const router = useRouter();
-	const query = router.query.staytype;
+	const maxUsageTime = 5;
 	const roomPrice = 25000;
 	const discount = 0;
 	const totalPrice = roomPrice - discount;
+	const user = false;
+	/** LIFESICLE **/
+
+	useEffect(() => {
+		if (router.query.input) {
+			const inputObj = JSON.parse(router?.query?.input as string);
+			setSearchFilter(inputObj);
+		}
+	}, [router]);
+
+	useEffect(() => {
+		if (rangeTimeSolts.length < maxUsageTime * 2 + 1) {
+			sweetBasicAlert(
+				`${selectedTimeStart.replace(':', '시 ')}분에 입실하시면 ${Math.floor((rangeTimeSolts.length - 1) / 2)}시간 ${
+					((rangeTimeSolts.length - 1) / 2) % 1 ? '30분' : ''
+				}이용하실 수 있습니다.`,
+			);
+		}
+	}, [selectedTimeStart]);
+
+	/** HANDLER **/
+	function generateTimeSlots(startSec: number, endSec: number): string[] {
+		const result: string[] = [];
+		const MAX_END = checkOutTime; // 22:00 = 79200초
+		const finalEnd = Math.min(endSec, MAX_END);
+
+		for (let t = startSec; t <= finalEnd; t += 1800) {
+			const date = new Date(t * 1000); // 초 → ms 변환
+			const hh = String(date.getUTCHours()).padStart(2, '0');
+			const mm = String(date.getUTCMinutes()).padStart(2, '0');
+			result.push(`${hh}:${mm}`);
+		}
+		return result;
+	}
+	const TIME_SLOTS = generateTimeSlots(checkInTime, checkOutTime);
+
+	const rangeTimeSolts = generateTimeSlots(
+		changeStrTimeToNumber(selectedTimeStart),
+		changeStrTimeToNumber(selectedTimeStart) + maxUsageTime * 3600,
+	);
+
+	const handleCreatReservation = async () => {
+		if (!guestName || !guestPhone) {
+			sweetBasicAlert('예약자 정보를 모두 입력해주세요!');
+			return;
+		}
+		console.log(searchFilter);
+		// await createReservation()
+		if (user) {
+			sweetTopSmallSuccessAlert('예약이 완료 되었습니다!');
+			router.push('/mypage/user?category=reservation-details');
+		} else {
+			sweetTopSmallSuccessAlert('예약이 완료 되었습니다!');
+			router.push('/');
+		}
+	};
 
 	return (
 		<Container maxWidth="lg" className="container">
@@ -69,23 +127,34 @@ const ReservationCheckoutPage = () => {
 					</Typography>
 
 					{/* 이용시간 */}
-					{query === 'stay' && (
+					{searchFilter.stayPlan === 'stay' && (
 						<Box className="section">
 							<Box className="section-header">
 								<Typography className="section-title">이용시간</Typography>
-								<Typography className="section-sub">최대 8시간 이용 가능</Typography>
+								<Typography className="section-sub">최대 {maxUsageTime}시간 이용 가능</Typography>
 							</Box>
 							<Box className="time-chip-wrap">
-								{TIME_SLOTS.map((time) => (
-									<Button
-										key={time}
-										variant="outlined"
-										className={'time-chip' + (selectedTime === time ? ' time-chip--selected' : '')}
-										onClick={() => setSelectedTime(time)}
-									>
-										{time}
-									</Button>
-								))}
+								{TIME_SLOTS.map((time) => {
+									const startTime = selectedTimeStart === time;
+									const endTime = rangeTimeSolts[rangeTimeSolts.length - 1] === time;
+									const rangeClassName = time !== selectedTimeStart ? rangeTimeSolts.includes(time) : '';
+									return (
+										<Button
+											key={time}
+											variant="outlined"
+											className={
+												'time-chip' +
+												(selectedTimeStart === time ? ' time-chip--selected' : '') +
+												(rangeClassName ? ' time-chip--range-time' : '') +
+												(startTime ? ' time-chip--start-time' : '') +
+												(endTime ? ' time-chip--end-time' : '')
+											}
+											onClick={() => setSelectedTimeStart(time)}
+										>
+											{time}
+										</Button>
+									);
+								})}
 							</Box>
 						</Box>
 					)}
@@ -101,11 +170,34 @@ const ReservationCheckoutPage = () => {
 								fullWidth
 								placeholder="홍길동"
 								value={guestName}
-								onChange={(e) => setGuestName(e.target.value)}
+								onChange={(e) => {
+									setSearchFilter({
+										...searchFilter,
+										memberInfo: {
+											...searchFilter.memberInfo,
+											guestName: e.target.value,
+										},
+									});
+
+									setGuestName(e.target.value);
+								}}
 								InputProps={{
 									endAdornment: guestName && (
 										<InputAdornment position="end">
-											<IconButton size="small" onClick={() => setGuestName('')} edge="end">
+											<IconButton
+												size="small"
+												onClick={() => {
+													setSearchFilter({
+														...searchFilter,
+														memberInfo: {
+															...searchFilter.memberInfo,
+															guestName: '',
+														},
+													});
+													setGuestName('');
+												}}
+												edge="end"
+											>
 												<ClearIcon fontSize="small" />
 											</IconButton>
 										</InputAdornment>
@@ -119,12 +211,20 @@ const ReservationCheckoutPage = () => {
 							<TextField
 								size="small"
 								fullWidth
-								value={phone}
-								onChange={(e) => setPhone(e.target.value)}
+								value={guestPhone}
+								onChange={(e) => {
+									setGuestPhone(e.target.value);
+								}}
 								InputProps={{
-									endAdornment: phone && (
+									endAdornment: guestPhone && (
 										<InputAdornment position="end">
-											<IconButton size="small" onClick={() => setPhone('')} edge="end">
+											<IconButton
+												size="small"
+												onClick={() => {
+													setGuestPhone('');
+												}}
+												edge="end"
+											>
 												<ClearIcon fontSize="small" />
 											</IconButton>
 										</InputAdornment>
@@ -192,11 +292,27 @@ const ReservationCheckoutPage = () => {
 								<Box className="room-meta">
 									<Box className="room-meta-row">
 										<span className="room-meta-label">객실</span>
-										<span className="room-meta-value">B-타입(카운터에서 B타입 꼭 말씀해주세요, OTT 시청 가능)</span>
+										<span className="room-meta-value">{searchFilter.propertyName}</span>
 									</Box>
 									<Box className="room-meta-row">
 										<span className="room-meta-label">일정</span>
-										<span className="room-meta-value">12.01 (월) {selectedTime} ~ 12.01 (월) 20:00 (대실)</span>
+										{searchFilter.stayPlan === 'stay' ? (
+											<span className="room-meta-value">
+												{formatToMD(searchFilter.reservationCheckIn!)} (
+												{fweek(new Date(searchFilter.reservationCheckIn!))}) {selectedTimeStart} ~{' '}
+												{formatToMD(searchFilter.reservationCheckOut!)} (
+												{fweek(new Date(searchFilter.reservationCheckOut!))}){' '}
+												{rangeTimeSolts[rangeTimeSolts.length - 1]} (대실)
+											</span>
+										) : (
+											<span className="room-meta-value">
+												{formatToMD(searchFilter.reservationCheckIn!)} (
+												{fweek(new Date(searchFilter.reservationCheckIn!))}) {searchFilter.reservationCheckInAt} ~{' '}
+												{formatToMD(searchFilter.reservationCheckOut!)} (
+												{fweek(new Date(searchFilter.reservationCheckOut!))}) {searchFilter.reservationCheckOutAt}{' '}
+												(숙박)
+											</span>
+										)}
 									</Box>
 								</Box>
 							</Box>
@@ -227,7 +343,7 @@ const ReservationCheckoutPage = () => {
 								/>
 							</Box>
 
-							<Button fullWidth className="pay-button" disabled={!agreeAll}>
+							<Button fullWidth className="pay-button" disabled={!agreeAll} onClick={handleCreatReservation}>
 								{totalPrice.toLocaleString()}원 결제하기
 							</Button>
 						</CardContent>
@@ -236,6 +352,22 @@ const ReservationCheckoutPage = () => {
 			</Box>
 		</Container>
 	);
+};
+
+ReservationCheckoutPage.defaultProps = {
+	initialInput: {
+		propertyId: '',
+		roomTypeId: '',
+		stayPlanId: '',
+		reservationCheckIn: '',
+		reservationCheckOut: '',
+		reservationCheckInAt: '',
+		reservationCheckOutAt: '',
+		memberInfo: {
+			guestName: '',
+			guestPhone: '',
+		},
+	},
 };
 
 export default LayoutHome(ReservationCheckoutPage);

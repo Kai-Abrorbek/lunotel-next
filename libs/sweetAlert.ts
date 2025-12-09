@@ -109,7 +109,7 @@ export const sweetErrorHandlingForAdmin = async (err: any) => {
 
 export const sweetTopSmallSuccessAlert = async (
 	msg: string,
-	duration: number = 2000,
+	duration: number = 1000,
 	enable_forward: boolean = false,
 ) => {
 	const Toast = Swal.mixin({
@@ -123,6 +123,9 @@ export const sweetTopSmallSuccessAlert = async (
 	Toast.fire({
 		icon: 'success',
 		title: msg,
+		didOpen: (toast) => {
+			toast.style.top = '8%';
+		},
 	}).then((data) => {
 		if (enable_forward) {
 			window.location.reload();

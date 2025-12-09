@@ -87,7 +87,6 @@ const ReservationHistory = () => {
 	const upcoming = filtered.filter((r) => r.status === 'upcoming');
 	const history = filtered.filter((r) => r.status === 'completed' || r.status === 'canceled');
 	const [openReview, setOpenReview] = useState<boolean>(false);
-
 	const handleTabChange = (_: React.SyntheticEvent, value: TabValue) => {
 		setTab(value);
 	};
@@ -123,9 +122,9 @@ const ReservationHistory = () => {
 						</Box>
 					) : (
 						<Box>
-							{upcoming.map((r) => (
-								<Stack className="my-res-item-box">
-									<Box className="my-res-item-img" src="/img/서울.jfif" component={'img'}></Box>
+							{upcoming.map((r, idx) => (
+								<Stack key={idx} className="my-res-item-box">
+									<Box className="my-res-item-img" src="/img/JEJU.jfif" component={'img'}></Box>
 									<Box key={r.id} className="my-res-item">
 										<Box className="my-res-item-info">
 											<Typography className="my-res-item-title">{r.title}</Typography>
@@ -159,7 +158,7 @@ const ReservationHistory = () => {
 							<React.Fragment key={r.id}>
 								{idx > 0 && <Divider />}
 								<Stack className="my-res-history-box">
-									<Box className="my-res-history-item-img" src="/img/서울.jfif" component={'img'}></Box>
+									<Box className="my-res-history-item-img" src="/img/JEJU.jfif" component={'img'}></Box>
 									<Box className="my-res-history-item">
 										<Box className="my-res-history-item-info">
 											<Typography className="my-res-history-item-title">{r.title}</Typography>

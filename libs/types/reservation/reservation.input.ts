@@ -3,8 +3,8 @@ import { StayPlanType } from '../../enums/stayplan.enum';
 
 /** MEMBER INFO */
 export interface MemberInfoInput {
-	guestName: string;
-	guestPhone: string;
+	guestName?: string;
+	guestPhone?: string;
 	// guestEmail: string;
 }
 
@@ -26,32 +26,23 @@ export interface ReservationPriceBreakdownInput {
 
 /** CREATE RESERVATION */
 export interface ReservationInput {
-	propertyId: string;
-	roomTypeId: string;
-	stayPlanId: string;
-
+	propertyId?: string;
+	roomTypeId?: string;
+	stayPlanId?: string;
 	reservationPlanType?: StayPlanType;
-
-	reservationCheckIn: string;
-	reservationCheckOut: string;
-
-	reservationCheckInAt: string;
-	reservationCheckOutAt: string;
-
-	/** optional when not logged in */
+	reservationCheckIn?: string;
+	reservationCheckOut?: string;
+	reservationCheckInAt?: string;
+	reservationCheckOutAt?: string;
 	memberId?: string;
-
-	/** guest information */
-	memberInfo: MemberInfoInput;
-
+	memberInfo?: MemberInfoInput;
 	reservationStatus?: ReservationStatus;
 	reservationQty?: number;
-
-	/** breakdown prices per date */
 	priceBreakdown?: ReservationPriceBreakdownInput[];
-
 	reservationTotalPrice?: number;
 	reservationDate?: string;
+	stayPlan?: string;
+	propertyName?: string;
 }
 
 /** PAGINATION */
