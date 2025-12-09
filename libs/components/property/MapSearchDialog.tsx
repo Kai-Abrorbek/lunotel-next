@@ -27,7 +27,14 @@ import StarIcon from '@mui/icons-material/Star';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import MapView from './MapView';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
-import { PropertyAmenityKorean, PropertyOtherAmenityKorean } from '../../enums/property.enum';
+import {
+	PropertyAmenity,
+	PropertyAmenityKorean,
+	PropertyOtherAmenity,
+	PropertyOtherAmenityKorean,
+	PropertyType,
+	PropertyTypeKorean,
+} from '../../enums/property.enum';
 import { PropertiesInquiry } from '../../types/property/property.input';
 import { useRouter } from 'next/router';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -36,36 +43,39 @@ import CheckIcon from '@mui/icons-material/Check';
 const tags: PropertyAmenityKorean[] = Object.values(PropertyAmenityKorean);
 const otherTags: PropertyOtherAmenityKorean[] = Object.values(PropertyOtherAmenityKorean);
 const SORT_OPTIONS = [
-	{ value: 'RECOMMEND', label: '추천순' },
-	{ value: 'RATING_DESC', label: '평점높은순' },
-	{ value: 'REVIEW_DESC', label: '리뷰많은순' },
-	{ value: 'PRICE_ASC', label: '낮은가격순' },
-	{ value: 'PRICE_DESC', label: '높은가격순' },
-	{ value: 'DISTANCE_ASC', label: '거리순' },
+	{ value: 'createdAt', label: '추천순' },
+	{ value: 'propertyRank', label: '평점높은순' },
+	{ value: 'propertyComments', label: '리뷰많은순' },
+	{ value: 'propertyPrice_DESC', label: '낮은가격순' },
+	{ value: 'propertyRank_ASC', label: '높은가격순' },
+	{ value: 'propertyReservations', label: '거리순' },
 ];
 
 interface MapSearchDialogProps {
 	open: boolean;
 	onClose: () => void;
+	initialInput: PropertiesInquiry;
 }
 
-const MapSearchDialog: React.FC<MapSearchDialogProps> = ({ open, onClose }) => {
-	const [spin, setSpin] = useState(false);
+const MapSearchDialog: React.FC<MapSearchDialogProps> = ({ open, onClose, initialInput }) => {
 	const router = useRouter();
+	const [spin, setSpin] = useState(false);
 	const [favoriteIds, setFavoriteIds] = useState<number[]>([]);
-	const [price, setPrice] = React.useState<[number, number]>([0, 500000]);
+	const [price, setPrice] = useState<[number, number]>([0, 500000]);
 	const [selectRatingIds, setSelectRatingIds] = useState<number[]>([]);
 	const [selectTagIds, setSelectTagIds] = useState<PropertyAmenityKorean[]>([]);
 	const [selectOtheragIds, setSelectOtherTagIds] = useState<PropertyOtherAmenityKorean[]>([]);
 	const [openMoreTags, setOpenMoreTags] = useState<boolean>(false);
 	const [openMoreOtherTags, setOpenMoreOtherTags] = useState<boolean>(false);
-	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-	const [value, setValue] = React.useState('RATING_DESC');
+	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+	const [targetPropertyEl, setTargetPropertyEl] = useState<number | null>(null);
+	const [sort, setSort] = useState('createdAt');
+	const [type, setType] = useState('ALL');
 	const [searchFilter, setSearchFilter] = useState<PropertiesInquiry>(
-		router?.query?.input ? JSON.parse(router?.query?.input as string) : null,
+		router?.query?.input ? JSON.parse(router?.query?.input as string) : initialInput,
 	);
 	const [total, setTotal] = useState<number>(10);
-	const raw = router.query.input;
+	const openAn = Boolean(anchorEl);
 
 	/** LIFECYCLES **/
 	useEffect(() => {
@@ -76,15 +86,68 @@ const MapSearchDialog: React.FC<MapSearchDialogProps> = ({ open, onClose }) => {
 	}, [router]);
 
 	useEffect(() => {
-		if (typeof raw === 'string') {
-			const parsed = JSON.parse(raw);
-			setSearchFilter(parsed);
+		if (searchFilter?.search.propertyStarsList?.length === 0) {
+			delete searchFilter.search.propertyStarsList;
+			router.push(
+				`/property?input=${JSON.stringify({
+					...searchFilter,
+					search: {
+						...searchFilter.search,
+					},
+				})}`,
+				`/property?input=${JSON.stringify({
+					...searchFilter,
+					search: {
+						...searchFilter.search,
+					},
+				})}`,
+				{ scroll: false },
+			);
 		}
-	}, [raw]);
+
+		if (searchFilter?.search.amenityList?.length === 0) {
+			delete searchFilter.search.amenityList;
+			router.push(
+				`/property?input=${JSON.stringify({
+					...searchFilter,
+					search: {
+						...searchFilter.search,
+					},
+				})}`,
+				`/property?input=${JSON.stringify({
+					...searchFilter,
+					search: {
+						...searchFilter.search,
+					},
+				})}`,
+				{ scroll: false },
+			);
+		}
+
+		if (searchFilter?.search.otherAmenityList?.length === 0) {
+			delete searchFilter.search.otherAmenityList;
+			router.push(
+				`/property?input=${JSON.stringify({
+					...searchFilter,
+					search: {
+						...searchFilter.search,
+					},
+				})}`,
+				`/property?input=${JSON.stringify({
+					...searchFilter,
+					search: {
+						...searchFilter.search,
+					},
+				})}`,
+				{ scroll: false },
+			);
+		}
+	}, [searchFilter]);
 
 	/**HANDLERS**/
 	const resetSearchFilter = () => {
 		setSpin(true);
+		setType('ALL');
 		setPrice([0, 500000]);
 		setSelectRatingIds([]);
 		setSelectTagIds([]);
@@ -92,21 +155,110 @@ const MapSearchDialog: React.FC<MapSearchDialogProps> = ({ open, onClose }) => {
 		setTimeout(() => {
 			setSpin(false);
 		}, 500);
+
+		setSearchFilter({ ...initialInput });
 	};
 
-	const openAn = Boolean(anchorEl);
 	const handleOpen = (e: React.MouseEvent<HTMLButtonElement>) => {
 		setAnchorEl(e.currentTarget);
 	};
+
 	const handleClose = () => setAnchorEl(null);
 
-	const handleSelect = (next: string) => {
-		setValue(next);
-		setAnchorEl(null);
-		// 여기서 API 호출 or 정렬 변경 로직 넣으면 됨
+	const selectPropertyTypeHandler = (value: any) => {
+		setSearchFilter({
+			...searchFilter,
+			search: {
+				...searchFilter.search,
+				propertyType: value,
+			},
+		});
 	};
 
-	const currentLabel = SORT_OPTIONS.find((o) => o.value === value)?.label ?? '정렬';
+	const selectSortTypeHandler = (sort: string) => {
+		setSort(sort);
+		setAnchorEl(null);
+		setSearchFilter({
+			...searchFilter,
+			sort: sort,
+		});
+	};
+
+	const selectRangePriceHandler = (price: number[]) => {
+		setSearchFilter({
+			...searchFilter,
+			search: {
+				...searchFilter.search,
+				pricesRange: {
+					...searchFilter.search.pricesRange,
+					start: price[0],
+					end: price[1],
+				},
+			},
+		});
+	};
+
+	const selectStarsHandler = (star: number, selected: boolean) => {
+		if (!selected) {
+			setSearchFilter({
+				...searchFilter,
+				search: {
+					...searchFilter.search,
+					propertyStarsList: [...(searchFilter.search.propertyStarsList || []), star],
+				},
+			});
+		} else if (selected) {
+			setSearchFilter({
+				...searchFilter,
+				search: {
+					...searchFilter.search,
+					propertyStarsList: searchFilter?.search?.propertyStarsList?.filter((item: number) => item !== star),
+				},
+			});
+		}
+	};
+
+	const selectAmenityListHandler = (amenity: string, selected: boolean) => {
+		if (!selected) {
+			setSearchFilter({
+				...searchFilter,
+				search: {
+					...searchFilter.search,
+					amenityList: [...(searchFilter.search.amenityList || []), amenity as PropertyAmenity],
+				},
+			});
+		} else if (selected) {
+			setSearchFilter({
+				...searchFilter,
+				search: {
+					...searchFilter.search,
+					amenityList: searchFilter?.search?.amenityList!.filter((item: string) => item !== amenity),
+				},
+			});
+		}
+	};
+
+	const selectOtehrAmenityListHandler = (otherAmenity: string, selected: boolean) => {
+		if (!selected) {
+			setSearchFilter({
+				...searchFilter,
+				search: {
+					...searchFilter.search,
+					otherAmenityList: [...(searchFilter.search.otherAmenityList || []), otherAmenity as PropertyOtherAmenity],
+				},
+			});
+		} else if (selected) {
+			setSearchFilter({
+				...searchFilter,
+				search: {
+					...searchFilter.search,
+					otherAmenityList: searchFilter?.search?.otherAmenityList!.filter((item: string) => item !== otherAmenity),
+				},
+			});
+		}
+	};
+
+	const currentLabel = SORT_OPTIONS.find((o) => o.value === sort)?.label ?? '정렬';
 
 	return (
 		<div className="dialog-container">
@@ -138,7 +290,7 @@ const MapSearchDialog: React.FC<MapSearchDialogProps> = ({ open, onClose }) => {
 						<Box style={{ width: 48 }} /> {/* 가운데 정렬용 더미 */}
 					</Box>
 
-					{/* 본문 */}
+					{/* --- 본문  */}
 					<Box className="map-dialog-body">
 						{/* 왼쪽 필터 */}
 						<Box className="map-dialog-column filter-column">
@@ -161,14 +313,26 @@ const MapSearchDialog: React.FC<MapSearchDialogProps> = ({ open, onClose }) => {
 							{/* 숙소 유형 */}
 							<Box className="section">
 								<Typography className="section-title">숙소유형</Typography>
-								<RadioGroup defaultValue="all" className="roomtype-group">
-									<FormControlLabel value="all" control={<Radio size="small" />} label="전체" />
-									<FormControlLabel value="motel" control={<Radio size="small" />} label="모텔" />
-									<FormControlLabel value="hotel" control={<Radio size="small" />} label="호텔·리조트" />
-									<FormControlLabel value="pension" control={<Radio size="small" />} label="펜션" />
-									<FormControlLabel value="homevilla" control={<Radio size="small" />} label="홈&빌라" />
-									<FormControlLabel value="camping" control={<Radio size="small" />} label="캠핑" />
-									<FormControlLabel value="guest" control={<Radio size="small" />} label="게하·한옥" />
+								<RadioGroup
+									defaultValue={type}
+									className="roomtype-group"
+									value={type}
+									onChange={(e) => {
+										setType(e.target.value);
+										selectPropertyTypeHandler(e.target.value);
+									}}
+								>
+									{Object.values(PropertyType).map((type, idx) => {
+										const type_krName = Object.values(PropertyTypeKorean)[idx];
+										return (
+											<FormControlLabel
+												key={idx}
+												value={`${type}`}
+												control={<Radio size="small" />}
+												label={`${type_krName}`}
+											/>
+										);
+									})}
 								</RadioGroup>
 							</Box>
 
@@ -183,6 +347,7 @@ const MapSearchDialog: React.FC<MapSearchDialogProps> = ({ open, onClose }) => {
 										onChange={(_, newValue) => {
 											if (Array.isArray(newValue)) {
 												setPrice(newValue as [number, number]);
+												selectRangePriceHandler(newValue as [number, number]);
 											}
 										}}
 										min={0}
@@ -208,22 +373,24 @@ const MapSearchDialog: React.FC<MapSearchDialogProps> = ({ open, onClose }) => {
 														key={rating}
 														label={rating + '성급'}
 														className="rating-chip active"
-														onClick={() =>
+														onClick={() => {
+															selectStarsHandler(rating, isInc);
 															setSelectRatingIds((prev) =>
 																prev.includes(rating) ? prev.filter((x) => x !== rating) : [...prev, rating],
-															)
-														}
+															);
+														}}
 													/>
 												) : (
 													<Chip
 														key={rating}
 														label={rating + '성급'}
 														className="rating-chip"
-														onClick={() =>
+														onClick={() => {
+															selectStarsHandler(rating, isInc);
 															setSelectRatingIds((prev) =>
 																prev.includes(rating) ? prev.filter((x) => x !== rating) : [...prev, rating],
-															)
-														}
+															);
+														}}
 													/>
 												)}
 											</div>
@@ -245,22 +412,24 @@ const MapSearchDialog: React.FC<MapSearchDialogProps> = ({ open, onClose }) => {
 														key={tag}
 														label={'#' + tag}
 														className="hashtag-chip active"
-														onClick={() =>
+														onClick={() => {
+															selectAmenityListHandler(tag, isInc);
 															setSelectTagIds((prev) =>
 																prev.includes(tag) ? prev.filter((x) => x !== tag) : [...prev, tag],
-															)
-														}
+															);
+														}}
 													/>
 												) : (
 													<Chip
 														key={tag}
 														label={'#' + tag}
 														className="hashtag-chip"
-														onClick={() =>
+														onClick={() => {
+															selectAmenityListHandler(tag, isInc);
 															setSelectTagIds((prev) =>
 																prev.includes(tag) ? prev.filter((x) => x !== tag) : [...prev, tag],
-															)
-														}
+															);
+														}}
 													/>
 												)}
 											</div>
@@ -282,22 +451,24 @@ const MapSearchDialog: React.FC<MapSearchDialogProps> = ({ open, onClose }) => {
 														key={tag}
 														label={'#' + tag}
 														className="hashtag-chip active"
-														onClick={() =>
+														onClick={() => {
+															selectOtehrAmenityListHandler(tag, isInc);
 															setSelectOtherTagIds((prev) =>
 																prev.includes(tag) ? prev.filter((x) => x !== tag) : [...prev, tag],
-															)
-														}
+															);
+														}}
 													/>
 												) : (
 													<Chip
 														key={tag}
 														label={'#' + tag}
 														className="hashtag-chip"
-														onClick={() =>
+														onClick={() => {
+															selectOtehrAmenityListHandler(tag, isInc);
 															setSelectOtherTagIds((prev) =>
 																prev.includes(tag) ? prev.filter((x) => x !== tag) : [...prev, tag],
-															)
-														}
+															);
+														}}
 													/>
 												)}
 											</div>
@@ -310,7 +481,7 @@ const MapSearchDialog: React.FC<MapSearchDialogProps> = ({ open, onClose }) => {
 							</Box>
 						</Box>
 
-						{/* 가운데 리스트 */}
+						{/* --- 가운데 리스트 */}
 						<Box className="map-dialog-column list-column">
 							<Box className="list-header">
 								<Typography className="results-count">
@@ -333,11 +504,11 @@ const MapSearchDialog: React.FC<MapSearchDialogProps> = ({ open, onClose }) => {
 									transformOrigin={{ vertical: 'top', horizontal: 'left' }}
 								>
 									{SORT_OPTIONS.map((opt) => {
-										const selected = opt.value === value;
+										const selected = opt.value === sort;
 										return (
 											<MenuItem
 												key={opt.value}
-												onClick={() => handleSelect(opt.value)}
+												onClick={() => selectSortTypeHandler(opt.value)}
 												selected={selected}
 												className="sort-menu-item"
 											>
@@ -358,11 +529,21 @@ const MapSearchDialog: React.FC<MapSearchDialogProps> = ({ open, onClose }) => {
 							</Box>
 
 							<Box className="list-scroll">
-								{/* card */}
+								{/* --- card */}
 								{[1, 2, 3, 4, 5, 6, 7].map((item) => {
 									const isFav = favoriteIds.includes(item);
 									return (
-										<Card key={item} className="hotel-card" elevation={1}>
+										<Card
+											key={item}
+											className="hotel-card"
+											elevation={1}
+											onMouseEnter={() => {
+												setTargetPropertyEl(item);
+											}}
+											onMouseLeave={() => {
+												setTargetPropertyEl(null);
+											}}
+										>
 											<Box className="hotel-card-inner">
 												<CardMedia
 													component="img"
@@ -420,7 +601,7 @@ const MapSearchDialog: React.FC<MapSearchDialogProps> = ({ open, onClose }) => {
 						{/* 오른쪽 지도 */}
 						<Box className="map-dialog-column map-column">
 							<Box className="map-area">
-								<MapView />
+								<MapView targetPropertyEl={targetPropertyEl} />
 							</Box>
 						</Box>
 					</Box>

@@ -38,6 +38,7 @@ import {
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import CheckIcon from '@mui/icons-material/Check';
 import MapSearchDialog from '../../libs/components/property/MapSearchDialog';
+import { validate } from 'graphql';
 
 const tags: PropertyAmenityKorean[] = Object.values(PropertyAmenityKorean);
 const otherTags: PropertyOtherAmenityKorean[] = Object.values(PropertyOtherAmenityKorean);
@@ -66,14 +67,15 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 	const [openMoreOtherTags, setOpenMoreOtherTags] = useState<boolean>(false);
 	const [spin, setSpin] = useState(false);
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-	const [value, setValue] = React.useState('RATING_DESC');
+	const [sort, setSort] = React.useState('RATING_DESC');
+	const [type, setType] = React.useState('ALL');
 	const [mapOpen, setMapOpen] = useState(false);
 	const [searchFilter, setSearchFilter] = useState<PropertiesInquiry>(
 		router?.query?.input ? JSON.parse(router?.query?.input as string) : initialInput,
 	);
 	const [total, setTotal] = useState<number>(11);
 	const locationRef: any = useRef();
-	const currentLabel = SORT_OPTIONS.find((o) => o.value === value)?.label ?? '정렬';
+	const currentLabel = SORT_OPTIONS.find((o) => o.value === sort)?.label ?? '정렬';
 	const open = Boolean(anchorEl);
 
 	/** LIFECYCLES **/
@@ -147,6 +149,7 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 
 	const resetSearchFilter = () => {
 		setSpin(true);
+		setType('ALL');
 		setPrice([0, 500000]);
 		setSelectRatingIds([]);
 		setSelectTagIds([]);
@@ -154,6 +157,15 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 		setTimeout(() => {
 			setSpin(false);
 		}, 500);
+
+		const inputObj = localStorage.getItem('searchFilter');
+		if (inputObj) {
+			const data = JSON.parse(inputObj);
+			setSearchFilter({ ...data });
+			router.push(`/property?input=${JSON.stringify({ ...data })}`, `/property?input=${JSON.stringify({ ...data })}`, {
+				scroll: false,
+			});
+		}
 	};
 
 	const handleClose = () => setAnchorEl(null);
@@ -169,14 +181,12 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 				...searchFilter,
 				search: {
 					...searchFilter.search,
-					propertyType: value,
 				},
 			})}`,
 			`/property?input=${JSON.stringify({
 				...searchFilter,
 				search: {
 					...searchFilter.search,
-					propertyType: value,
 				},
 			})}`,
 			{
@@ -184,8 +194,7 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 			},
 		);
 
-		// localStorage.setItem('searchFilter', JSON.stringify({ ...searchFilter, page: value }));
-		// setCurrentPage(value);
+		setCurrentPage(value);
 	};
 
 	const selectPropertyTypeHandler = (value: any) => {
@@ -211,7 +220,7 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 	};
 
 	const selectSortTypeHandler = (next: string) => {
-		setValue(next);
+		setSort(next);
 		setAnchorEl(null);
 		router.push(
 			`/property?input=${JSON.stringify({
@@ -390,7 +399,7 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 
 	const pushPropertyDetailHandler = (item: number, name: string) => {
 		if (searchFilter.search) searchFilter.search.propertyName = name;
-		localStorage.setItem('searchFilter', JSON.stringify(searchFilter));
+		localStorage.setItem('searchFilter', JSON.stringify({ ...searchFilter }));
 		router.push(
 			`/property/propertyId=${item}?input=${JSON.stringify({ ...searchFilter })}`,
 			`/property/propertyId=${item}?input=${JSON.stringify({ ...searchFilter })}`,
@@ -402,7 +411,7 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 
 	return (
 		<Stack className="container">
-			<MapSearchDialog open={mapOpen} onClose={() => setMapOpen(false)} />
+			<MapSearchDialog open={mapOpen} onClose={() => setMapOpen(false)} initialInput={searchFilter} />
 			<Box className="search-page" ref={locationRef}>
 				<Box className="search-layout">
 					{/* LEFT : FILTER */}
@@ -432,9 +441,13 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 						<Box className="section">
 							<Typography className="section-title">숙소유형</Typography>
 							<RadioGroup
-								defaultValue="ALL"
+								defaultValue={type}
 								className="roomtype-group"
-								onChange={(e) => selectPropertyTypeHandler(e.target.value)}
+								value={type}
+								onChange={(e) => {
+									setType(e.target.value);
+									selectPropertyTypeHandler(e.target.value);
+								}}
 							>
 								{Object.values(PropertyType).map((type, idx) => {
 									const type_krName = Object.values(PropertyTypeKorean)[idx];
@@ -617,7 +630,7 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 								transformOrigin={{ vertical: 'top', horizontal: 'left' }}
 							>
 								{SORT_OPTIONS.map((opt) => {
-									const selected = opt.value === value;
+									const selected = opt.value === sort;
 									return (
 										<MenuItem
 											key={opt.value}

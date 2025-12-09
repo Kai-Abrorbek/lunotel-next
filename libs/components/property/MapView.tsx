@@ -129,7 +129,11 @@ const MARKERS = [
 	},
 ];
 
-const KakaoMapView = () => {
+interface KakaoMapViewProps {
+	targetPropertyEl: number | null;
+}
+
+const KakaoMapView = ({ targetPropertyEl }: KakaoMapViewProps) => {
 	const containerRef = useRef<HTMLDivElement | null>(null);
 
 	useEffect(() => {
@@ -143,16 +147,29 @@ const KakaoMapView = () => {
 				level: 6,
 			});
 
-			MARKERS.forEach((hotel) => {
+			MARKERS.forEach((hotel, idx) => {
 				/* 1. 가격 마커 생성 */
 				const priceContent = document.createElement('div');
-				priceContent.className = 'kakao-price-marker';
+				priceContent.className = `kakao-price-marker ${targetPropertyEl === idx ? 'hover' : ''}`;
 				priceContent.innerText = hotel.price;
+				priceContent.dataset.index = idx.toString();
 
 				const priceOverlay = new window.kakao.maps.CustomOverlay({
 					position: new window.kakao.maps.LatLng(hotel.lat, hotel.lng),
 					content: priceContent,
 					yAnchor: 1,
+				});
+
+				priceContent.addEventListener('mouseenter', () => {
+					priceContent.style.background = 'black';
+					priceContent.style.color = 'white';
+					priceContent.style.transform = 'scale(1.1)';
+				});
+
+				priceContent.addEventListener('mouseleave', () => {
+					priceContent.style.background = 'white';
+					priceContent.style.color = 'black';
+					priceContent.style.transform = 'scale(1)';
 				});
 
 				priceOverlay.setMap(map);
@@ -190,7 +207,7 @@ const KakaoMapView = () => {
 				});
 			});
 		});
-	}, []);
+	}, [targetPropertyEl]);
 
 	return <div ref={containerRef} className="kakao-map-root" />;
 };
