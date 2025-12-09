@@ -11,10 +11,10 @@ import NotificationsPage from '../../../libs/components/mypage/host/Notification
 import CustomerInquiryPage from '../../../libs/components/mypage/host/CustomerInquiryPage';
 
 const HostMyPage = () => {
-	const [active, setActive] = useState('dashboard');
+	const [activeMenu, setActiveMenu] = useState('dashboard');
 
 	const renderPage = () => {
-		switch (active) {
+		switch (activeMenu) {
 			case 'dashboard':
 				return <HostDashboard />;
 			case 'reservations':
@@ -37,7 +37,7 @@ const HostMyPage = () => {
 	return (
 		<div className="container">
 			<div className="host-layout">
-				<Sidebar active={active} setActive={setActive} />
+				<Sidebar activeMenu={activeMenu} setActiveMenu={setActiveMenu} />
 				<main className="host-layout__content">{renderPage()}</main>
 			</div>
 		</div>

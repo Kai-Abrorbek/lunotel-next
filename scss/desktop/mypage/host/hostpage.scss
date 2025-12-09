@@ -14,97 +14,153 @@
 			width: 100%;
 		}
 
-		.sidebar {
-			width: 300px;
-			background: linear-gradient(180deg, #0a0a0a 0%, #1a1a1a 100%);
-			padding: 48px 0;
+		.sidebar-container {
 			display: flex;
-			flex-direction: column;
-			border-right: 1px solid rgba(255, 255, 255, 0.06);
-			position: relative;
+			gap: 20px;
+			min-height: 90vh;
+			background: #000000;
+			padding: 20px;
+			font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+			border-radius: 10px;
+			.sidebar {
+				background: linear-gradient(180deg, #1a1a1a 0%, #0f0f0f 100%);
+				border-radius: 40px;
+				padding: 24px 16px;
+				display: flex;
+				flex-direction: column;
+				transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+				position: relative;
+				box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+			}
+			.sidebar-collapsed {
+				width: 80px;
+			}
+
+			.sidebar-expanded {
+				width: 280px;
+			}
+
+			.sidebar-header {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				margin-bottom: 32px;
+				height: 40px;
+			}
 
 			.logo {
-				padding: 0 32px 40px;
-				margin-bottom: 32px;
-				.logo-title {
-					font-size: 20px;
-					font-weight: 300;
-					color: white;
-					letter-spacing: 4px;
-					text-transform: uppercase;
-				}
-				.logo-subtitle {
-					font-size: 11px;
-					color: rgba(255, 255, 255, 0.3);
-					letter-spacing: 2px;
-					margin-top: 4px;
-					text-transform: uppercase;
-				}
+				width: 32px;
+				height: 32px;
+				background: white;
+				border-radius: 8px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-weight: bold;
+				color: #000;
+				font-size: 18px;
 			}
+
+			.brand-text {
+				color: white;
+				font-size: 18px;
+				font-weight: 600;
+				margin-left: 12px;
+			}
+
+			.menu-section {
+				flex: 1;
+				display: flex;
+				flex-direction: column;
+				gap: 8px;
+			}
+
 			.menu-item {
 				display: flex;
 				align-items: center;
-				justify-content: space-between;
-				padding: 16px 32px;
-				margin: 2px 20px;
-				border-radius: 8px;
-				color: rgba(255, 255, 255, 1);
+				padding: 14px 16px;
+				border-radius: 20px;
 				cursor: pointer;
-				transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-				font-size: 15px;
-				font-weight: 400;
-				letter-spacing: 0.3px;
+				transition: all 0.2s ease;
 				position: relative;
-
-				.menu-left {
-					display: flex;
-					align-items: center;
-					gap: 16px;
-					.icon {
-						font-size: 16px;
-						opacity: 0.9;
-					}
-				}
-				.badge {
-					background: rgb(255, 27, 27);
-					color: rgb(255, 247, 247);
-					padding: 3px 6px;
-					border-radius: 50%;
-					font-size: 12px;
-					font-weight: 600;
-				}
+				color: #8a8a8a;
+				background: transparent;
+				border: none;
+				width: 100%;
+				text-align: left;
 			}
-			.menu-item::before {
+
+			.menu-item:hover {
+				background: rgba(255, 255, 255, 0.05);
+				color: #ffffff;
+			}
+
+			.menu-item.active {
+				background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+				color: white;
+			}
+
+			.menu-item.active::before {
 				content: '';
 				position: absolute;
-				left: 0;
+				left: -16px;
 				top: 50%;
 				transform: translateY(-50%);
-				width: 2px;
-				height: 0;
-				background: white;
-				transition: height 0.3s;
-			}
-			.menu-item:hover {
-				color: rgba(255, 255, 255, 0.8);
-				background: rgba(255, 255, 255, 0.03);
-			}
-			.menu-item.active {
-				color: white;
-				background: rgba(255, 255, 255, 0.1);
-			}
-			.menu-item.active::before {
-				height: 60%;
+				width: 4px;
+				height: 24px;
+				background: #a855f7;
+				border-radius: 0 4px 4px 0;
 			}
 
-			&::before {
-				content: '';
-				position: absolute;
-				top: 0;
-				right: 0;
-				width: 1px;
-				height: 100%;
-				background: linear-gradient(180deg, transparent 0%, rgba(255, 255, 255, 0.1) 50%, transparent 100%);
+			.menu-icon {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				min-width: 24px;
+			}
+
+			.menu-label {
+				margin-left: 16px;
+				font-size: 15px;
+				font-weight: 500;
+				white-space: nowrap;
+				opacity: 0;
+				transition: opacity 0.2s ease;
+			}
+
+			.sidebar-expanded .menu-label {
+				opacity: 1;
+			}
+
+			.menu-badge {
+				margin-left: auto;
+				background: #2a2a2a;
+				color: white;
+				padding: 2px 8px;
+				border-radius: 10px;
+				font-size: 12px;
+				font-weight: 600;
+				min-width: 24px;
+				text-align: center;
+				opacity: 0;
+				transition: opacity 0.2s ease;
+			}
+
+			.sidebar-expanded .menu-badge {
+				opacity: 1;
+			}
+
+			.menu-divider {
+				height: 1px;
+				background: rgba(255, 255, 255, 0.1);
+				margin: 16px 0;
+			}
+
+			.bottom-menu {
+				display: flex;
+				flex-direction: column;
+				gap: 8px;
+				margin-top: 16px;
 			}
 		}
 		.dashboard {
