@@ -140,7 +140,6 @@ export const bubbleAlert = (msg: string): Promise<void> => {
 		div.id = id;
 		div.className = 'bubble-alert';
 		div.textContent = msg;
-
 		document.body.appendChild(div);
 
 		// fade-in

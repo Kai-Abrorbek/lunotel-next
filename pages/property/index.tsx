@@ -27,7 +27,7 @@ import StarIcon from '@mui/icons-material/Star';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import OtherLayout from '../../libs/components/layout/OtherLayout';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import { PropertiesInquiry } from '../../libs/types/property/property.input';
+import { PropertiesInquiry, PropertyInquiry } from '../../libs/types/property/property.input';
 import { useRouter } from 'next/router';
 import {
 	PropertyAmenityKorean,
@@ -398,11 +398,18 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 	};
 
 	const pushPropertyDetailHandler = (item: number, name: string) => {
-		if (searchFilter.search) searchFilter.search.propertyName = name;
-		localStorage.setItem('searchFilter', JSON.stringify({ ...searchFilter }));
+		const propertyInqiry: PropertyInquiry = {
+			_id: String(item),
+			propertyName: name,
+			checkInDate: searchFilter?.search?.checkInDate!,
+			checkOutDate: searchFilter?.search?.checkOutDate!,
+			personal: searchFilter?.search?.personal!,
+		};
+
+		localStorage.setItem('propertyInqiry', JSON.stringify({ ...propertyInqiry }));
 		router.push(
-			`/property/propertyId=${item}?input=${JSON.stringify({ ...searchFilter })}`,
-			`/property/propertyId=${item}?input=${JSON.stringify({ ...searchFilter })}`,
+			`/property/propertyId=${item}?input=${JSON.stringify({ ...propertyInqiry })}`,
+			`/property/propertyId=${item}?input=${JSON.stringify({ ...propertyInqiry })}`,
 			{
 				scroll: false,
 			},

@@ -7,7 +7,23 @@ import { useRouter } from 'next/router';
 import { PropertiesInquiry } from '../types/property/property.input';
 import HeroCard from './common/HeroCard';
 import MemberQuickMenu from './common/MemberQuickMenu';
-import property from '../../pages/property';
+
+const WEEK_DAYS = ['일', '월', '화', '수', '목', '금', '토'];
+function formatRangeLabel(checkIn: Date | undefined, checkOut: Date | undefined) {
+	if (!checkIn || !checkOut) return '날짜를 선택하세요';
+
+	const nights = (checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24);
+
+	const fm = (d: Date) => (d.getMonth() + 1).toString().padStart(2, '0');
+	const fd = (d: Date) => d.getDate().toString().padStart(2, '0');
+	const fw = (d: Date) => WEEK_DAYS[d.getDay()];
+
+	return `${fm(checkIn)}.${fd(checkIn)} ${fw(checkIn)} - ${fm(checkOut)}.${fd(checkOut)} ${fw(checkOut)} (${nights}박)`;
+}
+
+function toDate(value: string | undefined): Date | undefined {
+	return value ? new Date(value) : undefined;
+}
 
 interface MiniHeaderProps {
 	initialInput: PropertiesInquiry;
@@ -23,14 +39,13 @@ const MiniHeader = (props: MiniHeaderProps) => {
 	);
 	const [heroCardOpen, setHeroCardOpen] = useState<boolean>(false);
 	const refElement: any = useRef();
-	const WEEK_DAYS = ['일', '월', '화', '수', '목', '금', '토'];
-
 	const locationLabel = searchFilter?.search?.location;
 	const dateLabel = formatRangeLabel(
 		toDate(searchFilter?.search?.checkInDate),
 		toDate(searchFilter?.search?.checkOutDate),
 	);
 	const guestLabel = searchFilter?.search?.personal;
+	const property = router?.query?.input ? JSON.parse(router?.query?.input as string) : '';
 	/** LIFESICLE **/
 	useEffect(() => {
 		if (typeof window === 'undefined') return;
@@ -57,24 +72,6 @@ const MiniHeader = (props: MiniHeaderProps) => {
 		setHeroCardOpen(true);
 	};
 
-	function toDate(value: string | undefined): Date | undefined {
-		return value ? new Date(value) : undefined;
-	}
-
-	function formatRangeLabel(checkIn: Date | undefined, checkOut: Date | undefined) {
-		if (!checkIn || !checkOut) return '날짜를 선택하세요';
-
-		const nights = (checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24);
-
-		const fm = (d: Date) => (d.getMonth() + 1).toString().padStart(2, '0');
-		const fd = (d: Date) => d.getDate().toString().padStart(2, '0');
-		const fw = (d: Date) => WEEK_DAYS[d.getDay()];
-
-		return `${fm(checkIn)}.${fd(checkIn)} ${fw(checkIn)} - ${fm(checkOut)}.${fd(checkOut)} ${fw(
-			checkOut,
-		)} (${nights}박)`;
-	}
-
 	return (
 		<div className={`other-top-header ${heroCardOpen ? 'active' : ''}`}>
 			<Stack
@@ -89,12 +86,19 @@ const MiniHeader = (props: MiniHeaderProps) => {
 						</Link>
 					</Box>
 					{heroCardOpen ? (
-						<HeroCard initialInput={searchFilter!} refElement={refElement} setHeroCardOpen={setHeroCardOpen} />
+						<HeroCard
+							initialInput={searchFilter!}
+							refElement={refElement}
+							setHeroCardOpen={setHeroCardOpen}
+							propertyName={property.propertyName}
+						/>
 					) : (
 						<Box className="mini-header-center">
 							<Box className="mini-search-bar" onClick={openHeroCardHandler}>
 								<SearchIcon className="mini-search-icon" />
-								<span className="mini-search-text mini-search-location">{locationLabel}</span>
+								<span className="mini-search-text mini-search-location">
+									{property.propertyName ? property.propertyName : locationLabel}
+								</span>
 								<span className="mini-search-divider">|</span>
 								<span className="mini-search-text mini-search-date">{dateLabel}</span>
 								<span className="mini-search-divider">|</span>

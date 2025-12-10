@@ -213,6 +213,14 @@ const ReservationCheckoutPage = (props: ReservationCheckoutPageProps) => {
 								fullWidth
 								value={guestPhone}
 								onChange={(e) => {
+									setSearchFilter({
+										...searchFilter,
+										memberInfo: {
+											...searchFilter.memberInfo,
+											guestPhone: e.target.value,
+										},
+									});
+
 									setGuestPhone(e.target.value);
 								}}
 								InputProps={{
@@ -221,6 +229,13 @@ const ReservationCheckoutPage = (props: ReservationCheckoutPageProps) => {
 											<IconButton
 												size="small"
 												onClick={() => {
+													setSearchFilter({
+														...searchFilter,
+														memberInfo: {
+															...searchFilter.memberInfo,
+															guestPhone: '',
+														},
+													});
 													setGuestPhone('');
 												}}
 												edge="end"

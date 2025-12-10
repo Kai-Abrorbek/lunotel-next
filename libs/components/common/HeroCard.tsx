@@ -8,7 +8,7 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import CloseIcon from '@mui/icons-material/Close';
 import PlaceIcon from '@mui/icons-material/Place';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import { PropertiesInquiry } from '../../types/property/property.input';
+import { PropertiesInquiry, PropertyInquiry } from '../../types/property/property.input';
 import { PropertyLocation } from '../../enums/property.enum';
 import { bubbleAlert } from '../../sweetAlert';
 import { useRouter } from 'next/router';
@@ -46,10 +46,11 @@ interface HeroCardProps {
 	initialInput: PropertiesInquiry;
 	refElement: any;
 	setHeroCardOpen: (v: boolean) => void;
+	propertyName: string | null;
 }
 
 const HeroCard = (props: HeroCardProps) => {
-	const { initialInput, refElement, setHeroCardOpen } = props;
+	const { initialInput, refElement, setHeroCardOpen, propertyName } = props;
 	const router = useRouter();
 	const [searchFilter, setSearchFilter] = useState<PropertiesInquiry>(initialInput);
 	const today = useMemo(() => {
@@ -60,9 +61,9 @@ const HeroCard = (props: HeroCardProps) => {
 	const dateRef: any = useRef();
 	const pesonalRef: any = useRef();
 	const [activeTab, setActiveTab] = useState<TabKey>('domestic');
-	const [propertyLocation, setPropertyLocation] = useState<PropertyLocation[]>(Object.values(PropertyLocation));
 	const [checkIn, setCheckIn] = useState<Date | undefined>(toDate(initialInput.search?.checkInDate));
 	const [checkOut, setCheckOut] = useState<Date | undefined>(toDate(initialInput.search?.checkOutDate));
+	const [currentProperty, setCurrentProperty] = useState<string | null>(propertyName ? propertyName : null);
 	const [showDatePicker, setShowDatePicker] = useState(false);
 	const [showGuestPicker, setShowGuestPicker] = useState(false);
 	const [showKeywordPanel, setShowKeywordPanel] = useState(false);
@@ -171,8 +172,16 @@ const HeroCard = (props: HeroCardProps) => {
 					location: (word as PropertyLocation) || String,
 				},
 			});
-			setShowDatePicker(true);
 			setShowKeywordPanel(false);
+
+			searchFilter.search.location = word as PropertyLocation;
+			await router.push(
+				`/property?input=${JSON.stringify({ ...searchFilter })}`,
+				`/property?input=${JSON.stringify({ ...searchFilter })}`,
+				{
+					scroll: true,
+				},
+			);
 		},
 		[searchFilter],
 	);
@@ -240,18 +249,41 @@ const HeroCard = (props: HeroCardProps) => {
 
 	const pushSearchHandler = async () => {
 		try {
-			if (!searchFilter.search?.location) {
-				await bubbleAlert('여행지를 선택해주세요!');
+			if (router.pathname === '/property/[propertyId]') {
+				const propertyId = router.query.propertyId?.slice(11);
+				const propertyInqiry: PropertyInquiry = {
+					_id: propertyId! as string,
+					propertyName: propertyName ?? '',
+					checkInDate: searchFilter.search.checkInDate!,
+					checkOutDate: searchFilter.search.checkOutDate!,
+					personal: searchFilter.search.personal!,
+				};
+				if (!searchFilter.search?.location) {
+					await bubbleAlert('여행지를 선택해주세요!');
+				} else {
+					await router.push(
+						`/property/propertyId=${propertyId}?input=${JSON.stringify({ ...propertyInqiry })}`,
+						`/property/propertyId=${propertyId}?input=${JSON.stringify({ ...propertyInqiry })}`,
+						{
+							scroll: false,
+						},
+					);
+				}
+				setHeroCardOpen(false);
 			} else {
-				await router.push(
-					`/property?input=${JSON.stringify({ ...searchFilter })}`,
-					`/property?input=${JSON.stringify({ ...searchFilter })}`,
-					{
-						scroll: false,
-					},
-				);
+				if (!searchFilter.search?.location) {
+					await bubbleAlert('여행지를 선택해주세요!');
+				} else {
+					await router.push(
+						`/property?input=${JSON.stringify({ ...searchFilter })}`,
+						`/property?input=${JSON.stringify({ ...searchFilter })}`,
+						{
+							scroll: true,
+						},
+					);
+				}
+				setHeroCardOpen(false);
 			}
-			setHeroCardOpen(false);
 		} catch (err: any) {
 			console.log('ERROR : pushSearchHandler', err);
 		}
@@ -295,30 +327,32 @@ const HeroCard = (props: HeroCardProps) => {
 							<InputBase
 								className="hero-input"
 								placeholder="여행지나 숙소를 검색해보세요."
-								value={searchFilter?.search?.location}
-								onChange={(e) =>
+								value={currentProperty ? currentProperty : searchFilter?.search?.location}
+								onChange={(e) => {
+									setCurrentProperty(e.target.value);
 									setSearchFilter({
 										...searchFilter,
 										search: {
 											...searchFilter.search,
 											location: e.target.value as PropertyLocation,
 										},
-									})
-								}
+									});
+								}}
 								onFocus={openKeywordPanel}
 							/>
 							{searchFilter?.search?.location && (
 								<button
 									className="clear-btn"
-									onClick={() =>
+									onClick={() => {
+										setCurrentProperty('');
 										setSearchFilter({
 											...searchFilter,
 											search: {
 												...searchFilter.search,
 												location: '' as PropertyLocation,
 											},
-										})
-									}
+										});
+									}}
 								>
 									×
 								</button>
@@ -370,7 +404,7 @@ const HeroCard = (props: HeroCardProps) => {
 								</Box>
 
 								<Box className="hero-ranking-list">
-									{propertyLocation.map((city, idx) => (
+									{Object.values(PropertyLocation).map((city, idx) => (
 										<button key={city} className="hero-ranking-item" onClick={() => handleSelectKeyword(city)}>
 											<span className="hero-ranking-index">{idx + 1}</span>
 											<span>{city}</span>

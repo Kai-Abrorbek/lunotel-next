@@ -1,6 +1,6 @@
 import { ChangeEvent, useEffect, useState } from 'react';
 import OtherLayout from '../../../libs/components/layout/OtherLayout';
-import { PropertiesInquiry } from '../../../libs/types/property/property.input';
+import { PropertiesInquiry, PropertyInquiry } from '../../../libs/types/property/property.input';
 import { useRouter } from 'next/router';
 import { Box, Button, Chip, IconButton, Menu, MenuItem, Pagination, Stack, Typography } from '@mui/material';
 import RoomStickyBar from '../../../libs/components/room/RoomStickyBar';
@@ -25,11 +25,9 @@ import SwapVertIcon from '@mui/icons-material/SwapVert';
 import CheckIcon from '@mui/icons-material/Check';
 import 'swiper/css';
 import 'swiper/css/navigation';
-import Link from 'next/link';
 import { CommentsInquiry } from '../../../libs/types/comment/comment.input';
 import { Direction } from '../../../libs/enums/common.enum';
 import { ReservationInput } from '../../../libs/types/reservation/reservation.input';
-import property from '..';
 
 export type GalleryImage = {
 	id: number;
@@ -361,8 +359,8 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 			commentRefId: propertyId!,
 		},
 	});
-	const [searchFilter, setSearchFilter] = useState<PropertiesInquiry>(
-		router?.query?.input ? JSON.parse(router?.query?.input as string) : initialInput,
+	const [searchFilter, setSearchFilter] = useState<PropertyInquiry>(
+		router?.query?.input ? JSON.parse(router?.query?.input as string) : initialInput, // propertyInquiry => 변경
 	);
 
 	const sortLabelMap = {
@@ -430,16 +428,12 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 			propertyId: propertyId,
 			roomTypeId: roomId,
 			stayPlanId: stayPlanId,
-			reservationCheckIn: searchFilter.search.checkInDate,
-			reservationCheckOut: searchFilter.search.checkOutDate,
+			reservationCheckIn: searchFilter.checkInDate,
+			reservationCheckOut: searchFilter.checkOutDate,
 			reservationCheckInAt: '15:00',
 			reservationCheckOutAt: '11:00',
 			stayPlan: stayPlan,
 			propertyName: 'propertyName',
-			memberInfo: {
-				guestName: '',
-				guestPhone: '',
-			},
 		};
 
 		router.push(
@@ -893,14 +887,11 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 
 PropertyDetailPage.defaultProps = {
 	initialInput: {
-		page: 1,
-		limit: 10,
-		search: {
-			location: '',
-			checkInDate: '',
-			checkOutDate: '',
-			personal: 2,
-		},
+		_id: '',
+		propertyName: '',
+		checkInDate: '',
+		checkOutDate: '',
+		personal: 2,
 	},
 };
 

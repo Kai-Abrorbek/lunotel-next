@@ -5,7 +5,6 @@ import HeroCard from '../common/HeroCard';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, EffectCoverflow } from 'swiper';
 import 'swiper/css';
-import property from '../../../pages/property';
 interface HeroSearchProps {
 	initialInput: PropertiesInquiry;
 }
@@ -39,7 +38,7 @@ const HeroSearch = (props: HeroSearchProps) => {
 			<Box className="hero-overlay" />
 			<Box className="hero-inner">
 				<Typography className="hero-title">국내부터 해외까지 루노텔</Typography>
-				<HeroCard setHeroCardOpen={setHeroCardOpen} initialInput={initialInput} refElement={null} />
+				<HeroCard setHeroCardOpen={setHeroCardOpen} initialInput={initialInput} refElement={null} propertyName={null} />
 			</Box>
 		</Box>
 	);

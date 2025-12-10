@@ -29,18 +29,12 @@ export interface ReservationInput {
 	propertyId?: string;
 	roomTypeId?: string;
 	stayPlanId?: string;
-	reservationPlanType?: StayPlanType;
 	reservationCheckIn?: string;
 	reservationCheckOut?: string;
 	reservationCheckInAt?: string;
 	reservationCheckOutAt?: string;
-	memberId?: string;
 	memberInfo?: MemberInfoInput;
-	reservationStatus?: ReservationStatus;
 	reservationQty?: number;
-	priceBreakdown?: ReservationPriceBreakdownInput[];
-	reservationTotalPrice?: number;
-	reservationDate?: string;
 	stayPlan?: string;
 	propertyName?: string;
 }
