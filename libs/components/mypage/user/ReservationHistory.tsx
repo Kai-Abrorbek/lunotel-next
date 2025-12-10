@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Paper, Stack, Tab, Tabs, Typography } from '@mui/material';
+import { Box, Button, Divider, Pagination, Paper, Stack, Tab, Tabs, Typography } from '@mui/material';
 import Link from 'next/link';
 import React, { useMemo, useState } from 'react';
 import ReviewPage from './ReviewPage';
@@ -45,51 +45,71 @@ const MOCK_RESERVATIONS: Reservation[] = [
 		status: 'canceled',
 		type: 'domestic',
 	},
+	{
+		id: 'R-2024091112',
+		title: '오사카 난바 호텔',
+		dateRange: '2024.09.11 ~ 2024.09.14',
+		location: '일본 · 오사카',
+		guestCount: 2,
+		status: 'canceled',
+		type: 'domestic',
+	},
+	{
+		id: 'R-20240912341',
+		title: '오사카 난바 호텔',
+		dateRange: '2024.09.11 ~ 2024.09.14',
+		location: '일본 · 오사카',
+		guestCount: 2,
+		status: 'canceled',
+		type: 'domestic',
+	},
+	{
+		id: 'R-20240915121',
+		title: '오사카 난바 호텔',
+		dateRange: '2024.09.11 ~ 2024.09.14',
+		location: '일본 · 오사카',
+		guestCount: 2,
+		status: 'canceled',
+		type: 'domestic',
+	},
+	{
+		id: 'R-2024012151911',
+		title: '오사카 난바 호텔',
+		dateRange: '2024.09.11 ~ 2024.09.14',
+		location: '일본 · 오사카',
+		guestCount: 2,
+		status: 'upcoming',
+		type: 'domestic',
+	},
+	{
+		id: 'R-202412a0911',
+		title: '오사카 난바 호텔',
+		dateRange: '2024.09.11 ~ 2024.09.14',
+		location: '일본 · 오사카',
+		guestCount: 2,
+		status: 'upcoming',
+		type: 'domestic',
+	},
 ];
 
-interface MenuLIst {
-	id: string;
-	title: string;
-	label: string;
+interface ReservationHistoryProps {
+	currentPage: number;
+	setTotal: (v: number) => void;
 }
 
-const manuList: MenuLIst[] = [
-	{
-		id: '1',
-		label: 'reservation-details',
-		title: '예약 내역',
-	},
-	{
-		id: '2',
-		label: 'my-favorits',
-		title: '찜 목록',
-	},
-	{
-		id: '3',
-		label: 'points',
-		title: '포인트',
-	},
-	{
-		id: '4',
-		label: 'my-info',
-		title: '내 정보 관리',
-	},
-	{
-		id: '4',
-		label: 'settings',
-		title: '설정',
-	},
-];
-
-const ReservationHistory = () => {
+const ReservationHistory = (props: ReservationHistoryProps) => {
+	const { currentPage, setTotal } = props;
 	const [tab, setTab] = useState<TabValue>('domestic');
 	const filtered = useMemo(() => MOCK_RESERVATIONS.filter((r) => r.type === tab), [tab]);
 	const upcoming = filtered.filter((r) => r.status === 'upcoming');
 	const history = filtered.filter((r) => r.status === 'completed' || r.status === 'canceled');
 	const [openReview, setOpenReview] = useState<boolean>(false);
+
+	/** HANDLER **/
 	const handleTabChange = (_: React.SyntheticEvent, value: TabValue) => {
 		setTab(value);
 	};
+
 	return (
 		<>
 			<Typography className="my-res-main-title">예약내역</Typography>
@@ -121,7 +141,7 @@ const ReservationHistory = () => {
 							<Box className="my-res-empty-illust" />
 						</Box>
 					) : (
-						<Box>
+						<Box sx={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
 							{upcoming.map((r, idx) => (
 								<Stack key={idx} className="my-res-item-box">
 									<Box className="my-res-item-img" src="/img/JEJU.jfif" component={'img'}></Box>

@@ -1,10 +1,10 @@
 // MyReservationsPage.tsx
-import React from 'react';
-import { Box, Button, Paper, Divider, Stack } from '@mui/material';
+import React, { useRef, useState } from 'react';
+import { Box, Button, Paper, Divider, Stack, Pagination } from '@mui/material';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import LayoutHome from '../../../libs/components/layout/LayoutHome';
 import ReservationHistory from '../../../libs/components/mypage/user/ReservationHistory';
-import RoomResultCard from '../../../libs/components/mypage/user/RoomResultCard';
+import MyFavorits from '../../../libs/components/mypage/user/MyFavorits';
 import PointPage from '../../../libs/components/mypage/user/PointPage';
 import MyInfoPage from '../../../libs/components/mypage/user/MyInfoPage';
 import SettingsPage from '../../../libs/components/mypage/user/SettingsPage';
@@ -14,15 +14,20 @@ import NotificationsPage from '../../../libs/components/mypage/user/Notification
 
 const MyReservationsPage: React.FC = () => {
 	const router = useRouter();
+	const boxRef = useRef<HTMLDivElement>(null);
 	const category = router.query.category ?? 'reservation-details';
 	const user = { name: 'KAi', type: 'host' };
+	const [total, setTotal] = useState<number>(11);
+	const [currentPage, setCurrentPage] = useState<number>(1);
+
+	if (!router.isReady) return null;
 
 	const renderPage = () => {
 		switch (category) {
 			case 'reservation-details':
-				return <ReservationHistory />;
+				return <ReservationHistory currentPage={currentPage} setTotal={setTotal} />;
 			case 'my-favorits':
-				return <RoomResultCard />;
+				return <MyFavorits currentPage={currentPage} setTotal={setTotal} />;
 			case 'points':
 				return <PointPage />;
 			case 'my-info':
@@ -30,8 +35,14 @@ const MyReservationsPage: React.FC = () => {
 			case 'settings':
 				return <SettingsPage />;
 			case 'notifications':
-				return <NotificationsPage />;
+				return <NotificationsPage currentPage={currentPage} setTotal={setTotal} />;
 		}
+	};
+
+	const paginationHandler = (e: any, value: number) => {
+		setCurrentPage(value);
+		boxRef.current ? boxRef.current.scrollTo({ top: 0, behavior: 'smooth' }) : null;
+		window.scrollTo({ top: 0, behavior: 'smooth' });
 	};
 
 	return (
@@ -98,7 +109,7 @@ const MyReservationsPage: React.FC = () => {
 							{user.type === 'host' ? (
 								<Link href={'/mypage/property-management'}>
 									<Box className="my-res-side-menu-box ">
-										<Button className={`my-res-side-menu-item ${category === 'settings' ? 'active' : ''}`}>
+										<Button className={`my-res-side-menu-item ${category === 'property-management' ? 'active' : ''}`}>
 											숙소 관리
 										</Button>
 										<ChevronRightIcon />
@@ -111,11 +122,20 @@ const MyReservationsPage: React.FC = () => {
 					</Paper>
 
 					{/* RIGHT MAIN AREA */}
-					<Box className="my-res-main">
+					<Box className="my-res-main" ref={boxRef}>
 						<div>{renderPage()}</div>
 					</Box>
 				</Box>
 			</Box>
+			<Stack sx={{ width: '100%', alignItems: 'center' }}>
+				<Pagination
+					count={Math.ceil(total / 10) || 1}
+					page={currentPage}
+					shape="circular"
+					color="primary"
+					onChange={paginationHandler}
+				/>
+			</Stack>
 		</Stack>
 	);
 };

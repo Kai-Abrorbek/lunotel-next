@@ -10,7 +10,14 @@ interface Notification {
 	isImportant: boolean;
 }
 
-export default function NotificationsPage() {
+interface NotificationsPageProps {
+	currentPage: number;
+	setTotal: (v: number) => void;
+}
+
+export default function NotificationsPage(props: NotificationsPageProps) {
+	const { currentPage, setTotal } = props;
+
 	const [filter, setFilter] = useState('all');
 	const [notifications, setNotifications] = useState<Notification[]>([
 		{
@@ -87,6 +94,7 @@ export default function NotificationsPage() {
 		},
 	]);
 
+	/** HANDLER **/
 	const getCategoryInfo = (category: string) => {
 		const categoryMap: { [key: string]: { icon: string; color: string; label: string } } = {
 			reservation: { icon: '🔔', color: '#3b82f6', label: 'Reservation' },

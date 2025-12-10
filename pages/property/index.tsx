@@ -731,7 +731,7 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 							)}
 						</Box>
 
-						{[1, 2, 3, 4, 5].length !== 0 ? (
+						{[1, 2, 3, 4, 5].length !== 0 ? ( // 나중에 실제 데이터랑 변경
 							<Stack className="result-pagination">
 								<Pagination
 									count={Math.ceil(total / searchFilter?.limit!) || 1}

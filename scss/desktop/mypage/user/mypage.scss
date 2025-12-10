@@ -282,7 +282,7 @@
 					}
 				}
 				.room-page {
-					width: 75%;
+					width: 70%;
 					background: #ffffff;
 					/* 상단 필터 바 */
 					.room-filter-bar {
@@ -320,151 +320,156 @@
 					}
 
 					/* 결과 카드 */
-					.room-card {
+					.room-card-box {
 						display: flex;
-						border-radius: 12px;
-						border: 1px solid #e5e7eb;
-						overflow: hidden;
-						background: #ffffff;
-						margin-top: 25px;
-						/* 이미지 영역 */
-						.room-card-image-wrap {
-							position: relative;
-							width: 320px;
-							flex-shrink: 0;
-
-							.room-card-image {
-								display: block;
-								width: 100%;
-								height: 100%;
-								object-fit: cover;
-							}
-
-							.room-card-badge {
-								position: absolute;
-								top: 10px;
-								left: 10px;
-								padding: 6px 8px;
-								border-radius: 4px;
-								background: #ff385c;
-								color: #ffffff;
-								font-size: 11px;
-								font-weight: 700;
-							}
-						}
-
-						/* 정보 영역 */
-						.room-card-content {
-							flex: 1;
-							padding: 16px 24px;
+						flex-direction: column;
+						gap: 10px;
+						.room-card {
 							display: flex;
-							flex-direction: column;
+							border-radius: 12px;
+							border: 1px solid #e5e7eb;
+							overflow: hidden;
+							background: #ffffff;
+							cursor: pointer;
+							/* 이미지 영역 */
+							.room-card-image-wrap {
+								position: relative;
+								width: 320px;
+								flex-shrink: 0;
 
-							/* 헤더 */
-							.room-card-header {
-								display: flex;
-								justify-content: space-between;
-
-								.room-card-type {
-									font-size: 12px;
-									color: #6b7280;
-									margin-bottom: 2px;
+								.room-card-image {
+									display: block;
+									width: 100%;
+									height: 100%;
+									object-fit: cover;
 								}
 
-								.room-card-title {
-									font-size: 18px;
+								.room-card-badge {
+									position: absolute;
+									top: 10px;
+									left: 10px;
+									padding: 6px 8px;
+									border-radius: 4px;
+									background: #ff385c;
+									color: #ffffff;
+									font-size: 11px;
 									font-weight: 700;
-									margin-bottom: 2px;
-								}
-
-								.room-card-location {
-									font-size: 13px;
-									color: #6b7280;
-								}
-
-								.room-card-rating-row {
-									display: flex;
-									align-items: center;
-									margin-top: 8px;
-									gap: 6px;
-
-									.room-card-rating-chip {
-										background: #ffbf00 !important;
-										color: #111827 !important;
-										font-weight: 700 !important;
-
-										.MuiChip-label {
-											padding-right: 6px;
-										}
-
-										.room-card-rating-star {
-											color: #ffffff;
-										}
-									}
-
-									.room-card-rating-text {
-										font-size: 12px;
-										color: #6b7280;
-									}
-								}
-
-								.room-card-like {
-									align-self: flex-start;
 								}
 							}
 
-							/* 중간 정보 */
-							.room-card-middle {
-								margin-top: 16px;
+							/* 정보 영역 */
+							.room-card-content {
+								flex: 1;
+								padding: 2px 24px;
 								display: flex;
 								flex-direction: column;
-								gap: 4px;
 
-								.room-card-line {
+								/* 헤더 */
+								.room-card-header {
 									display: flex;
-									gap: 8px;
-									font-size: 13px;
+									justify-content: space-between;
 
-									.room-card-line-label {
+									.room-card-type {
+										font-size: 12px;
+										color: #6b7280;
+										margin-bottom: 2px;
+									}
+
+									.room-card-title {
+										font-size: 18px;
+										font-weight: 700;
+										margin-bottom: 2px;
+									}
+
+									.room-card-location {
+										font-size: 13px;
 										color: #6b7280;
 									}
 
-									.room-card-line-value {
-										color: #111827;
-									}
-								}
-							}
+									.room-card-rating-row {
+										display: flex;
+										align-items: center;
+										margin-top: 8px;
+										gap: 6px;
 
-							/* 하단 */
-							.room-card-bottom {
-								margin-top: auto;
-								display: flex;
-								justify-content: space-between;
-								align-items: flex-end;
+										.room-card-rating-chip {
+											background: #ffbf00 !important;
+											color: #111827 !important;
+											font-weight: 700 !important;
 
-								.room-card-date-link {
-									font-size: 13px;
-									color: #9ca3af;
-								}
+											.MuiChip-label {
+												padding-right: 6px;
+											}
 
-								.room-card-price-wrap {
-									text-align: right;
+											.room-card-rating-star {
+												color: #ffffff;
+											}
+										}
 
-									.room-card-price {
-										font-size: 20px;
-										font-weight: 700;
-										color: #111827;
-
-										.room-card-price-unit {
-											font-size: 14px;
-											margin-left: 2px;
+										.room-card-rating-text {
+											font-size: 12px;
+											color: #6b7280;
 										}
 									}
 
-									.room-card-remaining {
-										margin-top: 2px;
-										font-size: 12px;
-										color: #ef4444;
+									.room-card-like {
+										align-self: flex-start;
+									}
+								}
+
+								/* 중간 정보 */
+								.room-card-middle {
+									margin-top: 10px;
+									display: flex;
+									flex-direction: column;
+									gap: 4px;
+
+									.room-card-line {
+										display: flex;
+										gap: 8px;
+										font-size: 13px;
+
+										.room-card-line-label {
+											color: #6b7280;
+										}
+
+										.room-card-line-value {
+											color: #111827;
+										}
+									}
+								}
+
+								/* 하단 */
+								.room-card-bottom {
+									margin-top: auto;
+									display: flex;
+									justify-content: space-between;
+									align-items: flex-end;
+
+									.room-card-date-link {
+										font-size: 13px;
+										color: #9ca3af;
+									}
+
+									.room-card-price-wrap {
+										text-align: right;
+
+										.room-card-price {
+											font-size: 20px;
+											font-weight: 700;
+											color: #111827;
+
+											.room-card-price-unit {
+												font-size: 14px;
+												margin-left: 2px;
+											}
+										}
+
+										.room-card-remaining {
+											margin-top: 2px;
+											font-size: 12px;
+											color: #ef4444;
+										}
 									}
 								}
 							}
