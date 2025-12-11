@@ -5,7 +5,7 @@ import { StayPlanType } from '../../enums/stayplan.enum';
 export interface MemberInfoInput {
 	guestName?: string;
 	guestPhone?: string;
-	// guestEmail: string;
+	guestEmail?: string;
 }
 
 /** NO-AUTH MEMBER INFO */
@@ -26,17 +26,18 @@ export interface ReservationPriceBreakdownInput {
 
 /** CREATE RESERVATION */
 export interface ReservationInput {
-	propertyId?: string;
-	roomTypeId?: string;
-	stayPlanId?: string;
-	reservationCheckIn?: string;
-	reservationCheckOut?: string;
-	reservationCheckInAt?: string;
-	reservationCheckOutAt?: string;
+	propertyId: string;
+	roomTypeId: string;
+	stayPlanId: string;
+	reservationCheckIn: string;
+	reservationCheckOut: string;
+	reservationCheckInAt: string;
+	reservationCheckOutAt: string;
 	memberInfo?: MemberInfoInput;
 	reservationQty?: number;
 	stayPlan?: string;
 	propertyName?: string;
+	reservationPersonal?: number;
 }
 
 interface ResIsearch {

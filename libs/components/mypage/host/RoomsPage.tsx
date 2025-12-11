@@ -1,23 +1,14 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import {
-	Box,
-	Button,
-	Chip,
-	Typography,
-	Dialog,
-	DialogContent,
-	IconButton,
-	InputBase,
-	Stack,
-	Pagination,
-} from '@mui/material';
+import { Box, Button, Chip, Typography, Dialog, DialogContent, IconButton, Stack, Pagination } from '@mui/material';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import CloseIcon from '@mui/icons-material/Close';
-import AddReservationModal from './ReservationForm';
 import RoomUpdateModal from './RoomUpdateModal';
 import { RoomStatus } from '../../../enums/propertyRoomtype.enum';
 import RoomAddModal from './RoomAddModal';
+import { sweetMixinErrorAlert } from '../../../sweetAlert';
+import { ReservationInput } from '../../../types/reservation/reservation.input';
+import { useRouter } from 'next/router';
 
 interface Room {
 	id: string;
@@ -169,16 +160,24 @@ const ROOM_RESERVATIONS: RoomReservation[] = [
 	{ roomId: '10', checkIn: '2025-12-27', checkOut: '2025-12-30' },
 ];
 
+const dateTypeToString = (date: Date): string => {
+	return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(
+		2,
+		'0',
+	)}`;
+};
+
 type TabKey = 'all' | RoomStatus;
 
 const WEEK_DAYS = ['일', '월', '화', '수', '목', '금', '토'];
 
 const RoomsPage: React.FC = () => {
+	const router = useRouter();
+	const propertyId = router.query.propertyId?.slice(router.query.propertyId.length - 1) as string;
 	const [activeTab, setActiveTab] = useState<TabKey>('all');
 	const [calendarOpenRoomId, setCalendarOpenRoomId] = useState<string | null>(null);
 	const [checkIn, setCheckIn] = useState<Date | null>(null);
 	const [checkOut, setCheckOut] = useState<Date | null>(null);
-	const [isOpen, setIsOpen] = useState<boolean>(false);
 	const [isOpenAddRoom, setIsOpenAddRoom] = useState<boolean>(false);
 	const [isOpenUpdateRoom, setIsOpenUpdateRoom] = useState<boolean>(false);
 	const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
@@ -268,6 +267,17 @@ const RoomsPage: React.FC = () => {
 		});
 	};
 
+	const hasReservedBetween = (roomId: string, start: Date, end: Date) => {
+		const [s, e] = start < end ? [start, end] : [end, start];
+
+		let d = new Date(s);
+		while (d <= e) {
+			if (isReservedDay(roomId, d)) return true;
+			d.setDate(d.getDate() + 1);
+		}
+		return false;
+	};
+
 	const formatMonthLabel = (date: Date) => `${date.getFullYear()}년 ${String(date.getMonth() + 1).padStart(2, '0')}월`;
 
 	const isPastDate = useCallback(
@@ -280,10 +290,17 @@ const RoomsPage: React.FC = () => {
 	);
 
 	/** HANDLERS */
-	const handleSelectDay = (day: Date) => {
+	const handleSelectDay = async (day: Date) => {
+		if (isReservedDay(selectedRoom?.id!, day)) return;
+
 		if (!checkIn || (checkIn && checkOut)) {
 			setCheckIn(day);
 			setCheckOut(null);
+			return;
+		}
+
+		if (hasReservedBetween(selectedRoom?.id!, checkIn, day)) {
+			await sweetMixinErrorAlert('해당 기간에 이미 예약이 있습니다');
 			return;
 		}
 
@@ -319,6 +336,27 @@ const RoomsPage: React.FC = () => {
 
 	const handleNextMonth = () => {
 		setCalendarMonth((prev) => new Date(prev.getFullYear(), prev.getMonth() + 1, 1));
+	};
+
+	const handlePushReservationPage = (roomId: string, stayPlan: string, stayPlanId: string) => {
+		// 나중에 room 자체를 가겨와서 data 거내기
+		const reservationInput: ReservationInput = {
+			propertyId: propertyId,
+			roomTypeId: roomId,
+			stayPlanId: stayPlanId,
+			reservationCheckIn: dateTypeToString(checkIn!),
+			reservationCheckOut: dateTypeToString(checkOut!),
+			reservationCheckInAt: '15:00',
+			reservationCheckOutAt: '11:00',
+			stayPlan: stayPlan,
+			propertyName: 'propertyName',
+		};
+
+		router.push(
+			`/reservation/checkout?input=${JSON.stringify({
+				...reservationInput,
+			})}`,
+		);
 	};
 
 	return (
@@ -533,8 +571,8 @@ const RoomsPage: React.FC = () => {
 								const isToday = isSameDate(day, today);
 								const isStart = isSameDate(day, checkIn);
 								const isEnd = isSameDate(day, checkOut);
-								const isRange = inRange(day);
 								const reserved = isReservedDay(selectedRoom.id, day);
+								const isRange = inRange(day);
 								const isPast = isPastDate(day, calendarMonth);
 								const cellClasses = [
 									'room-calendar__cell',
@@ -552,7 +590,7 @@ const RoomsPage: React.FC = () => {
 									<button
 										key={day.toISOString()}
 										className={cellClasses}
-										onClick={() => !isPast && handleSelectDay(day)}
+										onClick={() => !isPast && !reserved && handleSelectDay(day)}
 									>
 										{day.getDate()}
 									</button>
@@ -576,7 +614,19 @@ const RoomsPage: React.FC = () => {
 									<span>예약 가능</span>
 								</div>
 							</div>
-							{checkIn && checkOut ? <AddReservationModal isOpen={isOpen} setIsOpen={setIsOpen} /> : ''}
+							<div>
+								{checkIn && checkOut ? (
+									<button
+										className="room-calendar__reservation-btn"
+										onClick={() => handlePushReservationPage(String(selectedRoom.id), 'stay', '13asdas1dasd1dasdd')}
+									>
+										{' '}
+										➕ 예약
+									</button>
+								) : (
+									''
+								)}
+							</div>
 						</Box>
 					</DialogContent>
 				)}

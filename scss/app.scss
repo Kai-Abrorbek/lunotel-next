@@ -39,6 +39,10 @@ body {
 	.MuiPopover-paper {
 		box-shadow: none;
 	}
+
+	.css-zw3mfo-MuiModal-root-MuiDialog-root {
+		z-index: 1000;
+	}
 }
 hr {
 	border-width: 0;

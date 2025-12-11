@@ -298,7 +298,7 @@ const PropertyManagementPage = (props: PropertyManagementPageProps) => {
 										>
 											수정
 										</Button>
-										<Link href={`/mypage/property-management/deshboard?propertyId=${property.name}`}>
+										<Link href={`/mypage/property-management/deshboard?propertyId=${property.id}`}>
 											<Button
 												variant="contained"
 												size="small"

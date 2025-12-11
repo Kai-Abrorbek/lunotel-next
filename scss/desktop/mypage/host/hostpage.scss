@@ -1280,9 +1280,9 @@
 		}
 
 		&--reserved {
-			background-color: #f97316;
+			background-color: #a59b95;
 			border-color: #ea580c;
-			color: #ffffff;
+			color: #d1cfcf;
 			font-weight: 600;
 		}
 
@@ -1321,6 +1321,25 @@
 		justify-content: space-between;
 		font-size: 13px;
 		color: #6b7280;
+	}
+
+	&__reservation-btn {
+		width: 100%;
+		padding: 14px 24px;
+		background: #ffffff;
+		color: #667eea;
+		border: none;
+		border-radius: 12px;
+		font-size: 15px;
+		font-weight: 600;
+		cursor: pointer;
+		transition: all 0.25s;
+		box-shadow: 0 3px 14px rgba(0, 0, 0, 0.18);
+
+		&:hover {
+			transform: translateY(-1px);
+			box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+		}
 	}
 
 	&__legend-title {
