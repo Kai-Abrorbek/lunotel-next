@@ -2,6 +2,13 @@ import { Direction } from '../../enums/common.enum';
 import { RoomStatus } from '../../enums/propertyRoomtype.enum';
 
 /** CREATE ROOM TYPE */
+export interface SPRules {
+	durationHours?: number;
+	windowStart: string;
+	windowEnd: string;
+	lastCheckInBy: string;
+}
+
 export interface RoomTypeInput {
 	propertyId: string;
 	roomName: string;
@@ -9,10 +16,10 @@ export interface RoomTypeInput {
 	roomStandPersonal: number;
 	basePriceOvernight: number;
 	basePriceDayUse: number;
-
 	roomDiscountPrice?: number;
 	roombedInfo?: string;
-	roomImages: string[];
+	roomImages?: string[];
+	stayPlanRules: SPRules;
 }
 
 /** ROOM SEARCH FILTER */
@@ -30,4 +37,10 @@ export interface RoomsIquiry {
 	sort?: string;
 	direction?: Direction;
 	search?: RIsearch;
+}
+
+export interface RoomReservationsInquiry {
+	propertyId: string;
+	roomTypeId: string;
+	stayPlanId: string;
 }

@@ -6,8 +6,9 @@ import LayoutHome from '../../../libs/components/layout/LayoutHome';
 import Link from 'next/link';
 import AddPropertyModal from '../../../libs/components/mypage/property-management/AddPropertyModal';
 import PropertyUpdateModal from '../../../libs/components/mypage/property-management/PropertyUpdateData ';
+import { AgentPropertiesInquiry } from '../../../libs/types/property/property.input';
 
-type PropertyStatus = '운영중' | '대기중' | '중지';
+type PropertyStatus = '운영중' | '대기중' | '중지' | '차단';
 
 interface Property {
 	id: number;
@@ -24,7 +25,12 @@ interface Property {
 
 type TabKey = 'all' | PropertyStatus;
 
-const PropertyManagementPage = () => {
+interface PropertyManagementPageProps {
+	initialInput: AgentPropertiesInquiry;
+}
+
+const PropertyManagementPage = (props: PropertyManagementPageProps) => {
+	const { initialInput } = props;
 	const [selectedTab, setSelectedTab] = useState<TabKey>('all');
 	const [searchTerm, setSearchTerm] = useState('');
 	const [addPropertyOpen, setAddPropertyOpen] = useState<boolean>(false);
@@ -218,94 +224,92 @@ const PropertyManagementPage = () => {
 
 				{/* 숙소 카드 리스트 */}
 				{filteredProperties.length > 0 ? (
-					<Grid container spacing={3} className="property-page__cards-grid">
+					<Box className="property-page__cards-grid">
 						{filteredProperties.map((property, index) => (
-							<Grid item xs={12} sm={6} md={4} key={property.id}>
-								<Box className="property-card">
-									<Box className="property-card__image">
-										<img
-											src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80"
-											alt=""
+							<Box key={index} className="property-card">
+								<Box className="property-card__image">
+									<img
+										src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80"
+										alt=""
+									/>
+								</Box>
+
+								<Box className="property-card__body">
+									<Box className="property-card__header">
+										<Box>
+											<p className="property-card__title">{property.name}</p>
+											<p className="property-card__type">{property.type}</p>
+										</Box>
+										<Chip
+											className="property-card__status"
+											label={property.status}
+											style={{
+												backgroundColor: getStatusColor(property.status),
+												color: '#fff',
+											}}
+											size="small"
 										/>
 									</Box>
 
-									<Box className="property-card__body">
-										<Box className="property-card__header">
-											<Box>
-												<p className="property-card__title">{property.name}</p>
-												<p className="property-card__type">{property.type}</p>
-											</Box>
-											<Chip
-												className="property-card__status"
-												label={property.status}
-												style={{
-													backgroundColor: getStatusColor(property.status),
-													color: '#fff',
-												}}
-												size="small"
-											/>
+									<Box className="property-card__address">
+										<span>📍</span>
+										<p>{property.address}</p>
+									</Box>
+
+									{property.rating > 0 && (
+										<Box className="property-card__rating">
+											<StarIcon fontSize="small" />
+											<p>{property.rating.toFixed(1)}</p>
 										</Box>
+									)}
 
-										<Box className="property-card__address">
-											<span>📍</span>
-											<p>{property.address}</p>
+									<Box className="property-card__stats">
+										<Box className="property-card__stat">
+											<p className="property-card__stat-label">객실 수</p>
+											<p className="property-card__stat-value">{property.rooms}개</p>
 										</Box>
-
-										{property.rating > 0 && (
-											<Box className="property-card__rating">
-												<StarIcon fontSize="small" />
-												<p>{property.rating.toFixed(1)}</p>
-											</Box>
-										)}
-
-										<Box className="property-card__stats">
-											<Box className="property-card__stat">
-												<p className="property-card__stat-label">객실 수</p>
-												<p className="property-card__stat-value">{property.rooms}개</p>
-											</Box>
-											<Box className="property-card__stat">
-												<p className="property-card__stat-label">이번 달 예약</p>
-												<p className="property-card__stat-value">{property.bookings}건</p>
-											</Box>
-											<Box className="property-card__stat">
-												<p className="property-card__stat-label">이번 달 매출</p>
-												<p className="property-card__stat-value">{formatCurrency(property.revenue)}</p>
-											</Box>
-											<Box className="property-card__stat">
-												<p className="property-card__stat-label">가동률</p>
-												<p className="property-card__stat-value">
-													{property.status === '운영중'
-														? `${Math.round((property.bookings / property.rooms) * 100)}%`
-														: '-'}
-												</p>
-											</Box>
+										<Box className="property-card__stat">
+											<p className="property-card__stat-label">이번 달 예약</p>
+											<p className="property-card__stat-value">{property.bookings}건</p>
 										</Box>
-
-										<Box className="property-card__actions">
-											<Button variant="outlined" size="small" className="property-card__action-btn">
-												상세보기
-											</Button>
-											<Button
-												onClick={() => handleOpenUpdatePropertyModal(property.id)}
-												variant="outlined"
-												size="small"
-												className="property-card__action-btn"
-											>
-												수정
-											</Button>
-											<Link href={`/mypage/property-management/deshboard?propertyId=${property.name}`}>
-												<Button
-													variant="contained"
-													size="small"
-													className="property-card__action-btn property-card__action-btn--primary"
-												>
-													대시보드
-												</Button>
-											</Link>
+										<Box className="property-card__stat">
+											<p className="property-card__stat-label">이번 달 매출</p>
+											<p className="property-card__stat-value">{formatCurrency(property.revenue)}</p>
+										</Box>
+										<Box className="property-card__stat">
+											<p className="property-card__stat-label">가동률</p>
+											<p className="property-card__stat-value">
+												{property.status === '운영중'
+													? `${Math.round((property.bookings / property.rooms) * 100)}%`
+													: '-'}
+											</p>
 										</Box>
 									</Box>
+
+									<Box className="property-card__actions">
+										<Button variant="outlined" size="small" className="property-card__action-btn">
+											상세보기
+										</Button>
+										<Button
+											onClick={() => handleOpenUpdatePropertyModal(property.id)}
+											variant="outlined"
+											size="small"
+											className="property-card__action-btn"
+										>
+											수정
+										</Button>
+										<Link href={`/mypage/property-management/deshboard?propertyId=${property.name}`}>
+											<Button
+												variant="contained"
+												size="small"
+												className="property-card__action-btn property-card__action-btn--primary"
+											>
+												대시보드
+											</Button>
+										</Link>
+									</Box>
 								</Box>
-							</Grid>
+							</Box>
 						))}
 						<PropertyUpdateModal
 							isOpen={updatePropertyOpen}
@@ -314,7 +318,7 @@ const PropertyManagementPage = () => {
 							setSelectedPropertyId={setSelectedPropertyId}
 						/>
 						!
-					</Grid>
+					</Box>
 				) : (
 					<Paper elevation={0} className="property-page__empty">
 						<p className="property-page__empty-icon">🏨</p>
@@ -325,6 +329,16 @@ const PropertyManagementPage = () => {
 			</Stack>
 		</Box>
 	);
+};
+
+PropertyManagementPage.defaultProps = {
+	initialInput: {
+		page: 1,
+		limit: 10,
+		sort: 'createdAt',
+		direction: 'DESC',
+		search: {},
+	},
 };
 
 export default LayoutHome(PropertyManagementPage);

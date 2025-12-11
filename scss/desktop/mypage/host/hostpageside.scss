@@ -1923,6 +1923,16 @@
 				}
 				.form-group {
 					margin-bottom: 16px;
+					> div {
+						display: flex;
+						flex-direction: row;
+						justify-content: space-between;
+						.room-time-row {
+							display: flex;
+							flex-direction: column;
+						}
+					}
+
 					.form-group:last-child {
 						margin-bottom: 0;
 					}

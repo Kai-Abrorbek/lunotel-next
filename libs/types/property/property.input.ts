@@ -69,6 +69,7 @@ export interface PropertyInquiry {
 /** AGENT PROPERTY FILTER */
 export interface APIsearch {
 	propertyStatus?: PropertyStatus;
+	propertyId?: string;
 }
 
 export interface AgentPropertiesInquiry {

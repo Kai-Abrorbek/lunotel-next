@@ -15,9 +15,9 @@ import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import CloseIcon from '@mui/icons-material/Close';
 import AddReservationModal from './ReservationForm';
-import AddRoomModal from './RoomAddAndUpdateModal';
-
-type RoomStatus = 'available' | 'occupied' | 'cleaning' | 'maintenance';
+import RoomUpdateModal from './RoomUpdateModal';
+import { RoomStatus } from '../../../enums/propertyRoomtype.enum';
+import RoomAddModal from './RoomAddModal';
 
 interface Room {
 	id: string;
@@ -51,7 +51,7 @@ const ROOMS: Room[] = [
 		capacity: 2,
 		size: 32,
 		price: 180,
-		status: 'available',
+		status: RoomStatus.AVAILABLE,
 		imageType: 'bed',
 		amenities: ['WiFi', 'TV', 'Mini Bar', 'Bathtub'],
 	},
@@ -64,7 +64,7 @@ const ROOMS: Room[] = [
 		capacity: 2,
 		size: 32,
 		price: 180,
-		status: 'occupied',
+		status: RoomStatus.OCCUPIED,
 		imageType: 'bed',
 		amenities: ['WiFi', 'TV', 'Mini Bar', 'Bathtub'],
 		guestName: 'John Doe',
@@ -79,7 +79,7 @@ const ROOMS: Room[] = [
 		capacity: 3,
 		size: 48,
 		price: 320,
-		status: 'available',
+		status: RoomStatus.AVAILABLE,
 		imageType: 'wave',
 		amenities: ['WiFi', 'TV', 'Mini Bar', 'Ocean View', 'Balcony'],
 	},
@@ -92,7 +92,7 @@ const ROOMS: Room[] = [
 		capacity: 3,
 		size: 48,
 		price: 320,
-		status: 'occupied',
+		status: RoomStatus.OCCUPIED,
 		imageType: 'wave',
 		amenities: ['WiFi', 'TV', 'Mini Bar', 'Ocean View', 'Balcony'],
 		guestName: 'Maria Kim',
@@ -107,7 +107,7 @@ const ROOMS: Room[] = [
 		capacity: 2,
 		size: 28,
 		price: 150,
-		status: 'maintenance',
+		status: RoomStatus.MAINTENANCE,
 		imageType: 'building',
 		amenities: ['WiFi', 'TV', 'Desk'],
 	},
@@ -120,7 +120,7 @@ const ROOMS: Room[] = [
 		capacity: 2,
 		size: 28,
 		price: 150,
-		status: 'available',
+		status: RoomStatus.AVAILABLE,
 		imageType: 'building',
 		amenities: ['WiFi', 'TV', 'Desk'],
 	},
@@ -133,7 +133,7 @@ const ROOMS: Room[] = [
 		capacity: 2,
 		size: 28,
 		price: 150,
-		status: 'available',
+		status: RoomStatus.AVAILABLE,
 		imageType: 'building',
 		amenities: ['WiFi', 'TV', 'Desk'],
 	},
@@ -146,7 +146,7 @@ const ROOMS: Room[] = [
 		capacity: 2,
 		size: 28,
 		price: 150,
-		status: 'available',
+		status: RoomStatus.AVAILABLE,
 		imageType: 'building',
 		amenities: ['WiFi', 'TV', 'Desk'],
 	},
@@ -180,8 +180,9 @@ const RoomsPage: React.FC = () => {
 	const [checkOut, setCheckOut] = useState<Date | null>(null);
 	const [isOpen, setIsOpen] = useState<boolean>(false);
 	const [isOpenAddRoom, setIsOpenAddRoom] = useState<boolean>(false);
-	const [isOpenModalType, setIsOpenModalType] = useState<string>('');
+	const [isOpenUpdateRoom, setIsOpenUpdateRoom] = useState<boolean>(false);
 	const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
+	const [searchTerm, setSearchTerm] = useState('');
 	const [calendarMonth, setCalendarMonth] = useState<Date>(() => {
 		const d = new Date();
 		return new Date(d.getFullYear(), d.getMonth(), 1);
@@ -190,18 +191,23 @@ const RoomsPage: React.FC = () => {
 		const d = new Date();
 		return new Date(d.getFullYear(), d.getMonth(), d.getDate());
 	}, []);
-	const filteredRooms = useMemo(() => {
-		if (activeTab === 'all') return ROOMS;
-		return ROOMS.filter((room) => room.status === activeTab);
-	}, [activeTab]);
+
+	const filteredRooms = ROOMS.filter((room) => {
+		const matchesStatus = activeTab === 'all' || room.status === activeTab;
+		const matchesSearch =
+			room.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+			room.code.toLowerCase().includes(searchTerm.toLowerCase());
+		return matchesStatus && matchesSearch;
+	});
 
 	const counts = useMemo(() => {
 		const base = {
 			all: ROOMS.length,
-			available: 0,
-			occupied: 0,
-			cleaning: 0,
-			maintenance: 0,
+			AVAILABLE: 0,
+			UNAVAILABLE: 0,
+			OCCUPIED: 0,
+			CLEANING: 0,
+			MAINTENANCE: 0,
 		};
 		ROOMS.forEach((r) => {
 			base[r.status]++;
@@ -212,16 +218,15 @@ const RoomsPage: React.FC = () => {
 	const selectedRoom = useMemo(() => ROOMS.find((r) => r.id === calendarOpenRoomId) ?? null, [calendarOpenRoomId]);
 
 	/** UTIL */
-
 	const renderStatusChip = (status: RoomStatus) => {
 		switch (status) {
-			case 'available':
+			case 'AVAILABLE':
 				return <span className="room-card__status room-card__status--available">예약 가능</span>;
-			case 'occupied':
+			case 'OCCUPIED':
 				return <span className="room-card__status room-card__status--occupied">투숙중</span>;
-			case 'cleaning':
+			case 'CLEANING':
 				return <span className="room-card__status room-card__status--cleaning">청소중</span>;
-			case 'maintenance':
+			case 'MAINTENANCE':
 				return <span className="room-card__status room-card__status--maintenance">정비중</span>;
 		}
 	};
@@ -275,7 +280,6 @@ const RoomsPage: React.FC = () => {
 	);
 
 	/** HANDLERS */
-
 	const handleSelectDay = (day: Date) => {
 		if (!checkIn || (checkIn && checkOut)) {
 			setCheckIn(day);
@@ -317,17 +321,6 @@ const RoomsPage: React.FC = () => {
 		setCalendarMonth((prev) => new Date(prev.getFullYear(), prev.getMonth() + 1, 1));
 	};
 
-	const handleOpenAddAndUpdateRoomModal = (type: string, roomId: string | null) => {
-		if (type === 'add') {
-			setIsOpenAddRoom(true);
-			setIsOpenModalType(type);
-		} else {
-			setIsOpenAddRoom(true);
-			setIsOpenModalType(type);
-			setSelectedRoomId(roomId);
-		}
-	};
-
 	return (
 		<Box className="rooms-page">
 			<Box className="rooms-page__header">
@@ -335,18 +328,17 @@ const RoomsPage: React.FC = () => {
 					객실
 				</Typography>
 				<Button
-					onClick={() => handleOpenAddAndUpdateRoomModal('add', null)}
+					onClick={() => setIsOpenAddRoom(true)}
 					variant="contained"
 					size="large"
 					className="rooms-page__add-button"
 				>
 					+ 객실 추가
 				</Button>
-				<AddRoomModal
-					isOpen={isOpenAddRoom}
-					setIsOpen={setIsOpenAddRoom}
-					isOpenModalType={isOpenModalType}
-					setIsOpenModalType={setIsOpenModalType}
+				<RoomAddModal isOpen={isOpenAddRoom} setIsOpen={setIsOpenAddRoom} />
+				<RoomUpdateModal
+					isOpen={isOpenUpdateRoom}
+					setIsOpen={setIsOpenUpdateRoom}
 					selectedRoomId={selectedRoomId!}
 					setSelectedRoomId={setSelectedRoomId}
 				/>
@@ -361,33 +353,47 @@ const RoomsPage: React.FC = () => {
 						전체 ({counts.all})
 					</button>
 					<button
-						className={`rooms-tab ${activeTab === 'available' ? 'rooms-tab--active' : ''}`}
-						onClick={() => setActiveTab('available')}
+						className={`rooms-tab ${activeTab === RoomStatus.AVAILABLE ? 'rooms-tab--active' : ''}`}
+						onClick={() => setActiveTab(RoomStatus.AVAILABLE)}
 					>
-						예약 가능 ({counts.available})
+						예약 가능 ({counts.AVAILABLE})
 					</button>
 					<button
-						className={`rooms-tab ${activeTab === 'occupied' ? 'rooms-tab--active' : ''}`}
-						onClick={() => setActiveTab('occupied')}
+						className={`rooms-tab ${activeTab === RoomStatus.OCCUPIED ? 'rooms-tab--active' : ''}`}
+						onClick={() => setActiveTab(RoomStatus.OCCUPIED)}
 					>
-						투숙중 ({counts.occupied})
+						투숙중 ({counts.OCCUPIED})
 					</button>
 					<button
-						className={`rooms-tab ${activeTab === 'cleaning' ? 'rooms-tab--active' : ''}`}
-						onClick={() => setActiveTab('cleaning')}
+						className={`rooms-tab ${activeTab === RoomStatus.CLEANING ? 'rooms-tab--active' : ''}`}
+						onClick={() => setActiveTab(RoomStatus.CLEANING)}
 					>
-						청소중 ({counts.cleaning})
+						청소중 ({counts.CLEANING})
 					</button>
 					<button
-						className={`rooms-tab ${activeTab === 'maintenance' ? 'rooms-tab--active' : ''}`}
-						onClick={() => setActiveTab('maintenance')}
+						className={`rooms-tab ${activeTab === RoomStatus.MAINTENANCE ? 'rooms-tab--active' : ''}`}
+						onClick={() => setActiveTab(RoomStatus.MAINTENANCE)}
 					>
-						정비중 ({counts.maintenance})
+						정비중 ({counts.MAINTENANCE})
 					</button>
 				</Box>
 				<div className="search-box">
-					<input type="search" className="search-input" placeholder="검색어를 입력하세요" />
-					<button className="search-btn">검색</button>
+					<input
+						type="search"
+						className="search-input"
+						placeholder="검색어를 입력하세요"
+						onChange={(e) => {
+							setSearchTerm(e.target.value);
+						}}
+					/>
+					<button
+						className="search-btn"
+						onClick={() => {
+							setSearchTerm('');
+						}}
+					>
+						검색
+					</button>
 				</div>
 			</Box>
 
@@ -408,7 +414,7 @@ const RoomsPage: React.FC = () => {
 								{renderStatusChip(room.status)}
 							</Box>
 
-							{room.status === 'occupied' && room.guestName && room.checkoutDate && (
+							{room.status === RoomStatus.OCCUPIED && room.guestName && room.checkoutDate && (
 								<Box className="room-card__current-stay">
 									<div className="room-card__stay-line">
 										<span className="room-card__stay-label">투숙객:</span>
@@ -447,14 +453,17 @@ const RoomsPage: React.FC = () => {
 								</div>
 								<div className="room-card__actions">
 									<Button
-										onClick={() => handleOpenAddAndUpdateRoomModal('update', room.id)}
+										onClick={() => {
+											setIsOpenUpdateRoom(true);
+											setSelectedRoomId(room.id);
+										}}
 										variant="contained"
 										size="large"
 										className="room-card__reserve-btn"
 									>
 										수정
 									</Button>
-									{room.status !== 'maintenance' && (
+									{room.status !== RoomStatus.MAINTENANCE && (
 										<Button
 											onClick={() => handleOpenCalendar(room)}
 											variant="contained"

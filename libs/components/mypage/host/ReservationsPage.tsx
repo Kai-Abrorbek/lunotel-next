@@ -1,11 +1,9 @@
 import { NextPage } from 'next';
 import { useState } from 'react';
-
-interface Stat {
-	label: string;
-	value: string;
-	change?: string;
-}
+import { ReservationsInquiry } from '../../../types/reservation/reservation.input';
+import { ReservationStatus } from '../../../enums/reservation';
+import { text } from 'stream/consumers';
+import { Direction } from '../../../enums/common.enum';
 
 interface Reservation {
 	id: string;
@@ -19,16 +17,21 @@ interface Reservation {
 	nights: number;
 	guests: number;
 	amount: number;
-	status: 'confirmed' | 'checked-in' | 'pending' | 'completed' | 'cancelled';
+	status: ReservationStatus;
 	bookingDate: string;
 	channel: string;
 }
 
-const ReservationsPage: NextPage = () => {
+interface ReservationsPageProps {
+	initialInput: ReservationsInquiry;
+}
+
+const ReservationsPage = (props: ReservationsPageProps) => {
+	const { initialInput } = props;
 	const [filterStatus, setFilterStatus] = useState('all');
 	const [searchTerm, setSearchTerm] = useState('');
 	const [selectedReservation, setSelectedReservation] = useState<Reservation | null>(null);
-
+	const [searchFilter, setSearchFilter] = useState<ReservationsInquiry>(initialInput);
 	const allReservations: Reservation[] = [
 		{
 			id: 'RSV-001',
@@ -42,7 +45,7 @@ const ReservationsPage: NextPage = () => {
 			nights: 3,
 			guests: 2,
 			amount: 540,
-			status: 'confirmed',
+			status: ReservationStatus.CONFIRMED,
 			bookingDate: '2024-11-20',
 			channel: '직접 예약',
 		},
@@ -58,7 +61,7 @@ const ReservationsPage: NextPage = () => {
 			nights: 4,
 			guests: 3,
 			amount: 1280,
-			status: 'confirmed',
+			status: ReservationStatus.CONFIRMED,
 			bookingDate: '2024-11-18',
 			channel: 'Booking.com',
 		},
@@ -74,7 +77,7 @@ const ReservationsPage: NextPage = () => {
 			nights: 1,
 			guests: 2,
 			amount: 150,
-			status: 'checked-in',
+			status: ReservationStatus.CHECKED_IN,
 			bookingDate: '2024-11-22',
 			channel: 'Airbnb',
 		},
@@ -90,7 +93,7 @@ const ReservationsPage: NextPage = () => {
 			nights: 3,
 			guests: 2,
 			amount: 840,
-			status: 'checked-in',
+			status: ReservationStatus.CHECKED_IN,
 			bookingDate: '2024-11-15',
 			channel: '직접 예약',
 		},
@@ -106,7 +109,7 @@ const ReservationsPage: NextPage = () => {
 			nights: 2,
 			guests: 2,
 			amount: 360,
-			status: 'pending',
+			status: ReservationStatus.PENDING,
 			bookingDate: '2024-11-25',
 			channel: 'Expedia',
 		},
@@ -122,19 +125,26 @@ const ReservationsPage: NextPage = () => {
 			nights: 3,
 			guests: 3,
 			amount: 960,
-			status: 'confirmed',
+			status: ReservationStatus.CONFIRMED,
 			bookingDate: '2024-11-21',
 			channel: '직접 예약',
 		},
 	];
 
+	/************
+	 * LIFESICLE *
+	 ************/
+
+	/************
+	 * HANDLERS *
+	 ************/
 	const getStatusInfo = (status: string) => {
 		const statusMap: { [key: string]: { label: string; class: string } } = {
-			confirmed: { label: '예약 확정', class: 'status-confirmed' },
-			'checked-in': { label: '체크인 완료', class: 'status-checked-in' },
-			pending: { label: '확인 대기중', class: 'status-pending' },
+			CONFIRMED: { label: '예약 확정', class: 'status-confirmed' },
+			CHECKED_IN: { label: '체크인 완료', class: 'status-checked-in' },
+			PENDING: { label: '확인 대기중', class: 'status-pending' },
 			completed: { label: '완료', class: 'status-completed' },
-			cancelled: { label: '취소됨', class: 'status-cancelled' },
+			CANCELLED: { label: '취소됨', class: 'status-cancelled' },
 		};
 		return statusMap[status] || { label: '알 수 없음', class: 'status-confirmed' };
 	};
@@ -150,12 +160,12 @@ const ReservationsPage: NextPage = () => {
 
 	const statusCounts = {
 		all: allReservations.length,
-		confirmed: allReservations.filter((r) => r.status === 'confirmed').length,
-		'checked-in': allReservations.filter((r) => r.status === 'checked-in').length,
-		pending: allReservations.filter((r) => r.status === 'pending').length,
+		confirmed: allReservations.filter((r) => r.status === 'CONFIRMED').length,
+		CHECKED_IN: allReservations.filter((r) => r.status === 'CHECKED_IN').length,
+		pending: allReservations.filter((r) => r.status === 'PENDING').length,
 	};
 
-	const totalRevenue = allReservations.filter((r) => r.status !== 'cancelled').reduce((sum, r) => sum + r.amount, 0);
+	const totalRevenue = allReservations.filter((r) => r.status !== 'CANCELLED').reduce((sum, r) => sum + r.amount, 0);
 
 	return (
 		<div className="reservation-page-contanier">
@@ -187,14 +197,50 @@ const ReservationsPage: NextPage = () => {
 							placeholder="Search by guest name, reservation ID, or room..."
 							className="search-input-with-icon"
 							value={searchTerm}
-							onChange={(e) => setSearchTerm(e.target.value)}
+							onChange={(e) => {
+								setSearchTerm(e.target.value);
+								setSearchFilter((prev) => ({
+									...prev,
+									search: {
+										...prev.search,
+										text: e.target.value,
+									},
+								}));
+							}}
 						/>
+						{searchFilter?.search?.text && (
+							<button
+								className="clear-btn"
+								onClick={() => {
+									setSearchTerm('');
+									setSearchFilter((prev) => ({
+										...prev,
+										search: {
+											...prev.search,
+											text: '',
+										},
+									}));
+								}}
+							>
+								×
+							</button>
+						)}
 					</div>
-					<select className="filter-select" value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
+					<select
+						className="filter-select"
+						value={filterStatus}
+						onChange={(e) => {
+							setSearchFilter((prev) => ({
+								...prev,
+								sort: e.target.value,
+							}));
+							setFilterStatus(e.target.value);
+						}}
+					>
 						<option value="all">전체 ({statusCounts.all})</option>
-						<option value="confirmed">확인됨 ({statusCounts.confirmed})</option>
-						<option value="checked-in">체크인 ({statusCounts['checked-in']})</option>
-						<option value="pending">보류 중 ({statusCounts.pending})</option>
+						<option value="CONFIRMED">확인됨 ({statusCounts.confirmed})</option>
+						<option value="CHECKED_IN">체크인 ({statusCounts.CHECKED_IN})</option>
+						<option value="PENDING">보류 중 ({statusCounts.pending})</option>
 					</select>
 				</div>
 
@@ -328,6 +374,19 @@ const ReservationsPage: NextPage = () => {
 			)}
 		</div>
 	);
+};
+
+ReservationsPage.defaultProps = {
+	initialInput: {
+		page: 1,
+		limit: 10,
+		sort: 'createdAt',
+		direction: Direction.DESC,
+		search: {
+			propertyId: '',
+			text: '',
+		},
+	},
 };
 
 export default ReservationsPage;

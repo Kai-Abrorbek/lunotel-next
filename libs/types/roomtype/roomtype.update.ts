@@ -1,5 +1,12 @@
 import { RoomStatus } from '../../enums/propertyRoomtype.enum';
 
+export interface STPRules {
+	durationHours?: number;
+	windowStart?: string;
+	windowEnd?: string;
+	lastCheckInBy?: string;
+}
+
 export interface RoomTypeUpdate {
 	_id: string;
 	propertyId: string;
@@ -13,4 +20,5 @@ export interface RoomTypeUpdate {
 	roomAmenities?: string[];
 	roomImages?: string[];
 	roomStatus?: RoomStatus;
+	stayPlanRules: STPRules;
 }

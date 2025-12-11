@@ -39,8 +39,13 @@ export interface ReservationInput {
 	propertyName?: string;
 }
 
-/** PAGINATION */
+interface ResIsearch {
+	propertyId?: string;
+	text?: string;
+}
+
 export interface ReservationsInquiry {
 	page: number;
 	limit: number;
+	search: ResIsearch;
 }

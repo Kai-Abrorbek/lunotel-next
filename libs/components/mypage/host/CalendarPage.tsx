@@ -1,6 +1,10 @@
 // src/components/HostLayout/CalendarPage.tsx
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Box, Card, Typography, Button, FormControl, Select, MenuItem } from '@mui/material';
+import { RoomReservationsInquiry, RoomsIquiry } from '../../../types/roomtype/roomtype.input';
+import { useRouter } from 'next/router';
+import { RoomType, RoomTypes } from '../../../types/roomtype/roomtype';
+import { Reservations } from '../../../types/reservation/reservation';
 
 type RoomOption = {
 	value: string;
@@ -64,7 +68,14 @@ function buildCalendar(monthDate: Date): CalendarCell[] {
 	return cells;
 }
 
-export default function CalendarPage() {
+interface CalendarPageProps {
+	roomsInquiry: RoomsIquiry;
+	getRoomReservation: RoomReservationsInquiry;
+}
+
+const CalendarPage = (props: CalendarPageProps) => {
+	const { roomsInquiry, getRoomReservation } = props;
+	const router = useRouter();
 	const today = useMemo(() => {
 		const d = new Date();
 		return new Date(d.getFullYear(), d.getMonth(), d.getDate()); // 00:00
@@ -76,7 +87,28 @@ export default function CalendarPage() {
 	const [selectedRoom, setSelectedRoom] = useState<string>('all');
 	const cells = useMemo(() => buildCalendar(currentMonth), [currentMonth]);
 	const formattedMonthLabel = `${currentMonth.getFullYear()}년 ${currentMonth.getMonth() + 1}월`;
+	const [getRoomsInquiry, setGetRoomsInquiry] = useState<RoomsIquiry>(roomsInquiry);
+	const [roomsData, setRoomsData] = useState<RoomTypes>();
+	const [getReservationsInquiry, setGetReservationsInquiry] = useState<RoomReservationsInquiry>(getRoomReservation);
+	const [roomReservation, setRoomReservations] = useState<Reservations>();
+	/*****************
+	 **  	LIFESICLE   **
+	 *****************/
+	useEffect(() => {
+		if (!router.isReady) return;
+		const propertyId = router.query.propertyId as string;
+		setGetRoomsInquiry({
+			...getRoomsInquiry,
+			search: {
+				...getRoomsInquiry.search,
+				propertyId: propertyId,
+			},
+		});
+	}, [router]);
 
+	/*****************
+	 **  	HANDLER   **
+	 *****************/
 	const handlePrevMonth = () => {
 		setCurrentMonth((prev) => {
 			const year = prev.getFullYear();
@@ -117,7 +149,6 @@ export default function CalendarPage() {
 		});
 	}
 
-	// 예약별 색을 HSL로 자동 생성 (예: id 기반)
 	function getReservationColorStyles(reservation: RoomReservation | undefined) {
 		if (!reservation) return {};
 
@@ -132,6 +163,17 @@ export default function CalendarPage() {
 		} as React.CSSProperties;
 	}
 
+	const selectRoom = (roomId: string) => {
+		const room = roomOptions.filter((opt) => opt.value === roomId)[0];
+
+		// setGetReservationsInquiry({
+		// 	...getReservationsInquiry,
+		// 	propertyId: room.propertyId,
+		// 	roomTypeId: room._id,
+		// 	stayPlanId: room.stayPlans?.[0]._id!,
+		// });
+	};
+
 	return (
 		<Box className="calendar-page">
 			{/* 상단 제목 + 셀렉트 */}
@@ -139,7 +181,13 @@ export default function CalendarPage() {
 				<Typography className="calendar-page__title">달력</Typography>
 
 				<FormControl size="small" className="calendar-page__room-select">
-					<Select value={selectedRoom} onChange={(e) => setSelectedRoom(e.target.value as string)}>
+					<Select
+						value={selectedRoom}
+						onChange={(e) => {
+							selectRoom(e.target.value);
+							setSelectedRoom(e.target.value as string);
+						}}
+					>
 						{roomOptions.map((room) => (
 							<MenuItem key={room.value} value={room.value}>
 								{room.label}
@@ -213,4 +261,22 @@ export default function CalendarPage() {
 			</Card>
 		</Box>
 	);
-}
+};
+
+CalendarPage.defaultProps = {
+	roomsInquiry: {
+		page: 1,
+		limit: 10,
+		sort: 'createdAt',
+		direction: 'DESC',
+		search: {
+			propertyId: '',
+		},
+	},
+	getRoomReservation: {
+		propertyId: '',
+		roomId: '',
+		stayPlanId: '',
+	},
+};
+export default CalendarPage;

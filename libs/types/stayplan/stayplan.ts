@@ -15,8 +15,8 @@ export interface StayPlan {
 
 	stayPlanstatus: StayPlanStatus;
 
-	createdAt: Date;
-	updatedAt: Date;
+	createdAt?: Date;
+	updatedAt?: Date;
 
 	/* from aggregatio */
 	inventories?: Inventory[];

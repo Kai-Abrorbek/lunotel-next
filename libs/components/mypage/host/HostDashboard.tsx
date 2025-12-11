@@ -1,5 +1,7 @@
 import Link from 'next/link';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { AgentPropertiesInquiry } from '../../../types/property/property.input';
+import { useRouter } from 'next/router';
 
 type StatItem = {
 	id: string;
@@ -50,7 +52,26 @@ const reservations: Reservation[] = [
 	},
 ];
 
-export default function HostDashboard() {
+interface HostDashboardProps {
+	initialInput: AgentPropertiesInquiry;
+}
+
+const HostDashboard = (props: HostDashboardProps) => {
+	const { initialInput } = props;
+	const router = useRouter();
+	const [searchFilter, setSearchFilter] = useState<AgentPropertiesInquiry>(initialInput);
+
+	useEffect(() => {
+		if (!router.isReady) return;
+		const propertyId = router.query.propertyId as string;
+		setSearchFilter({
+			...searchFilter,
+			search: {
+				propertyId: propertyId,
+			},
+		});
+	}, [router]);
+
 	return (
 		<div className="dashboard">
 			<div className="dashboard__header">
@@ -128,4 +149,18 @@ export default function HostDashboard() {
 			</section>
 		</div>
 	);
-}
+};
+
+HostDashboard.defaultProps = {
+	initialInput: {
+		page: 1,
+		limit: 10,
+		sort: 'createdAt',
+		direction: 'DESC',
+		search: {
+			propertyId: '',
+		},
+	},
+};
+
+export default HostDashboard;
