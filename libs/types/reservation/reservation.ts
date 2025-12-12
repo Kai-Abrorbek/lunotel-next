@@ -18,29 +18,21 @@ export interface type {
 export interface Reservation {
 	_id: string;
 	memberId?: string;
-
-	propertyId: string;
-	roomTypeId: string;
-	stayPlanId: string;
-
-	reservationStatus: ReservationStatus;
-
-	reservationQty: number;
-	priceBreakdown: ReservationPriceBreakdownItem[];
-
-	reservationTotalPrice: number;
-
+	propertyId?: string;
+	roomTypeId?: string;
+	stayPlanId?: string;
+	reservationStatus?: ReservationStatus;
+	reservationQty?: number;
+	priceBreakdown?: ReservationPriceBreakdownItem[];
+	reservationTotalPrice?: number;
 	reservationCheckIn?: string;
 	reservationCheckOut?: string;
-
-	memberInfo: type;
-
+	memberInfo?: type;
 	reservationDate?: string;
 	reservationCheckInAt?: string;
 	reservationCheckOutAt?: string;
-
-	createdAt: Date;
-	updatedAt: Date;
+	createdAt?: Date;
+	updatedAt?: Date;
 
 	/** FROM AGGREGATE **/
 	propertyData?: Property[];

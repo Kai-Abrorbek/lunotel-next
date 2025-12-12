@@ -6,32 +6,26 @@ import { Reservation } from '../reservation/reservation';
 /** MEMBER BASE */
 export interface Member {
 	_id: string;
-
 	memberType: MemberType;
 	memberStatus: MemberStatus;
 	memberAuthType: MemberAuthType;
-
 	memberPhone: string;
 	memberNick: string;
 	memberEmail: string;
-
 	memberPassword?: string;
-
 	memberFullName?: string;
 	memberImage: string;
 	memberAddress?: string;
 	memberDesc?: string;
-
 	memberProperties: number;
-	memberReservations: number;
+	memberReservations?: number;
 	memberComments: number;
 	memberPoints: number;
 	memberWarnings: number;
 	memberBlocks: number;
-
 	deletedAt?: Date;
-	createdAt: Date;
-	updatedAt: Date;
+	createdAt?: Date;
+	updatedAt?: Date;
 
 	accessToken?: string;
 

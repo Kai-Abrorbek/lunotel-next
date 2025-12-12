@@ -1,8 +1,6 @@
-import { NextPage } from 'next';
 import { useState } from 'react';
 import { ReservationsInquiry } from '../../../types/reservation/reservation.input';
 import { ReservationStatus } from '../../../enums/reservation';
-import { text } from 'stream/consumers';
 import { Direction } from '../../../enums/common.enum';
 
 interface Reservation {
@@ -160,9 +158,9 @@ const ReservationsPage = (props: ReservationsPageProps) => {
 
 	const statusCounts = {
 		all: allReservations.length,
-		confirmed: allReservations.filter((r) => r.status === 'CONFIRMED').length,
+		CONFIRMED: allReservations.filter((r) => r.status === 'CONFIRMED').length,
 		CHECKED_IN: allReservations.filter((r) => r.status === 'CHECKED_IN').length,
-		pending: allReservations.filter((r) => r.status === 'PENDING').length,
+		PENDING: allReservations.filter((r) => r.status === 'PENDING').length,
 	};
 
 	const totalRevenue = allReservations.filter((r) => r.status !== 'CANCELLED').reduce((sum, r) => sum + r.amount, 0);
@@ -184,7 +182,7 @@ const ReservationsPage = (props: ReservationsPageProps) => {
 				</div>
 				<div className="stat-card">
 					<p className="stat-label">보류 중인 체크인</p>
-					<p className="stat-value">{statusCounts.confirmed}</p>
+					<p className="stat-value">{statusCounts.CONFIRMED}</p>
 				</div>
 			</div>
 
@@ -238,9 +236,9 @@ const ReservationsPage = (props: ReservationsPageProps) => {
 						}}
 					>
 						<option value="all">전체 ({statusCounts.all})</option>
-						<option value="CONFIRMED">확인됨 ({statusCounts.confirmed})</option>
+						<option value="CONFIRMED">확인됨 ({statusCounts.CONFIRMED})</option>
 						<option value="CHECKED_IN">체크인 ({statusCounts.CHECKED_IN})</option>
-						<option value="PENDING">보류 중 ({statusCounts.pending})</option>
+						<option value="PENDING">보류 중 ({statusCounts.PENDING})</option>
 					</select>
 				</div>
 

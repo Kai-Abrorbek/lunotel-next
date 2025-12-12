@@ -26,6 +26,14 @@ export enum PropertyStatus {
 	DELETE = 'DELETE',
 }
 
+export enum PropertyStatusKorean {
+	DRAFT = '대기중',
+	ACTIVE = '운영중',
+	INACTIVE = '중지',
+	BLOCKED = '차단',
+	DELETE = '삭제',
+}
+
 export enum PropertyLocation {
 	SEOUL = 'SEOUL',
 	BUSAN = 'BUSAN',

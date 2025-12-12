@@ -1,10 +1,22 @@
 import React, { useState, useRef } from 'react';
+import { PropertyInput } from '../../../types/property/property.input';
+import { PropertyLocation, PropertyStatus, PropertyType } from '../../../enums/property.enum';
+import { Box, Button, Grid, IconButton, TextField } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 
-const statusOptions = [
-	{ value: 'ACTIVE', label: '운영중', color: '#10b981' },
-	{ value: 'HOLD', label: '대기중', color: '#f59e0b' },
-	{ value: 'SOLD', label: '판매완료', color: '#ef4444' },
+interface StatusOption {
+	value: PropertyStatus;
+	label: string;
+	color: string;
+}
+
+const statusOptions: StatusOption[] = [
+	{ value: PropertyStatus.ACTIVE, label: '운영중', color: '#10b981' },
+	{ value: PropertyStatus.DRAFT, label: '대기중', color: '#f59e0b' },
+	{ value: PropertyStatus.INACTIVE, label: '판매완료', color: '#e6e22fff' },
+	{ value: PropertyStatus.BLOCKED, label: '중지', color: '#ef4444' },
 ];
+
 const typeOptions = [
 	{ value: 'HOTEL', label: '호텔', icon: '🏨' },
 	{ value: 'MOTEL', label: '모텔', icon: '🏩' },
@@ -34,69 +46,29 @@ const locationOptions = [
 	{ value: 'JEJU', label: '제주' },
 ];
 
-interface PropertyUpdateData {
-	_id: string;
-	propertyStatus: 'ACTIVE' | 'HOLD' | 'SOLD';
-	propertyType: 'HOTEL' | 'MOTEL' | 'PENSION' | 'GUESTHOUSE' | 'RESORT';
-	propertyLocation:
-		| 'SEOUL'
-		| 'BUSAN'
-		| 'INCHEON'
-		| 'DAEGU'
-		| 'DAEJEON'
-		| 'GWANGJU'
-		| 'ULSAN'
-		| 'SEJONG'
-		| 'GYEONGGI'
-		| 'GANGWON'
-		| 'CHUNGBUK'
-		| 'CHUNGNAM'
-		| 'JEONBUK'
-		| 'JEONNAM'
-		| 'GYEONGBUK'
-		| 'GYEONGNAM'
-		| 'JEJU';
-	propertyAddress: string;
-	propertyName: string;
-	propertyPrice: number;
-	propertyRooms: number;
-	propertyStars: number;
-	propertyImages: string[];
-	propertyDesc: string;
-	soldAt: boolean;
+declare global {
+	interface Window {
+		daum?: any;
+	}
 }
+
 interface PropertyUpdateModalProps {
 	isOpen: boolean;
 	setIsOpen: (v: boolean) => void;
-	selectedPropertyId: string;
-	setSelectedPropertyId: (v: string | null) => void;
+	initialInput?: PropertyInput;
 }
-const PropertyUpdateModal = ({
-	isOpen,
-	setIsOpen,
-	selectedPropertyId,
-	setSelectedPropertyId,
-}: PropertyUpdateModalProps) => {
-	const [propertyData, setPropertyData] = useState<PropertyUpdateData>({
-		_id: '6742property123',
-		propertyStatus: 'ACTIVE',
-		propertyType: 'HOTEL',
-		propertyLocation: 'SEOUL',
-		propertyAddress: '서울시 중구 명동길 123',
-		propertyName: '서울 호텔 명동',
-		propertyPrice: 80000,
-		propertyRooms: 45,
-		propertyStars: 4,
-		propertyImages: [],
-		propertyDesc:
-			'명동 중심가에 위치한 프리미엄 비즈니스 호텔입니다. 지하철역과 도보 5분 거리에 있으며, 쇼핑과 관광에 최적화되어 있습니다.',
-		soldAt: false,
-	});
+const PropertyAddModal = ({ isOpen, setIsOpen, initialInput }: PropertyUpdateModalProps) => {
+	const [propertyData, setPropertyData] = useState<PropertyInput>(initialInput!);
 	const fileInputRef = useRef<HTMLInputElement>(null);
 
-	const handleChange = (field: keyof PropertyUpdateData, value: any) => {
-		setPropertyData({ ...propertyData, [field]: value });
+	const handleChange = <K extends keyof PropertyInput>(field: K, value: PropertyInput[K]) => {
+		setPropertyData((prev) => ({ ...prev, [field]: value }));
 	};
+
+	const clearInput = (field: keyof PropertyInput) => {
+		setPropertyData((prev) => ({ ...prev, [field]: '' as any }));
+	};
+
 	const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const files = e.target.files;
 		if (files) {
@@ -130,7 +102,6 @@ const PropertyUpdateModal = ({
 
 	const handleClose = () => {
 		setIsOpen(false);
-		setSelectedPropertyId(null);
 	};
 
 	const handleOverlayClick = (e: React.MouseEvent) => {
@@ -155,14 +126,34 @@ const PropertyUpdateModal = ({
 		);
 	};
 
+	const handlePostcodeSearch = () => {
+		if (!window.daum?.Postcode) return;
+		new window.daum.Postcode({
+			oncomplete: (data: any) => {
+				const address = data.roadAddress || data.jibunAddress;
+				handleChange('propertyAddress', ` ${address}`);
+				window.kakao.maps.load(() => {
+					const geocoder = new window.kakao.maps.services.Geocoder();
+					geocoder.addressSearch(address, (result: any, status: any) => {
+						if (status === window.kakao.maps.services.Status.OK) {
+							const { x, y } = result[0]; // x: lng, y: lat
+							console.log('좌표', x, y);
+							handleChange('propertyLat', y);
+							handleChange('propertyLng', x);
+						}
+					});
+				});
+			},
+		}).open();
+	};
+
 	return (
 		<div className={`property-update-modal ${isOpen ? 'active' : ''}`}>
 			<div className="modal-overlay" onClick={handleOverlayClick}>
 				<div className="modal">
 					<div className="modal-header">
 						<div>
-							<div className="modal-title">숙소 정보 수정</div>
-							<div className="property-id">Property ID: {propertyData._id}</div>
+							<div className="modal-title">숙소 생선</div>
 						</div>
 						<button className="close-btn" onClick={handleClose}>
 							✕
@@ -196,7 +187,7 @@ const PropertyUpdateModal = ({
 										<div
 											key={type.value}
 											className={`type-option ${propertyData.propertyType === type.value ? 'selected' : ''}`}
-											onClick={() => handleChange('propertyType', type.value)}
+											onClick={() => handleChange('propertyType', type.value as PropertyType)}
 										>
 											<span className="type-icon">{type.icon}</span>
 											<span>{type.label}</span>
@@ -211,7 +202,7 @@ const PropertyUpdateModal = ({
 									<select
 										className="form-select"
 										value={propertyData.propertyLocation}
-										onChange={(e) => handleChange('propertyLocation', e.target.value)}
+										onChange={(e) => handleChange('propertyLocation', e.target.value as PropertyLocation)}
 									>
 										{locationOptions.map((location) => (
 											<option key={location.value} value={location.value}>
@@ -227,18 +218,63 @@ const PropertyUpdateModal = ({
 								</div>
 							</div>
 
-							<div className="form-group">
-								<label className="form-label">주소</label>
-								<input
-									type="text"
-									className="form-input"
-									value={propertyData.propertyAddress}
-									onChange={(e) => handleChange('propertyAddress', e.target.value)}
-									minLength={3}
-									maxLength={100}
-								/>
-								<div className="char-count">{propertyData.propertyAddress.length}/100</div>
-							</div>
+							<Box className="property-modal__form-group">
+								<p className="property-modal__label">
+									주소 <span className="property-modal__required">*</span>
+								</p>
+
+								<Grid container spacing={1} mb={1}>
+									<Grid item xs>
+										<Box className="property-modal__input-wrapper">
+											<TextField
+												fullWidth
+												size="small"
+												placeholder="우편번호 검색"
+												value={propertyData.propertyAddress}
+												onChange={(e) => handleChange('propertyAddress', e.target.value)}
+											/>
+											{propertyData.propertyAddress && (
+												<IconButton
+													size="small"
+													className="property-modal__clear-button"
+													onClick={() => clearInput('propertyAddress')}
+												>
+													<CloseIcon fontSize="small" />
+												</IconButton>
+											)}
+										</Box>
+									</Grid>
+									<Grid item>
+										<Button
+											onClick={handlePostcodeSearch}
+											variant="outlined"
+											size="small"
+											className="property-modal__zipcode-button"
+										>
+											우편번호 검색
+										</Button>
+									</Grid>
+								</Grid>
+
+								<Box className="property-modal__input-wrapper">
+									<TextField
+										fullWidth
+										size="small"
+										placeholder="상세 주소"
+										value={propertyData.propertydetailAddress}
+										onChange={(e) => handleChange('propertydetailAddress', e.target.value)}
+									/>
+									{propertyData.propertydetailAddress && (
+										<IconButton
+											size="small"
+											className="property-modal__clear-button"
+											onClick={() => clearInput('propertydetailAddress')}
+										>
+											<CloseIcon fontSize="small" />
+										</IconButton>
+									)}
+								</Box>
+							</Box>
 						</div>
 
 						{/* 운영 정보 */}
@@ -262,36 +298,6 @@ const PropertyUpdateModal = ({
 											{status.label}
 										</div>
 									))}
-								</div>
-							</div>
-
-							<div className="form-row">
-								<div className="form-group">
-									<label className="form-label">객실 수</label>
-									<div className="input-wrapper">
-										<input
-											type="number"
-											className="form-input with-unit"
-											value={propertyData.propertyRooms}
-											onChange={(e) => handleChange('propertyRooms', parseInt(e.target.value))}
-											min={1}
-										/>
-										<span className="input-unit">개</span>
-									</div>
-								</div>
-
-								<div className="form-group">
-									<label className="form-label">평균 가격</label>
-									<div className="input-wrapper">
-										<input
-											type="number"
-											className="form-input with-unit"
-											value={propertyData.propertyPrice}
-											onChange={(e) => handleChange('propertyPrice', parseInt(e.target.value))}
-											min={0}
-										/>
-										<span className="input-unit">원</span>
-									</div>
 								</div>
 							</div>
 
@@ -323,7 +329,7 @@ const PropertyUpdateModal = ({
 									maxLength={500}
 									placeholder="숙소의 특징, 위치, 편의시설 등을 자세히 설명해주세요."
 								/>
-								<div className="char-count">{propertyData.propertyDesc.length}/500</div>
+								<div className="char-count">{propertyData?.propertyDesc?.length}/500</div>
 							</div>
 
 							<div className="info-box">
@@ -373,7 +379,7 @@ const PropertyUpdateModal = ({
 							취소
 						</button>
 						<button className="btn btn-submit" onClick={handleSubmit}>
-							수정 완료
+							등록 완료
 						</button>
 					</div>
 				</div>
@@ -382,4 +388,17 @@ const PropertyUpdateModal = ({
 	);
 };
 
-export default PropertyUpdateModal;
+PropertyAddModal.defaultProps = {
+	initialInput: {
+		propertyType: '',
+		propertyLocation: '',
+		propertyAddress: '',
+		propertyName: '',
+		propertyStars: 0,
+		propertyImages: [],
+		propertyAmenities: [],
+		propertyOtherAmenities: [],
+	},
+};
+
+export default PropertyAddModal;

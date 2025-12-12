@@ -12,17 +12,20 @@ import { Direction } from '../../enums/common.enum';
 /** CREATE PROPERTY */
 export interface PropertyInput {
 	propertyType: PropertyType;
+	propertyStatus: PropertyStatus;
 	propertyLocation: PropertyLocation;
 	propertyAddress: string;
+	propertydetailAddress: string;
 	propertyName: string;
 	propertyStars: number;
-
 	propertyImages: string[];
 	propertyAmenities: PropertyAmenity[];
 	propertyOtherAmenities: PropertyOtherAmenity[];
-
+	propertyLat: string;
+	propertyLng: string;
 	propertyDesc?: string;
 	memberId?: string;
+	soldAt?: boolean;
 }
 
 /** PRICE RANGE */
