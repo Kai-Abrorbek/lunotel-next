@@ -5,7 +5,7 @@ import { gql } from '@apollo/client';
  *************************/
 
 export const SIGN_UP = gql`
-	mutation Signup($input: MemberInput!) {
+	mutation Signup($input: SignupInput!) {
 		signup(input: $input) {
 			_id
 			memberType
@@ -13,22 +13,21 @@ export const SIGN_UP = gql`
 			memberAuthType
 			memberPhone
 			memberNick
+			memberEmail
 			memberFullName
 			memberImage
 			memberAddress
 			memberDesc
+			memberProperties
+			memberPoints
 			memberWarnings
 			memberBlocks
-			memberProperties
-			memberRank
-			memberArticles
-			memberPoints
-			memberLikes
-			memberViews
 			deletedAt
 			createdAt
 			updatedAt
 			accessToken
+			memberReservations
+			memberComments
 		}
 	}
 `;
@@ -42,21 +41,21 @@ export const LOGIN = gql`
 			memberAuthType
 			memberPhone
 			memberNick
+			memberEmail
 			memberFullName
 			memberImage
 			memberAddress
 			memberDesc
+			memberProperties
+			memberPoints
 			memberWarnings
 			memberBlocks
-			memberProperties
-			memberRank
-			memberPoints
-			memberLikes
-			memberViews
 			deletedAt
 			createdAt
 			updatedAt
 			accessToken
+			memberComments
+			memberReservations
 		}
 	}
 `;
@@ -70,22 +69,21 @@ export const UPDATE_MEMBER = gql`
 			memberAuthType
 			memberPhone
 			memberNick
+			memberEmail
 			memberFullName
 			memberImage
 			memberAddress
 			memberDesc
 			memberProperties
-			memberRank
-			memberArticles
 			memberPoints
-			memberLikes
-			memberViews
 			memberWarnings
 			memberBlocks
 			deletedAt
 			createdAt
 			updatedAt
 			accessToken
+			memberReservations
+			memberComments
 		}
 	}
 `;
@@ -130,23 +128,43 @@ export const CREATE_PROPERTY = gql`
 			propertyStatus
 			propertyLocation
 			propertyAddress
-			propertyTitle
-			propertyPrice
-			propertySquare
-			propertyBeds
+			propertyName
 			propertyRooms
 			propertyViews
 			propertyLikes
+			propertyComments
+			propertyRank
+			propertyStars
 			propertyImages
 			propertyDesc
-			propertyBarter
-			propertyRent
 			memberId
-			soldAt
-			deletedAt
-			constructedAt
 			createdAt
 			updatedAt
+			memberData {
+				_id
+				memberType
+				memberStatus
+				memberAuthType
+				memberPhone
+				memberNick
+				memberEmail
+				memberFullName
+				memberImage
+				memberAddress
+				memberDesc
+				memberProperties
+				memberPoints
+				memberWarnings
+				memberBlocks
+				deletedAt
+				createdAt
+				updatedAt
+				accessToken
+			}
+			propertyReservations
+			propertyPrice
+			propertyAmenities
+			propertyOtherAmenities
 		}
 	}
 `;
@@ -159,23 +177,44 @@ export const UPDATE_PROPERTY = gql`
 			propertyStatus
 			propertyLocation
 			propertyAddress
-			propertyTitle
-			propertyPrice
-			propertySquare
-			propertyBeds
+			propertyName
 			propertyRooms
 			propertyViews
 			propertyLikes
+			propertyComments
+			propertyRank
+			propertyStars
 			propertyImages
 			propertyDesc
-			propertyBarter
-			propertyRent
 			memberId
-			soldAt
-			deletedAt
-			constructedAt
 			createdAt
 			updatedAt
+			memberData {
+				_id
+				memberType
+				memberStatus
+				memberAuthType
+				memberPhone
+				memberNick
+				memberEmail
+				memberFullName
+				memberImage
+				memberAddress
+				memberDesc
+				memberProperties
+				memberPoints
+				memberWarnings
+				memberBlocks
+				deletedAt
+				createdAt
+				updatedAt
+				accessToken
+			}
+			propertyPrice
+			propertyReservations
+			propertyAmenities
+			propertyOtherAmenities
+			soldAt
 		}
 	}
 `;
@@ -188,81 +227,23 @@ export const LIKE_TARGET_PROPERTY = gql`
 			propertyStatus
 			propertyLocation
 			propertyAddress
-			propertyTitle
+			propertyName
 			propertyPrice
-			propertySquare
-			propertyBeds
 			propertyRooms
 			propertyViews
 			propertyLikes
+			propertyComments
+			propertyRank
+			propertyStars
 			propertyImages
+			propertyAmenities
+			propertyOtherAmenities
 			propertyDesc
-			propertyBarter
-			propertyRent
 			memberId
 			soldAt
-			deletedAt
-			constructedAt
 			createdAt
 			updatedAt
-		}
-	}
-`;
-
-/**************************
- *      BOARD-ARTICLE     *
- *************************/
-
-export const CREATE_BOARD_ARTICLE = gql`
-	mutation CreateBoardArticle($input: BoardArticleInput!) {
-		createBoardArticle(input: $input) {
-			_id
-			articleCategory
-			articleStatus
-			articleTitle
-			articleContent
-			articleImage
-			articleViews
-			articleLikes
-			memberId
-			createdAt
-			updatedAt
-		}
-	}
-`;
-
-export const UPDATE_BOARD_ARTICLE = gql`
-	mutation UpdateBoardArticle($input: BoardArticleUpdate!) {
-		updateBoardArticle(input: $input) {
-			_id
-			articleCategory
-			articleStatus
-			articleTitle
-			articleContent
-			articleImage
-			articleViews
-			articleLikes
-			memberId
-			createdAt
-			updatedAt
-		}
-	}
-`;
-
-export const LIKE_TARGET_BOARD_ARTICLE = gql`
-	mutation LikeTargetArticle($input: String!) {
-		likeTargetArticle(articleId: $input) {
-			_id
-			articleCategory
-			articleStatus
-			articleTitle
-			articleContent
-			articleImage
-			articleViews
-			articleLikes
-			memberId
-			createdAt
-			updatedAt
+			propertyReservations
 		}
 	}
 `;
@@ -302,29 +283,118 @@ export const UPDATE_COMMENT = gql`
 `;
 
 /**************************
- *         FOLLOW        *
+ *         AGENT         *
  *************************/
-
-export const SUBSCRIBE = gql`
-	mutation Subscribe($input: String!) {
-		subscribe(input: $input) {
+/**************************
+ *       RESERVATION      *
+ *************************/
+export const CREATE_RESERVATION = gql`
+	mutation CreateReservation($input: ReservationInput!) {
+		createReservation(input: $input) {
 			_id
-			followingId
-			followerId
+			memberId
+			propertyId
+			roomTypeId
+			stayPlanId
+			reservationStatus
+			reservationQty
+			reservationTotalPrice
+			reservationCheckIn
+			reservationCheckOut
+			reservationDate
+			reservationCheckInAt
+			reservationCheckOutAt
 			createdAt
 			updatedAt
+			priceBreakdown {
+				date
+				unitPrice
+				qty
+				subtotal
+			}
+			memberInfo {
+				guestName
+				guestPhone
+			}
 		}
 	}
 `;
 
-export const UNSUBSCRIBE = gql`
-	mutation Unsubscribe($input: String!) {
-		unsubscribe(input: $input) {
+export const UPDATE_RESERVATION = gql`
+	mutation UpdateReservation($input: ReservationUpdateInput!) {
+		updateReservation(input: $input) {
 			_id
-			followingId
-			followerId
+			memberId
+			propertyId
+			roomTypeId
+			stayPlanId
+			reservationStatus
+			reservationQty
+			reservationTotalPrice
+			reservationCheckIn
+			reservationCheckOut
+			reservationDate
+			reservationCheckInAt
+			reservationCheckOutAt
 			createdAt
 			updatedAt
+			priceBreakdown {
+				date
+				unitPrice
+				qty
+				subtotal
+			}
+			memberInfo {
+				guestName
+				guestPhone
+			}
 		}
 	}
 `;
+
+/**************************
+ *         ROOM           *
+ *************************/
+export const CREATE_ROOM = gql`
+	mutation CreateRoomType($input: RoomTypeInput!) {
+		createRoomType(input: $input) {
+			_id
+			propertyId
+			roomName
+			basePriceDayUse
+			basePriceOvernight
+			roomDiscountPrice
+			roombedInfo
+			roomImages
+			roomStatus
+			createdAt
+			updatedAt
+			roomMaxPersonal
+			roomStandPersonal
+		}
+	}
+`;
+
+export const UPDATE_ROOM = gql`
+	mutation UpdateRoomType($input: RoomTypeUpdate!) {
+		updateRoomType(input: $input) {
+			_id
+			propertyId
+			roomName
+			roombedInfo
+			roomImages
+			roomStatus
+			createdAt
+			updatedAt
+			roomDiscountPrice
+			basePriceDayUse
+			basePriceOvernight
+			roomMaxPersonal
+			roomStandPersonal
+		}
+	}
+`;
+
+/**************************
+ *         COMMENT        *
+ *************************/
