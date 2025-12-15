@@ -8,6 +8,7 @@ import { useReactiveVar } from '@apollo/client';
 import { getJwtToken, updateUserInfo } from '../../auth';
 import OtherTop from '../OtherTop';
 import { useRouter } from 'next/router';
+import OtherHeader from '../OtherHeader';
 
 const withLayoutOther = (Component: any) => {
 	return (props: any) => {
@@ -33,7 +34,7 @@ const withLayoutOther = (Component: any) => {
 					</Head>
 					<Stack id="mobile-wrap">
 						<Stack id={'top'}>
-							<OtherTop />
+							<OtherHeader />
 						</Stack>
 
 						<Stack id={'main'}>
@@ -55,7 +56,7 @@ const withLayoutOther = (Component: any) => {
 					</Head>
 					<Stack id="pc-wrap">
 						<Stack id={'other-top'}>
-							<OtherTop />
+							<OtherHeader />
 						</Stack>
 
 						<Stack id={'main'}>

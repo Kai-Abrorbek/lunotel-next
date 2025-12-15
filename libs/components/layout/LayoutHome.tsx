@@ -11,6 +11,7 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import { useRouter } from 'next/router';
+import Header from '../Header';
 
 const withLayoutMain = (Component: any) => {
 	return (props: any) => {
@@ -36,7 +37,7 @@ const withLayoutMain = (Component: any) => {
 					</Head>
 					<Stack id="mobile-wrap">
 						<Stack id={'top'}>
-							<Top />
+							<Header />
 						</Stack>
 
 						<Stack id={'main'}>
@@ -58,7 +59,7 @@ const withLayoutMain = (Component: any) => {
 					</Head>
 					<Stack id="pc-wrap">
 						<Stack id={'top'}>
-							<Top />
+							<Header />
 						</Stack>
 
 						<Stack id={'main'}>
