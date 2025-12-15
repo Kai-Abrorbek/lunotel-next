@@ -21,3 +21,6 @@ export const Messages = {
 };
 
 export const topPropertyRank = 2;
+
+export const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+export const phoneRegex = /^01[0]\-?\d{3,4}\-?\d{4}$/;

@@ -18,6 +18,7 @@ const userData = {
 	name: '김민수',
 	type: 'Premium Member',
 	image: 'https://i.pravatar.cc/150?img=12',
+	isLogin: false,
 };
 
 interface MiniHeaderProps {
@@ -184,7 +185,7 @@ const OtherHeader = (props: MiniHeaderProps) => {
 								{isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
 							</IconButton>
 
-							{!userData ? (
+							{!userData.isLogin ? (
 								<>
 									<Link href={'/reservation/check'}>
 										<ButtonBase className="guest-booking-button" disableRipple>

@@ -12,15 +12,12 @@ import { Badge } from '@mui/material';
 import MemberQuickMenu from './common/MemberQuickMenu';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-const userData = {
-	name: '김민수',
-	type: 'Premium Member',
-	image: 'https://i.pravatar.cc/150?img=12',
-};
+import { useReactiveVar } from '@apollo/client';
+import { userVar } from '../../apollo/store';
 
 const Header = () => {
 	const router = useRouter();
-
+	const user = useReactiveVar(userVar);
 	const [openMenu, setOpenMenu] = useState<boolean>(false);
 	const [isDarkMode, setIsDarkMode] = useState(false);
 	const [language, setLanguage] = useState('KO');
@@ -100,7 +97,7 @@ const Header = () => {
 								{isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
 							</IconButton>
 
-							{!userData ? (
+							{!user ? (
 								<>
 									<Link href={'/reservation/check'}>
 										<ButtonBase className="guest-booking-button" disableRipple>
@@ -120,10 +117,10 @@ const Header = () => {
 							) : (
 								<Link href={'/mypage/user'}>
 									<ButtonBase className="user-profile" disableRipple>
-										<Avatar src={userData.image} alt={userData.name} className="user-avatar" />
+										<Avatar src={user.memberImage} alt={user.memberNick} className="user-avatar" />
 										<Box className="user-info">
-											<Box className="user-name">{userData.name}</Box>
-											<Box className="user-type">{userData.type}</Box>
+											<Box className="user-name">{user.memberNick}</Box>
+											<Box className="user-type">{user.memberType}</Box>
 										</Box>
 									</ButtonBase>
 								</Link>
