@@ -1,5 +1,5 @@
 // PopularStays.tsx
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Box, Typography, Button, IconButton, Chip, Stack } from '@mui/material';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -10,7 +10,16 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper';
 import 'swiper/css';
 import 'swiper/css/navigation';
-import { PropertiesInquiry } from '../../types/property/property.input';
+import { PropertiesInquiry, PropertyInquiry } from '../../types/property/property.input';
+import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
+import { LIKE_TARGET_PROPERTY } from '../../../apollo/user/mutation';
+import { GET_PROPERTIES } from '../../../apollo/user/query';
+import { T } from '../../types/common';
+import { Message } from '../../enums/common.enum';
+import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../sweetAlert';
+import { Property } from '../../types/property/property';
+import { useRouter } from 'next/router';
+import { userVar } from '../../../apollo/store';
 
 type CategoryKey = 'all' | 'motel' | 'hotel_resort' | 'pension' | 'premium' | 'camping' | 'home_villa' | 'guesthouse';
 
@@ -156,10 +165,65 @@ interface WeeklyHotPensionsProps {
 
 const WeeklyHotPensions = (props: WeeklyHotPensionsProps) => {
 	const { initialInput } = props;
-	const [hotPensions, setHotPensions] = useState<PropertiesInquiry[]>([]);
-	const [favoriteIds, setFavoriteIds] = useState<number[]>([]);
-	const toggleFavorite = (id: number) => {
-		setFavoriteIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
+	const router = useRouter();
+	const user = useReactiveVar(userVar);
+	const [hotPensions, setHotPensions] = useState<Property[]>([]);
+	const checkIn = useMemo(() => {
+		const d = new Date();
+		return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+	}, []);
+	const checkOut = useMemo(() => {
+		const d = new Date();
+		return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate() + 1}`;
+	}, []);
+
+	const [likeTargetProperty] = useMutation(LIKE_TARGET_PROPERTY);
+
+	/** APOLLO REQUESTS **/
+	const {
+		loading: getHotPensionsLoading,
+		data: getHotPensionsData,
+		error: getHotPensionsError,
+		refetch: getHotPensionsRefetch,
+	} = useQuery(GET_PROPERTIES, {
+		fetchPolicy: 'network-only',
+		variables: { input: initialInput },
+		notifyOnNetworkStatusChange: true,
+		onCompleted: (data: T) => {
+			setHotPensions(data?.getProperties?.list);
+		},
+	});
+
+	/** --- HANDLER **/
+	const likePropertyHandler = async (user: T, id: string) => {
+		try {
+			if (!id) return;
+			if (!user._id) throw new Error(Message.NOT_AUTHENTICATED);
+			await likeTargetProperty({ variables: { input: id } });
+			await getHotPensionsRefetch({ input: initialInput });
+			await sweetTopSmallSuccessAlert('success', 800);
+		} catch (err: any) {
+			console.log('ERROR, likePropertyHandler', err.message);
+			sweetMixinErrorAlert(err.message);
+		}
+	};
+
+	const handlePushPropertyDetail = (property: Property) => {
+		const url: PropertyInquiry = {
+			_id: String(property._id),
+			checkInDate: checkIn,
+			checkOutDate: checkOut,
+			personal: 2,
+			propertyName: encodeURIComponent(property.propertyName),
+		};
+
+		router.push(
+			`/property/propertyId=${property._id}?input=${JSON.stringify({ ...url })}`,
+			`/property/propertyId=${property._id}?input=${JSON.stringify({ ...url })}`,
+			{
+				scroll: false,
+			},
+		);
 	};
 
 	return (
@@ -171,7 +235,7 @@ const WeeklyHotPensions = (props: WeeklyHotPensionsProps) => {
 				</Box>
 
 				{/* 슬라이더 래퍼 + 화살표 버튼 */}
-				{STAYS.length !== 0 ? (
+				{hotPensions.length !== 0 ? (
 					<Box className="weeklyhotpensions-slider-wrapper">
 						<IconButton className="weeklyhotpensions-arrow weeklyhotpensions-prev">
 							<ArrowBackIosNewIcon />
@@ -193,17 +257,27 @@ const WeeklyHotPensions = (props: WeeklyHotPensionsProps) => {
 								1280: { slidesPerView: 4, spaceBetween: 24 },
 							}}
 						>
-							{STAYS.map((stay) => {
-								const isFav = favoriteIds.includes(stay.id);
+							{hotPensions.map((stay: Property) => {
+								const isFav = stay?.meLiked?.[0]?.myFavorite!;
 								return (
-									<SwiperSlide key={stay.id}>
-										<Box className="popular-card">
+									<SwiperSlide key={stay._id}>
+										<Box className="popular-card" onClick={() => handlePushPropertyDetail(stay)}>
 											{/* 이미지 */}
 											<Box className="popular-image-wrapper">
-												<img src={stay.imageUrl} alt={stay.name} className="popular-image" />
+												<img
+													src={`${process.env.REACT_APP_API_URL}/${stay.propertyImages![0]}`}
+													alt={stay.propertyName}
+													className="popular-image"
+												/>
 												<Box className="popular-image-top">
-													{stay.badgeText && <Chip className="popular-chip" label={stay.badgeText} size="small" />}
-													<IconButton className="popular-fav-btn" onClick={() => toggleFavorite(stay.id)}>
+													{/* {stay.badgeText && <Chip className="popular-chip" label={stay.badgeText} size="small" />} */}
+													<IconButton
+														className="popular-fav-btn"
+														onClick={(e) => {
+															e.stopPropagation();
+															likePropertyHandler(user, stay._id);
+														}}
+													>
 														{isFav ? (
 															<FavoriteIcon className="popular-fav-icon active" />
 														) : (
@@ -215,26 +289,26 @@ const WeeklyHotPensions = (props: WeeklyHotPensionsProps) => {
 
 											{/* 텍스트/정보 영역 */}
 											<Box className="popular-info">
-												<Typography className="popular-category">{stay.categoryLabel}</Typography>
-												<Typography className="popular-name">{stay.name}</Typography>
+												<Typography className="popular-category">{stay.propertyType}</Typography>
+												<Typography className="popular-name">{stay.propertyName}</Typography>
 												<Typography className="popular-location">
-													{stay.location} · {stay.subLocation}
+													{stay.propertyLocation} · {stay.propertyLocation}
 												</Typography>
 
 												<Box className="popular-rating-row">
 													<Box className="popular-rating-badge">
 														<StarIcon className="popular-rating-star" />
-														<span className="popular-rating-score">{stay.rating.toFixed(1)}</span>
+														<span className="popular-rating-score">{stay.propertyRank.toFixed(1)}</span>
 													</Box>
-													<span className="popular-rating-count">{stay.reviewCount.toLocaleString()}명 평가</span>
+													<span className="popular-rating-count">{stay.propertyComments.toLocaleString()}명 평가</span>
 												</Box>
 
-												{stay.originalPrice && <Typography className="popular-coupon-text">쿠폰 적용시</Typography>}
+												{stay.propertyPrice && <Typography className="popular-coupon-text">쿠폰 적용시</Typography>}
 
 												<Box className="popular-price-row">
-													<span className="popular-price-current">{stay.price.toLocaleString()}원</span>
-													{stay.originalPrice && (
-														<span className="popular-price-origin">{stay.originalPrice.toLocaleString()}원</span>
+													<span className="popular-price-current">{stay.propertyPrice.toLocaleString()}원</span>
+													{stay.propertyPrice && (
+														<span className="popular-price-origin">{stay.propertyPrice.toLocaleString()}원</span>
 													)}
 												</Box>
 											</Box>
