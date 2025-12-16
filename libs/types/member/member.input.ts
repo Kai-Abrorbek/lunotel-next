@@ -2,6 +2,7 @@
 
 import { MemberStatus, MemberType } from '../../enums/member.enum';
 import { Direction } from '../../enums/common.enum';
+import { introspectionFromSchema } from 'graphql';
 
 /** SIGNUP */
 export interface SignupInput {
@@ -9,10 +10,22 @@ export interface SignupInput {
 	memberPhone: string;
 	memberPassword: string;
 	memberEmail: string;
-
+	memberFullName?: string;
 	memberType?: MemberType;
 	memberImage?: string;
 	memberStatus?: MemberStatus;
+}
+
+export interface SocialPayload {
+	provider: 'google' | 'kakao' | 'naver';
+	providerId: string;
+	email?: string;
+	name?: string;
+	nickname?: string;
+	phone?: string;
+	birthyear?: string;
+	birthday?: string;
+	image?: string;
 }
 
 /** LOGIN */

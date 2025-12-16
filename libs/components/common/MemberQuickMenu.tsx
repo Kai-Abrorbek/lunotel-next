@@ -2,12 +2,19 @@ import React from 'react';
 import { Badge, Box, Card, IconButton, Modal, Stack } from '@mui/material';
 import Link from 'next/link';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
+import { signOut } from 'next-auth/react';
+import { logOut } from '../../auth';
 
 interface MemberQuickMenuProps {
 	open: boolean;
 	setOpen: (v: boolean) => void;
 }
 export default function MemberQuickMenu({ open, setOpen }: MemberQuickMenuProps) {
+	const handleNaverLogOut = async () => {
+		await signOut({ redirect: false });
+		logOut();
+	};
+
 	return (
 		<Modal
 			BackdropProps={{
@@ -81,7 +88,9 @@ export default function MemberQuickMenu({ open, setOpen }: MemberQuickMenuProps)
 						</Link>
 					</Box>
 					<Box className="member-menu__section member-menu__section--last">
-						<button className="member-menu__item member-menu__item--logout">로그아웃</button>
+						<button className="member-menu__item member-menu__item--logout" onClick={handleNaverLogOut}>
+							로그아웃
+						</button>
 					</Box>
 				</Card>
 			</Box>

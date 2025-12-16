@@ -45,7 +45,7 @@ body::-webkit-scrollbar {
 	#other-top {
 		.navbar {
 			width: 100%;
-			height: 95px;
+			height: 75px;
 			position: fixed;
 			top: 0;
 			z-index: 9999;
@@ -53,7 +53,7 @@ body::-webkit-scrollbar {
 			border-bottom: 1px solid #80808030;
 			.header {
 				width: 100%;
-				height: 94px;
+				height: 74px;
 				background: rgba(255, 255, 255, 0.95);
 				backdrop-filter: blur(10px);
 				box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);

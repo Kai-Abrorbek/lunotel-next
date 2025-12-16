@@ -3,6 +3,61 @@ import { gql } from '@apollo/client';
 /**************************
  *         MEMBER         *
  *************************/
+export const SOCIAL_LOGIN_OR_SIGN_UP_NOGQL = `
+	mutation SocialLoginOrSignup($input: SignupInput!) {
+		socialLoginOrSignup(input: $input) {
+			_id
+			memberType
+			memberStatus
+			memberAuthType
+			memberPhone
+			memberNick
+			memberEmail
+			memberFullName
+			memberImage
+			memberAddress
+			memberDesc
+			memberProperties
+			memberReservations
+			memberComments
+			memberPoints
+			memberWarnings
+			memberBlocks
+			deletedAt
+			createdAt
+			updatedAt
+			accessToken
+		}
+	}
+`;
+
+export const SOCIAL_LOGIN_OR_SIGN_UP = gql`
+	mutation SocialLoginOrSignup($input: SignupInput!) {
+		socialLoginOrSignup(input: $input) {
+			_id
+			memberType
+			memberStatus
+			memberAuthType
+			memberPhone
+			memberNick
+			memberEmail
+			memberFullName
+			memberImage
+			memberAddress
+			memberDesc
+			memberProperties
+			memberReservations
+			memberComments
+			memberPoints
+			memberWarnings
+			memberBlocks
+			deletedAt
+			createdAt
+			updatedAt
+			accessToken
+		}
+	}
+`;
 
 export const SIGN_UP = gql`
 	mutation Signup($input: SignupInput!) {

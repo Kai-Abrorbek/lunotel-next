@@ -3,7 +3,8 @@ import { initializeApollo } from '../../apollo/client';
 import { userVar } from '../../apollo/store';
 import { CustomJwtPayload } from '../types/customJwtPayload';
 import { sweetMixinErrorAlert } from '../sweetAlert';
-import { LOGIN, SIGN_UP } from '../../apollo/user/mutation';
+import { LOGIN, SIGN_UP, SOCIAL_LOGIN_OR_SIGN_UP, SOCIAL_LOGIN_OR_SIGN_UP_NOGQL } from '../../apollo/user/mutation';
+import { SignupInput, SocialPayload } from '../types/member/member.input';
 
 export function getJwtToken(): any {
 	if (typeof window !== 'undefined') {
@@ -63,6 +64,73 @@ const requestJwtToken = async ({
 				break;
 		}
 		throw new Error('token error');
+	}
+};
+
+export const signUpServer = async (input: SignupInput) => {
+	const res = await fetch(process.env.REACT_APP_API_GRAPHQL_URL!, {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify({ query: SOCIAL_LOGIN_OR_SIGN_UP_NOGQL, variables: { input } }),
+	});
+
+	const json = await res.json();
+	// GraphQL error
+	if (!res.ok || json.errors?.length) {
+		console.log('GQL errorss:', json.errors);
+		return json.errors;
+	}
+
+	return json.data.socialLoginOrSignup as {
+		_id: string;
+		accessToken: string;
+		memberEmail?: string;
+		memberNick?: string;
+		memberFullName?: string;
+		memberImage?: string;
+	};
+};
+
+export const normalizeSocialProfile = (provider: SocialPayload['provider'], profile: any): SocialPayload => {
+	switch (provider) {
+		case 'google': {
+			return {
+				provider,
+				providerId: profile.sub,
+				email: profile.email,
+				name: profile.name,
+				image: profile.picture,
+			};
+		}
+
+		case 'kakao': {
+			const acc = profile.kakao_account ?? {};
+			const prof = acc.profile ?? {};
+			return {
+				provider,
+				providerId: profile.id?.toString(),
+				email: acc.email,
+				name: acc.name,
+				nickname: prof.nickname,
+				phone: acc.phone_number,
+				birthyear: acc.birthyear,
+				birthday: acc.birthday,
+			};
+		}
+
+		case 'naver': {
+			const r = profile.response ?? profile;
+			return {
+				provider,
+				providerId: r.id,
+				email: r.email,
+				name: r.name,
+				nickname: r.nickname,
+				phone: r.mobile_e164,
+				birthyear: r.birthyear,
+				birthday: r.birthday,
+			};
+		}
 	}
 };
 

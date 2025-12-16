@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Button, Divider, Stack, Typography } from '@mui/material';
 import GoogleIcon from '@mui/icons-material/Google';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import LayoutHome from '../../libs/components/layout/LayoutHome';
 import LoginModal from '../../libs/components/auth/LoginModal';
-import { signIn, signOut, useSession } from 'next-auth/react';
+import { signIn } from 'next-auth/react';
 
 const LoginPage: React.FC = () => {
 	const [open, setOpen] = useState<boolean>(false);
@@ -21,12 +21,6 @@ const LoginPage: React.FC = () => {
 		signIn('naver', { callbackUrl: '/' });
 	};
 
-	const handleNaverLogOut = () => {
-		signOut({ callbackUrl: '/' });
-	};
-
-	const { data: session } = useSession();
-	console.log(session);
 	return (
 		<Stack className="container">
 			<Box className="login-page">
@@ -56,7 +50,7 @@ const LoginPage: React.FC = () => {
 							<span>구글로 시작하기</span>
 						</Button>
 
-						<Button fullWidth className="login-page__btn login-page__btn--email" onClick={handleNaverLogOut}>
+						<Button fullWidth className="login-page__btn login-page__btn--email">
 							<MailOutlineIcon className="login-page__btn-icon" />
 							<span>이메일로 시작하기</span>
 						</Button>

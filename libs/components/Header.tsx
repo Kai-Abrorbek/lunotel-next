@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { Moon, Sun, Globe, Search } from 'lucide-react';
-
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import ButtonBase from '@mui/material/ButtonBase';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -97,7 +95,7 @@ const Header = () => {
 								{isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
 							</IconButton>
 
-							{!user ? (
+							{!user._id ? (
 								<>
 									<Link href={'/reservation/check'}>
 										<ButtonBase className="guest-booking-button" disableRipple>
