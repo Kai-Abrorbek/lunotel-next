@@ -28,12 +28,11 @@ const CATEGORIES_EN: PropertyType[] = Object.values(PropertyType);
 
 interface PopularStaysProps {
 	initialInput: PropertiesInquiry;
-	propertyDetail: PropertyInquiry;
 }
 
 const PopularStays = (props: PopularStaysProps) => {
 	const router = useRouter();
-	const { initialInput, propertyDetail } = props;
+	const { initialInput } = props;
 	const user = useReactiveVar(userVar);
 	const [popularStays, setPopularStays] = useState<Property[]>([]);
 	const [activeCategory, setActiveCategory] = useState<PropertyType>(PropertyType.ALL);
@@ -66,7 +65,6 @@ const PopularStays = (props: PopularStaysProps) => {
 		},
 	});
 
-	/** --- LIFESICLE **/
 	/** --- HANDLER **/
 	const likePropertyHandler = async (user: T, id: string) => {
 		try {
@@ -156,7 +154,13 @@ const PopularStays = (props: PopularStaysProps) => {
 												/>
 												<Box className="popular-image-top">
 													{/* {stay.badgeText && <Chip className="popular-chip" label={stay.badgeText} size="small" />} */}
-													<IconButton className="popular-fav-btn" onClick={() => likePropertyHandler(user, stay._id)}>
+													<IconButton
+														className="popular-fav-btn"
+														onClick={(e) => {
+															e.stopPropagation();
+															likePropertyHandler(user, stay._id);
+														}}
+													>
 														{isFav ? (
 															<FavoriteIcon className="popular-fav-icon active" />
 														) : (
@@ -211,13 +215,6 @@ const PopularStays = (props: PopularStaysProps) => {
 	);
 };
 
-function formatDate(date: Date, day: number = 0) {
-	const y = date.getFullYear();
-	const m = String(date.getMonth() + 1).padStart(2, '0');
-	const d = String(date.getDate() + day).padStart(2, '0');
-	return `${y}-${m}-${d}`;
-}
-
 PopularStays.defaultProps = {
 	initialInput: {
 		page: 1,
@@ -225,14 +222,6 @@ PopularStays.defaultProps = {
 		sort: 'propertyLikes',
 		direction: 'DESC',
 		search: {},
-	},
-
-	propertyDetail: {
-		_id: '',
-		propertyName: '',
-		checkInDate: '',
-		checkOutDate: '',
-		personal: 2,
 	},
 };
 
