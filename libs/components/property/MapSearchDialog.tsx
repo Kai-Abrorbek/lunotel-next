@@ -86,8 +86,8 @@ const MapSearchDialog: React.FC<MapSearchDialogProps> = ({ open, onClose, initia
 	}, [router]);
 
 	useEffect(() => {
-		if (searchFilter?.search.propertyStarsList?.length === 0) {
-			delete searchFilter.search.propertyStarsList;
+		if (searchFilter?.search?.propertyStarsList?.length === 0) {
+			delete searchFilter?.search?.propertyStarsList;
 			router.push(
 				`/property?input=${JSON.stringify({
 					...searchFilter,
@@ -105,8 +105,8 @@ const MapSearchDialog: React.FC<MapSearchDialogProps> = ({ open, onClose, initia
 			);
 		}
 
-		if (searchFilter?.search.amenityList?.length === 0) {
-			delete searchFilter.search.amenityList;
+		if (searchFilter?.search?.amenityList?.length === 0) {
+			delete searchFilter?.search?.amenityList;
 			router.push(
 				`/property?input=${JSON.stringify({
 					...searchFilter,
@@ -124,8 +124,8 @@ const MapSearchDialog: React.FC<MapSearchDialogProps> = ({ open, onClose, initia
 			);
 		}
 
-		if (searchFilter?.search.otherAmenityList?.length === 0) {
-			delete searchFilter.search.otherAmenityList;
+		if (searchFilter?.search?.otherAmenityList?.length === 0) {
+			delete searchFilter?.search?.otherAmenityList;
 			router.push(
 				`/property?input=${JSON.stringify({
 					...searchFilter,

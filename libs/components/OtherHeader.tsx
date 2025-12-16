@@ -117,13 +117,17 @@ const OtherHeader = (props: MiniHeaderProps) => {
 								<Box className="mini-header-center">
 									<Box className="mini-search-bar" onClick={openHeroCardHandler}>
 										<SearchIcon className="mini-search-icon" />
-										<span className="mini-search-text mini-search-location">
+										<span className="mini-search-text mini-search-location" style={{ flex: 4 }}>
 											{property.propertyName ? property.propertyName : locationLabel}
 										</span>
 										<span className="mini-search-divider">|</span>
-										<span className="mini-search-text mini-search-date">{dateLabel}</span>
+										<span className="mini-search-text mini-search-date" style={{ flex: 4 }}>
+											{dateLabel}
+										</span>
 										<span className="mini-search-divider">|</span>
-										<span className="mini-search-text mini-search-guest">{guestLabel}</span>
+										<span className="mini-search-text mini-search-guest" style={{ flex: 1 }}>
+											{guestLabel}
+										</span>
 									</Box>
 								</Box>
 							)}

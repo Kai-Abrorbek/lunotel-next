@@ -38,7 +38,6 @@ import {
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import CheckIcon from '@mui/icons-material/Check';
 import MapSearchDialog from '../../libs/components/property/MapSearchDialog';
-import { validate } from 'graphql';
 
 const tags: PropertyAmenityKorean[] = Object.values(PropertyAmenityKorean);
 const otherTags: PropertyOtherAmenityKorean[] = Object.values(PropertyOtherAmenityKorean);
@@ -88,7 +87,7 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 	}, [router]);
 
 	useEffect(() => {
-		if (searchFilter?.search.propertyStarsList?.length === 0) {
+		if (searchFilter?.search?.propertyStarsList?.length === 0) {
 			delete searchFilter.search.propertyStarsList;
 			router.push(
 				`/property?input=${JSON.stringify({
@@ -107,7 +106,7 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 			);
 		}
 
-		if (searchFilter?.search.amenityList?.length === 0) {
+		if (searchFilter?.search?.amenityList?.length === 0) {
 			delete searchFilter.search.amenityList;
 			router.push(
 				`/property?input=${JSON.stringify({
@@ -126,7 +125,7 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 			);
 		}
 
-		if (searchFilter?.search.otherAmenityList?.length === 0) {
+		if (searchFilter?.search?.otherAmenityList?.length === 0) {
 			delete searchFilter.search.otherAmenityList;
 			router.push(
 				`/property?input=${JSON.stringify({

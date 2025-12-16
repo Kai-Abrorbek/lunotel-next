@@ -1,6 +1,6 @@
 // PopularStays.tsx
-import { useMemo, useState } from 'react';
-import { Box, Typography, Button, IconButton, Chip, Stack, listItemTextClasses } from '@mui/material';
+import { useEffect, useMemo, useState } from 'react';
+import { Box, Typography, Button, IconButton, Chip, Stack } from '@mui/material';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import StarIcon from '@mui/icons-material/Star';
@@ -12,162 +12,91 @@ import { Navigation } from 'swiper';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import { PropertyType, PropertyTypeKorean } from '../../enums/property.enum';
-import { PropertiesInquiry } from '../../types/property/property.input';
-
-interface Stay {
-	id: number;
-	categoryKey: PropertyType;
-	categoryLabel: string;
-	name: string;
-	location: string;
-	subLocation: string;
-	rating: number;
-	reviewCount: number;
-	price: number;
-	originalPrice?: number;
-	badgeText?: string;
-	imageUrl: string;
-}
+import { PropertiesInquiry, PropertyInquiry } from '../../types/property/property.input';
+import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
+import { GET_PROPERTIES } from '../../../apollo/user/query';
+import { T } from '../../types/common';
+import { Property } from '../../types/property/property';
+import { LIKE_TARGET_PROPERTY } from '../../../apollo/user/mutation';
+import { Message } from '../../enums/common.enum';
+import { userVar } from '../../../apollo/store';
+import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../sweetAlert';
+import { useRouter } from 'next/router';
 
 const CATEGORIES_K: PropertyTypeKorean[] = Object.values(PropertyTypeKorean);
 const CATEGORIES_EN: PropertyType[] = Object.values(PropertyType);
 
-const STAYS: Stay[] = [
-	{
-		id: 1,
-		categoryKey: PropertyType.POLL_VILLA,
-		categoryLabel: '블랙 · 특급 · 호텔',
-		name: '★당일특가★ 세인트존스 호텔',
-		location: '강릉시',
-		subLocation: '강릉 강문해변 앞',
-		rating: 9.2,
-		reviewCount: 10235,
-		price: 99750,
-		imageUrl: 'https://images.pexels.com/photos/258154/pexels-photo-258154.jpeg?auto=compress&cs=tinysrgb&w=800',
-	},
-	{
-		id: 2,
-		categoryKey: PropertyType.MOTEL,
-		categoryLabel: '모텔',
-		name: '길동 MARI-마리',
-		location: '길동역',
-		subLocation: '도보 3분',
-		rating: 9.3,
-		reviewCount: 4934,
-		price: 44000,
-		originalPrice: 50000,
-		imageUrl: 'https://images.pexels.com/photos/265004/pexels-photo-265004.jpeg?auto=compress&cs=tinysrgb&w=800',
-	},
-	{
-		id: 3,
-		categoryKey: PropertyType.HOTEL,
-		categoryLabel: '가족호텔 · 호텔',
-		name: '★당일특가★ 체스터톤스 호텔',
-		location: '속초시',
-		subLocation: '속초터미널 차량 11분',
-		rating: 9.1,
-		reviewCount: 3368,
-		price: 65490,
-		originalPrice: 350000,
-		imageUrl: 'https://images.pexels.com/photos/338504/pexels-photo-338504.jpeg?auto=compress&cs=tinysrgb&w=800',
-	},
-	{
-		id: 5,
-		categoryKey: PropertyType.MOTEL,
-		categoryLabel: '모텔',
-		name: '구월 호텔반월',
-		location: '인천',
-		subLocation: '인천터미널역 도보 14분',
-		rating: 9.4,
-		reviewCount: 13877,
-		price: 40000,
-		originalPrice: 45000,
-		imageUrl: 'https://images.pexels.com/photos/189296/pexels-photo-189296.jpeg?auto=compress&cs=tinysrgb&w=800',
-	},
-	{
-		id: 6,
-		categoryKey: PropertyType.MOTEL,
-		categoryLabel: '모텔',
-		name: '구월 호텔반월',
-		location: '인천',
-		subLocation: '인천터미널역 도보 14분',
-		rating: 9.4,
-		reviewCount: 13877,
-		price: 40000,
-		originalPrice: 45000,
-		imageUrl: 'https://images.pexels.com/photos/189296/pexels-photo-189296.jpeg?auto=compress&cs=tinysrgb&w=800',
-	},
-	{
-		id: 7,
-		categoryKey: PropertyType.MOTEL,
-		categoryLabel: '모텔',
-		name: '구월 호텔반월',
-		location: '인천',
-		subLocation: '인천터미널역 도보 14분',
-		rating: 9.4,
-		reviewCount: 13877,
-		price: 40000,
-		originalPrice: 45000,
-		imageUrl: 'https://images.pexels.com/photos/189296/pexels-photo-189296.jpeg?auto=compress&cs=tinysrgb&w=800',
-	},
-	{
-		id: 8,
-		categoryKey: PropertyType.MOTEL,
-		categoryLabel: '모텔',
-		name: '구월 호텔반월',
-		location: '인천',
-		subLocation: '인천터미널역 도보 14분',
-		rating: 9.4,
-		reviewCount: 13877,
-		price: 40000,
-		originalPrice: 45000,
-		imageUrl: 'https://images.pexels.com/photos/189296/pexels-photo-189296.jpeg?auto=compress&cs=tinysrgb&w=800',
-	},
-	{
-		id: 9,
-		categoryKey: PropertyType.MOTEL,
-		categoryLabel: '모텔',
-		name: '구월 호텔반월',
-		location: '인천',
-		subLocation: '인천터미널역 도보 14분',
-		rating: 9.4,
-		reviewCount: 13877,
-		price: 40000,
-		originalPrice: 45000,
-		imageUrl: 'https://images.pexels.com/photos/189296/pexels-photo-189296.jpeg?auto=compress&cs=tinysrgb&w=800',
-	},
-	{
-		id: 10,
-		categoryKey: PropertyType.HOTEL,
-		categoryLabel: '모텔',
-		name: '구월 호텔반월',
-		location: '인천',
-		subLocation: '인천터미널역 도보 14분',
-		rating: 9.4,
-		reviewCount: 13877,
-		price: 40000,
-		originalPrice: 45000,
-		imageUrl: 'https://images.pexels.com/photos/189296/pexels-photo-189296.jpeg?auto=compress&cs=tinysrgb&w=800',
-	},
-
-	// 필요하면 더 추가
-];
-
 interface PopularStaysProps {
 	initialInput: PropertiesInquiry;
+	propertyDetail: PropertyInquiry;
 }
 
 const PopularStays = (props: PopularStaysProps) => {
-	const { initialInput } = props;
-	const [popularStays, setPopularStays] = useState<PropertiesInquiry[]>([]);
+	const router = useRouter();
+	const { initialInput, propertyDetail } = props;
+	const user = useReactiveVar(userVar);
+	const [popularStays, setPopularStays] = useState<Property[]>([]);
 	const [activeCategory, setActiveCategory] = useState<PropertyType>(PropertyType.ALL);
-	const [favoriteIds, setFavoriteIds] = useState<number[]>([]);
-	const filteredStays = useMemo(() => {
-		return activeCategory === 'ALL' ? STAYS : STAYS.filter((s) => s.categoryKey === activeCategory);
-	}, [activeCategory, STAYS]);
+	const checkIn = useMemo(() => {
+		const d = new Date();
+		return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+	}, []);
+	const checkOut = useMemo(() => {
+		const d = new Date();
+		return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate() + 1}`;
+	}, []);
 
-	const toggleFavorite = (id: number) => {
-		setFavoriteIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
+	const filteredStays =
+		activeCategory === 'ALL' ? popularStays : popularStays.filter((s) => s.propertyType === activeCategory);
+
+	const [likeTargetProperty] = useMutation(LIKE_TARGET_PROPERTY);
+
+	/** APOLLO REQUESTS **/
+	const {
+		loading: getPopularStaysLoading,
+		data: getPopularStaysData,
+		error: getPopularStaysError,
+		refetch: getPopularStaysRefetch,
+	} = useQuery(GET_PROPERTIES, {
+		fetchPolicy: 'network-only',
+		variables: { input: initialInput },
+		notifyOnNetworkStatusChange: true,
+		onCompleted: (data: T) => {
+			setPopularStays(data?.getProperties?.list);
+		},
+	});
+
+	/** --- LIFESICLE **/
+	/** --- HANDLER **/
+	const likePropertyHandler = async (user: T, id: string) => {
+		try {
+			if (!id) return;
+			if (!user._id) throw new Error(Message.NOT_AUTHENTICATED);
+			await likeTargetProperty({ variables: { input: id } });
+			await getPopularStaysRefetch({ input: initialInput });
+			await sweetTopSmallSuccessAlert('success', 800);
+		} catch (err: any) {
+			console.log('ERROR, likePropertyHandler', err.message);
+			sweetMixinErrorAlert(err.message);
+		}
+	};
+
+	const handlePushPropertyDetail = (property: Property) => {
+		const url: PropertyInquiry = {
+			_id: String(property._id),
+			checkInDate: checkIn,
+			checkOutDate: checkOut,
+			personal: 2,
+			propertyName: encodeURIComponent(property.propertyName),
+		};
+
+		router.push(
+			`/property/propertyId=${property._id}?input=${JSON.stringify({ ...url })}`,
+			`/property/propertyId=${property._id}?input=${JSON.stringify({ ...url })}`,
+			{
+				scroll: false,
+			},
+		);
 	};
 
 	return (
@@ -213,17 +142,21 @@ const PopularStays = (props: PopularStaysProps) => {
 								1280: { slidesPerView: 4, spaceBetween: 24 },
 							}}
 						>
-							{filteredStays.map((stay) => {
-								const isFav = favoriteIds.includes(stay.id);
+							{filteredStays.map((stay: Property) => {
+								const isFav = stay?.meLiked?.[0]?.myFavorite!;
 								return (
-									<SwiperSlide key={stay.id}>
-										<Box className="popular-card">
+									<SwiperSlide key={stay._id}>
+										<Box className="popular-card" onClick={() => handlePushPropertyDetail(stay)}>
 											{/* 이미지 */}
 											<Box className="popular-image-wrapper">
-												<img src={stay.imageUrl} alt={stay.name} className="popular-image" />
+												<img
+													src={`${process.env.REACT_APP_API_URL}/${stay.propertyImages![0]}`}
+													alt={stay.propertyName}
+													className="popular-image"
+												/>
 												<Box className="popular-image-top">
-													{stay.badgeText && <Chip className="popular-chip" label={stay.badgeText} size="small" />}
-													<IconButton className="popular-fav-btn" onClick={() => toggleFavorite(stay.id)}>
+													{/* {stay.badgeText && <Chip className="popular-chip" label={stay.badgeText} size="small" />} */}
+													<IconButton className="popular-fav-btn" onClick={() => likePropertyHandler(user, stay._id)}>
 														{isFav ? (
 															<FavoriteIcon className="popular-fav-icon active" />
 														) : (
@@ -235,26 +168,26 @@ const PopularStays = (props: PopularStaysProps) => {
 
 											{/* 텍스트/정보 영역 */}
 											<Box className="popular-info">
-												<Typography className="popular-category">{stay.categoryLabel}</Typography>
-												<Typography className="popular-name">{stay.name}</Typography>
+												<Typography className="popular-category">{stay.propertyType}</Typography>
+												<Typography className="popular-name">{stay.propertyName}</Typography>
 												<Typography className="popular-location">
-													{stay.location} · {stay.subLocation}
+													{stay.propertyAddress} · {stay.propertyAddress}
 												</Typography>
 
 												<Box className="popular-rating-row">
 													<Box className="popular-rating-badge">
 														<StarIcon className="popular-rating-star" />
-														<span className="popular-rating-score">{stay.rating.toFixed(1)}</span>
+														<span className="popular-rating-score">{stay.propertyRank!.toFixed(1)}</span>
 													</Box>
-													<span className="popular-rating-count">{stay.reviewCount.toLocaleString()}명 평가</span>
+													<span className="popular-rating-count">{stay.propertyComments!.toLocaleString()}명 평가</span>
 												</Box>
 
-												{stay.originalPrice && <Typography className="popular-coupon-text">쿠폰 적용시</Typography>}
+												{stay.propertyPrice && <Typography className="popular-coupon-text">쿠폰 적용시</Typography>}
 
 												<Box className="popular-price-row">
-													<span className="popular-price-current">{stay.price.toLocaleString()}원</span>
-													{stay.originalPrice && (
-														<span className="popular-price-origin">{stay.originalPrice.toLocaleString()}원</span>
+													<span className="popular-price-current">{stay.propertyPrice!.toLocaleString()}원</span>
+													{stay.propertyPrice! && (
+														<span className="popular-price-origin">{stay.propertyPrice!.toLocaleString()}원</span>
 													)}
 												</Box>
 											</Box>
@@ -278,6 +211,13 @@ const PopularStays = (props: PopularStaysProps) => {
 	);
 };
 
+function formatDate(date: Date, day: number = 0) {
+	const y = date.getFullYear();
+	const m = String(date.getMonth() + 1).padStart(2, '0');
+	const d = String(date.getDate() + day).padStart(2, '0');
+	return `${y}-${m}-${d}`;
+}
+
 PopularStays.defaultProps = {
 	initialInput: {
 		page: 1,
@@ -285,6 +225,14 @@ PopularStays.defaultProps = {
 		sort: 'propertyLikes',
 		direction: 'DESC',
 		search: {},
+	},
+
+	propertyDetail: {
+		_id: '',
+		propertyName: '',
+		checkInDate: '',
+		checkOutDate: '',
+		personal: 2,
 	},
 };
 
