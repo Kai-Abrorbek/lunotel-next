@@ -167,7 +167,6 @@ const WeeklyHotPensions = (props: WeeklyHotPensionsProps) => {
 	const { initialInput } = props;
 	const router = useRouter();
 	const user = useReactiveVar(userVar);
-	const [hotPensions, setHotPensions] = useState<Property[]>([]);
 	const checkIn = useMemo(() => {
 		const d = new Date();
 		return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
@@ -189,10 +188,9 @@ const WeeklyHotPensions = (props: WeeklyHotPensionsProps) => {
 		fetchPolicy: 'network-only',
 		variables: { input: initialInput },
 		notifyOnNetworkStatusChange: true,
-		onCompleted: (data: T) => {
-			setHotPensions(data?.getProperties?.list);
-		},
 	});
+
+	const hotPensions: Property[] = getHotPensionsData?.getProperties?.list ?? [];
 
 	/** --- HANDLER **/
 	const likePropertyHandler = async (user: T, id: string) => {

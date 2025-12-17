@@ -115,7 +115,11 @@ const Header = () => {
 							) : (
 								<Link href={'/mypage/user'}>
 									<ButtonBase className="user-profile" disableRipple>
-										<Avatar src={user.memberImage} alt={user.memberNick} className="user-avatar" />
+										<Avatar
+											src={`${process.env.REACT_APP_API_URL}/${user.memberImage}`}
+											alt={user.memberNick}
+											className="user-avatar"
+										/>
 										<Box className="user-info">
 											<Box className="user-name">{user.memberNick}</Box>
 											<Box className="user-type">{user.memberType}</Box>

@@ -27,7 +27,7 @@ export interface Property {
 	propertyStars: number;
 	propertyImages?: string[];
 	propertyAmenities: PropertyAmenity[];
-	propertyOtherAmenities: PropertyOtherAmenity[];
+	propertyOtherAmenities?: PropertyOtherAmenity[];
 	propertyDesc?: string;
 	memberId?: string;
 	soldAt?: boolean;

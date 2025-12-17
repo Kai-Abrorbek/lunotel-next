@@ -61,7 +61,7 @@ HeroSearch.defaultProps = {
 			checkInDate: formatDate(new Date(), 0),
 			checkOutDate: formatDate(new Date(), 1),
 			personal: 2,
-			propertyType: 'ALL',
+			// propertyType: 'ALL',
 		},
 	},
 };

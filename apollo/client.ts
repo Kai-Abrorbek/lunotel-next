@@ -117,7 +117,28 @@ function createApolloClient() {
 	return new ApolloClient({
 		ssrMode: typeof window === 'undefined',
 		link: createIsomorphicLink(),
-		cache: new InMemoryCache(),
+		cache: new InMemoryCache({
+			typePolicies: {
+				Property: {
+					fields: {
+						rooms: {
+							merge(_existing, incoming) {
+								return incoming;
+							},
+						},
+					},
+				},
+				StayPlan: {
+					fields: {
+						inventories: {
+							merge(_existing, incoming) {
+								return incoming;
+							},
+						},
+					},
+				},
+			},
+		}),
 		resolvers: {},
 	});
 }

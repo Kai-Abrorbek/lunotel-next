@@ -30,7 +30,9 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import { PropertiesInquiry, PropertyInquiry } from '../../libs/types/property/property.input';
 import { useRouter } from 'next/router';
 import {
+	PropertyAmenity,
 	PropertyAmenityKorean,
+	PropertyOtherAmenity,
 	PropertyOtherAmenityKorean,
 	PropertyType,
 	PropertyTypeKorean,
@@ -38,9 +40,19 @@ import {
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import CheckIcon from '@mui/icons-material/Check';
 import MapSearchDialog from '../../libs/components/property/MapSearchDialog';
+import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
+import { LIKE_TARGET_PROPERTY } from '../../apollo/user/mutation';
+import { GET_PROPERTIES } from '../../apollo/user/query';
+import { T } from '../../libs/types/common';
+import { Property } from '../../libs/types/property/property';
+import { Message } from '../../libs/enums/common.enum';
+import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../libs/sweetAlert';
+import { userVar } from '../../apollo/store';
 
-const tags: PropertyAmenityKorean[] = Object.values(PropertyAmenityKorean);
-const otherTags: PropertyOtherAmenityKorean[] = Object.values(PropertyOtherAmenityKorean);
+const tags_EN: PropertyAmenity[] = Object.values(PropertyAmenity);
+const tags_KR: PropertyAmenityKorean[] = Object.values(PropertyAmenityKorean);
+const otherTags_EN: PropertyOtherAmenity[] = Object.values(PropertyOtherAmenity);
+const otherTags_KR: PropertyOtherAmenityKorean[] = Object.values(PropertyOtherAmenityKorean);
 const SORT_OPTIONS = [
 	{ value: 'createdAt', label: '추천순' },
 	{ value: 'propertyRank', label: '평점높은순' },
@@ -56,11 +68,11 @@ interface SearchResultPageProps {
 const SearchResultPage = (props: SearchResultPageProps) => {
 	const { initialInput } = props;
 	const router = useRouter();
-	const [favoriteIds, setFavoriteIds] = useState<number[]>([]);
+	const user = useReactiveVar(userVar);
 	const [price, setPrice] = React.useState<[number, number]>([0, 500000]);
 	const [selectRatingIds, setSelectRatingIds] = useState<number[]>([]);
-	const [selectTagIds, setSelectTagIds] = useState<PropertyAmenityKorean[]>([]);
-	const [selectOtheragIds, setSelectOtherTagIds] = useState<PropertyOtherAmenityKorean[]>([]);
+	const [selectTagIds, setSelectTagIds] = useState<PropertyAmenity[]>([]);
+	const [selectOtheragIds, setSelectOtherTagIds] = useState<PropertyOtherAmenity[]>([]);
 	const [currentPage, setCurrentPage] = useState<number>(1);
 	const [openMoreTags, setOpenMoreTags] = useState<boolean>(false);
 	const [openMoreOtherTags, setOpenMoreOtherTags] = useState<boolean>(false);
@@ -72,18 +84,35 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 	const [searchFilter, setSearchFilter] = useState<PropertiesInquiry>(
 		router?.query?.input ? JSON.parse(router?.query?.input as string) : initialInput,
 	);
-	const [total, setTotal] = useState<number>(11);
 	const locationRef: any = useRef();
 	const currentLabel = SORT_OPTIONS.find((o) => o.value === sort)?.label ?? '정렬';
 	const open = Boolean(anchorEl);
+
+	const [likeTargetProperty] = useMutation(LIKE_TARGET_PROPERTY);
+
+	/** APOLLO REQUESTS **/
+	const {
+		loading: getPropertiesLoading,
+		data: getPropertiesData,
+		error: getPropertiesError,
+		refetch: getPropertiesRefetch,
+	} = useQuery(GET_PROPERTIES, {
+		fetchPolicy: 'network-only',
+		variables: { input: searchFilter },
+		notifyOnNetworkStatusChange: true,
+	});
+
+	const properties: Property[] = getPropertiesData?.getProperties?.list ?? [];
+	const total: number = getPropertiesData?.getProperties?.metaCounter[0]?.total ?? 1;
 
 	/** LIFECYCLES **/
 	useEffect(() => {
 		if (router.query.input) {
 			const inputObj = JSON.parse(router?.query?.input as string);
 			setSearchFilter(inputObj);
-			setCurrentPage(inputObj.page);
 		}
+
+		setCurrentPage(searchFilter.page === undefined ? 1 : searchFilter.page);
 	}, [router]);
 
 	useEffect(() => {
@@ -143,8 +172,21 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 				{ scroll: false },
 			);
 		}
-	}, [searchFilter]);
-	/** HANDLERS **/
+	}, [searchFilter, router]);
+
+	/** --- HANDLER **/
+	const likePropertyHandler = async (user: T, id: string) => {
+		try {
+			if (!id) return;
+			if (!user._id) throw new Error(Message.NOT_AUTHENTICATED);
+			await likeTargetProperty({ variables: { input: id } });
+			await getPropertiesRefetch({ input: searchFilter });
+			await sweetTopSmallSuccessAlert('success', 800);
+		} catch (err: any) {
+			console.log('ERROR, likePropertyHandler', err.message);
+			sweetMixinErrorAlert(err.message);
+		}
+	};
 
 	const resetSearchFilter = () => {
 		setSpin(true);
@@ -396,10 +438,10 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 		}
 	};
 
-	const pushPropertyDetailHandler = (item: number, name: string) => {
+	const pushPropertyDetailHandler = (property: Property) => {
 		const propertyInqiry: PropertyInquiry = {
-			_id: String(item),
-			propertyName: name,
+			_id: String(property._id),
+			propertyName: encodeURIComponent(property.propertyName),
 			checkInDate: searchFilter?.search?.checkInDate!,
 			checkOutDate: searchFilter?.search?.checkOutDate!,
 			personal: searchFilter?.search?.personal!,
@@ -407,8 +449,8 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 
 		localStorage.setItem('propertyInqiry', JSON.stringify({ ...propertyInqiry }));
 		router.push(
-			`/property/propertyId=${item}?input=${JSON.stringify({ ...propertyInqiry })}`,
-			`/property/propertyId=${item}?input=${JSON.stringify({ ...propertyInqiry })}`,
+			`/property/propertyId=${property._id}?input=${JSON.stringify({ ...propertyInqiry })}`,
+			`/property/propertyId=${property._id}?input=${JSON.stringify({ ...propertyInqiry })}`,
 			{
 				scroll: false,
 			},
@@ -534,14 +576,14 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 						<Box className="section">
 							<Typography className="section-title">시설</Typography>
 							<Box className={`hashtag-list ${openMoreTags ? 'active' : ''}`}>
-								{tags.map((tag) => {
+								{tags_EN.map((tag, idx) => {
 									const isInc = selectTagIds.includes(tag);
 									return (
 										<div key={tag}>
 											{isInc ? (
 												<Chip
 													key={tag}
-													label={'#' + tag}
+													label={'#' + tags_KR[idx]}
 													className="hashtag-chip active"
 													onClick={() => {
 														selectAmenityListHandler(tag, isInc);
@@ -553,7 +595,7 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 											) : (
 												<Chip
 													key={tag}
-													label={'#' + tag}
+													label={'#' + tags_KR[idx]}
 													className="hashtag-chip"
 													onClick={() => {
 														selectAmenityListHandler(tag, isInc);
@@ -573,14 +615,14 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 
 							<Typography className="section-title">기타시설</Typography>
 							<Box className={`hashtag-list ${openMoreOtherTags ? 'active' : ''}`}>
-								{otherTags.map((tag) => {
+								{otherTags_EN.map((tag, idx) => {
 									const isInc = selectOtheragIds.includes(tag);
 									return (
 										<div key={tag}>
 											{isInc ? (
 												<Chip
 													key={tag}
-													label={'#' + tag}
+													label={'#' + otherTags_KR[idx]}
 													className="hashtag-chip active"
 													onClick={() => {
 														selectOtehrAmenityListHandler(tag, isInc);
@@ -592,7 +634,7 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 											) : (
 												<Chip
 													key={tag}
-													label={'#' + tag}
+													label={'#' + otherTags_KR[idx]}
 													className="hashtag-chip"
 													onClick={() => {
 														selectOtehrAmenityListHandler(tag, isInc);
@@ -661,15 +703,15 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 						</Box>
 
 						<Box className="hotel-card-box">
-							{[1, 2, 3, 4, 5, 6, 7].length !== 0 ? (
-								[1, 2, 3, 4, 5, 6, 7].map((item) => {
-									const isFav = favoriteIds.includes(item);
+							{properties.length !== 0 ? (
+								properties.map((property: Property) => {
+									const isFav = property?.meLiked?.[0]?.myFavorite;
 									return (
 										<Card
-											key={item}
+											key={property._id}
 											className="hotel-card"
 											elevation={1}
-											onClick={() => pushPropertyDetailHandler(item, '잠실 라운지 호텔 - LOUNGE')}
+											onClick={() => pushPropertyDetailHandler(property)}
 										>
 											<Box className="hotel-card-inner">
 												<CardMedia
@@ -681,17 +723,15 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 												<CardContent className="hotel-info">
 													<Box className="hotel-header-row">
 														<Box>
-															<Typography className="hotel-type">모텔</Typography>
-															<Typography className="hotel-title">잠실 라운지 호텔 - LOUNGE</Typography>
-															<Typography className="hotel-location">몽토르성(잠실역) 도보 5분</Typography>
+															<Typography className="hotel-type">{property.propertyType}</Typography>
+															<Typography className="hotel-title">{property.propertyName}</Typography>
+															<Typography className="hotel-location">{property.propertyLocation}</Typography>
 														</Box>
 														<IconButton
 															className="favorite-btn"
 															onClick={(e) => {
 																e.stopPropagation();
-																setFavoriteIds((prev) =>
-																	prev.includes(item) ? prev.filter((x) => x !== item) : [...prev, item],
-																);
+																likePropertyHandler(user, property._id);
 															}}
 														>
 															{isFav ? (
@@ -705,16 +745,20 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 													<Box className="hotel-rating-row">
 														<Box className="rating-badge">
 															<StarIcon className="rating-star" fontSize="small" />
-															<span className="rating-score">9.9</span>
+															<span className="rating-score">{property.propertyRank!.toFixed(1)}</span>
 														</Box>
-														<Typography className="rating-count">411명 평가</Typography>
+														<Typography className="rating-count">
+															{property.propertyComments!.toLocaleString()}명 평가
+														</Typography>
 													</Box>
 
 													<Typography className="hotel-checkin">숙박 14:00 체크인</Typography>
 
 													<Box className="hotel-price-row">
 														<Typography className="price-label">쿠폰 적용 시</Typography>
-														<Typography className="price-value">221,666원/1박</Typography>
+														<Typography className="price-value">
+															{property.propertyPrice!.toLocaleString()}원/1박
+														</Typography>
 													</Box>
 													<Typography className="price-warning">이 가격으로 남은 객실 1개</Typography>
 												</CardContent>
@@ -725,12 +769,12 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 							) : (
 								<div className="no-data">
 									<h1>검색 결과가 없어요.</h1>
-									<p>'asdd'에 대한 철자를 확인하거나 긴 문구는 띄어쓰기를 해보세요.</p>
+									<p>'{searchFilter?.search?.location}'에 대한 철자를 확인하거나 긴 문구는 띄어쓰기를 해보세요.</p>
 								</div>
 							)}
 						</Box>
 
-						{[1, 2, 3, 4, 5].length !== 0 ? ( // 나중에 실제 데이터랑 변경
+						{properties.length !== 0 ? ( // 나중에 실제 데이터랑 변경
 							<Stack className="result-pagination">
 								<Pagination
 									count={Math.ceil(total / searchFilter?.limit!) || 1}
@@ -755,13 +799,8 @@ SearchResultPage.defaultProps = {
 		page: 1,
 		limit: 10,
 		sort: 'createdAt',
-		search: {
-			location: '',
-			checkInDate: '',
-			checkOutDate: '',
-			personal: '',
-			propertyType: 'ALL',
-		},
+		direction: 'DESC',
+		search: {},
 	},
 };
 

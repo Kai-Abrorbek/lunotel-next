@@ -28,7 +28,6 @@ const HotelSpecialsToday = (props: HotelSpecialsTodayProps) => {
 	const router = useRouter();
 	const { initialInput } = props;
 	const user = useReactiveVar(userVar);
-	const [hotelspecials, setHotelSpecials] = useState<Property[]>([]);
 	const checkIn = useMemo(() => {
 		const d = new Date();
 		return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
@@ -50,10 +49,9 @@ const HotelSpecialsToday = (props: HotelSpecialsTodayProps) => {
 		fetchPolicy: 'network-only',
 		variables: { input: initialInput },
 		notifyOnNetworkStatusChange: true,
-		onCompleted: (data: T) => {
-			setHotelSpecials(data?.getProperties?.list);
-		},
 	});
+
+	const hotelspecials: Property[] = getHotelSpecialsData?.getProperties?.list ?? [];
 
 	/** --- HANDLER **/
 	const likePropertyHandler = async (user: T, id: string) => {

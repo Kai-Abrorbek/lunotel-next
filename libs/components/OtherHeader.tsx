@@ -14,12 +14,8 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import HeroCard from './common/HeroCard';
 import { PropertiesInquiry } from '../types/property/property.input';
-const userData = {
-	name: '김민수',
-	type: 'Premium Member',
-	image: 'https://i.pravatar.cc/150?img=12',
-	isLogin: false,
-};
+import { useReactiveVar } from '@apollo/client';
+import { userVar } from '../../apollo/store';
 
 interface MiniHeaderProps {
 	initialInput: PropertiesInquiry;
@@ -45,12 +41,12 @@ function toDate(value: string | undefined): Date | undefined {
 const OtherHeader = (props: MiniHeaderProps) => {
 	const { initialInput } = props;
 	const router = useRouter();
+	const user = useReactiveVar(userVar);
 	const [openMenu, setOpenMenu] = useState<boolean>(false);
 	const [isDarkMode, setIsDarkMode] = useState(false);
 	const [language, setLanguage] = useState('KO');
 	const [isLanguageOpen, setIsLanguageOpen] = useState(false);
 	const device = useDeviceDetect();
-	const pathName = router.pathname.replace('/', '').trim();
 	const [searchFilter, setSearchFilter] = useState<PropertiesInquiry>(
 		router?.query?.input ? JSON.parse(router?.query?.input as string) : initialInput,
 	);
@@ -189,7 +185,7 @@ const OtherHeader = (props: MiniHeaderProps) => {
 								{isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
 							</IconButton>
 
-							{!userData.isLogin ? (
+							{!user._id ? (
 								<>
 									<Link href={'/reservation/check'}>
 										<ButtonBase className="guest-booking-button" disableRipple>
@@ -209,10 +205,14 @@ const OtherHeader = (props: MiniHeaderProps) => {
 							) : (
 								<Link href={'/mypage/user'}>
 									<ButtonBase className="user-profile" disableRipple>
-										<Avatar src={userData.image} alt={userData.name} className="user-avatar" />
+										<Avatar
+											src={`${process.env.REACT_APP_API_URL}/${user.memberImage}`}
+											alt={user.memberNick}
+											className="user-avatar"
+										/>
 										<Box className="user-info">
-											<Box className="user-name">{userData.name}</Box>
-											<Box className="user-type">{userData.type}</Box>
+											<Box className="user-name">{user.memberNick}</Box>
+											<Box className="user-type">{user.memberType}</Box>
 										</Box>
 									</ButtonBase>
 								</Link>

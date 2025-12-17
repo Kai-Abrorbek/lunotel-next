@@ -34,7 +34,6 @@ const PopularStays = (props: PopularStaysProps) => {
 	const router = useRouter();
 	const { initialInput } = props;
 	const user = useReactiveVar(userVar);
-	const [popularStays, setPopularStays] = useState<Property[]>([]);
 	const [activeCategory, setActiveCategory] = useState<PropertyType>(PropertyType.ALL);
 	const checkIn = useMemo(() => {
 		const d = new Date();
@@ -44,9 +43,6 @@ const PopularStays = (props: PopularStaysProps) => {
 		const d = new Date();
 		return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate() + 1}`;
 	}, []);
-
-	const filteredStays =
-		activeCategory === 'ALL' ? popularStays : popularStays.filter((s) => s.propertyType === activeCategory);
 
 	const [likeTargetProperty] = useMutation(LIKE_TARGET_PROPERTY);
 
@@ -60,10 +56,11 @@ const PopularStays = (props: PopularStaysProps) => {
 		fetchPolicy: 'network-only',
 		variables: { input: initialInput },
 		notifyOnNetworkStatusChange: true,
-		onCompleted: (data: T) => {
-			setPopularStays(data?.getProperties?.list);
-		},
 	});
+
+	const popularStays: Property[] = getPopularStaysData?.getProperties?.list ?? [];
+	const filteredStays =
+		activeCategory === 'ALL' ? popularStays : popularStays.filter((s: Property) => s.propertyType === activeCategory);
 
 	/** --- HANDLER **/
 	const likePropertyHandler = async (user: T, id: string) => {

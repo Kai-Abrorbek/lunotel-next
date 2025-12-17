@@ -4,45 +4,13 @@ import { RoomTypeUpdate } from '../../../types/roomtype/roomtype.update';
 import { sweetConfirmAlert } from '../../../sweetAlert';
 import { Box, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import { SPRules } from '../../../types/roomtype/roomtype.input';
+import { amenitiesList } from '../../../enums/property.enum';
 
 interface RoomAddAndUpdateModalProps {
 	isOpen: boolean;
 	setIsOpen: (v: boolean) => void;
 	initialInput: RoomTypeUpdate;
 }
-
-const amenitiesList = [
-	{ key: 'wifi', name: '무료 Wi-Fi', en: 'Free Wi-Fi', icon: '📶' },
-	{ key: 'air_conditioner', name: '에어컨', en: 'Air Conditioner', icon: '❄️' },
-	{ key: 'tv', name: 'TV', en: 'Television', icon: '📺' },
-	{ key: 'minibar', name: '미니바', en: 'Minibar', icon: '🍷' },
-	{ key: 'refrigerator', name: '냉장고', en: 'Refrigerator', icon: '🧊' },
-	{ key: 'coffee_machine', name: '커피머신', en: 'Coffee Machine', icon: '☕' },
-	{ key: 'hair_dryer', name: '헤어드라이어', en: 'Hair Dryer', icon: '💨' },
-	{ key: 'bathtub', name: '욕조', en: 'Bathtub', icon: '🛁' },
-	{ key: 'shower_booth', name: '샤워부스', en: 'Shower Booth', icon: '🚿' },
-	{ key: 'microwave', name: '전자레인지', en: 'Microwave', icon: '🔥' },
-	{ key: 'washing_machine', name: '세탁기', en: 'Washing Machine', icon: '🧺' },
-	{ key: 'iron', name: '다리미', en: 'Iron', icon: '👔' },
-	{ key: 'safe', name: '금고', en: 'Safe', icon: '🔐' },
-	{ key: 'balcony', name: '발코니', en: 'Balcony', icon: '🌅' },
-	{ key: 'bed', name: '침대', en: 'Bed', icon: '🛏️' },
-	{ key: 'sofa', name: '소파', en: 'Sofa', icon: '🛋️' },
-	{ key: 'desk', name: '책상', en: 'Desk', icon: '🪑' },
-	{ key: 'wardrobe', name: '옷장', en: 'Wardrobe', icon: '👗' },
-	{ key: 'slippers', name: '슬리퍼', en: 'Slippers', icon: '🩴' },
-	{ key: 'towels', name: '수건', en: 'Towels', icon: '🧻' },
-	{ key: 'shampoo', name: '샴푸', en: 'Shampoo', icon: '🧴' },
-	{ key: 'body_wash', name: '바디워시', en: 'Body Wash', icon: '🧼' },
-	{ key: 'toothbrush', name: '칫솔', en: 'Toothbrush', icon: '🪥' },
-	{ key: 'telephone', name: '전화기', en: 'Telephone', icon: '☎️' },
-	{ key: 'clock', name: '시계', en: 'Clock', icon: '⏰' },
-	{ key: 'blinds', name: '블라인드', en: 'Blinds', icon: '🪟' },
-	{ key: 'air_purifier', name: '공기청정기', en: 'Air Purifier', icon: '🌬️' },
-	{ key: 'humidifier', name: '가습기', en: 'Humidifier', icon: '💧' },
-	{ key: 'heating', name: '난방', en: 'Heating', icon: '🔥' },
-	{ key: 'non_smoking', name: '객실금연', en: 'Non-Smoking Room', icon: '🚭' },
-];
 
 const RoomAddModal = ({ isOpen, setIsOpen, initialInput }: RoomAddAndUpdateModalProps) => {
 	const [roomImgfiles, setRoomImgfiles] = useState<File[]>([]);

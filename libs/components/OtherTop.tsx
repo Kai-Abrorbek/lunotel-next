@@ -7,6 +7,8 @@ import { useRouter } from 'next/router';
 import { PropertiesInquiry } from '../types/property/property.input';
 import HeroCard from './common/HeroCard';
 import MemberQuickMenu from './common/MemberQuickMenu';
+import { useReactiveVar } from '@apollo/client';
+import { userVar } from '../../apollo/store';
 
 const WEEK_DAYS = ['일', '월', '화', '수', '목', '금', '토'];
 function formatRangeLabel(checkIn: Date | undefined, checkOut: Date | undefined) {
@@ -32,7 +34,7 @@ interface MiniHeaderProps {
 const MiniHeader = (props: MiniHeaderProps) => {
 	const { initialInput } = props;
 	const router = useRouter();
-	const user = true;
+	const user = useReactiveVar(userVar);
 	const [openMenu, setOpenMenu] = useState<boolean>(false);
 	const [searchFilter, setSearchFilter] = useState<PropertiesInquiry>(
 		router?.query?.input ? JSON.parse(router?.query?.input as string) : initialInput,
@@ -107,7 +109,7 @@ const MiniHeader = (props: MiniHeaderProps) => {
 						</Box>
 					)}
 				</Box>
-				{!user ? (
+				{!user._id ? (
 					<Stack className="mini-right-header">
 						<Box className="mini-header-right">
 							<Link href={'/login'}>
