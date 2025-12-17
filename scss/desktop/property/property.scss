@@ -676,9 +676,12 @@
 							color: #666;
 						}
 						.name {
-							font-size: 15px;
+							font-size: 14px;
 							font-weight: 700;
-							overflow: hidden;
+							// overflow: hidden;
+							// text-overflow: ellipsis;
+							width: 130px;
+							text-wrap: wrap;
 						}
 
 						.rating {

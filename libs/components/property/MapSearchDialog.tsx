@@ -34,22 +34,25 @@ import {
 	PropertyOtherAmenityKorean,
 	PropertyType,
 	PropertyTypeKorean,
+	SORT_OPTIONS,
 } from '../../enums/property.enum';
-import { PropertiesInquiry } from '../../types/property/property.input';
+import { PropertiesInquiry, PropertyInquiry } from '../../types/property/property.input';
 import { useRouter } from 'next/router';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import CheckIcon from '@mui/icons-material/Check';
+import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
+import { LIKE_TARGET_PROPERTY } from '../../../apollo/user/mutation';
+import { GET_PROPERTIES } from '../../../apollo/user/query';
+import { Property } from '../../types/property/property';
+import { T } from '../../types/common';
+import { Direction, Message } from '../../enums/common.enum';
+import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../sweetAlert';
+import { userVar } from '../../../apollo/store';
 
-const tags: PropertyAmenityKorean[] = Object.values(PropertyAmenityKorean);
-const otherTags: PropertyOtherAmenityKorean[] = Object.values(PropertyOtherAmenityKorean);
-const SORT_OPTIONS = [
-	{ value: 'createdAt', label: '추천순' },
-	{ value: 'propertyRank', label: '평점높은순' },
-	{ value: 'propertyComments', label: '리뷰많은순' },
-	{ value: 'propertyPrice_DESC', label: '낮은가격순' },
-	{ value: 'propertyRank_ASC', label: '높은가격순' },
-	{ value: 'propertyReservations', label: '거리순' },
-];
+const tags_EN: PropertyAmenity[] = Object.values(PropertyAmenity);
+const tags_KR: PropertyAmenityKorean[] = Object.values(PropertyAmenityKorean);
+const otherTags_EN: PropertyOtherAmenity[] = Object.values(PropertyOtherAmenity);
+const otherTags_KR: PropertyOtherAmenityKorean[] = Object.values(PropertyOtherAmenityKorean);
 
 interface MapSearchDialogProps {
 	open: boolean;
@@ -59,31 +62,50 @@ interface MapSearchDialogProps {
 
 const MapSearchDialog: React.FC<MapSearchDialogProps> = ({ open, onClose, initialInput }) => {
 	const router = useRouter();
+	const user = useReactiveVar(userVar);
 	const [spin, setSpin] = useState(false);
-	const [favoriteIds, setFavoriteIds] = useState<number[]>([]);
 	const [price, setPrice] = useState<[number, number]>([0, 500000]);
 	const [selectRatingIds, setSelectRatingIds] = useState<number[]>([]);
-	const [selectTagIds, setSelectTagIds] = useState<PropertyAmenityKorean[]>([]);
-	const [selectOtheragIds, setSelectOtherTagIds] = useState<PropertyOtherAmenityKorean[]>([]);
+	const [selectTagIds, setSelectTagIds] = useState<PropertyAmenity[]>([]);
+	const [selectOtheragIds, setSelectOtherTagIds] = useState<PropertyOtherAmenity[]>([]);
 	const [openMoreTags, setOpenMoreTags] = useState<boolean>(false);
 	const [openMoreOtherTags, setOpenMoreOtherTags] = useState<boolean>(false);
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-	const [targetPropertyEl, setTargetPropertyEl] = useState<number | null>(null);
+	const [targetPropertyId, setTargetPropertyId] = useState<string | null>(null);
 	const [sort, setSort] = useState('createdAt');
 	const [type, setType] = useState('ALL');
 	const [searchFilter, setSearchFilter] = useState<PropertiesInquiry>(
 		router?.query?.input ? JSON.parse(router?.query?.input as string) : initialInput,
 	);
-	const [total, setTotal] = useState<number>(10);
+	const [hasRouterApplied, setHasRouterApplied] = useState(false);
 	const openAn = Boolean(anchorEl);
+	const [likeTargetProperty] = useMutation(LIKE_TARGET_PROPERTY);
+
+	/** APOLLO REQUESTS **/
+	const {
+		loading: getPropertiesLoading,
+		data: getPropertiesData,
+		error: getPropertiesError,
+		refetch: getPropertiesRefetch,
+	} = useQuery(GET_PROPERTIES, {
+		fetchPolicy: 'network-only',
+		variables: { input: searchFilter },
+		notifyOnNetworkStatusChange: true,
+		skip: !hasRouterApplied,
+	});
+
+	const properties: Property[] = getPropertiesData?.getProperties?.list ?? [];
+	const total: number = getPropertiesData?.getProperties?.metaCounter[0]?.total ?? 1;
 
 	/** LIFECYCLES **/
 	useEffect(() => {
+		if (!router.isReady) return;
+
 		if (router.query.input) {
-			const inputObj = JSON.parse(router?.query?.input as string);
-			setSearchFilter(inputObj);
+			setSearchFilter(JSON.parse(router?.query?.input as string));
 		}
-	}, [router]);
+		setHasRouterApplied(true);
+	}, [router.isReady, router.query.input]);
 
 	useEffect(() => {
 		if (searchFilter?.search?.propertyStarsList?.length === 0) {
@@ -145,6 +167,19 @@ const MapSearchDialog: React.FC<MapSearchDialogProps> = ({ open, onClose, initia
 	}, [searchFilter]);
 
 	/**HANDLERS**/
+	const likePropertyHandler = async (user: T, id: string) => {
+		try {
+			if (!id) return;
+			if (!user._id) throw new Error(Message.NOT_AUTHENTICATED);
+			await likeTargetProperty({ variables: { input: id } });
+			await getPropertiesRefetch({ input: searchFilter });
+			await sweetTopSmallSuccessAlert('success', 800);
+		} catch (err: any) {
+			console.log('ERROR, likePropertyHandler', err.message);
+			sweetMixinErrorAlert(err.message);
+		}
+	};
+
 	const resetSearchFilter = () => {
 		setSpin(true);
 		setType('ALL');
@@ -175,12 +210,13 @@ const MapSearchDialog: React.FC<MapSearchDialogProps> = ({ open, onClose, initia
 		});
 	};
 
-	const selectSortTypeHandler = (sort: string) => {
-		setSort(sort);
+	const selectSortTypeHandler = (next: string, sort: string, direction: string) => {
+		setSort(next);
 		setAnchorEl(null);
 		setSearchFilter({
 			...searchFilter,
 			sort: sort,
+			direction: direction,
 		});
 	};
 
@@ -256,6 +292,25 @@ const MapSearchDialog: React.FC<MapSearchDialogProps> = ({ open, onClose, initia
 				},
 			});
 		}
+	};
+
+	const pushPropertyDetailHandler = (property: Property) => {
+		const propertyInqiry: PropertyInquiry = {
+			_id: String(property._id),
+			propertyName: encodeURIComponent(property.propertyName),
+			checkInDate: searchFilter?.search?.checkInDate!,
+			checkOutDate: searchFilter?.search?.checkOutDate!,
+			personal: searchFilter?.search?.personal!,
+		};
+
+		localStorage.setItem('propertyInqiry', JSON.stringify({ ...propertyInqiry }));
+		router.push(
+			`/property/propertyId=${property._id}?input=${JSON.stringify({ ...propertyInqiry })}`,
+			`/property/propertyId=${property._id}?input=${JSON.stringify({ ...propertyInqiry })}`,
+			{
+				scroll: false,
+			},
+		);
 	};
 
 	const currentLabel = SORT_OPTIONS.find((o) => o.value === sort)?.label ?? '정렬';
@@ -403,14 +458,14 @@ const MapSearchDialog: React.FC<MapSearchDialogProps> = ({ open, onClose, initia
 							<Box className="section">
 								<Typography className="section-title">시설</Typography>
 								<Box className={`hashtag-list ${openMoreTags ? 'active' : ''}`}>
-									{tags.map((tag) => {
+									{tags_EN.map((tag, idx) => {
 										const isInc = selectTagIds.includes(tag);
 										return (
 											<div key={tag}>
 												{isInc ? (
 													<Chip
 														key={tag}
-														label={'#' + tag}
+														label={'#' + tags_KR[idx]}
 														className="hashtag-chip active"
 														onClick={() => {
 															selectAmenityListHandler(tag, isInc);
@@ -422,7 +477,7 @@ const MapSearchDialog: React.FC<MapSearchDialogProps> = ({ open, onClose, initia
 												) : (
 													<Chip
 														key={tag}
-														label={'#' + tag}
+														label={'#' + tags_KR[idx]}
 														className="hashtag-chip"
 														onClick={() => {
 															selectAmenityListHandler(tag, isInc);
@@ -442,14 +497,14 @@ const MapSearchDialog: React.FC<MapSearchDialogProps> = ({ open, onClose, initia
 
 								<Typography className="section-title">기타시설</Typography>
 								<Box className={`hashtag-list ${openMoreOtherTags ? 'active' : ''}`}>
-									{otherTags.map((tag) => {
+									{otherTags_EN.map((tag, idx) => {
 										const isInc = selectOtheragIds.includes(tag);
 										return (
 											<div key={tag}>
 												{isInc ? (
 													<Chip
 														key={tag}
-														label={'#' + tag}
+														label={'#' + otherTags_KR[idx]}
 														className="hashtag-chip active"
 														onClick={() => {
 															selectOtehrAmenityListHandler(tag, isInc);
@@ -461,7 +516,7 @@ const MapSearchDialog: React.FC<MapSearchDialogProps> = ({ open, onClose, initia
 												) : (
 													<Chip
 														key={tag}
-														label={'#' + tag}
+														label={'#' + otherTags_KR[idx]}
 														className="hashtag-chip"
 														onClick={() => {
 															selectOtehrAmenityListHandler(tag, isInc);
@@ -508,7 +563,7 @@ const MapSearchDialog: React.FC<MapSearchDialogProps> = ({ open, onClose, initia
 										return (
 											<MenuItem
 												key={opt.value}
-												onClick={() => selectSortTypeHandler(opt.value)}
+												onClick={() => selectSortTypeHandler(opt.value, opt.sort, opt.direc)}
 												selected={selected}
 												className="sort-menu-item"
 											>
@@ -530,78 +585,89 @@ const MapSearchDialog: React.FC<MapSearchDialogProps> = ({ open, onClose, initia
 
 							<Box className="list-scroll">
 								{/* --- card */}
-								{[1, 2, 3, 4, 5, 6, 7].map((item) => {
-									const isFav = favoriteIds.includes(item);
-									return (
-										<Card
-											key={item}
-											className="hotel-card"
-											elevation={1}
-											onMouseEnter={() => {
-												setTargetPropertyEl(item);
-											}}
-											onMouseLeave={() => {
-												setTargetPropertyEl(null);
-											}}
-										>
-											<Box className="hotel-card-inner">
-												<CardMedia
-													component="img"
-													image="https://images.pexels.com/photos/189296/pexels-photo-189296.jpeg?auto=compress&cs=tinysrgb&w=800" // 여기 나중에 실제 이미지로 교체
-													alt="room"
-													className="hotel-image"
-												/>
-												<CardContent className="hotel-info">
-													<Box className="hotel-header-row">
-														<Box>
-															<Typography className="hotel-type">모텔</Typography>
-															<Typography className="hotel-title">잠실 라운지 호텔 - LOUNGE</Typography>
-															<Typography className="hotel-location">몽토르성(잠실역) 도보 5분</Typography>
+								{properties.length !== 0 ? (
+									properties.map((property: Property, idx) => {
+										const isFav = property?.meLiked?.[0]?.myFavorite;
+										const checkin = property.rooms?.[0]?.stayPlans?.[1]?.stayPlanRules?.checkInFrom;
+										return (
+											<Card
+												key={property._id}
+												className="hotel-card"
+												elevation={1}
+												onClick={() => pushPropertyDetailHandler(property)}
+												onMouseEnter={() => {
+													setTargetPropertyId(property._id);
+												}}
+												onMouseLeave={() => {
+													setTargetPropertyId(null);
+												}}
+											>
+												<Box className="hotel-card-inner">
+													<CardMedia
+														component="img"
+														image={`${process.env.REACT_APP_API_URL}/${property.propertyImages[0]}`}
+														alt="room"
+														className="hotel-image"
+													/>
+													<CardContent className="hotel-info">
+														<Box className="hotel-header-row">
+															<Box>
+																<Typography className="hotel-type">{property.propertyType}</Typography>
+																<Typography className="hotel-title">{property.propertyName}</Typography>
+																<Typography className="hotel-location">{property.propertyLocation}</Typography>
+															</Box>
+															<IconButton
+																className="favorite-btn"
+																onClick={(e) => {
+																	e.stopPropagation();
+																	likePropertyHandler(user, property._id);
+																}}
+															>
+																{isFav ? (
+																	<FavoriteIcon className="popular-fav-icon active" />
+																) : (
+																	<FavoriteBorderIcon className="popular-fav-icon" />
+																)}
+															</IconButton>
 														</Box>
-														<IconButton
-															className="favorite-btn"
-															onClick={(e) => {
-																e.stopPropagation();
-																setFavoriteIds((prev) =>
-																	prev.includes(item) ? prev.filter((x) => x !== item) : [...prev, item],
-																);
-															}}
-														>
-															{isFav ? (
-																<FavoriteIcon className="popular-fav-icon active" />
-															) : (
-																<FavoriteBorderIcon className="popular-fav-icon" />
-															)}
-														</IconButton>
-													</Box>
 
-													<Box className="hotel-rating-row">
-														<Box className="rating-badge">
-															<StarIcon className="rating-star" fontSize="small" />
-															<span className="rating-score">9.9</span>
+														<Box className="hotel-rating-row">
+															<Box className="rating-badge">
+																<StarIcon className="rating-star" fontSize="small" />
+																<span className="rating-score">{property.propertyRank!.toFixed(1)}</span>
+															</Box>
+															<Typography className="rating-count">
+																{property.propertyComments!.toLocaleString()}명 평가
+															</Typography>
 														</Box>
-														<Typography className="rating-count">411명 평가</Typography>
-													</Box>
 
-													<Typography className="hotel-checkin">숙박 14:00 체크인</Typography>
+														<Typography className="hotel-checkin">숙박 {String(checkin)} 체크인</Typography>
 
-													<Box className="hotel-price-row">
-														<Typography className="price-label">쿠폰 적용 시</Typography>
-														<Typography className="price-value">221,666원/1박</Typography>
-													</Box>
-													<Typography className="price-warning">이 가격으로 남은 객실 1개</Typography>
-												</CardContent>
-											</Box>
-										</Card>
-									);
-								})}
+														<Box className="hotel-price-row">
+															<Typography className="price-label">쿠폰 적용 시</Typography>
+															<Typography className="price-value">
+																{property.propertyPrice!.toLocaleString()}원/1박
+															</Typography>
+														</Box>
+														<Typography className="price-warning">이 가격으로 남은 객실 1개</Typography>
+													</CardContent>
+												</Box>
+											</Card>
+										);
+									})
+								) : (
+									<div className="no-data">
+										<h1>검색 결과가 없어요.</h1>
+										<p>'{searchFilter?.search?.location}'에 대한 철자를 확인하거나 긴 문구는 띄어쓰기를 해보세요.</p>
+									</div>
+								)}
 							</Box>
 						</Box>
 
 						{/* 오른쪽 지도 */}
 						<Box className="map-dialog-column map-column">
 							<Box className="map-area">
-								<MapView targetPropertyEl={targetPropertyEl} />
+								{properties.length !== 0 && <MapView targetPropertyId={targetPropertyId} properties={properties} />}
 							</Box>
 						</Box>
 					</Box>

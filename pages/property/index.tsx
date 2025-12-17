@@ -36,6 +36,7 @@ import {
 	PropertyOtherAmenityKorean,
 	PropertyType,
 	PropertyTypeKorean,
+	SORT_OPTIONS,
 } from '../../libs/enums/property.enum';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import CheckIcon from '@mui/icons-material/Check';
@@ -53,14 +54,7 @@ const tags_EN: PropertyAmenity[] = Object.values(PropertyAmenity);
 const tags_KR: PropertyAmenityKorean[] = Object.values(PropertyAmenityKorean);
 const otherTags_EN: PropertyOtherAmenity[] = Object.values(PropertyOtherAmenity);
 const otherTags_KR: PropertyOtherAmenityKorean[] = Object.values(PropertyOtherAmenityKorean);
-const SORT_OPTIONS = [
-	{ value: 'createdAt', label: '추천순' },
-	{ value: 'propertyRank', label: '평점높은순' },
-	{ value: 'propertyComments', label: '리뷰많은순' },
-	{ value: 'propertyPrice_DESC', label: '낮은가격순' },
-	{ value: 'propertyRank_ASC', label: '높은가격순' },
-	{ value: 'propertyReservations', label: '거리순' },
-];
+
 interface SearchResultPageProps {
 	initialInput: PropertiesInquiry;
 }
@@ -77,13 +71,14 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 	const [openMoreTags, setOpenMoreTags] = useState<boolean>(false);
 	const [openMoreOtherTags, setOpenMoreOtherTags] = useState<boolean>(false);
 	const [spin, setSpin] = useState(false);
-	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-	const [sort, setSort] = React.useState('RATING_DESC');
-	const [type, setType] = React.useState('ALL');
+	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+	const [sort, setSort] = useState('createdAt');
+	const [type, setType] = useState('ALL');
 	const [mapOpen, setMapOpen] = useState(false);
 	const [searchFilter, setSearchFilter] = useState<PropertiesInquiry>(
 		router?.query?.input ? JSON.parse(router?.query?.input as string) : initialInput,
 	);
+	const [hasRouterApplied, setHasRouterApplied] = useState(false);
 	const locationRef: any = useRef();
 	const currentLabel = SORT_OPTIONS.find((o) => o.value === sort)?.label ?? '정렬';
 	const open = Boolean(anchorEl);
@@ -100,6 +95,7 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 		fetchPolicy: 'network-only',
 		variables: { input: searchFilter },
 		notifyOnNetworkStatusChange: true,
+		skip: !hasRouterApplied,
 	});
 
 	const properties: Property[] = getPropertiesData?.getProperties?.list ?? [];
@@ -107,13 +103,14 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 
 	/** LIFECYCLES **/
 	useEffect(() => {
-		if (router.query.input) {
-			const inputObj = JSON.parse(router?.query?.input as string);
-			setSearchFilter(inputObj);
-		}
+		if (!router.isReady) return;
 
+		if (router.query.input) {
+			setSearchFilter(JSON.parse(router?.query?.input as string));
+		}
 		setCurrentPage(searchFilter.page === undefined ? 1 : searchFilter.page);
-	}, [router]);
+		setHasRouterApplied(true);
+	}, [router.isReady, router.query.input]);
 
 	useEffect(() => {
 		if (searchFilter?.search?.propertyStarsList?.length === 0) {
@@ -260,17 +257,19 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 		);
 	};
 
-	const selectSortTypeHandler = (next: string) => {
+	const selectSortTypeHandler = (next: string, sort: string, direction: string) => {
 		setSort(next);
 		setAnchorEl(null);
 		router.push(
 			`/property?input=${JSON.stringify({
 				...searchFilter,
-				sort: next,
+				sort: sort,
+				direction: direction,
 			})}`,
 			`/property?input=${JSON.stringify({
 				...searchFilter,
-				sort: next,
+				sort: sort,
+				direction: direction,
 			})}`,
 			{
 				scroll: false,
@@ -459,7 +458,9 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 
 	return (
 		<Stack className="container">
-			<MapSearchDialog open={mapOpen} onClose={() => setMapOpen(false)} initialInput={searchFilter} />
+			{properties.length !== 0 && (
+				<MapSearchDialog open={mapOpen} onClose={() => setMapOpen(false)} initialInput={searchFilter} />
+			)}
 			<Box className="search-page" ref={locationRef}>
 				<Box className="search-layout">
 					{/* LEFT : FILTER */}
@@ -682,7 +683,7 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 									return (
 										<MenuItem
 											key={opt.value}
-											onClick={() => selectSortTypeHandler(opt.value)}
+											onClick={() => selectSortTypeHandler(opt.value, opt.sort, opt.direc)}
 											selected={selected}
 											className="sort-menu-item"
 										>
@@ -706,6 +707,7 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 							{properties.length !== 0 ? (
 								properties.map((property: Property) => {
 									const isFav = property?.meLiked?.[0]?.myFavorite;
+									const checkin = property.rooms?.[0]?.stayPlans?.[1]?.stayPlanRules?.checkInFrom;
 									return (
 										<Card
 											key={property._id}
@@ -716,7 +718,7 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 											<Box className="hotel-card-inner">
 												<CardMedia
 													component="img"
-													image="https://images.pexels.com/photos/189296/pexels-photo-189296.jpeg?auto=compress&cs=tinysrgb&w=800" // 여기 나중에 실제 이미지로 교체
+													image={`${process.env.REACT_APP_API_URL}/${property.propertyImages[0]}`} // 여기 나중에 실제 이미지로 교체
 													alt="room"
 													className="hotel-image"
 												/>
@@ -752,7 +754,7 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 														</Typography>
 													</Box>
 
-													<Typography className="hotel-checkin">숙박 14:00 체크인</Typography>
+													<Typography className="hotel-checkin">숙박 {String(checkin)} 체크인</Typography>
 
 													<Box className="hotel-price-row">
 														<Typography className="price-label">쿠폰 적용 시</Typography>

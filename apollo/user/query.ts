@@ -261,6 +261,9 @@ export const GET_PROPERTIES = gql`
 				}
 				propertyReservations
 				propertyPrice
+				propertyDetailAddress
+				propertyLat
+				propertyLng
 			}
 			metaCounter {
 				total

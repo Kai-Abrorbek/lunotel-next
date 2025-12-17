@@ -16,6 +16,9 @@ export interface Property {
 	propertyStatus: PropertyStatus;
 	propertyLocation: PropertyLocation;
 	propertyAddress: string;
+	propertyDetailAddress: string;
+	propertyLat: string;
+	propertyLng: string;
 	propertyName: string;
 	propertyPrice: number;
 	propertyRooms: number;
@@ -25,7 +28,7 @@ export interface Property {
 	propertyComments: number;
 	propertyRank: number;
 	propertyStars: number;
-	propertyImages?: string[];
+	propertyImages: string[];
 	propertyAmenities: PropertyAmenity[];
 	propertyOtherAmenities?: PropertyOtherAmenity[];
 	propertyDesc?: string;

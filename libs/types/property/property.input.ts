@@ -56,7 +56,7 @@ export interface PropertiesInquiry {
 	page?: number;
 	limit?: number;
 	sort?: string;
-	direction?: Direction;
+	direction?: string;
 	search: PIsearch;
 }
 

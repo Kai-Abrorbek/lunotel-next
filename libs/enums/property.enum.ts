@@ -188,3 +188,30 @@ export const amenitiesList = [
 	{ key: 'HEATING', name: '난방', en: 'Heating', icon: '🔥' },
 	{ key: 'NON_SMOKING', name: '객실금연', en: 'Non-Smoking Room', icon: '🚭' },
 ];
+
+export const SORT_OPTIONS = [
+	{ value: 'createdAt', label: '추천순', sort: 'createdAt', direc: 'DESC' },
+	{ value: 'propertyComments', label: '리뷰많은순', sort: 'propertyComments', direc: 'DESC' },
+	{ value: 'propertyPrice_DESC', label: '높은가격순', sort: 'propertyPrice', direc: 'DESC' },
+	{ value: 'propertyPrice_ASC', label: '낮은가격순', sort: 'propertyPrice', direc: 'ASC' },
+	{ value: 'propertyRank_DESC', label: '평점높은순', sort: 'propertyRank', direc: 'DESC' },
+	{ value: 'propertyRank_ASC', label: '평점낮은순', sort: 'propertyRank', direc: 'ASC' },
+	{ value: 'propertyReservations', label: '거리순', sort: 'propertyReservations', direc: 'DESC' },
+];
+
+export const LOCATION_LIST = [
+	{ key: 'SEOUL', label: '서울', lat: 37.5665, lng: 126.978 },
+	{ key: 'BUSAN', label: '부산', lat: 35.1796, lng: 129.0756 },
+	{ key: 'INCHEON', label: '인천', lat: 37.4563, lng: 126.7052 },
+	{ key: 'DAEGU', label: '대구', lat: 35.8714, lng: 128.6014 },
+	{ key: 'GWANGJU', label: '광주', lat: 35.1595, lng: 126.8526 },
+	{ key: 'GYEONGJU', label: '경주', lat: 35.8562, lng: 129.2247 },
+	{ key: 'CHONJU', label: '청주', lat: 36.6424, lng: 127.489 },
+	{ key: 'DAEJON', label: '대전', lat: 36.3504, lng: 127.3845 },
+	{ key: 'JEJU', label: '제주', lat: 33.4996, lng: 126.5312 },
+	{ key: 'GANGNEUNG', label: '강릉', lat: 37.7519, lng: 128.8761 },
+	{ key: 'SOKCHO', label: '속초', lat: 38.207, lng: 128.5918 },
+	{ key: 'YEOSU', label: '여수', lat: 34.7604, lng: 127.6622 },
+	{ key: 'HEUNDE', label: '해운대', lat: 35.1631, lng: 129.1635 },
+	{ key: 'GAPYEONG', label: '가평', lat: 37.8315, lng: 127.5109 },
+];

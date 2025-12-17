@@ -1,4 +1,6 @@
 import React, { useEffect, useRef } from 'react';
+import { Property } from '../../types/property/property';
+import { LOCATION_LIST } from '../../enums/property.enum';
 
 declare global {
 	interface Window {
@@ -6,156 +8,36 @@ declare global {
 	}
 }
 
-const MARKERS = [
-	{
-		id: 1,
-		lat: 37.555,
-		lng: 126.936,
-		price: '79,900원',
-		name: '신촌 시스터즈',
-		type: '모텔',
-		rating: 9.1,
-		reviews: 148,
-		thumb: 'https://images.pexels.com/photos/189296/pexels-photo-189296.jpeg?auto=compress&cs=tinysrgb&w=800',
-		checkin: '17:00',
-	},
-	{
-		id: 2,
-		lat: 37.556,
-		lng: 126.94,
-		price: '89,000원',
-		name: '홍대 라운지 호텔',
-		type: '호텔',
-		rating: 8.7,
-		reviews: 569,
-		thumb: 'https://images.pexels.com/photos/189296/pexels-photo-189296.jpeg?auto=compress&cs=tinysrgb&w=800',
-		checkin: '15:00',
-	},
-	{
-		id: 3,
-		lat: 37.558,
-		lng: 126.943,
-		price: '102,000원',
-		name: '이대 메트로 스테이',
-		type: '호텔',
-		rating: 8.4,
-		reviews: 312,
-		thumb: 'https://images.pexels.com/photos/189296/pexels-photo-189296.jpeg?auto=compress&cs=tinysrgb&w=800',
-		checkin: '15:00',
-	},
-	{
-		id: 4,
-		lat: 37.552,
-		lng: 126.928,
-		price: '69,000원',
-		name: '홍대 퍼스트 모텔',
-		type: '모텔',
-		rating: 8.9,
-		reviews: 210,
-		thumb: 'https://images.pexels.com/photos/189296/pexels-photo-189296.jpeg?auto=compress&cs=tinysrgb&w=800',
-		checkin: '18:00',
-	},
-	{
-		id: 5,
-		lat: 37.567,
-		lng: 126.982,
-		price: '155,000원',
-		name: '종로 프리미엄 호텔',
-		type: '호텔',
-		rating: 9.0,
-		reviews: 987,
-		thumb: 'https://images.pexels.com/photos/189296/pexels-photo-189296.jpeg?auto=compress&cs=tinysrgb&w=800',
-		checkin: '14:00',
-	},
-	{
-		id: 6,
-		lat: 37.563,
-		lng: 126.97,
-		price: '112,000원',
-		name: '시청 스테이 모던',
-		type: '호텔',
-		rating: 8.5,
-		reviews: 420,
-		thumb: 'https://images.pexels.com/photos/189296/pexels-photo-189296.jpeg?auto=compress&cs=tinysrgb&w=800',
-		checkin: '15:00',
-	},
-	{
-		id: 7,
-		lat: 37.545,
-		lng: 127.015,
-		price: '95,000원',
-		name: '서울숲 리버뷰 모텔',
-		type: '모텔',
-		rating: 8.8,
-		reviews: 186,
-		thumb: 'https://images.pexels.com/photos/189296/pexels-photo-189296.jpeg?auto=compress&cs=tinysrgb&w=800',
-		checkin: '17:00',
-	},
-	{
-		id: 8,
-		lat: 37.534,
-		lng: 127.001,
-		price: '178,000원',
-		name: '압구정 디자이너 호텔',
-		type: '호텔',
-		rating: 9.3,
-		reviews: 652,
-		thumb: 'https://images.pexels.com/photos/189296/pexels-photo-189296.jpeg?auto=compress&cs=tinysrgb&w=800',
-		checkin: '14:00',
-	},
-	{
-		id: 9,
-		lat: 37.525,
-		lng: 126.955,
-		price: '129,000원',
-		name: '여의도 비즈니스 호텔',
-		type: '호텔',
-		rating: 8.2,
-		reviews: 331,
-		thumb: 'https://images.pexels.com/photos/189296/pexels-photo-189296.jpeg?auto=compress&cs=tinysrgb&w=800',
-		checkin: '15:00',
-	},
-	{
-		id: 10,
-		lat: 37.516,
-		lng: 127.02,
-		price: '86,000원',
-		name: '논현 스위트 모텔',
-		type: '모텔',
-		rating: 8.6,
-		reviews: 204,
-		thumb: 'https://images.pexels.com/photos/189296/pexels-photo-189296.jpeg?auto=compress&cs=tinysrgb&w=800',
-		checkin: '18:00',
-	},
-];
-
 interface KakaoMapViewProps {
-	targetPropertyEl: number | null;
+	targetPropertyId: string | null;
+	properties: Property[] | [];
 }
-
-const KakaoMapView = ({ targetPropertyEl }: KakaoMapViewProps) => {
+const KakaoMapView = ({ targetPropertyId, properties }: KakaoMapViewProps) => {
 	const containerRef = useRef<HTMLDivElement | null>(null);
-
 	useEffect(() => {
 		if (!window.kakao?.maps) return;
+		if (!location) return;
+		const locationLat = LOCATION_LIST.filter((loc) => loc.key === properties[0]?.propertyLocation)[0]?.lat;
+		const locationLng = LOCATION_LIST.filter((loc) => loc.key === properties[0]?.propertyLocation)[0]?.lng;
 
 		window.kakao.maps.load(() => {
-			const center = new window.kakao.maps.LatLng(37.555, 126.936);
+			const center = new window.kakao.maps.LatLng(locationLat, locationLng);
 
 			const map = new window.kakao.maps.Map(containerRef.current, {
 				center,
 				level: 6,
 			});
 
-			MARKERS.forEach((hotel, idx) => {
+			properties.forEach((property: Property, idx) => {
+				const checkin = property.rooms?.[0]?.stayPlans?.[1]?.stayPlanRules?.checkInFrom;
 				/* 1. 가격 마커 생성 */
 				const priceContent = document.createElement('div');
-				priceContent.className = `kakao-price-marker ${targetPropertyEl === idx ? 'hover' : ''}`;
-				priceContent.innerText = hotel.price;
-				priceContent.dataset.index = idx.toString();
+				priceContent.className = `kakao-price-marker ${targetPropertyId === property._id ? 'hover' : ''}`;
+				priceContent.innerText = String(property.propertyPrice);
+				priceContent.dataset.index = property._id.toString();
 
 				const priceOverlay = new window.kakao.maps.CustomOverlay({
-					position: new window.kakao.maps.LatLng(hotel.lat, hotel.lng),
+					position: new window.kakao.maps.LatLng(property.propertyLat, property.propertyLng),
 					content: priceContent,
 					yAnchor: 1,
 				});
@@ -179,19 +61,19 @@ const KakaoMapView = ({ targetPropertyEl }: KakaoMapViewProps) => {
 				card.className = 'hotel-preview-card';
 				card.innerHTML = `
           <div class="card-img-wrap">
-            <img src="${hotel.thumb}" />
+            <img src="${process.env.REACT_APP_API_URL}/${property.propertyImages[0]}" />
           </div>
           <div class="card-info">
-            <div class="type">${hotel.type}</div>
-            <div class="name">${hotel.name}</div>
-            <div class="rating">⭐ ${hotel.rating} | ${hotel.reviews}명</div>
-            <div class="checkin">숙박 ${hotel.checkin} 체크인</div>
-            <div class="price">${hotel.price}/1박</div>
+            <div class="type">${property.propertyType}</div>
+            <div class="name" >${property.propertyName}</div>
+            <div class="rating">⭐ ${property.propertyRank.toFixed(1)} | ${property.propertyComments}명</div>
+            <div class="checkin">숙박 ${checkin} 체크인</div>
+            <div class="price">${property.propertyPrice.toLocaleString()}/1박</div>
           </div>
         `;
 
 				const cardOverlay = new window.kakao.maps.CustomOverlay({
-					position: new window.kakao.maps.LatLng(hotel.lat, hotel.lng),
+					position: new window.kakao.maps.LatLng(property.propertyLat, property.propertyLng),
 					content: card,
 					yAnchor: 1.4,
 					zIndex: 999,
@@ -207,7 +89,7 @@ const KakaoMapView = ({ targetPropertyEl }: KakaoMapViewProps) => {
 				});
 			});
 		});
-	}, [targetPropertyEl]);
+	}, [targetPropertyId]);
 
 	return <div ref={containerRef} className="kakao-map-root" />;
 };
