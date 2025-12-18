@@ -461,6 +461,40 @@ export const GET_VISITED = gql`
 `;
 
 /**************************
+ *        PROPERTY        *
+ *************************/
+export const GET_ROOM = gql`
+	query GetRoom($roomId: String!) {
+		getRoom(roomId: $roomId) {
+			_id
+			propertyId
+			roomName
+			roomMaxPersonal
+			roomStandPersonal
+			basePriceDayUse
+			basePriceOvernight
+			roomDiscountPrice
+			roombedInfo
+			roomImages
+			roomStatus
+			createdAt
+			updatedAt
+			stayPlans {
+				_id
+				roomTypeId
+				stayPlanType
+				stayPlanName
+				stayPlanBasePrice
+				stayPlanRules
+				stayPlanstatus
+				createdAt
+				updatedAt
+			}
+		}
+	}
+`;
+
+/**************************
  *         COMMENT        *
  *************************/
 export const GET_COMMENTS = gql`

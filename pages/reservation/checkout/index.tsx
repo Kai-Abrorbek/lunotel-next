@@ -16,8 +16,14 @@ import {
 import ClearIcon from '@mui/icons-material/Clear';
 import LayoutHome from '../../../libs/components/layout/LayoutHome';
 import { useRouter } from 'next/router';
-import { sweetBasicAlert, sweetTopSmallSuccessAlert } from '../../../libs/sweetAlert';
+import { sweetBasicAlert, sweetErrorAlert, sweetTopSmallSuccessAlert } from '../../../libs/sweetAlert';
 import { ReservationInput } from '../../../libs/types/reservation/reservation.input';
+import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
+import { GET_ROOM } from '../../../apollo/user/query';
+import { RoomType } from '../../../libs/types/roomtype/roomtype';
+import { userVar } from '../../../apollo/store';
+import { REACT_APP_API_URL } from '../../../libs/config';
+import { CREATE_RESERVATION } from '../../../apollo/user/mutation';
 
 const PAYMENT_METHODS = [
 	'카카오페이',
@@ -39,36 +45,52 @@ const formatToMD = (dateStr: string) => {
 interface ReservationCheckoutPageProps {
 	initialInput: ReservationInput;
 }
-function changeStrTimeToNumber(time: string): number {
-	return time.split(':').map(Number)[0] * 3600 + time.split(':').map(Number)[1] * 60;
+function changeStrTimeToNumber(time?: string): number {
+	if (!time || !time.includes(':')) return 0;
+
+	const [h, m] = time.split(':').map(Number);
+	if (Number.isNaN(h) || Number.isNaN(m)) return 0;
+
+	return h * 3600 + m * 60;
 }
 const ReservationCheckoutPage = (props: ReservationCheckoutPageProps) => {
 	const { initialInput } = props;
 	const router = useRouter();
+	const user = useReactiveVar(userVar);
 	const [selectedTimeStart, setSelectedTimeStart] = useState<string>('09:00');
-	const [checkInTime, setCheckInTime] = useState<number>(changeStrTimeToNumber('12:00'));
-	const [checkOutTime, setCheckOutTime] = useState<number>(changeStrTimeToNumber('20:00'));
 	const [searchFilter, setSearchFilter] = useState<ReservationInput>(
 		router?.query?.input ? JSON.parse(router.query.input as string) : initialInput,
 	);
+	const [hasRouterApplied, setHasRouterApplied] = useState(false);
 	const [guestName, setGuestName] = useState('');
 	const [guestPhone, setGuestPhone] = useState('');
 	const [visitMethod, setVisitMethod] = useState<'walk' | 'car'>('walk');
 	const [paymentMethod, setPaymentMethod] = useState<string>('카카오페이');
 	const [agreeAll, setAgreeAll] = useState(false);
-	const maxUsageTime = 5;
-	const roomPrice = 25000;
-	const discount = 0;
-	const totalPrice = roomPrice - discount;
-	const user = false;
-	/** LIFESICLE **/
 
+	/** APOLLO MUTATION **/
+	const [createReservation] = useMutation(CREATE_RESERVATION);
+	/** APOLLO REQUESTS **/
+	const {
+		loading: getRoomLoading,
+		data: getRoomData,
+		error: getRoomError,
+		refetch: getRoomRefetch,
+	} = useQuery(GET_ROOM, {
+		fetchPolicy: 'cache-and-network',
+		variables: { roomId: searchFilter?.roomTypeId },
+		notifyOnNetworkStatusChange: true,
+		skip: !hasRouterApplied,
+	});
+
+	/** LIFESICLE **/
 	useEffect(() => {
+		if (!router.isReady) return;
 		if (router.query.input) {
-			const inputObj = JSON.parse(router?.query?.input as string);
-			setSearchFilter(inputObj);
+			setSearchFilter(JSON.parse(router?.query?.input as string));
 		}
-	}, [router]);
+		setHasRouterApplied(true);
+	}, [router.isReady, router.query.input]);
 
 	useEffect(() => {
 		if (rangeTimeSolts.length < maxUsageTime * 2 + 1) {
@@ -80,12 +102,25 @@ const ReservationCheckoutPage = (props: ReservationCheckoutPageProps) => {
 		}
 	}, [selectedTimeStart]);
 
+	useEffect(() => {
+		if (getRoomData?.getRoom) {
+			setSelectedTimeStart(String(getRoomData?.getRoom?.stayPlans?.[0]?.stayPlanRules?.windowStart));
+		}
+	}, [getRoomData?.getRoom]);
+
+	/**--- VARIABLES **/
+	const roomData: RoomType = getRoomData?.getRoom;
+	const checkInTime = changeStrTimeToNumber(String(roomData?.stayPlans?.[0]?.stayPlanRules?.windowStart));
+	const checkOutTime = changeStrTimeToNumber(String(roomData?.stayPlans?.[0]?.stayPlanRules?.windowEnd));
+	const maxUsageTime = Number(roomData?.stayPlans?.[0]?.stayPlanRules.durationHours);
+	const roomPrice = searchFilter.stayPlan === 'DAY_USE' ? roomData?.basePriceDayUse : roomData?.basePriceOvernight;
+	const discount = roomData?.roomDiscountPrice!;
+	const totalPrice = roomPrice - discount;
 	/** HANDLER **/
 	function generateTimeSlots(startSec: number, endSec: number): string[] {
 		const result: string[] = [];
 		const MAX_END = checkOutTime; // 22:00 = 79200초
 		const finalEnd = Math.min(endSec, MAX_END);
-
 		for (let t = startSec; t <= finalEnd; t += 1800) {
 			const date = new Date(t * 1000); // 초 → ms 변환
 			const hh = String(date.getUTCHours()).padStart(2, '0');
@@ -106,14 +141,29 @@ const ReservationCheckoutPage = (props: ReservationCheckoutPageProps) => {
 			sweetBasicAlert('예약자 정보를 모두 입력해주세요!');
 			return;
 		}
-		console.log(searchFilter);
-		// await createReservation()
-		if (user) {
-			sweetTopSmallSuccessAlert('예약이 완료 되었습니다!');
-			router.push('/mypage/user?category=reservation-details');
-		} else {
-			sweetTopSmallSuccessAlert('예약이 완료 되었습니다!');
-			router.push('/');
+		try {
+			const reservationInput: ReservationInput = {
+				propertyId: searchFilter.propertyId,
+				roomTypeId: searchFilter.roomTypeId,
+				stayPlanId: searchFilter.stayPlanId,
+				reservationCheckIn: searchFilter.reservationCheckIn,
+				reservationCheckOut: searchFilter.reservationCheckOut,
+				reservationCheckInAt: searchFilter.reservationCheckInAt,
+				reservationCheckOutAt: searchFilter.reservationCheckOutAt,
+				memberInfo: searchFilter.memberInfo,
+				reservationQty: 1,
+			};
+
+			await createReservation({ variables: { input: reservationInput } });
+			if (user._id) {
+				sweetTopSmallSuccessAlert('예약이 완료 되었습니다!');
+				router.push('/mypage/user?category=reservation-details');
+			} else {
+				sweetTopSmallSuccessAlert('예약이 완료 되었습니다!');
+				router.push('/');
+			}
+		} catch (err: any) {
+			sweetErrorAlert(err.message);
 		}
 	};
 
@@ -127,7 +177,7 @@ const ReservationCheckoutPage = (props: ReservationCheckoutPageProps) => {
 					</Typography>
 
 					{/* 이용시간 */}
-					{searchFilter.stayPlan === 'stay' && (
+					{searchFilter?.stayPlan === 'DAY_USE' && (
 						<Box className="section">
 							<Box className="section-header">
 								<Typography className="section-title">이용시간</Typography>
@@ -298,20 +348,17 @@ const ReservationCheckoutPage = (props: ReservationCheckoutPageProps) => {
 				<Box className="reservation-sidebar">
 					<Card className="room-card" variant="outlined">
 						<CardContent>
-							<Typography className="room-title">길동 MARI-마리</Typography>
+							<Typography className="room-title">{searchFilter.propertyName}</Typography>
 							<Box className="room-info">
-								<img
-									className="room-thumb"
-									src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80"
-								/>
+								<img className="room-thumb" src={`${process.env.REACT_APP_API_URL}/${roomData?.roomImages[0]}`} />
 								<Box className="room-meta">
 									<Box className="room-meta-row">
 										<span className="room-meta-label">객실</span>
-										<span className="room-meta-value">{searchFilter.propertyName}</span>
+										<span className="room-meta-value">{roomData?.roomName}</span>
 									</Box>
 									<Box className="room-meta-row">
 										<span className="room-meta-label">일정</span>
-										{searchFilter.stayPlan === 'stay' ? (
+										{searchFilter.stayPlan === 'DAY_USE' ? (
 											<span className="room-meta-value">
 												{formatToMD(searchFilter.reservationCheckIn!)} (
 												{fweek(new Date(searchFilter.reservationCheckIn!))}) {selectedTimeStart} ~{' '}
@@ -339,7 +386,7 @@ const ReservationCheckoutPage = (props: ReservationCheckoutPageProps) => {
 							<Typography className="section-title mb-16">결제 정보</Typography>
 							<Box className="payment-row">
 								<span className="payment-label">객실 가격</span>
-								<span className="payment-value">{roomPrice.toLocaleString()}원</span>
+								<span className="payment-value">{roomPrice?.toLocaleString()}원</span>
 							</Box>
 							<Box className="payment-row">
 								<span className="payment-label">할인 금액</span>

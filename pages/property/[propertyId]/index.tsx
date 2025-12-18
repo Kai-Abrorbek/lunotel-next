@@ -241,8 +241,7 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 		skip: !targetCommnetsInput.search.commentRefId,
 	});
 
-	const propertyCommentList = getPropertyCommentsData?.getComments?.list!;
-
+	const propertyCommentList: Comment[] = getPropertyCommentsData?.getComments?.list!;
 	const {
 		loading: getSimilarPropertiesLoading,
 		data: getSimilarPropertiesData,
@@ -257,7 +256,7 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 
 	const similarProperties = getSimilarPropertiesData?.getSimilarProperties;
 	/** VARIABLES **/
-	const commentTotal = getPropertyData?.getProperty?.propertyComments;
+	const commentTotal = propertyCommentList?.length ?? 0;
 	const propertyImages = targetProperty?.propertyImages;
 	const propertyAmenities = new Set(targetProperty?.propertyAmenities);
 	const propertyAmenitiesList = amenitiesList.filter((amenint) =>
@@ -309,7 +308,6 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 	};
 
 	const handlePaginationChange = async (event: ChangeEvent<unknown>, value: number) => {
-		targetCommnetsInput.page = value;
 		setTargetCommnetsInput({
 			...targetCommnetsInput,
 			page: value,
@@ -317,18 +315,17 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 		setCurrentPage(value);
 	};
 
-	const handlePushReservationPage = (roomId: string, stayPlan: string, stayPlanId: string) => {
-		// 나중에 room 자체를 가겨와서 data 거내기
+	const handlePushReservationPage = (room: RoomType, stayType: number) => {
 		const reservationInput: ReservationInput = {
 			propertyId: propertyId,
-			roomTypeId: roomId,
-			stayPlanId: stayPlanId,
+			roomTypeId: room?._id,
+			stayPlanId: room?.stayPlans?.[stayType]?._id!,
 			reservationCheckIn: searchFilter.checkInDate,
 			reservationCheckOut: searchFilter.checkOutDate,
-			reservationCheckInAt: '15:00',
-			reservationCheckOutAt: '11:00',
-			stayPlan: stayPlan,
-			propertyName: 'propertyName',
+			reservationCheckInAt: String(room?.stayPlans?.[1]?.stayPlanRules?.checkInFrom!),
+			reservationCheckOutAt: String(room?.stayPlans?.[1]?.stayPlanRules?.checkOutBy!),
+			stayPlan: room?.stayPlans?.[stayType]?.stayPlanType,
+			propertyName: encodeURIComponent(targetProperty?.propertyName),
 		};
 
 		router.push(
@@ -543,7 +540,7 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 												<Button
 													variant="contained"
 													className="room-card__button room-card__button--day"
-													onClick={() => handlePushReservationPage(String(room), 'stay', '13asdas1dasd1dasdd')}
+													onClick={() => handlePushReservationPage(room, 0)}
 												>
 													대실 예약
 												</Button>
@@ -577,7 +574,7 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 												<Button
 													variant="contained"
 													className="room-card__button room-card__button--stay"
-													onClick={() => handlePushReservationPage(String(room), 'overnight', 'asd1f3asdas1dasd1dasdd')}
+													onClick={() => handlePushReservationPage(room, 1)}
 												>
 													숙박 예약
 												</Button>
@@ -723,7 +720,7 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 
 					<Stack className="reviews-pagination">
 						<Pagination
-							count={Math.ceil(commentTotal! / targetCommnetsInput.limit)}
+							count={Math.max(1, Math.ceil(commentTotal! / targetCommnetsInput.limit))}
 							page={currentPage}
 							shape="circular"
 							color="primary"
