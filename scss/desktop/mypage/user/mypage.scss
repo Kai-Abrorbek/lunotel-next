@@ -141,9 +141,9 @@
 							display: flex;
 							flex-direction: row;
 							gap: 30px;
-							height: 100px;
+							height: 120px;
 							.my-res-item-img {
-								width: 150px;
+								width: 160px;
 								height: 100%;
 								border-radius: 10px;
 							}
@@ -151,7 +151,8 @@
 								display: flex;
 								justify-content: space-between;
 								padding: 12px 0;
-								width: 240px;
+								width: 400px;
+								height: 100%;
 								& + .my-res-item {
 									border-top: 1px solid #f3f4f6;
 								}
@@ -221,8 +222,8 @@
 							display: flex;
 							flex-direction: row;
 							gap: 30px;
-							padding: 22px;
-							height: 146px;
+							padding: 15px;
+							height: 160px;
 							.my-res-history-item-img {
 								width: 150px;
 								height: 100%;
@@ -254,9 +255,9 @@
 									display: flex;
 									flex-direction: column;
 									justify-content: space-between;
-									width: 150px;
+									width: 93px;
 									text-align: end;
-									height: 136%;
+									height: 116%;
 									.my-res-history-status {
 										font-size: 12px;
 										font-weight: 600;

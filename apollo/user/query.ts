@@ -461,7 +461,7 @@ export const GET_VISITED = gql`
 `;
 
 /**************************
- *        PROPERTY        *
+ *        ROOM        *
  *************************/
 export const GET_ROOM = gql`
 	query GetRoom($roomId: String!) {

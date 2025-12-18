@@ -1,96 +1,16 @@
 import { Box, Button, Divider, Pagination, Paper, Stack, Tab, Tabs, Typography } from '@mui/material';
 import Link from 'next/link';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReviewPage from './ReviewPage';
+import { useQuery, useReactiveVar } from '@apollo/client';
+import { GET_MY_RESERVATIONS } from '../../../../apollo/user/query';
+import { userVar } from '../../../../apollo/store';
+import { Reservation } from '../../../types/reservation/reservation';
+import { ReservationStatus } from '../../../enums/reservation';
 
 type TripStatus = 'upcoming' | 'completed' | 'canceled';
 type TripType = 'domestic' | 'overseas' | 'package';
 type TabValue = 'domestic' | 'overseas' | 'package';
-
-interface Reservation {
-	id: string;
-	title: string;
-	dateRange: string;
-	location: string;
-	guestCount: number;
-	status: TripStatus;
-	type: TripType;
-}
-
-const MOCK_RESERVATIONS: Reservation[] = [
-	{
-		id: 'R-20241101',
-		title: '서울 시티 호텔 (디럭스 더블)',
-		dateRange: '2024.12.01 ~ 2024.12.03',
-		location: '서울 · 명동',
-		guestCount: 2,
-		status: 'upcoming',
-		type: 'domestic',
-	},
-	{
-		id: 'R-20241021',
-		title: '제주 블루오션 리조트',
-		dateRange: '2024.10.21 ~ 2024.10.24',
-		location: '제주 · 애월',
-		guestCount: 3,
-		status: 'completed',
-		type: 'domestic',
-	},
-	{
-		id: 'R-20240911',
-		title: '오사카 난바 호텔',
-		dateRange: '2024.09.11 ~ 2024.09.14',
-		location: '일본 · 오사카',
-		guestCount: 2,
-		status: 'canceled',
-		type: 'domestic',
-	},
-	{
-		id: 'R-2024091112',
-		title: '오사카 난바 호텔',
-		dateRange: '2024.09.11 ~ 2024.09.14',
-		location: '일본 · 오사카',
-		guestCount: 2,
-		status: 'canceled',
-		type: 'domestic',
-	},
-	{
-		id: 'R-20240912341',
-		title: '오사카 난바 호텔',
-		dateRange: '2024.09.11 ~ 2024.09.14',
-		location: '일본 · 오사카',
-		guestCount: 2,
-		status: 'canceled',
-		type: 'domestic',
-	},
-	{
-		id: 'R-20240915121',
-		title: '오사카 난바 호텔',
-		dateRange: '2024.09.11 ~ 2024.09.14',
-		location: '일본 · 오사카',
-		guestCount: 2,
-		status: 'canceled',
-		type: 'domestic',
-	},
-	{
-		id: 'R-2024012151911',
-		title: '오사카 난바 호텔',
-		dateRange: '2024.09.11 ~ 2024.09.14',
-		location: '일본 · 오사카',
-		guestCount: 2,
-		status: 'upcoming',
-		type: 'domestic',
-	},
-	{
-		id: 'R-202412a0911',
-		title: '오사카 난바 호텔',
-		dateRange: '2024.09.11 ~ 2024.09.14',
-		location: '일본 · 오사카',
-		guestCount: 2,
-		status: 'upcoming',
-		type: 'domestic',
-	},
-];
 
 interface ReservationHistoryProps {
 	currentPage: number;
@@ -100,11 +20,40 @@ interface ReservationHistoryProps {
 const ReservationHistory = (props: ReservationHistoryProps) => {
 	const { currentPage, setTotal } = props;
 	const [tab, setTab] = useState<TabValue>('domestic');
-	const filtered = useMemo(() => MOCK_RESERVATIONS.filter((r) => r.type === tab), [tab]);
-	const upcoming = filtered.filter((r) => r.status === 'upcoming');
-	const history = filtered.filter((r) => r.status === 'completed' || r.status === 'canceled');
 	const [openReview, setOpenReview] = useState<boolean>(false);
+	const user = useReactiveVar(userVar);
 
+	/** APOLLO REQUEST **/
+	const {
+		loading: getMyReservationsLoading,
+		data: getMyReservationsData,
+		error: getMyReservationsError,
+		refetch: getMyReservationsRefetch,
+	} = useQuery(GET_MY_RESERVATIONS, {
+		fetchPolicy: 'cache-and-network',
+		variables: {
+			input: {
+				page: currentPage,
+				limit: 10,
+				search: {},
+			},
+		},
+		notifyOnNetworkStatusChange: true,
+		skip: !user._id,
+	});
+
+	useEffect(() => {
+		if (getMyReservationsData) {
+			setTotal(getMyReservationsData?.getMyReservations?.metaCounter?.[0]?.total);
+		}
+	}, [getMyReservationsData]);
+
+	const myReservations = getMyReservationsData?.getMyReservations?.list ?? [];
+	const upcoming = myReservations?.filter((r: Reservation) => r.reservationStatus === ReservationStatus.UPCOMING);
+	const history = myReservations?.filter(
+		(r: Reservation) =>
+			r.reservationStatus === ReservationStatus.COMPLETED || r.reservationStatus === ReservationStatus.CANCELLED,
+	);
 	/** HANDLER **/
 	const handleTabChange = (_: React.SyntheticEvent, value: TabValue) => {
 		setTab(value);
@@ -134,23 +83,33 @@ const ReservationHistory = (props: ReservationHistoryProps) => {
 							<Box className="my-res-empty-text">
 								<Typography className="my-res-empty-title">예정된 여행이 없습니다.</Typography>
 								<Typography className="my-res-empty-sub">지금 새로 예약을 진행해보세요.</Typography>
-								<Button variant="contained" className="my-res-empty-button">
-									여행지 찾아보기
-								</Button>
+								<Link href={'/'}>
+									<Button variant="contained" className="my-res-empty-button">
+										여행지 찾아보기
+									</Button>
+								</Link>
 							</Box>
 							<Box className="my-res-empty-illust" />
 						</Box>
 					) : (
 						<Box sx={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-							{upcoming.map((r, idx) => (
+							{upcoming.map((reservation: Reservation, idx: number) => (
 								<Stack key={idx} className="my-res-item-box">
-									<Box className="my-res-item-img" src="/img/JEJU.jfif" component={'img'}></Box>
-									<Box key={r.id} className="my-res-item">
+									<Box
+										className="my-res-item-img"
+										src={`${process.env.REACT_APP_API_URL}/${reservation?.propertyData?.[0].propertyImages[0]}`}
+										component={'img'}
+									></Box>
+									<Box key={reservation._id} className="my-res-item">
 										<Box className="my-res-item-info">
-											<Typography className="my-res-item-title">{r.title}</Typography>
-											<Typography className="my-res-item-meta">{r.dateRange}</Typography>
+											<Typography className="my-res-item-title">
+												{reservation.propertyData?.[0].propertyName}
+											</Typography>
 											<Typography className="my-res-item-meta">
-												{r.location} · {r.guestCount}명
+												{reservation.createdAt?.toString().split('T')[0]}
+											</Typography>
+											<Typography className="my-res-item-meta">
+												{reservation?.propertyData?.[0].propertyAddress} · {2}명
 											</Typography>
 										</Box>
 									</Box>
@@ -174,31 +133,39 @@ const ReservationHistory = (props: ReservationHistoryProps) => {
 					<Box className="my-res-history-empty">해당되는 예약 내역이 없습니다.</Box>
 				) : (
 					<Paper className="my-res-history-card" elevation={0}>
-						{history.map((r, idx) => (
-							<React.Fragment key={r.id}>
+						{history.map((reservation: Reservation, idx: number) => (
+							<React.Fragment key={reservation._id}>
 								{idx > 0 && <Divider />}
 								<Stack className="my-res-history-box">
-									<Box className="my-res-history-item-img" src="/img/JEJU.jfif" component={'img'}></Box>
+									<Box
+										className="my-res-history-item-img"
+										src={`${process.env.REACT_APP_API_URL}/${reservation?.propertyData?.[0].propertyImages[0]}`}
+										component={'img'}
+									></Box>
 									<Box className="my-res-history-item">
 										<Box className="my-res-history-item-info">
-											<Typography className="my-res-history-item-title">{r.title}</Typography>
-											<Typography className="my-res-history-item-meta">{r.dateRange}</Typography>
+											<Typography className="my-res-history-item-title">
+												{reservation.propertyData?.[0].propertyName}
+											</Typography>
 											<Typography className="my-res-history-item-meta">
-												{r.location} · {r.guestCount}명
+												{reservation.createdAt?.toString().split('T')[0]}
+											</Typography>
+											<Typography className="my-res-history-item-meta">
+												{reservation?.propertyData?.[0].propertyAddress} · {2}명
 											</Typography>
 										</Box>
 										<Box className="my-res-history-item-btns">
 											<Typography
 												className={
 													'my-res-history-status ' +
-													(r.status === 'completed'
+													(reservation.reservationStatus === ReservationStatus.COMPLETED
 														? 'my-res-history-status--completed'
 														: 'my-res-history-status--canceled')
 												}
 											>
-												{r.status === 'completed' ? '이용완료' : '예약취소'}
+												{reservation.reservationStatus === ReservationStatus.COMPLETED ? '이용완료' : '예약취소'}
 											</Typography>
-											{r.status === 'completed' ? (
+											{reservation.reservationStatus === ReservationStatus.COMPLETED ? (
 												<Box>
 													<Button className="add-review-btn" onClick={() => setOpenReview(true)} variant="outlined">
 														리뷰 작성

@@ -3,6 +3,12 @@ import { Box, Chip, IconButton, Typography } from '@mui/material';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import StarIcon from '@mui/icons-material/Star';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
+import { userVar } from '../../../../apollo/store';
+import { GET_FAVORITES } from '../../../../apollo/user/query';
+import { Property } from '../../../types/property/property';
+import { LIKE_TARGET_PROPERTY } from '../../../../apollo/user/mutation';
+import { REACT_APP_API_URL } from '../../../config';
 
 interface MyFavoritsProps {
 	currentPage: number;
@@ -11,23 +17,45 @@ interface MyFavoritsProps {
 const MyFavorits = (props: MyFavoritsProps) => {
 	const { currentPage, setTotal } = props;
 	const [favoriteIds, setFavoriteIds] = useState<number[]>([]);
+	const user = useReactiveVar(userVar);
 
+	const [likeTargetProperty] = useMutation(LIKE_TARGET_PROPERTY);
+
+	/** APOLLO REQUEST **/
+	const {
+		loading: getMyFaoritesLoading,
+		data: getMyFaoritesData,
+		error: getMyFaoritesError,
+		refetch: getMyFaoritesRefetch,
+	} = useQuery(GET_FAVORITES, {
+		fetchPolicy: 'cache-and-network',
+		variables: {
+			input: {
+				page: currentPage,
+				limit: 10,
+			},
+		},
+		notifyOnNetworkStatusChange: true,
+		skip: !user._id,
+	});
+
+	const myFavorits = getMyFaoritesData?.getFavorites?.list;
+	console.log(myFavorits);
 	return (
 		<Box className="room-page">
 			<Typography className="my-res-main-title">찜 목록</Typography>
 
 			<Box className="room-card-box">
-				{[1, 2, 3, 4, 5, 6].length !== 0 ? (
-					[1, 2, 3, 4, 5, 6].map((item) => {
-						const isFav = favoriteIds.includes(item);
+				{myFavorits?.length !== 0 ? (
+					myFavorits.map((property: Property) => {
+						const isFav = true;
 						return (
-							<Box key={item} className="room-card">
+							<Box key={property._id} className="room-card">
 								<Box className="room-card-image-wrap">
 									{/* <Box className="room-card-badge">무제한 할인</Box> */}
 									<img
 										className="room-card-image"
-										src="https://images.pexels.com/photos/271624/pexels-photo-271624.jpeg?auto=compress&cs=tinysrgb&w=320&h=200
-"
+										src={`${process.env.REACT_APP_API_URL}/${property?.propertyImages[0]}`}
 										alt="객실 이미지"
 									/>
 								</Box>
@@ -35,18 +63,18 @@ const MyFavorits = (props: MyFavoritsProps) => {
 								<Box className="room-card-content">
 									<Box className="room-card-header">
 										<Box>
-											<Typography className="room-card-type">모텔</Typography>
-											<Typography className="room-card-title">길동 MARI-마리</Typography>
-											<Typography className="room-card-location">길동역 도보 3분</Typography>
+											<Typography className="room-card-type">{property?.propertyType}</Typography>
+											<Typography className="room-card-title">{property?.propertyName}</Typography>
+											<Typography className="room-card-location">{property.propertyAddress}</Typography>
 
 											<Box className="room-card-rating-row">
 												<Chip
 													icon={<StarIcon className="room-card-rating-star" />}
-													label="9.3"
+													label={property.propertyRank}
 													size="small"
 													className="room-card-rating-chip"
 												/>
-												<Typography className="room-card-rating-text">4,985명 평가</Typography>
+												<Typography className="room-card-rating-text">{property.propertyComments}명 평가</Typography>
 											</Box>
 										</Box>
 
@@ -54,9 +82,6 @@ const MyFavorits = (props: MyFavoritsProps) => {
 											className="room-card-like"
 											onClick={(e) => {
 												e.stopPropagation();
-												setFavoriteIds((prev) =>
-													prev.includes(item) ? prev.filter((x) => x !== item) : [...prev, item],
-												);
 											}}
 										>
 											{isFav ? <FavoriteIcon sx={{ color: 'red' }} /> : <FavoriteBorderIcon />}
