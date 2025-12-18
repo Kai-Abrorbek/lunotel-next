@@ -22,7 +22,6 @@ import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
 import { GET_ROOM } from '../../../apollo/user/query';
 import { RoomType } from '../../../libs/types/roomtype/roomtype';
 import { userVar } from '../../../apollo/store';
-import { REACT_APP_API_URL } from '../../../libs/config';
 import { CREATE_RESERVATION } from '../../../apollo/user/mutation';
 
 const PAYMENT_METHODS = [
@@ -95,7 +94,7 @@ const ReservationCheckoutPage = (props: ReservationCheckoutPageProps) => {
 	useEffect(() => {
 		if (rangeTimeSolts.length < maxUsageTime * 2 + 1) {
 			sweetBasicAlert(
-				`${selectedTimeStart.replace(':', '시 ')}분에 입실하시면 ${Math.floor((rangeTimeSolts.length - 1) / 2)}시간 ${
+				`${selectedTimeStart.replace(':', '시 ')}분에 입실하시면 [${Math.floor((rangeTimeSolts.length - 1) / 2)}]시간 ${
 					((rangeTimeSolts.length - 1) / 2) % 1 ? '30분' : ''
 				}이용하실 수 있습니다.`,
 			);
@@ -129,6 +128,7 @@ const ReservationCheckoutPage = (props: ReservationCheckoutPageProps) => {
 		}
 		return result;
 	}
+
 	const TIME_SLOTS = generateTimeSlots(checkInTime, checkOutTime);
 
 	const rangeTimeSolts = generateTimeSlots(

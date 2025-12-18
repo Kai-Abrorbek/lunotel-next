@@ -2,31 +2,16 @@ import { ChangeEvent, useEffect, useState } from 'react';
 import OtherLayout from '../../../libs/components/layout/OtherLayout';
 import { PropertiesInquiry, PropertyInquiry } from '../../../libs/types/property/property.input';
 import { useRouter } from 'next/router';
-import {
-	Box,
-	Button,
-	Chip,
-	dividerClasses,
-	IconButton,
-	Menu,
-	MenuItem,
-	Pagination,
-	Stack,
-	Typography,
-} from '@mui/material';
+import { Box, Button, IconButton, Menu, MenuItem, Pagination, Stack, Typography } from '@mui/material';
 import RoomStickyBar from '../../../libs/components/room/RoomStickyBar';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import RoomIcon from '@mui/icons-material/MeetingRoom';
-import WifiIcon from '@mui/icons-material/Wifi';
-import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
-import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import PlaceIcon from '@mui/icons-material/Place';
 import NearMeIcon from '@mui/icons-material/NearMe';
 import StarIcon from '@mui/icons-material/Star';
 import PropertyLocationMap from '../../../libs/components/room/PropertyLocationMap';
 import ReviewItem from '../../../libs/components/room/ReviewItem';
-import ImageGalleryModal, { ImageCategory } from '../../../libs/components/room/ImageGalleryModal';
+import ImageGalleryModal from '../../../libs/components/room/ImageGalleryModal';
 import ReviewImageModal from '../../../libs/components/room/ReviewImageModal';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
@@ -37,7 +22,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import { CommentsInquiry } from '../../../libs/types/comment/comment.input';
-import { Direction, Message } from '../../../libs/enums/common.enum';
+import { Message } from '../../../libs/enums/common.enum';
 import { ReservationInput } from '../../../libs/types/reservation/reservation.input';
 import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
 import { LIKE_TARGET_PROPERTY } from '../../../apollo/user/mutation';
@@ -51,132 +36,6 @@ import { amenitiesList, PropertyAmenity } from '../../../libs/enums/property.enu
 import { GET_COMMENTS } from '../../../apollo/admin/query';
 import { Comment } from '../../../libs/types/comment/comment';
 import { COMMENT_SORT_OPTIONS } from '../../../libs/enums/propertyRoomtype.enum';
-
-interface Stay {
-	id: number;
-	categoryLabel: string;
-	name: string;
-	location: string;
-	subLocation: string;
-	rating: number;
-	reviewCount: number;
-	price: number;
-	originalPrice?: number;
-	badgeText?: string;
-	imageUrl: string;
-}
-
-const STAYS: Stay[] = [
-	{
-		id: 1,
-		categoryLabel: '블랙 · 특급 · 호텔',
-		name: '★당일특가★ 세인트존스 호텔',
-		location: '강릉시',
-		subLocation: '강릉 강문해변 앞',
-		rating: 9.2,
-		reviewCount: 10235,
-		price: 99750,
-		imageUrl: 'https://images.pexels.com/photos/258154/pexels-photo-258154.jpeg?auto=compress&cs=tinysrgb&w=800',
-	},
-	{
-		id: 2,
-		categoryLabel: '모텔',
-		name: '길동 MARI-마리',
-		location: '길동역',
-		subLocation: '도보 3분',
-		rating: 9.3,
-		reviewCount: 4934,
-		price: 44000,
-		originalPrice: 50000,
-		imageUrl: 'https://images.pexels.com/photos/265004/pexels-photo-265004.jpeg?auto=compress&cs=tinysrgb&w=800',
-	},
-	{
-		id: 3,
-		categoryLabel: '가족호텔 · 호텔',
-		name: '★당일특가★ 체스터톤스 호텔',
-		location: '속초시',
-		subLocation: '속초터미널 차량 11분',
-		rating: 9.1,
-		reviewCount: 3368,
-		price: 65490,
-		originalPrice: 350000,
-		imageUrl: 'https://images.pexels.com/photos/338504/pexels-photo-338504.jpeg?auto=compress&cs=tinysrgb&w=800',
-	},
-	{
-		id: 5,
-		categoryLabel: '모텔',
-		name: '구월 호텔반월',
-		location: '인천',
-		subLocation: '인천터미널역 도보 14분',
-		rating: 9.4,
-		reviewCount: 13877,
-		price: 40000,
-		originalPrice: 45000,
-		imageUrl: 'https://images.pexels.com/photos/189296/pexels-photo-189296.jpeg?auto=compress&cs=tinysrgb&w=800',
-	},
-	{
-		id: 6,
-		categoryLabel: '모텔',
-		name: '구월 호텔반월',
-		location: '인천',
-		subLocation: '인천터미널역 도보 14분',
-		rating: 9.4,
-		reviewCount: 13877,
-		price: 40000,
-		originalPrice: 45000,
-		imageUrl: 'https://images.pexels.com/photos/189296/pexels-photo-189296.jpeg?auto=compress&cs=tinysrgb&w=800',
-	},
-	{
-		id: 7,
-		categoryLabel: '모텔',
-		name: '구월 호텔반월',
-		location: '인천',
-		subLocation: '인천터미널역 도보 14분',
-		rating: 9.4,
-		reviewCount: 13877,
-		price: 40000,
-		originalPrice: 45000,
-		imageUrl: 'https://images.pexels.com/photos/189296/pexels-photo-189296.jpeg?auto=compress&cs=tinysrgb&w=800',
-	},
-	{
-		id: 8,
-		categoryLabel: '모텔',
-		name: '구월 호텔반월',
-		location: '인천',
-		subLocation: '인천터미널역 도보 14분',
-		rating: 9.4,
-		reviewCount: 13877,
-		price: 40000,
-		originalPrice: 45000,
-		imageUrl: 'https://images.pexels.com/photos/189296/pexels-photo-189296.jpeg?auto=compress&cs=tinysrgb&w=800',
-	},
-	{
-		id: 9,
-		categoryLabel: '모텔',
-		name: '구월 호텔반월',
-		location: '인천',
-		subLocation: '인천터미널역 도보 14분',
-		rating: 9.4,
-		reviewCount: 13877,
-		price: 40000,
-		originalPrice: 45000,
-		imageUrl: 'https://images.pexels.com/photos/189296/pexels-photo-189296.jpeg?auto=compress&cs=tinysrgb&w=800',
-	},
-	{
-		id: 10,
-		categoryLabel: '모텔',
-		name: '구월 호텔반월',
-		location: '인천',
-		subLocation: '인천터미널역 도보 14분',
-		rating: 9.4,
-		reviewCount: 13877,
-		price: 40000,
-		originalPrice: 45000,
-		imageUrl: 'https://images.pexels.com/photos/189296/pexels-photo-189296.jpeg?auto=compress&cs=tinysrgb&w=800',
-	},
-
-	// 필요하면 더 추가
-];
 
 interface PropertyDetailPageProps {
 	initialInput: PropertiesInquiry;
@@ -194,9 +53,11 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 	const [initialIndex, setInitialIndex] = useState<number>(0);
 	const [reviewImgIndex, setReviewImgIndex] = useState<number>(0);
 	const [activeTab, setActiveTab] = useState<TabKey>('rooms');
-	const [favoriteRooms, setFavoriteRooms] = useState<number[]>([]);
 	const [sortOption, setSortOption] = useState('추천순');
 	const [sortAnchorEl, setSortAnchorEl] = useState<null | HTMLElement>(null);
+	const [selectRoomImg, setSelectRoomImg] = useState<string[]>([]);
+	const [selectCommentImg, setselectCommentImg] = useState<string[]>([]);
+	const [selectRoomName, setSelectRoomName] = useState<string>('');
 	const isSortMenuOpen = Boolean(sortAnchorEl);
 	const [currentPage, setCurrentPage] = useState<number>(1);
 	const [targetCommnetsInput, setTargetCommnetsInput] = useState<CommentsInquiry>({
@@ -215,6 +76,7 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 
 	const [likeTargetProperty] = useMutation(LIKE_TARGET_PROPERTY);
 
+	console.log(router.pathname);
 	/** APOLLO REQUESTS **/
 	const {
 		loading: getPropertyLoading,
@@ -333,6 +195,12 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 				...reservationInput,
 			})}`,
 		);
+	};
+
+	const handleSelectRoomImages = (roomId: string, roomName: string) => {
+		const result = targetProperty?.rooms?.filter((room) => room._id === roomId)[0];
+		setSelectRoomImg(result?.roomImages!);
+		setSelectRoomName(roomName);
 	};
 	return (
 		<Stack className="container">
@@ -487,27 +355,32 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 							<p>'asdd'에 대한 철자를 확인하거나 긴 문구는 띄어쓰기를 해보세요.</p>
 						</div>
 					)}
+					<ImageGalleryModal
+						open={open2}
+						onClose={() => {
+							setOpen2(false);
+							setInitialIndex(0);
+						}}
+						title={selectRoomName}
+						images={selectRoomImg}
+						initialIndex={initialIndex}
+					/>
 					{targetProperty?.rooms?.map((room: RoomType) => {
 						const maxUsageTime = room?.stayPlans?.[0].stayPlanRules?.durationHours;
-						const checkin = room?.stayPlans?.[1].stayPlanRules?.checkInFrom;
-						const checkOut = room?.stayPlans?.[1].stayPlanRules?.checkOutBy;
+						const checkinOverNight = room?.stayPlans?.[1]?.stayPlanRules?.checkInFrom;
+						const checkOutOverNight = room?.stayPlans?.[1]?.stayPlanRules?.checkOutBy;
+						const isDayUse = room?.stayPlans?.[0]?.inventories;
+						const isOvernight = room?.stayPlans?.[1]?.inventories;
 						return (
 							<Box key={room._id} className="room-card">
 								<Box className="room-card__image">
-									<ImageGalleryModal
-										open={open2}
-										onClose={() => {
-											setOpen2(false);
-											setInitialIndex(0);
-										}}
-										title={room?.roomName}
-										images={room?.roomImages!}
-										initialIndex={initialIndex}
-									/>
 									<img
 										src={`${process.env.REACT_APP_API_URL}/${room.roomImages[0]}`}
 										alt={room.roomName}
-										onClick={() => setOpen2(true)}
+										onClick={() => {
+											handleSelectRoomImages(room?._id, room?.roomName);
+											setOpen2(true);
+										}}
 									/>
 									<Box className="room-card__count">{room.roomImages.length}+</Box>
 								</Box>
@@ -520,66 +393,78 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 
 									<Box className="room-card__section">
 										<Typography className="room-card__section-title">대실</Typography>
-										<Typography className="room-card__sub">무한대실 · {String(maxUsageTime)}시간 이용</Typography>
-										<Box className="room-card__price-row">
-											<Box className="room-card__price-left">
-												{room?.roomDiscountPrice! > 0 && (
-													<span className="coupon-label">
-														{room?.roomDiscountPrice!.toLocaleString()}원 할인가 적용
-													</span>
-												)}
-												{room?.roomDiscountPrice! > 0 && (
-													<span className="original-price">{room?.basePriceDayUse}</span>
-												)}
-											</Box>
-											<Box className="room-card__price-right">
-												<span className="final-price">
-													{(room?.basePriceDayUse - room?.roomDiscountPrice!).toLocaleString()}원
-												</span>
-												<span className="per-night">/1실</span>
-												<Button
-													variant="contained"
-													className="room-card__button room-card__button--day"
-													onClick={() => handlePushReservationPage(room, 0)}
-												>
-													대실 예약
-												</Button>
-											</Box>
-										</Box>
+										{isDayUse?.length !== 0 ? (
+											<>
+												<Typography className="room-card__sub">무한대실 · {String(maxUsageTime)}시간 이용</Typography>
+												<Box className="room-card__price-row">
+													<Box className="room-card__price-left">
+														{room?.roomDiscountPrice! > 0 && (
+															<span className="coupon-label">
+																{room?.roomDiscountPrice!.toLocaleString()}원 할인가 적용
+															</span>
+														)}
+														{room?.roomDiscountPrice! > 0 && (
+															<span className="original-price">{room?.basePriceDayUse}</span>
+														)}
+													</Box>
+													<Box className="room-card__price-right">
+														<span className="final-price">
+															{(room?.basePriceDayUse - room?.roomDiscountPrice!).toLocaleString()}원
+														</span>
+														<span className="per-night">/1실</span>
+														<Button
+															variant="contained"
+															className="room-card__button room-card__button--day"
+															onClick={() => handlePushReservationPage(room, 0)}
+														>
+															대실 예약
+														</Button>
+													</Box>
+												</Box>
+											</>
+										) : (
+											<p style={{ color: 'red', fontSize: '13px', fontWeight: '600' }}>다른 날짜 확인</p>
+										)}
 									</Box>
 
 									<Box className="room-card__divider" />
 
 									<Box className="room-card__section">
 										<Typography className="room-card__section-title">숙박</Typography>
-										<Typography className="room-card__sub">
-											숙박 베이직 룸 · 입실 {String(checkin)} · 퇴실 {String(checkOut)}
-										</Typography>
-										<Box className="room-card__price-row">
-											<Box className="room-card__price-left">
-												{room?.roomDiscountPrice! > 0 && (
-													<span className="coupon-label">
-														{room?.roomDiscountPrice!.toLocaleString()}원 할인가 적용
-													</span>
-												)}
-												{room?.roomDiscountPrice! > 0 && (
-													<span className="original-price">{(room?.basePriceDayUse).toLocaleString()}원</span>
-												)}
-											</Box>
-											<Box className="room-card__price-right">
-												<span className="final-price">
-													{(room?.basePriceOvernight - room?.roomDiscountPrice!).toLocaleString()}원
-												</span>
-												<span className="per-night">/1박</span>
-												<Button
-													variant="contained"
-													className="room-card__button room-card__button--stay"
-													onClick={() => handlePushReservationPage(room, 1)}
-												>
-													숙박 예약
-												</Button>
-											</Box>
-										</Box>
+										{isOvernight?.length !== 0 ? (
+											<>
+												<Typography className="room-card__sub">
+													숙박 베이직 룸 · 입실 {String(checkinOverNight)} · 퇴실 {String(checkOutOverNight)}
+												</Typography>
+												<Box className="room-card__price-row">
+													<Box className="room-card__price-left">
+														{room?.roomDiscountPrice! > 0 && (
+															<span className="coupon-label">
+																{room?.roomDiscountPrice!.toLocaleString()}원 할인가 적용
+															</span>
+														)}
+														{room?.roomDiscountPrice! > 0 && (
+															<span className="original-price">{(room?.basePriceDayUse).toLocaleString()}원</span>
+														)}
+													</Box>
+													<Box className="room-card__price-right">
+														<span className="final-price">
+															{(room?.basePriceOvernight - room?.roomDiscountPrice!).toLocaleString()}원
+														</span>
+														<span className="per-night">/1박</span>
+														<Button
+															variant="contained"
+															className="room-card__button room-card__button--stay"
+															onClick={() => handlePushReservationPage(room, 1)}
+														>
+															숙박 예약
+														</Button>
+													</Box>
+												</Box>
+											</>
+										) : (
+											<p style={{ color: 'red', fontSize: '13px', fontWeight: '600' }}>다른 날짜 확인</p>
+										)}
 									</Box>
 								</Box>
 								<Stack className="room-card__info">
@@ -688,26 +573,13 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 						propertyCommentList?.map((review: Comment) => {
 							return (
 								<Box key={review._id}>
-									<ReviewImageModal
-										images={review?.commentImages!}
-										open={openReviewImage}
-										onClose={() => setOpenReviewImage(false)}
-										reviewImgIndex={reviewImgIndex}
-									/>
-									;
 									<ReviewItem
+										comment={review}
 										key={review._id}
-										nickname={review?.memberData?.memberNick!}
-										statsText="리뷰 37 · 사진 58 · 장소 34"
-										rating={review?.commentRating}
-										writtenAgo={review?.createdAt!.toString()}
-										roomName={review?.roomDate?.roomName!}
-										text={review?.commentContent}
 										replyText={'yoqqqqqq'}
-										replyAgo={'1개월 전'}
-										images={review?.commentImages!}
 										setOpenReviewImage={setOpenReviewImage}
 										setReviewImgIndex={setReviewImgIndex}
+										setselectCommentImg={setselectCommentImg}
 									/>
 								</Box>
 							);
@@ -727,6 +599,12 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 							onChange={handlePaginationChange}
 						/>
 					</Stack>
+					<ReviewImageModal
+						images={selectCommentImg}
+						open={openReviewImage}
+						onClose={() => setOpenReviewImage(false)}
+						reviewImgIndex={reviewImgIndex}
+					/>
 				</section>
 				<section id="section-similar-rooms">
 					<Stack className="container">
@@ -760,7 +638,7 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 										}}
 									>
 										{similarProperties?.map((property: Property) => {
-											const isFav = property?.meLiked?.[0]?.memberId === user._id;
+											const isFav = property?.meLiked?.[0]?.myFavorite!;
 											return (
 												<SwiperSlide key={property._id}>
 													<Box className="popular-card">

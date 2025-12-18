@@ -1,49 +1,41 @@
 // ReviewItem.tsx
 import React, { useState } from 'react';
-import { Box, Typography, Avatar, Button, Rating, IconButton } from '@mui/material';
+import { Box, Typography, Avatar, Button, Rating } from '@mui/material';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper';
 import 'swiper/css';
 import 'swiper/css/navigation';
+import { Comment } from '../../types/comment/comment';
 
 interface ReviewItemProps {
-	badge?: string; // "베스트리뷰"
-	nickname: string;
-	statsText: string; // "리뷰 37 · 사진 58 · 장소 34"
-	rating: number; // 4.5
-	writtenAgo: string; // "1개월 전"
-	roomName: string; // "A-타입(카운터에서 A타입 꼭 말씀해주세요, OTT 시청가능)"
-	text: string;
 	replyText?: string;
-	replyAgo?: string;
-	images: string[];
+	comment: Comment;
 	setOpenReviewImage: (v: boolean) => void;
 	setReviewImgIndex: (v: number) => void;
+	setselectCommentImg: (v: string[]) => void;
 }
 
 const MAX_PREVIEW_LENGTH = 140;
 
 const ReviewItem: React.FC<ReviewItemProps> = ({
-	badge = '베스트리뷰',
-	nickname,
-	statsText,
-	rating,
-	writtenAgo,
-	roomName,
-	text,
+	// badge = '베스트리뷰',
+	setselectCommentImg,
 	replyText,
-	replyAgo,
-	images,
 	setOpenReviewImage,
 	setReviewImgIndex,
+	comment,
 }) => {
 	const [expanded, setExpanded] = useState(false);
 
-	if (!images.length) return null;
+	if (!comment.commentImages.length) return null;
 
-	const maxIndex = images.length - 1;
-	const shouldClamp = text.length > MAX_PREVIEW_LENGTH;
-	const displayText = !expanded && shouldClamp ? text.slice(0, MAX_PREVIEW_LENGTH) + '…' : text;
+	const handleSelectComment = (commentId: string) => {
+		if (comment._id === commentId) setselectCommentImg(comment.commentImages);
+	};
+
+	const shouldClamp = comment.commentContent.length > MAX_PREVIEW_LENGTH;
+	const displayText =
+		!expanded && shouldClamp ? comment.commentContent.slice(0, MAX_PREVIEW_LENGTH) + '…' : comment.commentContent;
 
 	/** HANDLERS **/
 	const handleToggle = () => {
@@ -55,21 +47,23 @@ const ReviewItem: React.FC<ReviewItemProps> = ({
 		<Box className="review-item">
 			{/* 왼쪽 프로필 영역 */}
 			<Box className="review-item__left">
-				<Avatar className="review-item__avatar">{nickname.charAt(0)}</Avatar>
+				<Avatar className="review-item__avatar">{comment.memberData?.memberNick.charAt(0)}</Avatar>
 				<Box className="review-item__profile">
-					{badge && <span className="review-item__badge">{badge}</span>}
-					<Typography className="review-item__name">{nickname}</Typography>
-					<Typography className="review-item__stats">{statsText}</Typography>
+					{/* {badge && <span className="review-item__badge">{badge}</span>} */}
+					<Typography className="review-item__name">{comment.memberData?.memberNick}</Typography>
+					{/* <Typography className="review-item__stats">{statsText}</Typography> */}
 				</Box>
 			</Box>
-
 			{/* 오른쪽 리뷰 내용 */}
 			<Box className="review-item__right">
 				{/* 상단 별점 + 작성일 */}
 				<Box className="review-item__meta">
-					<Rating name="read-only-rating" value={rating} precision={0.5} readOnly size="small" />
-					<Typography className="review-item__rating-score">{rating.toFixed(1)}</Typography>
-					<Typography className="review-item__ago">{writtenAgo}</Typography>
+					<Rating name="read-only-rating" value={comment.commentRating} precision={0.5} readOnly size="small" />
+					<Typography className="review-item__rating-score">{comment.commentRating.toFixed(1)}</Typography>
+					<Typography className="review-item__ago">{`${comment.createdAt.toString().split('T')[0]} ${comment.createdAt
+						.toString()
+						.split('T')[1]
+						.slice(0, 8)}`}</Typography>
 				</Box>
 
 				{/* 사진 영역 */}
@@ -81,7 +75,7 @@ const ReviewItem: React.FC<ReviewItemProps> = ({
 						spaceBetween={10}
 						className="review-swiper__inner"
 					>
-						{images.map((img, idx) => (
+						{comment.commentImages.map((img, idx) => (
 							<SwiperSlide key={img}>
 								<div
 									className="review-swiper__item"
@@ -90,7 +84,11 @@ const ReviewItem: React.FC<ReviewItemProps> = ({
 										setReviewImgIndex(idx);
 									}}
 								>
-									<img src={`${process.env.REACT_APP_API_URL}/${img}`} alt={img} />
+									<img
+										src={`${process.env.REACT_APP_API_URL}/${img}`}
+										alt={img}
+										onClick={() => handleSelectComment(comment._id)}
+									/>
 								</div>
 							</SwiperSlide>
 						))}
@@ -98,7 +96,7 @@ const ReviewItem: React.FC<ReviewItemProps> = ({
 				</Box>
 
 				{/* 객실 이름 */}
-				<Typography className="review-item__room-name">{roomName}</Typography>
+				<Typography className="review-item__room-name">{comment.roomDate?.roomName}</Typography>
 
 				{/* 리뷰 텍스트 + 더보기 */}
 				<Box className="review-item__text-wrap">
@@ -113,7 +111,7 @@ const ReviewItem: React.FC<ReviewItemProps> = ({
 				{/* 사장님 답변 */}
 				{replyText && (
 					<Box className="review-item__reply">
-						<Typography className="review-item__reply-meta">제휴점 답변 · {replyAgo ?? writtenAgo}</Typography>
+						<Typography className="review-item__reply-meta">제휴점 답변 · {comment.createdAt.toString()}</Typography>
 						<Typography className="review-item__reply-text">{replyText}</Typography>
 					</Box>
 				)}

@@ -79,10 +79,10 @@ const PopularStays = (props: PopularStaysProps) => {
 	const handlePushPropertyDetail = (property: Property) => {
 		const url: PropertyInquiry = {
 			_id: String(property._id),
+			propertyName: encodeURIComponent(property.propertyName),
 			checkInDate: checkIn,
 			checkOutDate: checkOut,
 			personal: 2,
-			propertyName: encodeURIComponent(property.propertyName),
 		};
 
 		router.push(

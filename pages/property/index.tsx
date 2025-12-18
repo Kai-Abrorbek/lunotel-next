@@ -705,9 +705,13 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 
 						<Box className="hotel-card-box">
 							{properties.length !== 0 ? (
-								properties.map((property: Property) => {
+								properties.map((property: Property, idx) => {
 									const isFav = property?.meLiked?.[0]?.myFavorite;
-									const checkin = property.rooms?.[0]?.stayPlans?.[1]?.stayPlanRules?.checkInFrom;
+									const checkin =
+										property.rooms?.[0]?.stayPlans?.[1]?.inventories?.length !== 0
+											? property.rooms?.[0]?.stayPlans?.[1]?.stayPlanRules?.checkInFrom
+											: property.rooms?.[0]?.stayPlans?.[0]?.stayPlanRules?.windowStart;
+
 									return (
 										<Card
 											key={property._id}

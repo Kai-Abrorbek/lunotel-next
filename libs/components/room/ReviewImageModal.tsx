@@ -32,7 +32,7 @@ const ReviewImageModal: React.FC<ImageGalleryModalProps> = ({ open, onClose, ima
 		setCurrentIndex(idx);
 	};
 
-	if (!images.length) return null;
+	if (!images?.length) return null;
 	const active = images[currentIndex];
 	return (
 		<Modal

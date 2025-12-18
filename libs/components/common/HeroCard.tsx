@@ -250,25 +250,23 @@ const HeroCard = (props: HeroCardProps) => {
 	const pushSearchHandler = async () => {
 		try {
 			if (router.pathname === '/property/[propertyId]') {
+				console.log(searchFilter);
 				const propertyId = router.query.propertyId?.slice(11);
 				const propertyInqiry: PropertyInquiry = {
 					_id: propertyId! as string,
-					propertyName: propertyName ?? '',
+					propertyName: encodeURIComponent(propertyName!) ?? '',
 					checkInDate: searchFilter.search.checkInDate!,
 					checkOutDate: searchFilter.search.checkOutDate!,
 					personal: searchFilter.search.personal!,
 				};
-				if (!searchFilter.search?.location) {
-					await bubbleAlert('여행지를 선택해주세요!');
-				} else {
-					await router.push(
-						`/property/propertyId=${propertyId}?input=${JSON.stringify({ ...propertyInqiry })}`,
-						`/property/propertyId=${propertyId}?input=${JSON.stringify({ ...propertyInqiry })}`,
-						{
-							scroll: false,
-						},
-					);
-				}
+
+				await router.push(
+					`/property/propertyId=${propertyId}?input=${JSON.stringify({ ...propertyInqiry })}`,
+					`/property/propertyId=${propertyId}?input=${JSON.stringify({ ...propertyInqiry })}`,
+					{
+						scroll: false,
+					},
+				);
 				setHeroCardOpen(false);
 			} else {
 				if (!searchFilter.search?.location) {
