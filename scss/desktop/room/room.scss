@@ -278,10 +278,23 @@
 							flex-wrap: wrap;
 							gap: 6px;
 
-							.MuiChip-root {
-								height: 28px;
-								border-radius: 999px;
-								font-size: 12px;
+							.amenit-box {
+								display: inline-flex;
+								align-items: center;
+								gap: 4px;
+								padding: 6px 10px;
+								border-radius: 9999px;
+								font-size: 13px;
+								font-weight: 600;
+								line-height: 1;
+								white-space: nowrap;
+
+								background: rgba(17, 24, 39, 0.06);
+								border: 1px solid rgba(17, 24, 39, 0.12);
+								color: #111827;
+								transition: transform 120ms ease, background-color 120ms ease, border-color 120ms ease,
+									box-shadow 120ms ease;
+								user-select: none;
 							}
 						}
 					}
@@ -380,8 +393,11 @@
 				}
 
 				&__title {
-					font-size: 23px;
+					font-size: 21px;
 					font-weight: 700;
+					width: 80%;
+					overflow: hidden;
+					text-overflow: ellipsis;
 				}
 
 				&__link {
@@ -508,6 +524,24 @@
 					flex-direction: row;
 					flex-wrap: wrap;
 					gap: 5px;
+					.amenit-box {
+						display: inline-flex;
+						align-items: center;
+						gap: 4px;
+						padding: 6px 10px;
+						border-radius: 9999px;
+						font-size: 13px;
+						font-weight: 600;
+						line-height: 1;
+						white-space: nowrap;
+
+						background: rgba(17, 24, 39, 0.06);
+						border: 1px solid rgba(17, 24, 39, 0.12);
+						color: #111827;
+						transition: transform 120ms ease, background-color 120ms ease, border-color 120ms ease,
+							box-shadow 120ms ease;
+						user-select: none;
+					}
 				}
 			}
 		}

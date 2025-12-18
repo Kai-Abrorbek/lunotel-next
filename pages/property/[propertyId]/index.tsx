@@ -2,7 +2,18 @@ import { ChangeEvent, useEffect, useState } from 'react';
 import OtherLayout from '../../../libs/components/layout/OtherLayout';
 import { PropertiesInquiry, PropertyInquiry } from '../../../libs/types/property/property.input';
 import { useRouter } from 'next/router';
-import { Box, Button, Chip, IconButton, Menu, MenuItem, Pagination, Stack, Typography } from '@mui/material';
+import {
+	Box,
+	Button,
+	Chip,
+	dividerClasses,
+	IconButton,
+	Menu,
+	MenuItem,
+	Pagination,
+	Stack,
+	Typography,
+} from '@mui/material';
 import RoomStickyBar from '../../../libs/components/room/RoomStickyBar';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -26,76 +37,20 @@ import CheckIcon from '@mui/icons-material/Check';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import { CommentsInquiry } from '../../../libs/types/comment/comment.input';
-import { Direction } from '../../../libs/enums/common.enum';
+import { Direction, Message } from '../../../libs/enums/common.enum';
 import { ReservationInput } from '../../../libs/types/reservation/reservation.input';
-
-export type GalleryImage = {
-	id: number;
-	src: string;
-	alt: string;
-	category?: ImageCategory;
-};
-
-const GALLERY_IMAGES: GalleryImage[] = [
-	{
-		id: 1,
-		src: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80',
-		alt: '모던한 호텔 객실 전경',
-	},
-	{
-		id: 2,
-		src: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=800&q=80',
-		alt: '침대와 소파가 있는 객실',
-	},
-	{
-		id: 3,
-		src: 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=800&q=80',
-		alt: '어두운 톤의 호텔 침실',
-	},
-	{
-		id: 4,
-		src: 'https://images.unsplash.com/photo-1560448075-bb485b067938?auto=format&fit=crop&w=800&q=80',
-		alt: '라운지와 책상이 있는 객실',
-	},
-	{
-		id: 5,
-		src: 'https://images.unsplash.com/photo-1560448075-bb485b067938?auto=format&fit=crop&w=800&q=80',
-		alt: '욕실과 욕조가 있는 호텔',
-	},
-];
-
-const reviewImages = [
-	{
-		id: 0,
-		src: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80',
-		alt: '욕조가 있는 욕실',
-	},
-	{
-		id: 1,
-		src: 'https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=800&q=80',
-		alt: '침대와 책상이 있는 객실',
-	},
-	{
-		id: 2,
-		src: 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=800&q=80',
-		alt: '조명 켜진 호텔 침대',
-	},
-	{
-		id: 3,
-		src: 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=800&q=80',
-		alt: '조명 켜진 호텔 침대',
-	},
-	{
-		id: 4,
-		src: 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=800&q=80',
-		alt: '조명 켜진 호텔 침대',
-	},
-	{
-		id: 5,
-		src: 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=800&q=80',
-		alt: '조명 켜진 호텔 침대',
-	},
-];
+import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
+import { LIKE_TARGET_PROPERTY } from '../../../apollo/user/mutation';
+import { GET_PROPERTY, GET_SIMILAR_PROPERTIES } from '../../../apollo/user/query';
+import { userVar } from '../../../apollo/store';
+import { T } from '../../../libs/types/common';
+import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../../libs/sweetAlert';
+import { Property } from '../../../libs/types/property/property';
+import { RoomType } from '../../../libs/types/roomtype/roomtype';
+import { amenitiesList, PropertyAmenity } from '../../../libs/enums/property.enum';
+import { GET_COMMENTS } from '../../../apollo/admin/query';
+import { Comment } from '../../../libs/types/comment/comment';
+import { COMMENT_SORT_OPTIONS } from '../../../libs/enums/propertyRoomtype.enum';
 
 interface Stay {
 	id: number;
@@ -223,138 +178,32 @@ const STAYS: Stay[] = [
 	// 필요하면 더 추가
 ];
 
-const sampleReviews = [
-	{
-		id: 'REV-101',
-		guest: 'James Kim',
-		rating: 5,
-		date: '2024-12-01',
-		room: 'R203',
-		roomType: 'Deluxe Double Room',
-		verified: true,
-		comment: '최고의 숙박이었어요! 직원들 친절하고 방도 완전 깨끗했습니다.',
-		response: '좋은 리뷰 감사합니다! 더 편안한 숙박 되도록 항상 노력하겠습니다.',
-	},
-	{
-		id: 'REV-102',
-		guest: 'Sophie Lee',
-		rating: 3,
-		date: '2024-12-03',
-		room: 'R104',
-		roomType: 'Standard Twin',
-		verified: false,
-		comment: '전체적으로 무난했지만 방음이 좀 아쉬웠어요.',
-	},
-	{
-		id: 'REV-103',
-		guest: 'Daniel Park',
-		rating: 4,
-		date: '2024-11-29',
-		room: 'R402',
-		roomType: 'Oceanview Suite',
-		verified: true,
-		comment: '뷰가 정말 최고예요. 조식도 괜찮았습니다.',
-	},
-	{
-		id: 'REV-104',
-		guest: 'Emily Choi',
-		rating: 2,
-		date: '2024-12-02',
-		room: 'R305',
-		roomType: 'Standard Twin',
-		verified: true,
-		comment: '침대가 너무 딱딱했고 난방이 약했어요.',
-	},
-	{
-		id: 'REV-105',
-		guest: 'Michael Stone',
-		rating: 5,
-		date: '2024-11-27',
-		room: 'R501',
-		roomType: 'Premium King',
-		verified: true,
-		comment: '기념일로 갔는데 케이크 서비스까지 주셔서 감동했습니다!',
-		response: '소중한 날 함께할 수 있어 영광입니다.',
-	},
-	{
-		id: 'REV-106',
-		guest: 'Anna Kim',
-		rating: 1,
-		date: '2024-12-04',
-		room: 'R101',
-		roomType: 'Standard Double',
-		verified: false,
-		comment: '청결 상태가 많이 아쉬웠습니다. 다시 방문하기는 어려울 것 같아요.',
-	},
-	{
-		id: 'REV-107',
-		guest: 'Ryan Lee',
-		rating: 4,
-		date: '2024-12-04',
-		room: 'R303',
-		roomType: 'Deluxe Double Room',
-		verified: true,
-		comment: '적당한 가격에 만족스러운 시설이었습니다.',
-	},
-	{
-		id: 'REV-108',
-		guest: 'Olivia Park',
-		rating: 3,
-		date: '2024-11-30',
-		room: 'R212',
-		roomType: 'Oceanview Suite',
-		verified: true,
-		comment: '뷰는 좋았지만 체크인이 너무 오래 걸렸어요.',
-	},
-	{
-		id: 'REV-109',
-		guest: 'Henry Yoon',
-		rating: 5,
-		date: '2024-12-05',
-		room: 'R601',
-		roomType: 'Premium Suite',
-		verified: true,
-		comment: '시설, 직원 친절도, 위치 모두 완벽했습니다.',
-	},
-	{
-		id: 'REV-110',
-		guest: 'Jessica Han',
-		rating: 2,
-		date: '2024-11-25',
-		room: 'R105',
-		roomType: 'Standard Double',
-		verified: false,
-		comment: '욕실이 너무 오래돼서 불편했습니다.',
-	},
-];
-
 interface PropertyDetailPageProps {
 	initialInput: PropertiesInquiry;
 }
 type TabKey = 'overview' | 'rooms' | 'amenities' | 'location' | 'reviews';
-type CommnetTypes = 'recommended' | 'createdAt' | 'commentRating_DESC' | 'commentRating_ASC';
 
 const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 	const { initialInput } = props;
+	const user = useReactiveVar(userVar);
 	const router = useRouter();
-	const propertyId = router.query.propertyId?.slice(router.query.propertyId.length - 1) as string;
+	const propertyId = router.query.propertyId?.slice(11) as string;
 	const [open, setOpen] = useState(false);
+	const [open2, setOpen2] = useState(false);
 	const [openReviewImage, setOpenReviewImage] = useState(false);
 	const [initialIndex, setInitialIndex] = useState<number>(0);
 	const [reviewImgIndex, setReviewImgIndex] = useState<number>(0);
 	const [activeTab, setActiveTab] = useState<TabKey>('rooms');
-	const [favoriteIds, setFavoriteIds] = useState<boolean>(false);
 	const [favoriteRooms, setFavoriteRooms] = useState<number[]>([]);
-	const [sortOption, setSortOption] = useState<CommnetTypes>('recommended');
+	const [sortOption, setSortOption] = useState('추천순');
 	const [sortAnchorEl, setSortAnchorEl] = useState<null | HTMLElement>(null);
 	const isSortMenuOpen = Boolean(sortAnchorEl);
 	const [currentPage, setCurrentPage] = useState<number>(1);
-	const [total, setTotal] = useState<number>(20);
 	const [targetCommnetsInput, setTargetCommnetsInput] = useState<CommentsInquiry>({
 		page: 1,
 		limit: 10,
-		sort: 'recommended',
-		direction: Direction.DESC,
+		sort: 'createdAt',
+		direction: 'DESC',
 		search: {
 			commentRefId: propertyId!,
 		},
@@ -362,27 +211,93 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 	const [searchFilter, setSearchFilter] = useState<PropertyInquiry>(
 		router?.query?.input ? JSON.parse(router?.query?.input as string) : initialInput, // propertyInquiry => 변경
 	);
+	const [hasRouterApplied, setHasRouterApplied] = useState(false);
 
-	const sortLabelMap = {
-		recommended: '추천순',
-		createdAt: '최신순',
-		commentRating_DESC: '평점 높은순',
-		commentRating_ASC: '평점 낮은순',
-	} as const;
+	const [likeTargetProperty] = useMutation(LIKE_TARGET_PROPERTY);
 
-	const main = GALLERY_IMAGES[0];
-	const thumbs = GALLERY_IMAGES.slice(1, 5); // 오른쪽 4개
-	const totalCount = GALLERY_IMAGES.length; // 오른쪽 4개
+	/** APOLLO REQUESTS **/
+	const {
+		loading: getPropertyLoading,
+		data: getPropertyData,
+		error: getPropertyError,
+		refetch: getPropertyRefetch,
+	} = useQuery(GET_PROPERTY, {
+		fetchPolicy: 'cache-and-network',
+		variables: { input: searchFilter },
+		notifyOnNetworkStatusChange: true,
+		skip: !hasRouterApplied,
+	});
+	const targetProperty: Property = getPropertyData?.getProperty;
+
+	const {
+		loading: getPropertyCommentsLoading,
+		data: getPropertyCommentsData,
+		error: getPropertyCommentsError,
+		refetch: getPropertyCommentsRefetch,
+	} = useQuery(GET_COMMENTS, {
+		fetchPolicy: 'cache-and-network',
+		variables: { input: targetCommnetsInput },
+		notifyOnNetworkStatusChange: true,
+		skip: !targetCommnetsInput.search.commentRefId,
+	});
+
+	const propertyCommentList = getPropertyCommentsData?.getComments?.list!;
+
+	const {
+		loading: getSimilarPropertiesLoading,
+		data: getSimilarPropertiesData,
+		error: getSimilarPropertiesError,
+		refetch: getSimilarPropertiesRefetch,
+	} = useQuery(GET_SIMILAR_PROPERTIES, {
+		fetchPolicy: 'cache-and-network',
+		variables: { propertyId: targetProperty?._id },
+		notifyOnNetworkStatusChange: true,
+		skip: !targetProperty,
+	});
+
+	const similarProperties = getSimilarPropertiesData?.getSimilarProperties;
+	/** VARIABLES **/
+	const commentTotal = getPropertyData?.getProperty?.propertyComments;
+	const propertyImages = targetProperty?.propertyImages;
+	const propertyAmenities = new Set(targetProperty?.propertyAmenities);
+	const propertyAmenitiesList = amenitiesList.filter((amenint) =>
+		propertyAmenities.has(amenint.key as PropertyAmenity),
+	);
+	const main = propertyImages?.[0];
+	const thumbs = propertyImages?.slice(1, 5);
+	const totalCount = propertyImages?.length;
+
 	/** LIFECYCLES **/
-
 	useEffect(() => {
+		if (!router.isReady) return;
+
 		if (router.query.input) {
-			const inputObj = JSON.parse(router?.query?.input as string);
-			setSearchFilter(inputObj);
+			setSearchFilter(JSON.parse(router?.query?.input as string));
+			setTargetCommnetsInput({
+				...targetCommnetsInput,
+				search: {
+					commentRefId: propertyId,
+				},
+			});
 		}
-	}, [router]);
+		setHasRouterApplied(true);
+	}, [router.isReady, router.query.input]);
 
 	/** HANDLERS **/
+	const likePropertyHandler = async (user: T, id: string) => {
+		try {
+			if (!id) return;
+			if (!user._id) throw new Error(Message.NOT_AUTHENTICATED);
+			await likeTargetProperty({ variables: { input: id } });
+			await getPropertyRefetch({ input: searchFilter });
+			await getSimilarPropertiesRefetch({ propertyId: targetProperty?._id });
+			await sweetTopSmallSuccessAlert('success', 800);
+		} catch (err: any) {
+			console.log('ERROR, likePropertyHandler', err.message);
+			sweetMixinErrorAlert(err.message);
+		}
+	};
+
 	const handleTabClick = (tab: TabKey) => {
 		setActiveTab(tab);
 		const target = document.getElementById(`section-${tab}`);
@@ -392,26 +307,6 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 			window.scrollTo({ top, behavior: 'smooth' });
 		}
 	};
-
-	const toggleFavorite = (id: number) => {
-		setFavoriteRooms((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
-	};
-
-	const sortedReviews = [...sampleReviews].sort((a, b) => {
-		switch (sortOption) {
-			case 'createdAt':
-				return new Date(b.date).getTime() - new Date(a.date).getTime();
-			case 'commentRating_DESC':
-				return b.rating - a.rating;
-			case 'commentRating_ASC':
-				return a.rating - b.rating;
-			case 'recommended':
-			default:
-				// 추천순: 일단 평점↓, 날짜↓ 정도로
-				if (b.rating !== a.rating) return b.rating - a.rating;
-				return new Date(b.date).getTime() - new Date(a.date).getTime();
-		}
-	});
 
 	const handlePaginationChange = async (event: ChangeEvent<unknown>, value: number) => {
 		targetCommnetsInput.page = value;
@@ -446,9 +341,12 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 		<Stack className="container">
 			<ImageGalleryModal
 				open={open}
-				onClose={() => setOpen(false)}
-				title="길동 MARI-마리"
-				images={GALLERY_IMAGES}
+				onClose={() => {
+					setOpen(false);
+					setInitialIndex(0);
+				}}
+				title={targetProperty?.propertyName}
+				images={targetProperty?.propertyImages!}
 				initialIndex={initialIndex}
 			/>
 			{/* 상단 헤더 / 갤러리 등 */}
@@ -464,8 +362,8 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 						<Box className="property-gallery__main">
 							{main && (
 								<img
-									src={main.src}
-									alt={main.alt}
+									src={`${process.env.REACT_APP_API_URL}/${main}`}
+									alt={main}
 									onClick={() => {
 										setOpen(true);
 										setInitialIndex(0);
@@ -476,17 +374,17 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 						</Box>
 
 						<Box className="property-gallery__side">
-							{thumbs.map((img, idx) => (
-								<Box key={img.id} className="property-gallery__thumb">
+							{thumbs?.map((img, idx) => (
+								<Box key={idx} className="property-gallery__thumb">
 									<img
-										src={img.src}
-										alt={img.alt}
+										src={`${process.env.REACT_APP_API_URL}/${img}`}
+										alt={img}
 										onClick={() => {
 											setOpen(true);
 											setInitialIndex(idx + 1);
 										}}
 									/>
-									{idx === thumbs.length - 1 && totalCount && (
+									{idx === thumbs?.length - 1 && totalCount && (
 										<Box
 											className="property-gallery__more"
 											onClick={() => {
@@ -503,16 +401,25 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 					</Box>
 					<Stack className="property-info">
 						<Stack className="property-info__type-name">
-							<Typography className="property-info__type">모텔</Typography>
-							<Typography className="property-info__name">길동 MARI-마리</Typography>
+							<Typography className="property-info__type">{targetProperty?.propertyType}</Typography>
+							<Typography className="property-info__name">{targetProperty?.propertyName}</Typography>
 						</Stack>
 						<Stack className="property-info__price">
-							<IconButton className="property-info__favorite" onClick={() => setFavoriteIds(!favoriteIds)}>
-								{favoriteIds ? <FavoriteIcon className={favoriteIds ? 'active' : ''} /> : <FavoriteBorderIcon />}
+							<IconButton
+								className="property-info__favorite"
+								onClick={() => likePropertyHandler(user, targetProperty?._id)}
+							>
+								{targetProperty?.meLiked?.[0]?.memberId === user._id ? (
+									<FavoriteIcon className={targetProperty?.meLiked?.[0]?.memberId === user._id ? 'active' : ''} />
+								) : (
+									<FavoriteBorderIcon />
+								)}
 							</IconButton>
 
-							<Typography className="property-info__coupon-price">3000원 쿠폰 적용가</Typography>
-							<Typography className="property-info__basic-price">22,000원</Typography>
+							{/* <Typography className="property-info__coupon-price">3000원 쿠폰 적용가</Typography> */}
+							<Typography className="property-info__basic-price">
+								{targetProperty?.propertyPrice!.toLocaleString()}원
+							</Typography>
 						</Stack>
 					</Stack>
 					<Box className="property-summary">
@@ -524,9 +431,9 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 							<Box className="rating-box">
 								<Box className="rating-chip">
 									<StarIcon fontSize="small" />
-									<span>{(9.3).toFixed(1)}</span>
+									<span>{targetProperty?.propertyRank.toFixed(1)}</span>
 								</Box>
-								<span className="rating-chip__count">{1234}명 평가</span>
+								<span className="rating-chip__count">{targetProperty?.propertyComments.toLocaleString()}명 평가</span>
 							</Box>
 							<Typography className="rating-snippet" noWrap>
 								{'예전에도 들렀던 모텔인데 이번에도 근처 방문할 일이 생겨서 또 숙박했습니다...'}
@@ -543,10 +450,14 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 								<Typography className="card-link">자세히 보기 &gt;</Typography>
 							</Box>
 							<Box className="service-icons">
-								<Chip icon={<LocalOfferIcon />} label="스파/월풀" />
-								<Chip icon={<WifiIcon />} label="무선인터넷" />
-								<Chip icon={<DirectionsCarIcon />} label="주차장" />
-								<Chip icon={<RoomIcon />} label="트윈베드" />
+								{propertyAmenitiesList.map((amenit) => {
+									return (
+										<div key={amenit.key} className="amenit-box">
+											<span>{amenit.icon}</span>
+											<span>{amenit.name}</span>
+										</div>
+									);
+								})}
 							</Box>
 						</Box>
 
@@ -562,47 +473,72 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 							<Box className="location-lines">
 								<Box className="location-line">
 									<PlaceIcon fontSize="small" />
-									<Typography>{'서울 강동구 길동 387-7'}</Typography>
+									<Typography>{targetProperty?.propertyAddress}</Typography>
 								</Box>
 								<Box className="location-line">
 									<NearMeIcon fontSize="small" />
-									<Typography>{'길동역 도보 3분'}</Typography>
+									<Typography>{targetProperty?.propertyDetailAddress}</Typography>
 								</Box>
 							</Box>
 						</Box>
 					</Box>
 				</section>
 				<section id="section-rooms">
-					{[1, 2, 3, 4, 5, 6].length === 0 && (
+					{targetProperty?.rooms?.length === 0 && (
 						<div className="no-data">
 							<h1>검색 결과가 없어요.</h1>
 							<p>'asdd'에 대한 철자를 확인하거나 긴 문구는 띄어쓰기를 해보세요.</p>
 						</div>
 					)}
-					{[1, 2, 3, 4, 5, 6].map((room) => {
+					{targetProperty?.rooms?.map((room: RoomType) => {
+						const maxUsageTime = room?.stayPlans?.[0].stayPlanRules?.durationHours;
+						const checkin = room?.stayPlans?.[1].stayPlanRules?.checkInFrom;
+						const checkOut = room?.stayPlans?.[1].stayPlanRules?.checkOutBy;
 						return (
-							<Box key={room} className="room-card">
+							<Box key={room._id} className="room-card">
 								<Box className="room-card__image">
-									<img src={main.src} alt={main.alt} onClick={() => setOpen(true)} />
-									<Box className="room-card__count">65+</Box>
+									<ImageGalleryModal
+										open={open2}
+										onClose={() => {
+											setOpen2(false);
+											setInitialIndex(0);
+										}}
+										title={room?.roomName}
+										images={room?.roomImages!}
+										initialIndex={initialIndex}
+									/>
+									<img
+										src={`${process.env.REACT_APP_API_URL}/${room.roomImages[0]}`}
+										alt={room.roomName}
+										onClick={() => setOpen2(true)}
+									/>
+									<Box className="room-card__count">{room.roomImages.length}+</Box>
 								</Box>
 
 								<Box className="room-card__content">
 									<Box className="room-card__header">
-										<Typography className="room-card__title">{'title'}</Typography>
+										<Typography className="room-card__title">{room?.roomName}</Typography>
 										<Typography className="room-card__link">상세 정보 &gt;</Typography>
 									</Box>
 
 									<Box className="room-card__section">
 										<Typography className="room-card__section-title">대실</Typography>
-										<Typography className="room-card__sub">무한대실 · 9시간 이용</Typography>
+										<Typography className="room-card__sub">무한대실 · {String(maxUsageTime)}시간 이용</Typography>
 										<Box className="room-card__price-row">
 											<Box className="room-card__price-left">
-												{true && <span className="coupon-label">{'2,500원 쿠폰 적용가'}</span>}
-												{true && <span className="original-price">{'30,000원'}</span>}
+												{room?.roomDiscountPrice! > 0 && (
+													<span className="coupon-label">
+														{room?.roomDiscountPrice!.toLocaleString()}원 할인가 적용
+													</span>
+												)}
+												{room?.roomDiscountPrice! > 0 && (
+													<span className="original-price">{room?.basePriceDayUse}</span>
+												)}
 											</Box>
 											<Box className="room-card__price-right">
-												<span className="final-price">{'27,500원'}</span>
+												<span className="final-price">
+													{(room?.basePriceDayUse - room?.roomDiscountPrice!).toLocaleString()}원
+												</span>
 												<span className="per-night">/1실</span>
 												<Button
 													variant="contained"
@@ -619,14 +555,24 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 
 									<Box className="room-card__section">
 										<Typography className="room-card__section-title">숙박</Typography>
-										<Typography className="room-card__sub">숙박 베이직 룸 · 입실 17:00 · 퇴실 12:00</Typography>
+										<Typography className="room-card__sub">
+											숙박 베이직 룸 · 입실 {String(checkin)} · 퇴실 {String(checkOut)}
+										</Typography>
 										<Box className="room-card__price-row">
 											<Box className="room-card__price-left">
-												{true && <span className="coupon-label">{'8,000원+1,000원 쿠폰 적용가'}</span>}
-												{true && <span className="original-price">{'80,000원'}</span>}
+												{room?.roomDiscountPrice! > 0 && (
+													<span className="coupon-label">
+														{room?.roomDiscountPrice!.toLocaleString()}원 할인가 적용
+													</span>
+												)}
+												{room?.roomDiscountPrice! > 0 && (
+													<span className="original-price">{(room?.basePriceDayUse).toLocaleString()}원</span>
+												)}
 											</Box>
 											<Box className="room-card__price-right">
-												<span className="final-price">{'71,000원'}</span>
+												<span className="final-price">
+													{(room?.basePriceOvernight - room?.roomDiscountPrice!).toLocaleString()}원
+												</span>
 												<span className="per-night">/1박</span>
 												<Button
 													variant="contained"
@@ -641,7 +587,9 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 								</Box>
 								<Stack className="room-card__info">
 									<Typography>객실정보</Typography>
-									<Typography>기준2인 · 최대2인</Typography>
+									<Typography>
+										기준{room?.roomStandPersonal}인 · 최대{room?.roomMaxPersonal}인
+									</Typography>
 								</Stack>
 							</Box>
 						);
@@ -652,16 +600,14 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 					<Stack className="amenities-card">
 						<Typography className="amenities-card__title">서비스 및 부대시설</Typography>
 						<Box className="amenities-card__icons">
-							<Chip icon={<LocalOfferIcon />} label="스파/월풀" />
-							<Chip icon={<WifiIcon />} label="무선인터넷" />
-							<Chip icon={<DirectionsCarIcon />} label="주차장" />
-							<Chip icon={<RoomIcon />} label="트윈베드" />
-							<Chip icon={<RoomIcon />} label="트윈베드" />
-							<Chip icon={<RoomIcon />} label="트윈베드" />
-							<Chip icon={<RoomIcon />} label="트윈베드" />
-							<Chip icon={<RoomIcon />} label="트윈베드" />
-							<Chip icon={<RoomIcon />} label="트윈베드" />
-							<Chip icon={<RoomIcon />} label="트윈베드" />
+							{propertyAmenitiesList.map((amenit) => {
+								return (
+									<div key={amenit.key} className="amenit-box">
+										<span>{amenit.icon}</span>
+										<span>{amenit.name}</span>
+									</div>
+								);
+							})}
 						</Box>
 					</Stack>
 					<Box className="room-amenities__divider" />
@@ -673,17 +619,18 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 				</section>
 				<section id="section-location">
 					<Typography className="section-location_title">위치</Typography>
-					<PropertyLocationMap address="서울 강동구 길동 387-7" />
+					<PropertyLocationMap address={targetProperty?.propertyAddress} />
 				</section>
 				<section id="section-reviews">
 					<Box className="reviews-page__header">
 						<Box className="reviews-page__header-left">
 							<span className="reviews-page__header-star">★</span>
 							<span className="reviews-page__header-title">
-								리얼 리뷰 <span className="reviews-page__header-score">{9.1}</span>
+								리얼 리뷰 <span className="reviews-page__header-score">{targetProperty?.propertyRank?.toFixed(1)}</span>
 							</span>
 							<span className="reviews-page__header-meta">
-								{sampleReviews.length.toLocaleString()}명 평가 · {sampleReviews.length.toLocaleString()}개 리뷰
+								{targetProperty?.propertyComments.toLocaleString()}명 평가 ·{' '}
+								{targetProperty?.propertyComments.toLocaleString()}개 리뷰
 							</span>
 						</Box>
 
@@ -694,7 +641,7 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 								disableRipple
 							>
 								<SwapVertIcon fontSize="small" className="reviews-page__sort-icon" />
-								<span className="reviews-page__sort-label">{sortLabelMap[sortOption]}</span>
+								<span className="reviews-page__sort-label">{sortOption}</span>
 							</Button>
 
 							<Menu
@@ -706,36 +653,31 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 								anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
 								transformOrigin={{ vertical: 'top', horizontal: 'right' }}
 							>
-								{(
-									[
-										{ key: 'recommended', label: '추천순' },
-										{ key: 'createdAt', label: '최신순' },
-										{ key: 'commentRating_DESC', label: '평점 높은순' },
-										{ key: 'commentRating_ASC', label: '평점 낮은순' },
-									] as const
-								).map((item) => (
+								{COMMENT_SORT_OPTIONS.map((item) => (
 									<MenuItem
-										key={item.key}
+										key={item.value}
 										onClick={() => {
+											console.log(item);
 											setTargetCommnetsInput({
 												...targetCommnetsInput,
-												sort: item.key,
+												sort: item.sort,
+												direction: item.direc,
 											});
-											setSortOption(item.key);
+											setSortOption(item.label);
 											setSortAnchorEl(null);
 										}}
 										className="reviews-page__sort-menu-item"
 									>
 										<span
 											className={
-												sortOption === item.key
+												sortOption === item.label
 													? 'reviews-page__sort-menu-text reviews-page__sort-menu-text--active'
 													: 'reviews-page__sort-menu-text'
 											}
 										>
 											{item.label}
 										</span>
-										{sortOption === item.key && (
+										{sortOption === item.label && (
 											<CheckIcon fontSize="small" className="reviews-page__sort-menu-check" />
 										)}
 									</MenuItem>
@@ -744,29 +686,33 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 						</Box>
 					</Box>
 					<hr className="reviews-page__header-divider" />
-					<ReviewImageModal
-						images={reviewImages}
-						open={openReviewImage}
-						onClose={() => setOpenReviewImage(false)}
-						reviewImgIndex={reviewImgIndex}
-					/>
-					{sortedReviews.length !== 0 ? (
-						sortedReviews.map((review) => {
+
+					{propertyCommentList?.length !== 0 ? (
+						propertyCommentList?.map((review: Comment) => {
 							return (
-								<ReviewItem
-									key={review.id}
-									nickname={review.guest}
-									statsText="리뷰 37 · 사진 58 · 장소 34"
-									rating={review.rating}
-									writtenAgo={review.date}
-									roomName={review.roomType}
-									text={review.comment}
-									replyText={review.response}
-									replyAgo={'1개월 전'}
-									images={reviewImages}
-									setOpenReviewImage={setOpenReviewImage}
-									setReviewImgIndex={setReviewImgIndex}
-								/>
+								<Box key={review._id}>
+									<ReviewImageModal
+										images={review?.commentImages!}
+										open={openReviewImage}
+										onClose={() => setOpenReviewImage(false)}
+										reviewImgIndex={reviewImgIndex}
+									/>
+									;
+									<ReviewItem
+										key={review._id}
+										nickname={review?.memberData?.memberNick!}
+										statsText="리뷰 37 · 사진 58 · 장소 34"
+										rating={review?.commentRating}
+										writtenAgo={review?.createdAt!.toString()}
+										roomName={review?.roomDate?.roomName!}
+										text={review?.commentContent}
+										replyText={'yoqqqqqq'}
+										replyAgo={'1개월 전'}
+										images={review?.commentImages!}
+										setOpenReviewImage={setOpenReviewImage}
+										setReviewImgIndex={setReviewImgIndex}
+									/>
+								</Box>
 							);
 						})
 					) : (
@@ -777,7 +723,7 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 
 					<Stack className="reviews-pagination">
 						<Pagination
-							count={Math.ceil(total / targetCommnetsInput.limit)}
+							count={Math.ceil(commentTotal! / targetCommnetsInput.limit)}
 							page={currentPage}
 							shape="circular"
 							color="primary"
@@ -794,7 +740,7 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 							</Box>
 
 							{/* 슬라이더 래퍼 + 화살표 버튼 */}
-							{STAYS.length !== 0 ? (
+							{similarProperties?.length !== 0 ? (
 								<Box className="hotelspecials-slider-wrapper">
 									<IconButton className="hotelspecials-arrow hotelspecials-prev">
 										<ArrowBackIosNewIcon />
@@ -816,18 +762,28 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 											1280: { slidesPerView: 4, spaceBetween: 24 },
 										}}
 									>
-										{STAYS.map((stay) => {
-											const isFav = favoriteRooms.includes(stay.id);
+										{similarProperties?.map((property: Property) => {
+											const isFav = property?.meLiked?.[0]?.memberId === user._id;
 											return (
-												<SwiperSlide key={stay.id}>
+												<SwiperSlide key={property._id}>
 													<Box className="popular-card">
 														<Box className="popular-image-wrapper">
-															<img src={stay.imageUrl} alt={stay.name} className="popular-image" />
+															<img
+																src={`${process.env.REACT_APP_API_URL}/${property.propertyImages[0]}`}
+																alt={property.propertyName}
+																className="popular-image"
+															/>
 															<Box className="popular-image-top">
-																{stay.badgeText && (
-																	<Chip className="popular-chip" label={stay.badgeText} size="small" />
-																)}
-																<IconButton className="popular-fav-btn" onClick={() => toggleFavorite(stay.id)}>
+																{/* {property.badgeText && (
+																	<Chip className="popular-chip" label={property.badgeText} size="small" />
+																)} */}
+																<IconButton
+																	className="popular-fav-btn"
+																	onClick={(e) => {
+																		e.stopPropagation();
+																		likePropertyHandler(user, property._id);
+																	}}
+																>
 																	{isFav ? (
 																		<FavoriteIcon className="popular-fav-icon active" />
 																	) : (
@@ -838,28 +794,34 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 														</Box>
 
 														<Box className="popular-info">
-															<Typography className="popular-category">{stay.categoryLabel}</Typography>
-															<Typography className="popular-name">{stay.name}</Typography>
+															<Typography className="popular-category">{property.propertyType}</Typography>
+															<Typography className="popular-name">{property.propertyName}</Typography>
 															<Typography className="popular-location">
-																{stay.location} · {stay.subLocation}
+																{property.propertyAddress} · {property.propertyDetailAddress}
 															</Typography>
 
 															<Box className="popular-rating-row">
 																<Box className="popular-rating-badge">
 																	<StarIcon className="popular-rating-star" />
-																	<span className="popular-rating-score">{stay.rating.toFixed(1)}</span>
+																	<span className="popular-rating-score">{property.propertyRank.toFixed(1)}</span>
 																</Box>
-																<span className="popular-rating-count">{stay.reviewCount.toLocaleString()}명 평가</span>
+																<span className="popular-rating-count">
+																	{property.propertyComments.toLocaleString()}명 평가
+																</span>
 															</Box>
 
-															{stay.originalPrice && (
+															{property.propertyPrice && (
 																<Typography className="popular-coupon-text">쿠폰 적용시</Typography>
 															)}
 
 															<Box className="popular-price-row">
-																<span className="popular-price-current">{stay.price.toLocaleString()}원</span>
-																{stay.originalPrice && (
-																	<span className="popular-price-origin">{stay.originalPrice.toLocaleString()}원</span>
+																<span className="popular-price-current">
+																	{property.propertyPrice.toLocaleString()}원
+																</span>
+																{property.propertyPrice && (
+																	<span className="popular-price-origin">
+																		{property.propertyPrice.toLocaleString()}원
+																	</span>
 																)}
 															</Box>
 														</Box>

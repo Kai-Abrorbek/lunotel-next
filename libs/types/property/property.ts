@@ -9,6 +9,7 @@ import { MeLiked } from '../like/like';
 import { Member, TotalCounter } from '../member/member';
 import { Reservation } from '../reservation/reservation';
 import { RoomType } from '../roomtype/roomtype';
+import { Comment } from '../comment/comment';
 
 export interface Property {
 	_id: string;

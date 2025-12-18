@@ -5,24 +5,14 @@ import CloseIcon from '@mui/icons-material/Close';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
-export type ImageCategory = 'ALL' | 'ROOM';
-
-export interface GalleryImage {
-	id: number;
-	src: string;
-	alt: string;
-	category?: ImageCategory; // 'ALL' or 'ROOM'
-}
-
 interface ImageGalleryModalProps {
 	open: boolean;
 	onClose: () => void;
-	images: GalleryImage[];
+	images: string[];
 	reviewImgIndex?: number;
 }
 
 const ReviewImageModal: React.FC<ImageGalleryModalProps> = ({ open, onClose, images, reviewImgIndex = 0 }) => {
-	const [tab, setTab] = useState<ImageCategory>('ALL');
 	const [currentIndex, setCurrentIndex] = useState(reviewImgIndex);
 
 	// 모달 열릴 때 index 초기화
@@ -67,7 +57,7 @@ const ReviewImageModal: React.FC<ImageGalleryModalProps> = ({ open, onClose, ima
 					</IconButton>
 
 					<Box className="image-modal-main-img-wrap">
-						<img src={active.src} alt={active.alt} />
+						<img src={`${process.env.REACT_APP_API_URL}/${active}`} alt={active} />
 					</Box>
 
 					<IconButton className="image-modal-nav image-modal-nav--right" onClick={handleNext}>
@@ -80,11 +70,11 @@ const ReviewImageModal: React.FC<ImageGalleryModalProps> = ({ open, onClose, ima
 					<Box className="image-modal-thumbs">
 						{images.map((img, idx) => (
 							<button
-								key={img.id}
+								key={img}
 								className={idx === currentIndex ? 'image-modal-thumb image-modal-thumb--active' : 'image-modal-thumb'}
 								onClick={() => handleThumbClick(idx)}
 							>
-								<img src={img.src} alt={img.alt} />
+								<img src={`${process.env.REACT_APP_API_URL}/${img}`} alt={img} />
 							</button>
 						))}
 					</Box>

@@ -3,12 +3,14 @@ import { Member, TotalCounter } from '../member/member';
 import { RoomType } from '../roomtype/roomtype';
 
 export interface Comment {
-	_id: String;
+	_id: string;
 	commentStatus: CommentStatus;
 	commentGroup: CommentGroup;
 	commentContent: string;
-	commentRefId: String;
-	memberId: String;
+	commentImages: string[];
+	commentRefId: string;
+	commentRating: number;
+	memberId: string;
 	createdAt: Date;
 	updatedAt: Date;
 	/** from aggregation **/

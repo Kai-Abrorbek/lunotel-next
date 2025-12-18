@@ -167,6 +167,9 @@ export const GET_PROPERTY = gql`
 				createdAt
 				updatedAt
 			}
+			propertyDetailAddress
+			propertyLat
+			propertyLng
 		}
 	}
 `;
@@ -267,6 +270,44 @@ export const GET_PROPERTIES = gql`
 			}
 			metaCounter {
 				total
+			}
+		}
+	}
+`;
+
+export const GET_SIMILAR_PROPERTIES = gql`
+	query GetSimilarProperties($propertyId: String!) {
+		getSimilarProperties(propertyId: $propertyId) {
+			_id
+			propertyType
+			propertyStatus
+			propertyAddress
+			propertyLocation
+			propertyDetailAddress
+			propertyLat
+			propertyLng
+			propertyName
+			propertyPrice
+			propertyViews
+			propertyRooms
+			propertyReservations
+			propertyLikes
+			propertyComments
+			propertyRank
+			propertyStars
+			propertyImages
+			propertyAmenities
+			propertyOtherAmenities
+			propertyDesc
+			memberId
+			soldAt
+			createdAt
+			updatedAt
+			roomCount
+			meLiked {
+				memberId
+				likeRefId
+				myFavorite
 			}
 		}
 	}

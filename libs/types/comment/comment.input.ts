@@ -19,6 +19,6 @@ export interface CommentsInquiry {
 	page: number;
 	limit: number;
 	sort?: string;
-	direction?: Direction;
+	direction?: string;
 	search: CISearch;
 }

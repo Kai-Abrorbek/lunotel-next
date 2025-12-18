@@ -6,12 +6,6 @@ import { Navigation } from 'swiper';
 import 'swiper/css';
 import 'swiper/css/navigation';
 
-type ReviewImage = {
-	id: number;
-	src: string;
-	alt: string;
-};
-
 interface ReviewItemProps {
 	badge?: string; // "베스트리뷰"
 	nickname: string;
@@ -22,7 +16,7 @@ interface ReviewItemProps {
 	text: string;
 	replyText?: string;
 	replyAgo?: string;
-	images: ReviewImage[];
+	images: string[];
 	setOpenReviewImage: (v: boolean) => void;
 	setReviewImgIndex: (v: number) => void;
 }
@@ -44,7 +38,6 @@ const ReviewItem: React.FC<ReviewItemProps> = ({
 	setReviewImgIndex,
 }) => {
 	const [expanded, setExpanded] = useState(false);
-	const [index, setIndex] = useState(0);
 
 	if (!images.length) return null;
 
@@ -89,7 +82,7 @@ const ReviewItem: React.FC<ReviewItemProps> = ({
 						className="review-swiper__inner"
 					>
 						{images.map((img, idx) => (
-							<SwiperSlide key={img.id}>
+							<SwiperSlide key={img}>
 								<div
 									className="review-swiper__item"
 									onClick={() => {
@@ -97,7 +90,7 @@ const ReviewItem: React.FC<ReviewItemProps> = ({
 										setReviewImgIndex(idx);
 									}}
 								>
-									<img src={img.src} alt={img.alt} />
+									<img src={`${process.env.REACT_APP_API_URL}/${img}`} alt={img} />
 								</div>
 							</SwiperSlide>
 						))}

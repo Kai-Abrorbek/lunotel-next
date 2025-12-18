@@ -7,18 +7,11 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 export type ImageCategory = 'ALL' | 'ROOM';
 
-export interface GalleryImage {
-	id: number;
-	src: string;
-	alt: string;
-	category?: ImageCategory; // 'ALL' or 'ROOM'
-}
-
 interface ImageGalleryModalProps {
 	open: boolean;
 	onClose: () => void;
 	title: string; // 숙소 이름
-	images: GalleryImage[];
+	images: string[];
 	initialIndex?: number;
 }
 
@@ -26,10 +19,10 @@ const ImageGalleryModal: React.FC<ImageGalleryModalProps> = ({ open, onClose, ti
 	const [tab, setTab] = useState<ImageCategory>('ALL');
 	const [currentIndex, setCurrentIndex] = useState(initialIndex);
 
-	const filteredImages = useMemo(() => {
-		if (tab === 'ALL') return images;
-		return images.filter((img) => img.category === 'ROOM');
-	}, [images, tab]);
+	// const filteredImages = useMemo(() => {
+	// 	if (tab === 'ALL') return images;
+	// 	// return images.filter((img) => img.category === 'ROOM');
+	// }, [images, tab]);
 
 	// 모달 열릴 때 index 초기화
 	useEffect(() => {
@@ -37,19 +30,19 @@ const ImageGalleryModal: React.FC<ImageGalleryModalProps> = ({ open, onClose, ti
 	}, [open, initialIndex]);
 
 	const handlePrev = () => {
-		setCurrentIndex((prev) => (prev === 0 ? filteredImages.length - 1 : prev - 1));
+		setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
 	};
 
 	const handleNext = () => {
-		setCurrentIndex((prev) => (prev === filteredImages.length - 1 ? 0 : prev + 1));
+		setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
 	};
 
 	const handleThumbClick = (idx: number) => {
 		setCurrentIndex(idx);
 	};
 
-	if (!filteredImages.length) return null;
-	const active = filteredImages[currentIndex];
+	if (!images?.length) return null;
+	const active = images[currentIndex];
 
 	return (
 		<Modal
@@ -71,7 +64,7 @@ const ImageGalleryModal: React.FC<ImageGalleryModalProps> = ({ open, onClose, ti
 						<Tab label="객실" value="ROOM" />
 					</Tabs>
 
-					<Typography className="image-modal-title">{title}</Typography>
+					<p className="image-modal-title">{title}</p>
 				</Box>
 
 				{/* 가운데 큰 이미지 영역 */}
@@ -81,7 +74,7 @@ const ImageGalleryModal: React.FC<ImageGalleryModalProps> = ({ open, onClose, ti
 					</IconButton>
 
 					<Box className="image-modal-main-img-wrap">
-						<img src={active.src} alt={active.alt} />
+						<img src={`${process.env.REACT_APP_API_URL}/${active}`} alt={active} />
 					</Box>
 
 					<IconButton className="image-modal-nav image-modal-nav--right" onClick={handleNext}>
@@ -92,18 +85,18 @@ const ImageGalleryModal: React.FC<ImageGalleryModalProps> = ({ open, onClose, ti
 				{/* 하단 썸네일 바 */}
 				<Box className="image-modal-thumbs-bar">
 					<Box className="image-modal-thumbs">
-						{filteredImages.map((img, idx) => (
+						{images?.map((img, idx) => (
 							<button
-								key={img.id}
+								key={img}
 								className={idx === currentIndex ? 'image-modal-thumb image-modal-thumb--active' : 'image-modal-thumb'}
 								onClick={() => handleThumbClick(idx)}
 							>
-								<img src={img.src} alt={img.alt} />
+								<img src={`${process.env.REACT_APP_API_URL}/${img}`} alt={img} />
 							</button>
 						))}
 					</Box>
 					<Box className="image-modal-counter">
-						대표 사진 {currentIndex + 1} / {filteredImages.length}
+						대표 사진 {currentIndex + 1} / {images?.length}
 					</Box>
 				</Box>
 			</Box>

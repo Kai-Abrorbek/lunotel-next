@@ -156,6 +156,9 @@ export const GET_ALL_BOARD_ARTICLES_BY_ADMIN = gql`
 export const GET_COMMENTS = gql`
 	query GetComments($input: CommentsInquiry!) {
 		getComments(input: $input) {
+			metaCounter {
+				total
+			}
 			list {
 				_id
 				commentStatus
@@ -172,25 +175,38 @@ export const GET_COMMENTS = gql`
 					memberAuthType
 					memberPhone
 					memberNick
+					memberEmail
 					memberFullName
 					memberImage
 					memberAddress
 					memberDesc
+					memberProperties
+					memberComments
+					memberPoints
 					memberWarnings
 					memberBlocks
-					memberProperties
-					memberRank
-					memberPoints
-					memberLikes
-					memberViews
 					deletedAt
 					createdAt
 					updatedAt
 					accessToken
 				}
-			}
-			metaCounter {
-				total
+				roomDate {
+					_id
+					propertyId
+					roomName
+					roomMaxPersonal
+					roomStandPersonal
+					basePriceDayUse
+					basePriceOvernight
+					roomDiscountPrice
+					roombedInfo
+					roomImages
+					roomStatus
+					createdAt
+					updatedAt
+				}
+				commentRating
+				commentImages
 			}
 		}
 	}
