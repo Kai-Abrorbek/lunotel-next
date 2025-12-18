@@ -14,8 +14,9 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import HeroCard from './common/HeroCard';
 import { PropertiesInquiry } from '../types/property/property.input';
-import { useReactiveVar } from '@apollo/client';
+import { useQuery, useReactiveVar } from '@apollo/client';
 import { userVar } from '../../apollo/store';
+import { GET_MY_NOTIFICATIONS } from '../../apollo/user/query';
 
 interface MiniHeaderProps {
 	initialInput: PropertiesInquiry;
@@ -59,6 +60,27 @@ const OtherHeader = (props: MiniHeaderProps) => {
 	);
 	const guestLabel = searchFilter?.search?.personal;
 	const property = router?.query?.input ? JSON.parse(router?.query?.input as string) : '';
+
+	/** APOLLO REQUESTS **/
+	const {
+		loading: getMyNotificationsLoading,
+		data: getMyNotificationsData,
+		error: getMyNotificationsError,
+		refetch: getMyNotificationsRefetch,
+	} = useQuery(GET_MY_NOTIFICATIONS, {
+		fetchPolicy: 'cache-and-network',
+		variables: {
+			input: {
+				page: 1,
+				limit: 20,
+				search: {},
+			},
+		},
+		skip: !user._id,
+		notifyOnNetworkStatusChange: true,
+	});
+
+	const notifications = getMyNotificationsData?.getMyNotifications.metaCounter[0]?.total;
 
 	/** LIFESICLE **/
 	useEffect(() => {
@@ -220,7 +242,7 @@ const OtherHeader = (props: MiniHeaderProps) => {
 
 							<IconButton onClick={() => setOpenMenu(!openMenu)}>
 								<Badge
-									badgeContent={3} // 알림 개수
+									badgeContent={notifications} // 알림 개수
 									color="error" // 빨간색 뱃지
 									overlap="circular"
 									sx={{
@@ -235,7 +257,7 @@ const OtherHeader = (props: MiniHeaderProps) => {
 									<MenuIcon sx={{ fontSize: 30 }} />
 								</Badge>
 							</IconButton>
-							<MemberQuickMenu open={openMenu} setOpen={setOpenMenu} />
+							<MemberQuickMenu open={openMenu} setOpen={setOpenMenu} notifications={notifications} />
 						</Box>
 					</Box>
 				</Box>

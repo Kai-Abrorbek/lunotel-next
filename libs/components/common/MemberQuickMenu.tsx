@@ -4,12 +4,17 @@ import Link from 'next/link';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import { signOut } from 'next-auth/react';
 import { logOut } from '../../auth';
+import { useReactiveVar } from '@apollo/client';
+import { userVar } from '../../../apollo/store';
 
 interface MemberQuickMenuProps {
 	open: boolean;
 	setOpen: (v: boolean) => void;
+	notifications: number;
 }
-export default function MemberQuickMenu({ open, setOpen }: MemberQuickMenuProps) {
+export default function MemberQuickMenu({ open, setOpen, notifications }: MemberQuickMenuProps) {
+	const user = useReactiveVar(userVar);
+
 	const handleNaverLogOut = async () => {
 		await signOut({ redirect: false });
 		logOut();
@@ -35,9 +40,9 @@ export default function MemberQuickMenu({ open, setOpen }: MemberQuickMenuProps)
 									<span>🙂</span>
 								</Box>
 								<Box className="member-menu__profile">
-									<p className="member-menu__nickname">재미있고바람직한글</p>
+									<p className="member-menu__nickname">{user.memberNick}</p>
 									<p className="member-menu__grade">
-										<span className="member-menu__grade-label">Basic</span>
+										<span className="member-menu__grade-label">{user.memberType}</span>
 										<span className="member-menu__grade-sub">회원</span>
 									</p>
 								</Box>
@@ -47,7 +52,7 @@ export default function MemberQuickMenu({ open, setOpen }: MemberQuickMenuProps)
 							<Box>
 								<IconButton>
 									<Badge
-										badgeContent={3}
+										badgeContent={notifications}
 										color="error"
 										overlap="circular"
 										sx={{

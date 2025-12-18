@@ -8,20 +8,39 @@ import Avatar from '@mui/material/Avatar';
 import useDeviceDetect from '../hooks/useDeviceDetect';
 import { Badge } from '@mui/material';
 import MemberQuickMenu from './common/MemberQuickMenu';
-import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { useReactiveVar } from '@apollo/client';
+import { useQuery, useReactiveVar } from '@apollo/client';
 import { userVar } from '../../apollo/store';
+import { GET_MY_NOTIFICATIONS } from '../../apollo/user/query';
 
 const Header = () => {
-	const router = useRouter();
 	const user = useReactiveVar(userVar);
 	const [openMenu, setOpenMenu] = useState<boolean>(false);
 	const [isDarkMode, setIsDarkMode] = useState(false);
 	const [language, setLanguage] = useState('KO');
 	const [isLanguageOpen, setIsLanguageOpen] = useState(false);
 	const device = useDeviceDetect();
-	const pathName = router.pathname.replace('/', '').trim();
+
+	/** APOLLO REQUESTS **/
+	const {
+		loading: getMyNotificationsLoading,
+		data: getMyNotificationsData,
+		error: getMyNotificationsError,
+		refetch: getMyNotificationsRefetch,
+	} = useQuery(GET_MY_NOTIFICATIONS, {
+		fetchPolicy: 'cache-and-network',
+		variables: {
+			input: {
+				page: 1,
+				limit: 20,
+				search: {},
+			},
+		},
+		skip: !user._id,
+		notifyOnNetworkStatusChange: true,
+	});
+
+	const notifications = getMyNotificationsData?.getMyNotifications.metaCounter[0]?.total;
 
 	const toggleTheme = () => setIsDarkMode(!isDarkMode);
 
@@ -128,24 +147,28 @@ const Header = () => {
 								</Link>
 							)}
 
-							<IconButton onClick={() => setOpenMenu(!openMenu)}>
-								<Badge
-									badgeContent={3} // 알림 개수
-									color="error" // 빨간색 뱃지
-									overlap="circular"
-									sx={{
-										'& .MuiBadge-badge': {
-											fontSize: '13px', // 글씨 크기
-											height: '18px', // 뱃지 높이
-											minWidth: '18px', // 뱃지 최소 너비
-											padding: '0 4px', // 내부 여백
-										},
-									}}
-								>
-									<MenuIcon sx={{ fontSize: 30 }} />
-								</Badge>
-							</IconButton>
-							<MemberQuickMenu open={openMenu} setOpen={setOpenMenu} />
+							{user._id && (
+								<>
+									<IconButton onClick={() => setOpenMenu(!openMenu)}>
+										<Badge
+											badgeContent={notifications} // 알림 개수
+											color="error" // 빨간색 뱃지
+											overlap="circular"
+											sx={{
+												'& .MuiBadge-badge': {
+													fontSize: '13px', // 글씨 크기
+													height: '18px', // 뱃지 높이
+													minWidth: '18px', // 뱃지 최소 너비
+													padding: '0 4px', // 내부 여백
+												},
+											}}
+										>
+											<MenuIcon sx={{ fontSize: 30 }} />
+										</Badge>
+									</IconButton>
+									<MemberQuickMenu open={openMenu} setOpen={setOpenMenu} notifications={notifications} />
+								</>
+							)}
 						</Box>
 					</Box>
 				</Box>
