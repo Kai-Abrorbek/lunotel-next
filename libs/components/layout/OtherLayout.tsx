@@ -6,7 +6,6 @@ import { Stack } from '@mui/material';
 import { userVar } from '../../../apollo/store';
 import { useReactiveVar } from '@apollo/client';
 import { getJwtToken, updateUserInfo } from '../../auth';
-import OtherTop from '../OtherTop';
 import { useRouter } from 'next/router';
 import OtherHeader from '../OtherHeader';
 

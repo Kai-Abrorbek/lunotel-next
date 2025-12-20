@@ -1,31 +1,55 @@
-import React, { useState } from 'react';
-import { Box, Paper, TextField, Typography, Button, Switch, IconButton, InputAdornment, Stack } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import {
+	Box,
+	Paper,
+	TextField,
+	Typography,
+	Button,
+	Switch,
+	IconButton,
+	InputAdornment,
+	Stack,
+	Grid,
+} from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
+import { useMutation, useReactiveVar } from '@apollo/client';
+import { userVar } from '../../../../apollo/store';
+import { MemberUpdate } from '../../../types/member/member.update';
+import { sweetConfirmAlert, sweetErrorAlert, sweetErrorHandling, sweetMixinSuccessAlert } from '../../../sweetAlert';
+import { UPDATE_MEMBER } from '../../../../apollo/user/mutation';
+import { updateStorage, updateUserInfo } from '../../../auth';
 
-interface UserInfo {
-	nickname: string;
-	reserverName: string;
-	phone: string;
-	birth: string;
-	gender: string;
-}
-
-const MyInfoPage: React.FC = () => {
+const MyInfoPage = () => {
 	const [visible, setVisible] = useState(false);
-
-	const [userInfo, setUserInfo] = useState<UserInfo>({
-		nickname: '재미있고바람직한글',
-		reserverName: '',
-		phone: '01082108335',
-		birth: '1997년 02월 13일',
-		gender: '남성',
+	const user = useReactiveVar(userVar);
+	const [userInfo, setUserInfo] = useState<MemberUpdate>({
+		_id: user._id,
+		memberNick: user.memberNick,
+		memberPhone: user.memberPhone,
+		memberEmail: user.memberEmail,
+		memberFullName: user.memberFullName ?? '',
+		memberImage: user.memberImage ?? '',
+		memberAddress: user.memberAddress ?? '',
+		memberDesc: user.memberDesc ?? '',
 	});
 
-	const handleChange = (field: keyof UserInfo, value: string) => {
+	/** APOLLO REQUEST **/
+	const [memberUpdate] = useMutation(UPDATE_MEMBER);
+
+	useEffect(() => {
+		setUserInfo(
+			(prev) =>
+				Object.fromEntries(
+					Object.entries(prev).filter(([_, value]) => value !== '' && value !== null && value !== undefined),
+				) as MemberUpdate,
+		);
+	}, []);
+
+	const handleChange = (field: keyof MemberUpdate, value: string) => {
 		setUserInfo((prev) => ({ ...prev, [field]: value }));
 	};
 
-	const handleClear = (field: keyof UserInfo) => {
+	const handleClear = (field: keyof MemberUpdate) => {
 		setUserInfo((prev) => ({ ...prev, [field]: '' }));
 	};
 
@@ -35,16 +59,44 @@ const MyInfoPage: React.FC = () => {
 		return '●'.repeat(text.length);
 	};
 
-	const handleSave = () => {
-		alert('저장되었습니다.');
-		console.log('UPDATED USER:', userInfo);
+	const handleUpdateMemberInfo = async () => {
+		try {
+			if (visible && (await sweetConfirmAlert('이메일 정보를 변경하시면 간편 로그인이 어렵습니다!!'))) {
+				const result = await memberUpdate({ variables: { input: userInfo } });
+				//@ts-ignore
+				const jwtToken = result.data.updateMember?.accessToken;
+				await updateStorage({ jwtToken });
+				updateUserInfo(result.data.updateMember?.accessToken);
+				await sweetMixinSuccessAlert('information updated successfully.');
+			}
+		} catch (err: any) {
+			sweetErrorAlert(err.message);
+		}
+	};
+
+	const handlePostcodeSearch = () => {
+		if (!window.daum?.Postcode) return;
+		new window.daum.Postcode({
+			oncomplete: (data: any) => {
+				const address = data.roadAddress || data.jibunAddress;
+				handleChange('memberAddress', ` ${address}`);
+				window.kakao.maps.load(() => {
+					const geocoder = new window.kakao.maps.services.Geocoder();
+					geocoder.addressSearch(address, (result: any, status: any) => {
+						if (status === window.kakao.maps.services.Status.OK) {
+							const { x, y } = result[0]; // x: lng, y: lat
+						}
+					});
+				});
+			},
+		}).open();
 	};
 
 	return (
 		<Box className="myinfo-page">
 			<Box className="myinfo-header">
 				<Typography className="myinfo-title">내 정보 관리</Typography>
-				<Button variant="contained" className="myinfo-save-btn" onClick={handleSave}>
+				<Button variant="contained" className="myinfo-save-btn" onClick={handleUpdateMemberInfo}>
 					저장
 				</Button>
 			</Box>
@@ -69,14 +121,14 @@ const MyInfoPage: React.FC = () => {
 						<Typography className="form-label">닉네임</Typography>
 						<TextField
 							fullWidth
-							value={maskText(userInfo.nickname)}
+							value={maskText(userInfo.memberNick! ?? '')}
 							placeholder="닉네임 입력"
-							onChange={(e) => handleChange('nickname', e.target.value)}
+							onChange={(e) => handleChange('memberNick', e.target.value)}
 							InputProps={{
 								readOnly: !visible,
-								endAdornment: userInfo.nickname && visible && (
+								endAdornment: userInfo.memberNick && visible && (
 									<InputAdornment position="end">
-										<IconButton onClick={() => handleClear('nickname')} size="small">
+										<IconButton onClick={() => handleClear('memberNick')} size="small">
 											<ClearIcon fontSize="small" />
 										</IconButton>
 									</InputAdornment>
@@ -90,13 +142,13 @@ const MyInfoPage: React.FC = () => {
 						<TextField
 							fullWidth
 							placeholder="예약자 이름"
-							value={maskText(userInfo.reserverName)}
-							onChange={(e) => handleChange('reserverName', e.target.value)}
+							value={maskText(userInfo.memberFullName! ?? '')}
+							onChange={(e) => handleChange('memberFullName', e.target.value)}
 							InputProps={{
 								readOnly: !visible,
-								endAdornment: userInfo.reserverName && visible && (
+								endAdornment: userInfo.memberFullName && visible && (
 									<InputAdornment position="end">
-										<IconButton onClick={() => handleClear('reserverName')} size="small">
+										<IconButton onClick={() => handleClear('memberFullName')} size="small">
 											<ClearIcon fontSize="small" />
 										</IconButton>
 									</InputAdornment>
@@ -112,13 +164,13 @@ const MyInfoPage: React.FC = () => {
 						<Typography className="form-label">휴대폰 번호</Typography>
 						<TextField
 							fullWidth
-							value={maskText(userInfo.phone)}
-							onChange={(e) => handleChange('phone', e.target.value)}
+							value={maskText(userInfo.memberPhone! ?? '')}
+							onChange={(e) => handleChange('memberPhone', e.target.value)}
 							InputProps={{
 								readOnly: !visible,
-								endAdornment: userInfo.phone && visible && (
+								endAdornment: userInfo.memberPhone && visible && (
 									<InputAdornment position="end">
-										<IconButton onClick={() => handleClear('phone')} size="small">
+										<IconButton onClick={() => handleClear('memberPhone')} size="small">
 											<ClearIcon fontSize="small" />
 										</IconButton>
 									</InputAdornment>
@@ -128,16 +180,16 @@ const MyInfoPage: React.FC = () => {
 					</Box>
 
 					<Box className="form-item">
-						<Typography className="form-label">생년월일</Typography>
+						<Typography className="form-label">이메일</Typography>
 						<TextField
 							fullWidth
-							value={maskText(userInfo.birth)}
-							onChange={(e) => handleChange('birth', e.target.value)}
+							value={maskText(userInfo.memberEmail! ?? '')}
+							onChange={(e) => handleChange('memberEmail', e.target.value)}
 							InputProps={{
 								readOnly: !visible,
-								endAdornment: userInfo.birth && visible && (
+								endAdornment: userInfo.memberEmail && visible && (
 									<InputAdornment position="end">
-										<IconButton onClick={() => handleClear('birth')} size="small">
+										<IconButton onClick={() => handleClear('memberEmail')} size="small">
 											<ClearIcon fontSize="small" />
 										</IconButton>
 									</InputAdornment>
@@ -150,23 +202,33 @@ const MyInfoPage: React.FC = () => {
 				{/* 성별 */}
 				<Box className="form-row">
 					<Box className="form-item">
-						<Typography className="form-label">성별</Typography>
+						<Typography className="form-label">주소</Typography>
 						<TextField
 							fullWidth
-							value={maskText(userInfo.gender)}
-							onChange={(e) => handleChange('gender', e.target.value)}
+							value={maskText(userInfo.memberAddress! ?? '')}
+							onChange={(e) => handleChange('memberAddress', e.target.value)}
 							InputProps={{
-								readOnly: true,
-								// endAdornment: userInfo.gender && visible && (
-								// 	<InputAdornment position="end">
-								// 		<IconButton onClick={() => handleClear('gender')} size="small">
-								// 			<ClearIcon fontSize="small" />
-								// 		</IconButton>
-								// 	</InputAdornment>
-								// ),
+								readOnly: false,
+								endAdornment: userInfo.memberAddress && visible && (
+									<InputAdornment position="end">
+										<IconButton onClick={() => handleClear('memberAddress')} size="small">
+											<ClearIcon fontSize="small" />
+										</IconButton>
+									</InputAdornment>
+								),
 							}}
 						/>
 					</Box>
+					<Grid item sx={{ marginBottom: '5px' }}>
+						<Button
+							onClick={handlePostcodeSearch}
+							variant="outlined"
+							size="small"
+							className="property-modal__zipcode-button"
+						>
+							우편번호 검색
+						</Button>
+					</Grid>
 				</Box>
 			</Box>
 

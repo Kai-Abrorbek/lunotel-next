@@ -17,6 +17,7 @@ import { PropertiesInquiry } from '../types/property/property.input';
 import { useQuery, useReactiveVar } from '@apollo/client';
 import { userVar } from '../../apollo/store';
 import { GET_MY_NOTIFICATIONS } from '../../apollo/user/query';
+import { Notification } from '../types/notification/notification';
 
 interface MiniHeaderProps {
 	initialInput: PropertiesInquiry;
@@ -80,7 +81,9 @@ const OtherHeader = (props: MiniHeaderProps) => {
 		notifyOnNetworkStatusChange: true,
 	});
 
-	const notifications = getMyNotificationsData?.getMyNotifications.metaCounter[0]?.total;
+	const notifications = getMyNotificationsData?.getMyNotifications?.list.filter(
+		(notif: Notification) => !notif.isRead,
+	).length;
 
 	/** LIFESICLE **/
 	useEffect(() => {

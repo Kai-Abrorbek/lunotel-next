@@ -183,10 +183,14 @@
 								}
 							}
 							.my-res-item-btn {
+								display: flex;
+								flex-direction: row;
+								justify-content: flex-end;
+								align-items: flex-end;
 								height: 100%;
-								width: 200px;
-								align-content: flex-end;
+								width: 300px;
 								text-align: end;
+								gap: 5px;
 								button {
 									padding: 8px 15px;
 									background-color: #eb5f4c;
@@ -719,7 +723,7 @@
 						.form-row {
 							display: flex;
 							gap: 20px;
-
+							align-items: flex-end;
 							@media (max-width: 600px) {
 								flex-direction: column;
 							}

@@ -3,8 +3,9 @@ import { initializeApollo } from '../../apollo/client';
 import { userVar } from '../../apollo/store';
 import { CustomJwtPayload } from '../types/customJwtPayload';
 import { sweetMixinErrorAlert } from '../sweetAlert';
-import { LOGIN, SIGN_UP, SOCIAL_LOGIN_OR_SIGN_UP, SOCIAL_LOGIN_OR_SIGN_UP_NOGQL } from '../../apollo/user/mutation';
+import { LOGIN, SIGN_UP, SOCIAL_LOGIN_OR_SIGN_UP_NOGQL } from '../../apollo/user/mutation';
 import { SignupInput, SocialPayload } from '../types/member/member.input';
+import { ME } from '../../apollo/user/query';
 
 export function getJwtToken(): any {
 	if (typeof window !== 'undefined') {
@@ -22,6 +23,7 @@ export const logIn = async (email: string, password: string): Promise<string | u
 
 		if (jwtToken) {
 			updateStorage({ jwtToken });
+			console.log('logIn:', jwtToken);
 			updateUserInfo(jwtToken);
 
 			return jwtToken;
@@ -145,6 +147,7 @@ export const signUp = async (
 		const { jwtToken } = await requestSignUpJwtToken({ nick, email, password, phone, type });
 		if (jwtToken) {
 			updateStorage({ jwtToken });
+			console.log('signUP:', jwtToken);
 			updateUserInfo(jwtToken);
 		}
 	} catch (err) {
@@ -199,10 +202,25 @@ export const updateStorage = ({ jwtToken }: { jwtToken: any }) => {
 	window.localStorage.setItem('login', Date.now().toString());
 };
 
-export const updateUserInfo = (jwtToken: any) => {
-	if (!jwtToken) return false;
+export const fetchMeFromServer = async (jwtToken: any) => {
+	const apolloClient = await initializeApollo();
+	const result = await apolloClient.query({
+		query: ME,
+		fetchPolicy: 'network-only',
+		context: {
+			headers: {
+				Authorization: `Bearer ${jwtToken}`,
+			},
+		},
+	});
 
-	const claims = decodeJWT<CustomJwtPayload>(jwtToken);
+	return result?.data?.me;
+};
+
+export const updateUserInfo = async (jwtToken: any) => {
+	if (!jwtToken) return false;
+	// const claims = decodeJWT<CustomJwtPayload>(jwtToken);
+	const claims = await fetchMeFromServer(jwtToken);
 	userVar({
 		_id: claims._id ?? '',
 		memberType: claims.memberType ?? '',

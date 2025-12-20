@@ -1,14 +1,10 @@
-import React, { useState } from 'react';
-
-interface Notification {
-	id: string;
-	category: 'reservation' | 'payment' | 'review' | 'system' | 'message';
-	title: string;
-	description: string;
-	time: string;
-	isRead: boolean;
-	isImportant: boolean;
-}
+import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
+import React, { use, useEffect, useState } from 'react';
+import { userVar } from '../../../../apollo/store';
+import { GET_MY_NOTIFICATIONS } from '../../../../apollo/user/query';
+import { Notification } from '../../../types/notification/notification';
+import { DELETE_NOTIFICATION, UPDATE_NOTIFICATION } from '../../../../apollo/user/mutation';
+import { sweetErrorAlert } from '../../../sweetAlert';
 
 interface NotificationsPageProps {
 	currentPage: number;
@@ -17,84 +13,54 @@ interface NotificationsPageProps {
 
 export default function NotificationsPage(props: NotificationsPageProps) {
 	const { currentPage, setTotal } = props;
-
+	const user = useReactiveVar(userVar);
 	const [filter, setFilter] = useState('all');
-	const [notifications, setNotifications] = useState<Notification[]>([
-		{
-			id: 'N001',
-			category: 'reservation',
-			title: 'New Reservation',
-			description: 'John Doe booked Deluxe Double Room for 3 nights',
-			time: '5 minutes ago',
-			isRead: false,
-			isImportant: true,
+	const [notifications, setNotifications] = useState<Notification[]>([]);
+
+	const [updateNotification] = useMutation(UPDATE_NOTIFICATION);
+	const [deleteNotif] = useMutation(DELETE_NOTIFICATION);
+
+	/** APOLLO REQUEST **/
+	const {
+		loading: getMyNotificationsLoading,
+		data: getMyNotificationsData,
+		error: getMyNotificationsError,
+		refetch: getMyNotificationsRefetch,
+	} = useQuery(GET_MY_NOTIFICATIONS, {
+		fetchPolicy: 'cache-and-network',
+		variables: {
+			input: {
+				page: currentPage,
+				limit: 10,
+				search: {},
+			},
 		},
-		{
-			id: 'N002',
-			category: 'payment',
-			title: 'Payment Received',
-			description: 'Payment of $540 received for reservation RSV-001',
-			time: '1 hour ago',
-			isRead: false,
-			isImportant: false,
-		},
-		{
-			id: 'N003',
-			category: 'review',
-			title: 'New Review',
-			description: 'Maria Kim left a 5-star review for Oceanview Suite',
-			time: '2 hours ago',
-			isRead: false,
-			isImportant: false,
-		},
-		{
-			id: 'N004',
-			category: 'reservation',
-			title: 'Reservation Cancelled',
-			description: 'Reservation RSV-005 has been cancelled by guest',
-			time: '3 hours ago',
-			isRead: true,
-			isImportant: true,
-		},
-		{
-			id: 'N005',
-			category: 'message',
-			title: 'Guest Message',
-			description: 'Sarah Park sent you a message about check-in time',
-			time: '5 hours ago',
-			isRead: true,
-			isImportant: false,
-		},
-		{
-			id: 'N006',
-			category: 'system',
-			title: 'System Update',
-			description: 'New features added to the dashboard',
-			time: '1 day ago',
-			isRead: true,
-			isImportant: false,
-		},
-		{
-			id: 'N007',
-			category: 'payment',
-			title: 'Refund Processed',
-			description: 'Refund of $360 processed for cancelled reservation',
-			time: '1 day ago',
-			isRead: true,
-			isImportant: false,
-		},
-		{
-			id: 'N008',
-			category: 'review',
-			title: 'Review Response Needed',
-			description: 'Guest is waiting for your response to their review',
-			time: '2 days ago',
-			isRead: false,
-			isImportant: true,
-		},
-	]);
+		notifyOnNetworkStatusChange: true,
+		skip: !user._id,
+	});
+
+	const notificationsList = getMyNotificationsData?.getMyNotifications.list;
+	const notificationsTotal = getMyNotificationsData?.getMyNotifications?.metaCounter?.[0].total;
+
+	useEffect(() => {
+		if (notificationsList?.length !== 0) {
+			setNotifications(notificationsList);
+			setTotal(notificationsTotal);
+		}
+	}, [notificationsList]);
 
 	/** HANDLER **/
+	function timeAgo(createdAt: string | Date) {
+		const now = new Date().getTime();
+		const past = new Date(createdAt).getTime();
+		const diff = Math.floor((now - past) / 1000); // seconds
+
+		if (diff < 60) return `${diff}초 전`;
+		if (diff < 3600) return `${Math.floor(diff / 60)}분 전`;
+		if (diff < 86400) return `${Math.floor(diff / 3600)}시간 전`;
+		return `${Math.floor(diff / 86400)}일 전`;
+	}
+
 	const getCategoryInfo = (category: string) => {
 		const categoryMap: { [key: string]: { icon: string; color: string; label: string } } = {
 			reservation: { icon: '🔔', color: '#3b82f6', label: 'Reservation' },
@@ -106,33 +72,95 @@ export default function NotificationsPage(props: NotificationsPageProps) {
 		return categoryMap[category] || { icon: '🔔', color: '#6b7280', label: 'Other' };
 	};
 
-	const filteredNotifications = notifications.filter((notif) => {
+	const filteredNotifications = notifications?.filter((notif: Notification) => {
 		if (filter === 'all') return true;
 		if (filter === 'unread') return !notif.isRead;
 		if (filter === 'read') return notif.isRead;
-		if (filter === 'important') return notif.isImportant;
+		// if (filter === 'important') return notif.isImportant;
 		return true;
 	});
 
-	const unreadCount = notifications.filter((n) => !n.isRead).length;
-	const todayCount = notifications.filter((n) => n.time.includes('minute') || n.time.includes('hour')).length;
+	const unreadCount = notifications?.filter((n: Notification) => !n.isRead).length;
+	const todayCount = notificationsList?.filter((n: Notification) => {
+		const created = new Date(n.createdAt);
+		const now = new Date();
+		return created.toDateString() === now.toDateString();
+	}).length;
 
-	const markAsRead = (id: string) => {
-		setNotifications(notifications.map((n) => (n.id === id ? { ...n, isRead: true } : n)));
+	const markAsRead = async (id: string) => {
+		try {
+			await updateNotification({
+				variables: {
+					input: {
+						_id: id,
+						isRead: true,
+					},
+				},
+			});
+
+			await getMyNotificationsRefetch({
+				input: {
+					page: currentPage,
+					limit: 10,
+					search: {},
+				},
+			});
+		} catch (err: any) {
+			sweetErrorAlert(err.message);
+		}
+		setNotifications(notifications?.map((n: Notification) => (n._id === id ? { ...n, isRead: true } : n)));
 	};
 
-	const markAllAsRead = () => {
-		setNotifications(notifications.map((n) => ({ ...n, isRead: true })));
+	const markAllAsRead = async () => {
+		try {
+			notifications?.map(async (notif: Notification) => {
+				await updateNotification({
+					variables: {
+						input: {
+							_id: notif._id,
+							isRead: true,
+						},
+					},
+				});
+			});
+			await getMyNotificationsRefetch({
+				input: {
+					page: currentPage,
+					limit: 10,
+					search: {},
+				},
+			});
+		} catch (err: any) {
+			sweetErrorAlert(err.message);
+		}
+		setNotifications(notifications?.map((n: Notification) => ({ ...n, isRead: true })));
 	};
 
-	const deleteNotification = (id: string) => {
-		setNotifications(notifications.filter((n) => n.id !== id));
+	const deleteNotification = async (id: string) => {
+		try {
+			await deleteNotif({
+				variables: {
+					notifId: id,
+				},
+			});
+
+			await getMyNotificationsRefetch({
+				input: {
+					page: currentPage,
+					limit: 10,
+					search: {},
+				},
+			});
+		} catch (err: any) {
+			sweetErrorAlert(err.message);
+		}
+		setNotifications(notifications?.filter((n: Notification) => n._id !== id));
 	};
 
 	return (
 		<div className="notifications-container">
 			<div className="page-header">
-				<h1 className="page-title">알림</h1>
+				<h1 className="page-title">알림센터</h1>
 				<div className="header-actions">
 					<button className="btn btn-secondary" onClick={markAllAsRead}>
 						✓ 모두 읽음으로 표시
@@ -144,7 +172,7 @@ export default function NotificationsPage(props: NotificationsPageProps) {
 			<div className="stats-grid">
 				<div className="stat-card">
 					<div className="stat-label">총 알림</div>
-					<div className="stat-value">{notifications.length}</div>
+					<div className="stat-value">{notificationsTotal}</div>
 				</div>
 				<div className="stat-card">
 					<div className="stat-label">읽히지 않는</div>
@@ -174,14 +202,11 @@ export default function NotificationsPage(props: NotificationsPageProps) {
 				</button>
 			</div>
 
-			{filteredNotifications.length > 0 ? (
-				filteredNotifications.map((notif) => {
-					const categoryInfo = getCategoryInfo(notif.category);
+			{filteredNotifications?.length > 0 ? (
+				filteredNotifications?.map((notif: Notification) => {
+					const categoryInfo = getCategoryInfo('reservation');
 					return (
-						<div
-							key={notif.id}
-							className={`notification-card ${!notif.isRead ? 'unread' : ''} ${notif.isImportant ? 'important' : ''}`}
-						>
+						<div key={notif._id} className={`notification-card ${!notif.isRead ? 'unread' : ''} `}>
 							{!notif.isRead && <div className="unread-indicator"></div>}
 
 							<div className="notification-header">
@@ -194,15 +219,15 @@ export default function NotificationsPage(props: NotificationsPageProps) {
 								<div className="notification-content">
 									<div className="notification-title">
 										{notif.title}
-										{notif.isImportant && <span className="important-badge">! 중요한</span>}
+										{/* {notif.isImportant && <span className="important-badge">! 중요한</span>} */}
 									</div>
-									<div className="notification-description">{notif.description}</div>
+									<div className="notification-description">{notif.message}</div>
 								</div>
 							</div>
 
 							<div className="notification-footer">
 								<div className="notification-meta">
-									<span className="notification-time">{notif.time}</span>
+									<span className="notification-time">{timeAgo(notif.createdAt)}</span>
 									<span
 										className="category-badge"
 										style={{ backgroundColor: `${categoryInfo.color}20`, color: categoryInfo.color }}
@@ -216,7 +241,7 @@ export default function NotificationsPage(props: NotificationsPageProps) {
 											className="action-btn"
 											onClick={(e) => {
 												e.stopPropagation();
-												markAsRead(notif.id);
+												markAsRead(notif._id);
 											}}
 										>
 											읽음으로 표시
@@ -226,7 +251,7 @@ export default function NotificationsPage(props: NotificationsPageProps) {
 										className="action-btn danger"
 										onClick={(e) => {
 											e.stopPropagation();
-											deleteNotification(notif.id);
+											deleteNotification(notif._id);
 										}}
 									>
 										삭제

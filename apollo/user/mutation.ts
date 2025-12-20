@@ -449,3 +449,40 @@ export const UPDATE_ROOM = gql`
 		}
 	}
 `;
+
+/**************************
+ *     NOTIFICATION       *
+ *************************/
+export const UPDATE_NOTIFICATION = gql`
+	mutation UpdateNotification($input: NotificationUpdateInput!) {
+		updateNotification(input: $input) {
+			_id
+			memberId
+			title
+			message
+			type
+			reservationId
+			propertyId
+			isRead
+			createdAt
+			updatedAt
+		}
+	}
+`;
+
+export const DELETE_NOTIFICATION = gql`
+	mutation DeleteNotification($notifId: String!) {
+		deleteNotification(notifId: $notifId) {
+			_id
+			memberId
+			title
+			message
+			type
+			reservationId
+			propertyId
+			isRead
+			createdAt
+			updatedAt
+		}
+	}
+`;

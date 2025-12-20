@@ -4,8 +4,6 @@ import NextAuth, { type NextAuthOptions } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import KakaoProvider from 'next-auth/providers/kakao';
 import { normalizeSocialProfile, signUp, signUpServer } from '../../../libs/auth';
-import { use } from 'react';
-import { palette } from '@mui/system';
 import { MemberType } from '../../../libs/enums/member.enum';
 
 // Naver는 커스텀 OAuth Provider로 직접 정의

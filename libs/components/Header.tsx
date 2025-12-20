@@ -12,6 +12,7 @@ import Link from 'next/link';
 import { useQuery, useReactiveVar } from '@apollo/client';
 import { userVar } from '../../apollo/store';
 import { GET_MY_NOTIFICATIONS } from '../../apollo/user/query';
+import { Notification } from '../types/notification/notification';
 
 const Header = () => {
 	const user = useReactiveVar(userVar);
@@ -32,7 +33,7 @@ const Header = () => {
 		variables: {
 			input: {
 				page: 1,
-				limit: 20,
+				limit: 1000000,
 				search: {},
 			},
 		},
@@ -40,7 +41,9 @@ const Header = () => {
 		notifyOnNetworkStatusChange: true,
 	});
 
-	const notifications = getMyNotificationsData?.getMyNotifications.metaCounter[0]?.total;
+	const notifications = getMyNotificationsData?.getMyNotifications?.list.filter(
+		(notif: Notification) => !notif.isRead,
+	).length;
 
 	const toggleTheme = () => setIsDarkMode(!isDarkMode);
 

@@ -2,11 +2,14 @@ import { Box, Button, Divider, Pagination, Paper, Stack, Tab, Tabs, Typography }
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import ReviewPage from './ReviewPage';
-import { useQuery, useReactiveVar } from '@apollo/client';
+import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
 import { GET_MY_RESERVATIONS } from '../../../../apollo/user/query';
 import { userVar } from '../../../../apollo/store';
 import { Reservation } from '../../../types/reservation/reservation';
 import { ReservationStatus } from '../../../enums/reservation';
+import { UPDATE_RESERVATION } from '../../../../apollo/user/mutation';
+import { ReservationUpdateInput } from '../../../types/reservation/reservation.update';
+import { sweetErrorAlert, sweetMixinErrorAlert } from '../../../sweetAlert';
 
 type TripStatus = 'upcoming' | 'completed' | 'canceled';
 type TripType = 'domestic' | 'overseas' | 'package';
@@ -22,6 +25,8 @@ const ReservationHistory = (props: ReservationHistoryProps) => {
 	const [tab, setTab] = useState<TabValue>('domestic');
 	const [openReview, setOpenReview] = useState<boolean>(false);
 	const user = useReactiveVar(userVar);
+
+	const [updateReservation] = useMutation(UPDATE_RESERVATION);
 
 	/** APOLLO REQUEST **/
 	const {
@@ -57,6 +62,26 @@ const ReservationHistory = (props: ReservationHistoryProps) => {
 	/** HANDLER **/
 	const handleTabChange = (_: React.SyntheticEvent, value: TabValue) => {
 		setTab(value);
+	};
+
+	const handleCancelReservation = async (reservation: Reservation) => {
+		const todayDate = Math.floor(new Date().getTime() / 1000);
+		const reservationDate = Math.floor(new Date(reservation.reservationDate!).getTime() / 1000);
+		if (reservationDate > todayDate) {
+			try {
+				const updateReservationInput: ReservationUpdateInput = {
+					_id: reservation._id,
+					propertyId: reservation.propertyId!,
+					roomTypeId: reservation.roomTypeId!,
+					stayPlanId: reservation.stayPlanId!,
+					reservationStatus: ReservationStatus.CANCELLED,
+				};
+
+				await updateReservation({ variables: { input: updateReservationInput } });
+			} catch (err: any) {
+				sweetErrorAlert(err.message);
+			}
+		}
 	};
 
 	return (
@@ -114,9 +139,12 @@ const ReservationHistory = (props: ReservationHistoryProps) => {
 										</Box>
 									</Box>
 									<Box className="my-res-item-btn">
-										<Link href={'#'}>
-											<Button variant="outlined">상세 보기</Button>
-										</Link>
+										{new Date().getTime() / 1000 < new Date(reservation.reservationDate!).getTime() / 1000 && (
+											<Button onClick={() => handleCancelReservation(reservation)} variant="outlined">
+												취소하기
+											</Button>
+										)}
+										<Button variant="outlined">상세 보기</Button>
 									</Box>
 								</Stack>
 							))}

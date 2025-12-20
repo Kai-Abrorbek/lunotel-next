@@ -2,6 +2,8 @@
 import React, { useMemo, useState } from 'react';
 import { Box, Paper, Typography, IconButton } from '@mui/material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import { useReactiveVar } from '@apollo/client';
+import { userVar } from '../../../../apollo/store';
 
 type PointFilter = 'all' | 'earn' | 'use' | 'expire';
 type PointType = 'earn' | 'use' | 'expire';
@@ -15,15 +17,15 @@ interface PointHistory {
 }
 
 const POINT_HISTORY: PointHistory[] = [
-	{ id: 1, date: '2024.11.01', description: '숙박 결제 적립', amount: 1500, type: 'earn' },
-	{ id: 2, date: '2024.11.03', description: '리뷰 작성 적립', amount: 500, type: 'earn' },
-	{ id: 3, date: '2024.11.10', description: '예약 결제 사용', amount: -1200, type: 'use' },
-	{ id: 4, date: '2024.11.30', description: '포인트 소멸', amount: -300, type: 'expire' },
+	{ id: 1, date: '2025.12.01', description: '숙박 결제 적립', amount: 1500, type: 'earn' },
+	{ id: 2, date: '2025.12.03', description: '리뷰 작성 적립', amount: 500, type: 'earn' },
+	{ id: 3, date: '2025.12.10', description: '예약 결제 사용', amount: -1200, type: 'use' },
+	{ id: 4, date: '2025.12.30', description: '포인트 소멸', amount: -300, type: 'expire' },
 ];
 
 const PointPage: React.FC = () => {
 	const [filter, setFilter] = useState<PointFilter>('all');
-
+	const user = useReactiveVar(userVar);
 	const totalPoints = useMemo(() => POINT_HISTORY.reduce((sum, h) => sum + h.amount, 0), []);
 
 	const expiringPoints = useMemo(

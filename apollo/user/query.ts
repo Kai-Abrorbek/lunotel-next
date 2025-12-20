@@ -58,6 +58,35 @@ export const GET_MEMBER = gql`
 	}
 `;
 
+export const ME = gql`
+	query Me {
+		me {
+			_id
+			memberType
+			memberStatus
+			memberAuthType
+			memberPhone
+			memberNick
+			memberEmail
+			memberFullName
+			memberImage
+			memberAddress
+			memberDesc
+			memberProperties
+			memberReservations
+			memberComments
+			memberPoints
+			memberWarnings
+			memberBlocks
+			deletedAt
+			createdAt
+			updatedAt
+			accessToken
+			memberRank
+		}
+	}
+`;
+
 /**************************
  *        PROPERTY        *
  *************************/
