@@ -189,6 +189,17 @@ export const amenitiesList = [
 	{ key: 'NON_SMOKING', name: '객실금연', en: 'Non-Smoking Room', icon: '🚭' },
 ];
 
+export const otherAmenitiesList = [
+	{ key: 'BREAKFAST_PROVIDED', name: '조식 제공', en: 'Breakfast Provided', icon: '🥐' },
+	{ key: 'FREE_PARKING', name: '무료 주차', en: 'Free Parking', icon: '🅿️' },
+	{ key: 'PETS_ALLOWED', name: '반려동물 동반 가능', en: 'Pets Allowed', icon: '🐶' },
+	{ key: 'SAUNA_JJIMJILBANG', name: '사우나 / 찜질방', en: 'Sauna / Jjimjilbang', icon: '♨️' },
+	{ key: 'IN_ROOM_COOKING', name: '객실 내 취사 가능', en: 'In-room Cooking', icon: '🍳' },
+	{ key: 'PICK_UP_SERVICE', name: '픽업 서비스', en: 'Pick-up Service', icon: '🚐' },
+	{ key: 'SMOKING_ALLOWED', name: '흡연 가능', en: 'Smoking Allowed', icon: '🚬' },
+	{ key: 'LUGGAGE_STORAGE', name: '짐 보관', en: 'Luggage Storage', icon: '🧳' },
+];
+
 export const SORT_OPTIONS = [
 	{ value: 'createdAt', label: '추천순', sort: 'createdAt', direc: 'DESC' },
 	{ value: 'propertyComments', label: '리뷰많은순', sort: 'propertyComments', direc: 'DESC' },
@@ -214,4 +225,46 @@ export const LOCATION_LIST = [
 	{ key: 'YEOSU', label: '여수', lat: 34.7604, lng: 127.6622 },
 	{ key: 'HEUNDE', label: '해운대', lat: 35.1631, lng: 129.1635 },
 	{ key: 'GAPYEONG', label: '가평', lat: 37.8315, lng: 127.5109 },
+];
+
+interface StatusOption {
+	value: PropertyStatus;
+	label: string;
+	color: string;
+}
+
+export const statusOptions: StatusOption[] = [
+	{ value: PropertyStatus.ACTIVE, label: '운영중', color: '#10b981' },
+	{ value: PropertyStatus.DRAFT, label: '대기중', color: '#f59e0b' },
+	{ value: PropertyStatus.INACTIVE, label: '판매완료', color: '#e6e22fff' },
+	{ value: PropertyStatus.BLOCKED, label: '중지', color: '#ef4444' },
+];
+
+export const typeOptions = [
+	{ value: 'HOTEL', label: '호텔', icon: '🏨' },
+	{ value: 'MOTEL', label: '모텔', icon: '🏩' },
+	{ value: 'PENSION', label: '펜션', icon: '🏡' },
+	{ value: 'POLL_VILLA', label: '풀빌라', icon: '🏘️' },
+	{ value: 'RESORT', label: '리조트', icon: '🏖️' },
+	{ value: 'CAMPING', label: '캠핑', icon: '🏕️' },
+	{ value: 'GLAMPING', label: '캠핑', icon: '🏕️' },
+];
+export const locationOptions = [
+	{ value: 'SEOUL', label: '서울' },
+	{ value: 'BUSAN', label: '부산' },
+	{ value: 'INCHEON', label: '인천' },
+	{ value: 'DAEGU', label: '대구' },
+	{ value: 'DAEJEON', label: '대전' },
+	{ value: 'GWANGJU', label: '광주' },
+	{ value: 'ULSAN', label: '울산' },
+	{ value: 'SEJONG', label: '세종' },
+	{ value: 'GYEONGGI', label: '경기' },
+	{ value: 'GANGWON', label: '강원' },
+	{ value: 'CHUNGBUK', label: '충북' },
+	{ value: 'CHUNGNAM', label: '충남' },
+	{ value: 'JEONBUK', label: '전북' },
+	{ value: 'JEONNAM', label: '전남' },
+	{ value: 'GYEONGBUK', label: '경북' },
+	{ value: 'GYEONGNAM', label: '경남' },
+	{ value: 'JEJU', label: '제주' },
 ];

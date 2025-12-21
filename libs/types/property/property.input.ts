@@ -15,12 +15,12 @@ export interface PropertyInput {
 	propertyStatus: PropertyStatus;
 	propertyLocation: PropertyLocation;
 	propertyAddress: string;
-	propertydetailAddress: string;
+	propertyDetailAddress: string;
 	propertyName: string;
 	propertyStars: number;
-	propertyImages: string[];
-	propertyAmenities: PropertyAmenity[];
-	propertyOtherAmenities: PropertyOtherAmenity[];
+	propertyImages?: string[];
+	propertyAmenities?: PropertyAmenity[];
+	propertyOtherAmenities?: PropertyOtherAmenity[];
 	propertyLat: string;
 	propertyLng: string;
 	propertyDesc?: string;

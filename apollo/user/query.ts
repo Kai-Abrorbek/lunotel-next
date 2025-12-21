@@ -101,7 +101,6 @@ export const GET_PROPERTY = gql`
 			propertyName
 			propertyPrice
 			propertyRooms
-			propertyViews
 			propertyLikes
 			propertyComments
 			propertyRank

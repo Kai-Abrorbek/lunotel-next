@@ -1,50 +1,24 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { PropertyInput } from '../../../types/property/property.input';
-import { PropertyLocation, PropertyStatus, PropertyType } from '../../../enums/property.enum';
+import {
+	amenitiesList,
+	locationOptions,
+	otherAmenitiesList,
+	PropertyAmenity,
+	PropertyLocation,
+	PropertyOtherAmenity,
+	PropertyStatus,
+	PropertyType,
+	statusOptions,
+	typeOptions,
+} from '../../../enums/property.enum';
 import { Box, Button, Grid, IconButton, TextField } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-
-interface StatusOption {
-	value: PropertyStatus;
-	label: string;
-	color: string;
-}
-
-const statusOptions: StatusOption[] = [
-	{ value: PropertyStatus.ACTIVE, label: '운영중', color: '#10b981' },
-	{ value: PropertyStatus.DRAFT, label: '대기중', color: '#f59e0b' },
-	{ value: PropertyStatus.INACTIVE, label: '판매완료', color: '#e6e22fff' },
-	{ value: PropertyStatus.BLOCKED, label: '중지', color: '#ef4444' },
-];
-
-const typeOptions = [
-	{ value: 'HOTEL', label: '호텔', icon: '🏨' },
-	{ value: 'MOTEL', label: '모텔', icon: '🏩' },
-	{ value: 'PENSION', label: '펜션', icon: '🏡' },
-	{ value: 'POLL_VILLA', label: '풀빌라', icon: '🏘️' },
-	{ value: 'RESORT', label: '리조트', icon: '🏖️' },
-	{ value: 'CAMPING', label: '캠핑', icon: '🏕️' },
-	{ value: 'GLAMPING', label: '캠핑', icon: '🏕️' },
-];
-const locationOptions = [
-	{ value: 'SEOUL', label: '서울' },
-	{ value: 'BUSAN', label: '부산' },
-	{ value: 'INCHEON', label: '인천' },
-	{ value: 'DAEGU', label: '대구' },
-	{ value: 'DAEJEON', label: '대전' },
-	{ value: 'GWANGJU', label: '광주' },
-	{ value: 'ULSAN', label: '울산' },
-	{ value: 'SEJONG', label: '세종' },
-	{ value: 'GYEONGGI', label: '경기' },
-	{ value: 'GANGWON', label: '강원' },
-	{ value: 'CHUNGBUK', label: '충북' },
-	{ value: 'CHUNGNAM', label: '충남' },
-	{ value: 'JEONBUK', label: '전북' },
-	{ value: 'JEONNAM', label: '전남' },
-	{ value: 'GYEONGBUK', label: '경북' },
-	{ value: 'GYEONGNAM', label: '경남' },
-	{ value: 'JEJU', label: '제주' },
-];
+import { useMutation } from '@apollo/client';
+import { CREATE_PROPERTY } from '../../../../apollo/user/mutation';
+import axios from 'axios';
+import { getJwtToken } from '../../../auth';
+import { sweetErrorAlert, sweetMixinErrorAlert } from '../../../sweetAlert';
 
 declare global {
 	interface Window {
@@ -56,10 +30,34 @@ interface PropertyUpdateModalProps {
 	isOpen: boolean;
 	setIsOpen: (v: boolean) => void;
 	initialInput?: PropertyInput;
+	getMyPropertiesRefetch: (v: any) => void;
 }
-const PropertyAddModal = ({ isOpen, setIsOpen, initialInput }: PropertyUpdateModalProps) => {
+const PropertyAddModal = ({ isOpen, setIsOpen, initialInput, getMyPropertiesRefetch }: PropertyUpdateModalProps) => {
 	const [propertyData, setPropertyData] = useState<PropertyInput>(initialInput!);
-	const fileInputRef = useRef<HTMLInputElement>(null);
+	const fileInputRef = useRef<any>(null);
+	const token = getJwtToken();
+	/** APOLLO REQUESTS **/
+	const [createProperty] = useMutation(CREATE_PROPERTY);
+
+	const doDisabledCheck = () => {
+		if (
+			propertyData.propertyType === ('' as PropertyType) || // @ts-ignore
+			propertyData.propertyStatus === ('' as PropertyStatus) ||
+			propertyData.propertyLocation === ('' as PropertyLocation) || // @ts-ignore
+			propertyData.propertyAddress === '' || // @ts-ignore
+			propertyData.propertyDetailAddress === '' || // @ts-ignore
+			propertyData.propertyName === '' || // @ts-ignore
+			propertyData.propertyStars === 0 ||
+			propertyData.propertyImages!.length === 0 ||
+			propertyData.propertyAmenities?.length === 0 ||
+			propertyData.propertyOtherAmenities?.length === 0 ||
+			propertyData.propertyLat === '' ||
+			propertyData.propertyLng === ''
+			// propertyData.propertyDesc === ''
+		) {
+			return true;
+		}
+	};
 
 	const handleChange = <K extends keyof PropertyInput>(field: K, value: PropertyInput[K]) => {
 		setPropertyData((prev) => ({ ...prev, [field]: value }));
@@ -69,7 +67,7 @@ const PropertyAddModal = ({ isOpen, setIsOpen, initialInput }: PropertyUpdateMod
 		setPropertyData((prev) => ({ ...prev, [field]: '' as any }));
 	};
 
-	const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+	const handleImageUpload2 = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const files = e.target.files;
 		if (files) {
 			const newImages: string[] = [];
@@ -78,7 +76,7 @@ const PropertyAddModal = ({ isOpen, setIsOpen, initialInput }: PropertyUpdateMod
 				reader.onloadend = () => {
 					newImages.push(reader.result as string);
 					if (newImages.length === files.length) {
-						setPropertyData({ ...propertyData, propertyImages: [...propertyData.propertyImages, ...newImages] });
+						setPropertyData({ ...propertyData, propertyImages: [...propertyData.propertyImages!, ...newImages] });
 					}
 				};
 				reader.readAsDataURL(file);
@@ -86,8 +84,60 @@ const PropertyAddModal = ({ isOpen, setIsOpen, initialInput }: PropertyUpdateMod
 		}
 	};
 
+	async function handleImageUpload() {
+		try {
+			const formData = new FormData();
+			const selectedFiles = fileInputRef?.current?.files;
+
+			if (selectedFiles?.length === 0) return false;
+			if (selectedFiles!.length > 5) throw new Error('Cannot upload more than 5 images!');
+
+			formData.append(
+				'operations',
+				JSON.stringify({
+					query: `mutation ImagesUploader($files: [Upload!]!, $target: String!) {
+						imagesUploader(files: $files, target: $target)
+				}`,
+					variables: {
+						files: [null, null, null, null, null],
+						target: 'property',
+					},
+				}),
+			);
+			formData.append(
+				'map',
+				JSON.stringify({
+					'0': ['variables.files.0'],
+					'1': ['variables.files.1'],
+					'2': ['variables.files.2'],
+					'3': ['variables.files.3'],
+					'4': ['variables.files.4'],
+				}),
+			);
+			for (const key in selectedFiles) {
+				if (/^\d+$/.test(key)) formData.append(`${key}`, selectedFiles[key]);
+			}
+
+			const response = await axios.post(`${process.env.REACT_APP_API_GRAPHQL_URL}`, formData, {
+				headers: {
+					'Content-Type': 'multipart/form-data',
+					'apollo-require-preflight': true,
+					Authorization: `Bearer ${token}`,
+				},
+			});
+
+			const responseImages = response.data.data.imagesUploader;
+
+			console.log('+responseImages: ', responseImages);
+			setPropertyData({ ...propertyData, propertyImages: responseImages });
+		} catch (err: any) {
+			console.log('err: ', err.message);
+			await sweetMixinErrorAlert(err.message);
+		}
+	}
+
 	const removeImage = (index: number) => {
-		const newImages = propertyData.propertyImages.filter((_, i) => i !== index);
+		const newImages = propertyData.propertyImages!.filter((_, i) => i !== index);
 		setPropertyData({ ...propertyData, propertyImages: newImages });
 	};
 
@@ -95,12 +145,30 @@ const PropertyAddModal = ({ isOpen, setIsOpen, initialInput }: PropertyUpdateMod
 		fileInputRef.current?.click();
 	};
 
-	const handleSubmit = () => {
+	const handleSubmit = async () => {
+		try {
+			await createProperty({ variables: { input: propertyData } });
+			handleClose();
+			await getMyPropertiesRefetch({
+				variables: {
+					input: {
+						page: 1,
+						limit: 10,
+						sort: 'createdAt',
+						direction: 'DESC',
+						search: {},
+					},
+				},
+			});
+		} catch (err: any) {
+			sweetErrorAlert(err.message);
+		}
 		console.log('Updated Property Data:', propertyData);
 		setIsOpen(false);
 	};
 
 	const handleClose = () => {
+		setPropertyData(initialInput!);
 		setIsOpen(false);
 	};
 
@@ -145,6 +213,20 @@ const PropertyAddModal = ({ isOpen, setIsOpen, initialInput }: PropertyUpdateMod
 				});
 			},
 		}).open();
+	};
+
+	const toggleAmenity = (amenityName: string) => {
+		const amenities = propertyData.propertyAmenities!.includes(amenityName as PropertyAmenity)
+			? propertyData.propertyAmenities!.filter((a) => a !== amenityName)
+			: [...propertyData.propertyAmenities!, amenityName];
+		setPropertyData({ ...propertyData, propertyAmenities: amenities as PropertyAmenity[] });
+	};
+
+	const toggleOtherAmenity = (amenityName: string) => {
+		const amenities = propertyData.propertyOtherAmenities!.includes(amenityName as PropertyOtherAmenity)
+			? propertyData.propertyOtherAmenities!.filter((a) => a !== amenityName)
+			: [...propertyData.propertyOtherAmenities!, amenityName];
+		setPropertyData({ ...propertyData, propertyOtherAmenities: amenities as PropertyOtherAmenity[] });
 	};
 
 	return (
@@ -261,14 +343,14 @@ const PropertyAddModal = ({ isOpen, setIsOpen, initialInput }: PropertyUpdateMod
 										fullWidth
 										size="small"
 										placeholder="상세 주소"
-										value={propertyData.propertydetailAddress}
-										onChange={(e) => handleChange('propertydetailAddress', e.target.value)}
+										value={propertyData?.propertyDetailAddress! ?? ''}
+										onChange={(e) => handleChange('propertyDetailAddress', e.target.value)}
 									/>
-									{propertyData.propertydetailAddress && (
+									{propertyData.propertyDetailAddress && (
 										<IconButton
 											size="small"
 											className="property-modal__clear-button"
-											onClick={() => clearInput('propertydetailAddress')}
+											onClick={() => clearInput('propertyDetailAddress')}
 										>
 											<CloseIcon fontSize="small" />
 										</IconButton>
@@ -314,7 +396,56 @@ const PropertyAddModal = ({ isOpen, setIsOpen, initialInput }: PropertyUpdateMod
 								</div>
 							</div>
 						</div>
-
+						{/* 편의시설 */}
+						<div className="section">
+							<div className="section-title">객실 편의시설</div>
+							<div className="amenities-grid">
+								{amenitiesList.map((amenity) => (
+									<div
+										key={amenity.name}
+										className={`amenity-item ${
+											propertyData.propertyAmenities!.includes(amenity.key as PropertyAmenity) ? 'selected' : ''
+										}`}
+										onClick={() => toggleAmenity(amenity.key)}
+									>
+										<input
+											type="checkbox"
+											className="amenity-checkbox"
+											checked={propertyData.propertyAmenities!.includes(amenity.key as PropertyAmenity)}
+											onChange={() => {}}
+										/>
+										<span className="amenity-icon">{amenity.icon}</span>
+										{amenity.name}
+									</div>
+								))}
+							</div>
+						</div>
+						{/* 기타시설 */}
+						<div className="section">
+							<div className="section-title">객실 기타시설</div>
+							<div className="amenities-grid">
+								{otherAmenitiesList.map((amenity) => (
+									<div
+										key={amenity.name}
+										className={`amenity-item ${
+											propertyData.propertyOtherAmenities!.includes(amenity.key as PropertyOtherAmenity)
+												? 'selected'
+												: ''
+										}`}
+										onClick={() => toggleOtherAmenity(amenity.key)}
+									>
+										<input
+											type="checkbox"
+											className="amenity-checkbox"
+											checked={propertyData.propertyOtherAmenities!.includes(amenity.key as PropertyOtherAmenity)}
+											onChange={() => {}}
+										/>
+										<span className="amenity-icon">{amenity.icon}</span>
+										{amenity.name}
+									</div>
+								))}
+							</div>
+						</div>
 						{/* 상세 설명 */}
 						<div className="section">
 							<div className="section-title">상세 설명</div>
@@ -343,7 +474,7 @@ const PropertyAddModal = ({ isOpen, setIsOpen, initialInput }: PropertyUpdateMod
 						<div className="section">
 							<div className="section-title">숙소 이미지</div>
 							<div className="image-upload-section">
-								{propertyData.propertyImages.length < 10 && (
+								{propertyData.propertyImages!.length < 10 && (
 									<div className="upload-area" onClick={triggerFileInput}>
 										<div className="upload-icon">📤</div>
 										<div className="upload-text">숙소 사진을 업로드해주세요</div>
@@ -358,11 +489,15 @@ const PropertyAddModal = ({ isOpen, setIsOpen, initialInput }: PropertyUpdateMod
 									style={{ display: 'none' }}
 									onChange={handleImageUpload}
 								/>
-								{propertyData.propertyImages.length > 0 && (
+								{propertyData.propertyImages!.length > 0 && (
 									<div className="image-preview-grid">
-										{propertyData.propertyImages.map((img, index) => (
+										{propertyData.propertyImages!.map((img, index) => (
 											<div key={index} className="image-preview">
-												<img src={img} alt={`property ${index + 1}`} className="preview-image" />
+												<img
+													src={`${process.env.REACT_APP_API_URL}/${img}`}
+													alt={`property ${index + 1}`}
+													className="preview-image"
+												/>
 												<button className="remove-image" onClick={() => removeImage(index)}>
 													✕
 												</button>
@@ -378,7 +513,7 @@ const PropertyAddModal = ({ isOpen, setIsOpen, initialInput }: PropertyUpdateMod
 						<button className="btn btn-cancel" onClick={handleClose}>
 							취소
 						</button>
-						<button className="btn btn-submit" onClick={handleSubmit}>
+						<button className="btn btn-submit" onClick={handleSubmit} disabled={doDisabledCheck()}>
 							등록 완료
 						</button>
 					</div>

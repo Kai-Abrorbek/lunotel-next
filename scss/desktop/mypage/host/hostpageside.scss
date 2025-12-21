@@ -2213,6 +2213,57 @@
 					margin-bottom: 24px;
 					padding-bottom: 24px;
 					border-bottom: 1px solid #f1f3f5;
+					.amenities-grid {
+						display: grid;
+						grid-template-columns: repeat(3, 1fr);
+						gap: 8px;
+						max-height: 300px;
+						overflow-y: auto;
+						padding-right: 4px;
+						&::-webkit-scrollbar {
+							width: 6px;
+						}
+						&::-webkit-scrollbar-track {
+							background: #f8f9fa;
+							border-radius: 3px;
+						}
+						&::-webkit-scrollbar-thumb {
+							background: #dee2e6;
+							border-radius: 3px;
+						}
+						&::-webkit-scrollbar-thumb:hover {
+							background: #adb5bd;
+						}
+						.amenity-item {
+							display: flex;
+							align-items: center;
+							gap: 6px;
+							padding: 8px;
+							border: 1px solid #dee2e6;
+							border-radius: 6px;
+							cursor: pointer;
+							transition: all 0.2s;
+							font-size: 13px;
+						}
+						.amenity-item:hover {
+							border-color: #ff385c;
+							background: #fff5f5;
+						}
+						.amenity-item.selected {
+							background: #ff385c;
+							color: white;
+							border-color: #ff385c;
+						}
+						.amenity-icon {
+							font-size: 16px;
+							flex-shrink: 0;
+						}
+						.amenity-checkbox {
+							width: 16px;
+							height: 16px;
+							cursor: pointer;
+						}
+					}
 				}
 
 				.section:last-child {
