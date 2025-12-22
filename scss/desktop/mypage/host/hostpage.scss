@@ -321,6 +321,26 @@
 						color: #2563eb;
 						font-weight: 500;
 					}
+					&__status.UPCOMING {
+						background-color: #26ec14;
+						color: #0d0d0e;
+					}
+					&__status.PENDING {
+						background-color: #fef3c7;
+						color: #d97706;
+					}
+					&__status.CANCELLED {
+						background-color: #fee2e2;
+						color: #dc2626;
+					}
+					&__status.COMPLETED {
+						background-color: #e5e7eb;
+						color: #374151;
+					}
+					&__status.CHECKED_IN {
+						background-color: #dcfce7;
+						color: #16a34a;
+					}
 				}
 			}
 

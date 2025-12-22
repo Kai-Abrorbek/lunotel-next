@@ -1,6 +1,7 @@
 import { ReservationStatus } from '../../enums/reservation';
 import { TotalCounter } from '../member/member';
 import { Property } from '../property/property';
+import { RoomType } from '../roomtype/roomtype';
 
 export interface ReservationPriceBreakdownItem {
 	date: string;
@@ -36,6 +37,7 @@ export interface Reservation {
 
 	/** FROM AGGREGATE **/
 	propertyData?: Property[];
+	roomData?: RoomType[];
 }
 
 export interface Reservations {

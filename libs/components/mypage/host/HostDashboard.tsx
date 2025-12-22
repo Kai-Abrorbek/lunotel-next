@@ -2,75 +2,80 @@ import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { AgentPropertiesInquiry } from '../../../types/property/property.input';
 import { useRouter } from 'next/router';
+import { GET_AGENT_RESERVATIONS } from '../../../../apollo/user/query';
+import { useQuery } from '@apollo/client';
+import { Reservation } from '../../../types/reservation/reservation';
 
 type StatItem = {
 	id: string;
 	label: string;
-	value: string;
+	value: number;
 };
 
-type Reservation = {
-	id: number;
-	name: string;
-	roomType: string;
-	checkIn: string;
-	checkOut: string;
-	status: '확인됨';
-};
-
-const stats: StatItem[] = [
-	{ id: 'checkins', label: '오늘의 체크인', value: '12' },
-	{ id: 'checkouts', label: '오늘의 체크아웃', value: '8' },
-	{ id: 'reservations', label: '오늘의 예약', value: '5' },
-	{ id: 'revenue', label: '이번 주 수익', value: '$24,580' },
-];
-
-const reservations: Reservation[] = [
-	{
-		id: 1,
-		name: 'John Doe',
-		roomType: 'Deluxe Double Room',
-		checkIn: '2024-02-12',
-		checkOut: '2024-02-14',
-		status: '확인됨',
-	},
-	{
-		id: 2,
-		name: 'Maria Kim',
-		roomType: 'Oceanview Suite',
-		checkIn: '2024-02-13',
-		checkOut: '2024-02-15',
-		status: '확인됨',
-	},
-	{
-		id: 3,
-		name: 'Daniel Choi',
-		roomType: 'Standard Twin',
-		checkIn: '2024-02-12',
-		checkOut: '2024-02-13',
-		status: '확인됨',
-	},
-];
-
-interface HostDashboardProps {
-	initialInput: AgentPropertiesInquiry;
-}
-
-const HostDashboard = (props: HostDashboardProps) => {
-	const { initialInput } = props;
+const HostDashboard = () => {
 	const router = useRouter();
-	const [searchFilter, setSearchFilter] = useState<AgentPropertiesInquiry>(initialInput);
+	const [stats, setStats] = useState<StatItem[]>([
+		{ id: 'checkins', label: '오늘의 체크인', value: 0 },
+		{ id: 'checkouts', label: '오늘의 체크아웃', value: 0 },
+		{ id: 'reservations', label: '오늘의 예약', value: 5 },
+		{ id: 'revenue', label: '이번 주 수익', value: 24580 },
+	]);
+	/** APOLLO REQUEST **/
+	const {
+		loading: getPropertyInfoLoading,
+		data: getPropertyInfoData,
+		error: getPropertyInfoError,
+		refetch: getPropertyInfoRefetch,
+	} = useQuery(GET_AGENT_RESERVATIONS, {
+		fetchPolicy: 'cache-and-network',
+		variables: {
+			input: {
+				page: 1,
+				limit: 5,
+				search: {
+					propertyId: router.query.propertyId,
+				},
+			},
+		},
+		notifyOnNetworkStatusChange: true,
+		skip: !router.query.propertyId,
+	});
+
+	const reservations: Reservation[] = getPropertyInfoData?.getAgentReservations.list;
+
+	const todayLocalYMD = (() => {
+		const d = new Date();
+		const yyyy = d.getFullYear();
+		const mm = String(d.getMonth() + 1).padStart(2, '0');
+		const dd = String(d.getDate()).padStart(2, '0');
+		return `${yyyy}-${mm}-${dd}`;
+	})();
+
+	const todayYMD = new Date().toISOString().slice(0, 10);
+	const todayCheckInCount =
+		reservations?.filter((r: Reservation) => r.reservationCheckIn?.slice(0, 10) === todayLocalYMD).length ?? 0;
+	const todayCheckOutCount =
+		reservations?.filter((r: Reservation) => r.reservationCheckOut?.slice(0, 10) === todayLocalYMD).length ?? 0;
+	const todayReservations =
+		reservations?.filter((r: Reservation) => r.createdAt?.toString()?.slice(0, 10) === todayYMD).length ?? 0;
+	const revenueTotal = reservations?.reduce((a, b) => a + b.reservationTotalPrice!, 0);
 
 	useEffect(() => {
-		if (!router.isReady) return;
-		const propertyId = router.query.propertyId as string;
-		setSearchFilter({
-			...searchFilter,
-			search: {
-				propertyId: propertyId,
-			},
+		setStats((prev) => {
+			const checkins = prev.filter((p) => p.id === 'checkins')[0];
+			checkins.value = todayCheckInCount;
+
+			const checkOuts = prev.filter((p) => p.id === 'checkouts')[0];
+			checkOuts.value = todayCheckOutCount;
+
+			const reservations = prev.filter((p) => p.id === 'reservations')[0];
+			reservations.value = todayReservations;
+
+			const revenue = prev.filter((p) => p.id === 'revenue')[0];
+			revenue.value = Number(revenueTotal);
+			return prev;
 		});
-	}, [router]);
+	}, [todayCheckInCount, todayCheckOutCount, todayReservations, revenueTotal]);
 
 	return (
 		<div className="dashboard">
@@ -83,7 +88,11 @@ const HostDashboard = (props: HostDashboardProps) => {
 					<div key={item.id} className="dashboard__stat-card">
 						<div className="dashboard__stat-label">{item.label}</div>
 						<div className="dashboard__stat-value">
-							{item.id === 'revenue' ? <span className="dashboard__stat-value--bold">{item.value}</span> : item.value}
+							{item.id === 'revenue' ? (
+								<span className="dashboard__stat-value--bold">$ {item.value.toLocaleString()}</span>
+							) : (
+								item.value.toLocaleString()
+							)}
 						</div>
 					</div>
 				))}
@@ -97,29 +106,55 @@ const HostDashboard = (props: HostDashboardProps) => {
 					<h2 className="dashboard__section-title">최근 예약</h2>
 
 					<div className="dashboard__reservation-list">
-						{reservations.map((r) => (
-							<div key={r.id} className="reservation-card">
+						{reservations?.map((r: Reservation) => (
+							<div key={r._id} className="reservation-card">
 								<div className="reservation-card__left">
-									<div className="reservation-card__avatar">{r.name.charAt(0)}</div>
+									<div className="reservation-card__avatar">{r?.memberInfo?.guestName.charAt(0)}</div>
 									<div className="reservation-card__info">
-										<div className="reservation-card__name">{r.name}</div>
-										<div className="reservation-card__room">{r.roomType}</div>
+										<div className="reservation-card__name">{r?.memberInfo?.guestName}</div>
+										<div className="reservation-card__room">{r?.roomData?.[0].roomName}</div>
 
 										<div className="reservation-card__dates">
 											<div className="reservation-card__date-item">
 												<span className="reservation-card__date-label">체크인</span>
-												<span className="reservation-card__date-value">{r.checkIn}</span>
+												<span className="reservation-card__date-value">{r?.reservationCheckIn}</span>
 											</div>
 											<div className="reservation-card__date-item">
 												<span className="reservation-card__date-label">체크아웃</span>
-												<span className="reservation-card__date-value">{r.checkOut}</span>
+												<span className="reservation-card__date-value">{r?.reservationCheckOut}</span>
 											</div>
 										</div>
 									</div>
 								</div>
 
 								<div className="reservation-card__status-wrap">
-									<span className="reservation-card__status">{r.status}</span>
+									<span
+										className={`reservation-card__status ${
+											r.reservationStatus === 'UPCOMING'
+												? 'UPCOMING'
+												: r.reservationStatus === 'PENDING'
+												? 'PENDING'
+												: r.reservationStatus === 'CANCELLED'
+												? 'CANCELLED'
+												: r.reservationStatus === 'COMPLETED'
+												? 'COMPLETED'
+												: r.reservationStatus === 'CHECKED_IN'
+												? 'CHECKED_IN'
+												: ''
+										}`}
+									>
+										{r.reservationStatus === 'UPCOMING'
+											? '예정'
+											: r.reservationStatus === 'PENDING'
+											? '대기중'
+											: r.reservationStatus === 'CANCELLED'
+											? '취소됨'
+											: r.reservationStatus === 'COMPLETED'
+											? '완료됨'
+											: r.reservationStatus === 'CHECKED_IN'
+											? '두숙중'
+											: ''}
+									</span>
 								</div>
 							</div>
 						))}
@@ -149,18 +184,6 @@ const HostDashboard = (props: HostDashboardProps) => {
 			</section>
 		</div>
 	);
-};
-
-HostDashboard.defaultProps = {
-	initialInput: {
-		page: 1,
-		limit: 10,
-		sort: 'createdAt',
-		direction: 'DESC',
-		search: {
-			propertyId: '',
-		},
-	},
 };
 
 export default HostDashboard;

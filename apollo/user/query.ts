@@ -877,6 +877,21 @@ export const GET_AGENT_RESERVATIONS = gql`
 					updatedAt
 					roomCount
 				}
+				roomData {
+					_id
+					propertyId
+					roomName
+					roomMaxPersonal
+					roomStandPersonal
+					basePriceDayUse
+					basePriceOvernight
+					roomDiscountPrice
+					roombedInfo
+					roomImages
+					roomStatus
+					createdAt
+					updatedAt
+				}
 			}
 			metaCounter {
 				total
