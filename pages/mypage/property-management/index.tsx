@@ -260,7 +260,7 @@ const PropertyManagementPage = () => {
 										>
 											수정
 										</Button>
-										<Link href={`/mypage/property-management/deshboard?propertyId=${property._id}`}>
+										<Link href={`/mypage/property-management/deshboard?category=dashboard&propertyId=${property._id}`}>
 											<Button
 												variant="contained"
 												size="small"

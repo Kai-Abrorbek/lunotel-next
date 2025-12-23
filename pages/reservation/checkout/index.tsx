@@ -148,8 +148,8 @@ const ReservationCheckoutPage = (props: ReservationCheckoutPageProps) => {
 				stayPlanId: searchFilter.stayPlanId,
 				reservationCheckIn: searchFilter.reservationCheckIn,
 				reservationCheckOut: searchFilter.reservationCheckOut,
-				reservationCheckInAt: searchFilter.reservationCheckInAt,
-				reservationCheckOutAt: searchFilter.reservationCheckOutAt,
+				reservationCheckInAt: selectedTimeStart,
+				reservationCheckOutAt: rangeTimeSolts[rangeTimeSolts.length - 1],
 				memberInfo: searchFilter.memberInfo,
 				reservationQty: 1,
 			};

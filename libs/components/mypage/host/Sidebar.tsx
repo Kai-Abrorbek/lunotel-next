@@ -11,6 +11,8 @@ import {
 	User,
 	Settings,
 } from 'lucide-react';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 interface SidebarProps {
 	activeMenu: string;
 	setActiveMenu: (id: string) => void;
@@ -41,6 +43,8 @@ const bottomMenuItems: MenuItem[] = [
 
 export default function Sidebar({ activeMenu, setActiveMenu }: SidebarProps) {
 	const [isExpanded, setIsExpanded] = useState(false);
+	const router = useRouter();
+
 	return (
 		<div className="sidebar-container">
 			<div
@@ -55,15 +59,19 @@ export default function Sidebar({ activeMenu, setActiveMenu }: SidebarProps) {
 
 				<div className="menu-section">
 					{menuItems.map((item) => (
-						<button
-							key={item.id}
-							className={`menu-item ${activeMenu === item.id ? 'active' : ''}`}
-							onClick={() => setActiveMenu(item.id)}
+						<Link
+							href={`/mypage/property-management/deshboard?category=${item.id}&propertyId=${router.query.propertyId}`}
 						>
-							<span className="menu-icon">{item.icon}</span>
-							<span className="menu-label">{item.label}</span>
-							{item.badge && <span className="menu-badge">{item.badge}</span>}
-						</button>
+							<button
+								key={item.id}
+								className={`menu-item ${activeMenu === item.id ? 'active' : ''}`}
+								onClick={() => setActiveMenu(item.id)}
+							>
+								<span className="menu-icon">{item.icon}</span>
+								<span className="menu-label">{item.label}</span>
+								{item.badge && <span className="menu-badge">{item.badge}</span>}
+							</button>
+						</Link>
 					))}
 				</div>
 
@@ -83,26 +91,5 @@ export default function Sidebar({ activeMenu, setActiveMenu }: SidebarProps) {
 				</div>
 			</div>
 		</div>
-		// <div className="sidebar">
-		// 	<div className="logo">
-		// 		<div className="logo-title">LunoTel</div>
-		// 		<div className="logo-subtitle">Hotel Management</div>
-		// 	</div>
-		// 	<nav>
-		// 		{menuItems.map((item) => (
-		// 			<div
-		// 				key={item.id}
-		// 				className={`menu-item ${active === item.id ? 'active' : ''}`}
-		// 				onClick={() => setActive(item.id)}
-		// 			>
-		// 				<div className="menu-left">
-		// 					<span className="icon">{item.icon}</span>
-		// 					<span>{item.label}</span>
-		// 				</div>
-		// 				{item.badge && <span className="badge">{item.badge}</span>}
-		// 			</div>
-		// 		))}
-		// 	</nav>
-		// </div>
 	);
 }

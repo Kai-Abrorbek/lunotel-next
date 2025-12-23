@@ -962,6 +962,11 @@
 							font-size: 12px;
 							padding: 4px 12px;
 							border-radius: 9999px;
+							font-weight: 600;
+							&.status-upcoming {
+								background-color: #15da0e;
+								color: #111111;
+							}
 
 							&.status-confirmed {
 								background-color: #dbeafe;
@@ -979,7 +984,7 @@
 							}
 
 							&.status-completed {
-								background-color: #f3f4f6;
+								background-color: #c2cf0a;
 								color: #374151;
 							}
 

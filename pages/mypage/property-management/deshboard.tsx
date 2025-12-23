@@ -9,9 +9,11 @@ import RevenuePage from '../../../libs/components/mypage/host/RevenuePage';
 import ReviewsPage from '../../../libs/components/mypage/host/ReviewsPage';
 import NotificationsPage from '../../../libs/components/mypage/host/NotificationsPage';
 import CustomerInquiryPage from '../../../libs/components/mypage/host/CustomerInquiryPage';
+import { useRouter } from 'next/router';
 
 const HostMyPage = () => {
-	const [activeMenu, setActiveMenu] = useState('dashboard');
+	const router = useRouter();
+	const [activeMenu, setActiveMenu] = useState(router.query.category ? (router.query.category as string) : 'dashboard');
 
 	const renderPage = () => {
 		switch (activeMenu) {

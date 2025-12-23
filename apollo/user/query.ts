@@ -892,6 +892,7 @@ export const GET_AGENT_RESERVATIONS = gql`
 					createdAt
 					updatedAt
 				}
+				reservationPlanType
 			}
 			metaCounter {
 				total

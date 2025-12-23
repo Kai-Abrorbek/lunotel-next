@@ -13,7 +13,7 @@ export interface ReservationPriceBreakdownItem {
 export interface type {
 	guestName: string;
 	guestPhone: string;
-	// guestEmail: string;
+	guestEmail: string;
 }
 
 export interface Reservation {
@@ -22,14 +22,15 @@ export interface Reservation {
 	propertyId?: string;
 	roomTypeId?: string;
 	stayPlanId?: string;
-	reservationStatus?: ReservationStatus;
-	reservationQty?: number;
-	priceBreakdown?: ReservationPriceBreakdownItem[];
-	reservationTotalPrice?: number;
+	reservationStatus: ReservationStatus;
+	reservationPlanType: string;
+	reservationQty: number;
+	priceBreakdown: ReservationPriceBreakdownItem[];
+	reservationTotalPrice: number;
 	reservationCheckIn?: string;
 	reservationCheckOut?: string;
-	memberInfo?: type;
-	reservationDate?: string;
+	memberInfo: type;
+	reservationDate: string;
 	reservationCheckInAt?: string;
 	reservationCheckOutAt?: string;
 	createdAt?: Date;
