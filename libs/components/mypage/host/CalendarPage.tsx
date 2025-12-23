@@ -1,51 +1,15 @@
 // src/components/HostLayout/CalendarPage.tsx
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Box, Card, Typography, Button, FormControl, Select, MenuItem } from '@mui/material';
-import { RoomReservationsInquiry, RoomsIquiry } from '../../../types/roomtype/roomtype.input';
 import { useRouter } from 'next/router';
-import { RoomType, RoomTypes } from '../../../types/roomtype/roomtype';
-import { Reservations } from '../../../types/reservation/reservation';
-
-type RoomOption = {
-	value: string;
-	label: string;
-};
-
-const roomOptions: RoomOption[] = [
-	{ value: 'all', label: '전체 객실' },
-	{ value: 'r101', label: 'R101 - Deluxe Double Room' },
-	{ value: 'r102', label: 'R102 - Deluxe Double Room' },
-	{ value: 'r201', label: 'R201 - Oceanview Suite' },
-	{ value: 'r202', label: 'R202 - Oceanview Suite' },
-	{ value: 'r301', label: 'R301 - Standard Twin' },
-	{ value: 'r302', label: 'R302 - Standard Twin' },
-	{ value: 'r401', label: 'R401 - Premium King' },
-	{ value: 'r402', label: 'R402 - Premium King' },
-];
+import { RoomType } from '../../../types/roomtype/roomtype';
+import { Reservation } from '../../../types/reservation/reservation';
+import { GET_MYROOMS, GET_ROOM } from '../../../../apollo/user/query';
+import { useQuery } from '@apollo/client';
 
 const weekdays = ['일', '월', '화', '수', '목', '금', '토'];
 
 type CalendarCell = Date | null;
-
-type RoomReservation = {
-	id: string;
-	checkIn: string;
-	checkOut: string;
-};
-
-const roomReservations: RoomReservation[] = [
-	{ id: '0', checkIn: '2025-11-01', checkOut: '2025-11-02' },
-	{ id: '1', checkIn: '2025-11-03', checkOut: '2025-11-04' },
-	{ id: '2', checkIn: '2025-11-04', checkOut: '2025-11-06' },
-	{ id: '3', checkIn: '2025-11-10', checkOut: '2025-11-16' },
-	{ id: '4', checkIn: '2025-11-18', checkOut: '2025-11-26' },
-
-	{ id: '5', checkIn: '2025-12-01', checkOut: '2025-12-02' },
-	{ id: '6', checkIn: '2025-12-03', checkOut: '2025-12-04' },
-	{ id: '7', checkIn: '2025-12-04', checkOut: '2025-12-06' },
-	{ id: '8', checkIn: '2025-12-10', checkOut: '2025-12-16' },
-	{ id: '9', checkIn: '2025-12-18', checkOut: '2025-12-26' },
-];
 
 function buildCalendar(monthDate: Date): CalendarCell[] {
 	const year = monthDate.getFullYear();
@@ -68,13 +32,7 @@ function buildCalendar(monthDate: Date): CalendarCell[] {
 	return cells;
 }
 
-interface CalendarPageProps {
-	roomsInquiry: RoomsIquiry;
-	getRoomReservation: RoomReservationsInquiry;
-}
-
-const CalendarPage = (props: CalendarPageProps) => {
-	const { roomsInquiry, getRoomReservation } = props;
+const CalendarPage = () => {
 	const router = useRouter();
 	const today = useMemo(() => {
 		const d = new Date();
@@ -84,28 +42,61 @@ const CalendarPage = (props: CalendarPageProps) => {
 		const d = new Date();
 		return new Date(d.getFullYear(), d.getMonth());
 	});
-	const [selectedRoom, setSelectedRoom] = useState<string>('all');
+	const [selectedRoom, setSelectedRoom] = useState<string>('');
+	const [roomId, setRoomId] = useState<string>('');
 	const cells = useMemo(() => buildCalendar(currentMonth), [currentMonth]);
 	const formattedMonthLabel = `${currentMonth.getFullYear()}년 ${currentMonth.getMonth() + 1}월`;
-	const [getRoomsInquiry, setGetRoomsInquiry] = useState<RoomsIquiry>(roomsInquiry);
-	const [roomsData, setRoomsData] = useState<RoomTypes>();
-	const [getReservationsInquiry, setGetReservationsInquiry] = useState<RoomReservationsInquiry>(getRoomReservation);
-	const [roomReservation, setRoomReservations] = useState<Reservations>();
+
+	/** APOLLO REQUEST **/
+	const {
+		loading: getMyRoomsLoading,
+		data: getMyRoomsData,
+		error: getMyRoomsError,
+		refetch: getMyRoomsRefetch,
+	} = useQuery(GET_MYROOMS, {
+		fetchPolicy: 'cache-and-network',
+		variables: {
+			input: {
+				page: 1,
+				limit: 20,
+				sort: 'createdAt',
+				direction: 'DESC',
+				search: {
+					propertyId: router.query.propertyId,
+				},
+			},
+		},
+		notifyOnNetworkStatusChange: true,
+		skip: !router.query.propertyId,
+	});
+
+	useEffect(() => {
+		const firstRoomId = getMyRoomsData?.getMyRooms?.list?.[0];
+		if (!firstRoomId) return;
+
+		setRoomId((prev) => (prev ? prev : firstRoomId._id));
+	}, [getMyRoomsData]);
+
+	/** APOLLO REQUEST **/
+	const {
+		loading: getRoomLoading,
+		data: getRoomData,
+		error: getRoomError,
+		refetch: getRoomRefetch,
+	} = useQuery(GET_ROOM, {
+		fetchPolicy: 'cache-and-network',
+		variables: { roomId: roomId },
+		notifyOnNetworkStatusChange: true,
+		skip: !roomId,
+	});
+
+	const roomList = getMyRoomsData?.getMyRooms?.list;
+	const room: RoomType = getRoomData?.getRoom;
+	console.log(room);
 	/*****************
 	 **  	LIFESICLE   **
 	 *****************/
-	useEffect(() => {
-		if (!router.isReady) return;
-		const propertyId = router.query.propertyId as string;
-		setGetRoomsInquiry({
-			...getRoomsInquiry,
-			search: {
-				...getRoomsInquiry.search,
-				propertyId: propertyId,
-			},
-		});
-	}, [router]);
-
+	useEffect(() => {}, []);
 	/*****************
 	 **  	HANDLER   **
 	 *****************/
@@ -139,21 +130,21 @@ const CalendarPage = (props: CalendarPageProps) => {
 		return new Date(d.getFullYear(), d.getMonth(), d.getDate());
 	}
 
-	function getReservationForDay(day: Date, reservations: RoomReservation[]) {
+	function getReservationForDay(day: Date, reservations: Reservation[]) {
 		const t = new Date(day.getFullYear(), day.getMonth(), day.getDate()).getTime();
 
-		return reservations.find((r) => {
-			const start = toMidnight(r.checkIn).getTime();
-			const end = toMidnight(r.checkOut).getTime(); // [start, end)
+		return reservations?.find((r) => {
+			const start = toMidnight(r?.reservationCheckIn!).getTime();
+			const end = toMidnight(r?.reservationCheckOut!).getTime(); // [start, end)
 			return t >= start && t < end;
 		});
 	}
 
-	function getReservationColorStyles(reservation: RoomReservation | undefined) {
+	function getReservationColorStyles(reservation: Reservation | undefined) {
 		if (!reservation) return {};
 
 		// id 숫자 추출해서 대충 해시처럼 사용 (예시는 아주 단순하게)
-		const num = parseInt(reservation.id.replace(/\D/g, ''), 10) || 1;
+		const num = parseInt(reservation._id.replace(/\D/g, ''), 10) || 1;
 		const hue = (num * 157) % 360;
 
 		return {
@@ -162,17 +153,6 @@ const CalendarPage = (props: CalendarPageProps) => {
 			'--resv-text': `hsl(${hue} 50% 35%)`,
 		} as React.CSSProperties;
 	}
-
-	const selectRoom = (roomId: string) => {
-		const room = roomOptions.filter((opt) => opt.value === roomId)[0];
-
-		// setGetReservationsInquiry({
-		// 	...getReservationsInquiry,
-		// 	propertyId: room.propertyId,
-		// 	roomTypeId: room._id,
-		// 	stayPlanId: room.stayPlans?.[0]._id!,
-		// });
-	};
 
 	return (
 		<Box className="calendar-page">
@@ -184,13 +164,13 @@ const CalendarPage = (props: CalendarPageProps) => {
 					<Select
 						value={selectedRoom}
 						onChange={(e) => {
-							selectRoom(e.target.value);
+							setRoomId(e.target.value);
 							setSelectedRoom(e.target.value as string);
 						}}
 					>
-						{roomOptions.map((room) => (
-							<MenuItem key={room.value} value={room.value}>
-								{room.label}
+						{roomList?.map((room: RoomType) => (
+							<MenuItem key={room._id} value={room._id}>
+								{room.roomName}
 							</MenuItem>
 						))}
 					</Select>
@@ -231,33 +211,35 @@ const CalendarPage = (props: CalendarPageProps) => {
 				</Box>
 
 				{/* 날짜 그리드 */}
-				<Box className="calendar-page__grid">
-					{cells.map((cell, idx) => {
-						const isPastDay = cell !== null && isPastDate(cell, currentMonth);
-						let reservationStyle;
-						let isReserved;
-						if (cell) {
-							const reservation = getReservationForDay(cell!, roomReservations);
-							isReserved = !!reservation;
-							reservationStyle = getReservationColorStyles(reservation!);
-						}
+				{selectedRoom && (
+					<Box className="calendar-page__grid">
+						{cells.map((cell, idx) => {
+							const isPastDay = cell !== null && isPastDate(cell, currentMonth);
+							let reservationStyle;
+							let isReserved;
+							if (cell) {
+								const reservation = getReservationForDay(cell!, room?.reservationData!);
+								isReserved = !!reservation;
+								reservationStyle = getReservationColorStyles(reservation!);
+							}
 
-						const classes = [
-							'calendar-page__cell',
-							isReserved ? 'calendar-page__cell--reserved' : '',
-							cell === null ? 'calendar-page__cell--empty' : '',
-							isPastDay ? 'calendar-page__cell--past' : '',
-						]
-							.filter(Boolean)
-							.join(' ');
+							const classes = [
+								'calendar-page__cell',
+								isReserved ? 'calendar-page__cell--reserved' : '',
+								cell === null ? 'calendar-page__cell--empty' : '',
+								isPastDay ? 'calendar-page__cell--past' : '',
+							]
+								.filter(Boolean)
+								.join(' ');
 
-						return (
-							<Box key={idx} className={classes} style={isReserved ? reservationStyle : undefined}>
-								{cell && <span className="calendar-page__cell-day">{cell.getDate()}</span>}
-							</Box>
-						);
-					})}
-				</Box>
+							return (
+								<Box key={idx} className={classes} style={isReserved ? reservationStyle : undefined}>
+									{cell && <span className="calendar-page__cell-day">{cell.getDate()}</span>}
+								</Box>
+							);
+						})}
+					</Box>
+				)}
 			</Card>
 		</Box>
 	);

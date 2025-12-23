@@ -65,22 +65,20 @@ const ReservationHistory = (props: ReservationHistoryProps) => {
 	};
 
 	const handleCancelReservation = async (reservation: Reservation) => {
-		const todayDate = Math.floor(new Date().getTime() / 1000);
-		const reservationDate = Math.floor(new Date(reservation.reservationDate!).getTime() / 1000);
-		if (reservationDate > todayDate) {
-			try {
-				const updateReservationInput: ReservationUpdateInput = {
-					_id: reservation._id,
-					propertyId: reservation.propertyId!,
-					roomTypeId: reservation.roomTypeId!,
-					stayPlanId: reservation.stayPlanId!,
-					reservationStatus: ReservationStatus.CANCELLED,
-				};
+		try {
+			const updateReservationInput: ReservationUpdateInput = {
+				_id: reservation._id,
+				propertyId: reservation.propertyId!,
+				roomTypeId: reservation.roomTypeId!,
+				stayPlanId: reservation.stayPlanId!,
+				reservationCheckIn: reservation.reservationCheckIn,
+				reservationCheckOut: reservation.reservationCheckOut,
+				reservationStatus: ReservationStatus.CANCELLED,
+			};
 
-				await updateReservation({ variables: { input: updateReservationInput } });
-			} catch (err: any) {
-				sweetErrorAlert(err.message);
-			}
+			await updateReservation({ variables: { input: updateReservationInput } });
+		} catch (err: any) {
+			sweetErrorAlert(err.message);
 		}
 	};
 
@@ -130,16 +128,22 @@ const ReservationHistory = (props: ReservationHistoryProps) => {
 											<Typography className="my-res-item-title">
 												{reservation.propertyData?.[0].propertyName}
 											</Typography>
-											<Typography className="my-res-item-meta">
-												{reservation.createdAt?.toString().split('T')[0]}
-											</Typography>
+											<Typography className="my-res-item-meta">{reservation.reservationDate}</Typography>
 											<Typography className="my-res-item-meta">
 												{reservation?.propertyData?.[0].propertyAddress} · {2}명
 											</Typography>
 										</Box>
 									</Box>
 									<Box className="my-res-item-btn">
-										{new Date().getTime() / 1000 < new Date(reservation.reservationDate!).getTime() / 1000 && (
+										{(() => {
+											const today = new Date();
+											today.setHours(0, 0, 0, 0);
+
+											const reservationDay = new Date(reservation.reservationDate!);
+											reservationDay.setHours(0, 0, 0, 0);
+
+											return today <= reservationDay;
+										})() && (
 											<Button onClick={() => handleCancelReservation(reservation)} variant="outlined">
 												취소하기
 											</Button>
@@ -175,9 +179,7 @@ const ReservationHistory = (props: ReservationHistoryProps) => {
 											<Typography className="my-res-history-item-title">
 												{reservation.propertyData?.[0].propertyName}
 											</Typography>
-											<Typography className="my-res-history-item-meta">
-												{reservation.createdAt?.toString().split('T')[0]}
-											</Typography>
+											<Typography className="my-res-history-item-meta">{reservation.reservationDate}</Typography>
 											<Typography className="my-res-history-item-meta">
 												{reservation?.propertyData?.[0].propertyAddress} · {2}명
 											</Typography>

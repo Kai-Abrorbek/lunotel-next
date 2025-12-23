@@ -60,10 +60,10 @@ export default function Sidebar({ activeMenu, setActiveMenu }: SidebarProps) {
 				<div className="menu-section">
 					{menuItems.map((item) => (
 						<Link
+							key={item.id}
 							href={`/mypage/property-management/deshboard?category=${item.id}&propertyId=${router.query.propertyId}`}
 						>
 							<button
-								key={item.id}
 								className={`menu-item ${activeMenu === item.id ? 'active' : ''}`}
 								onClick={() => setActiveMenu(item.id)}
 							>

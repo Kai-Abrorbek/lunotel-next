@@ -1,5 +1,6 @@
 import { RoomStatus } from '../../enums/propertyRoomtype.enum';
 import { TotalCounter } from '../member/member';
+import { Reservation } from '../reservation/reservation';
 import { StayPlan } from '../stayplan/stayplan';
 
 export interface RoomType {
@@ -18,6 +19,7 @@ export interface RoomType {
 	updatedAt: Date;
 	/* from aggregatio */
 	stayPlans?: StayPlan[];
+	reservationData?: Reservation[];
 }
 
 export interface RoomTypes {

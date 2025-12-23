@@ -518,6 +518,24 @@ export const GET_ROOM = gql`
 				createdAt
 				updatedAt
 			}
+			reservationData {
+				_id
+				memberId
+				propertyId
+				roomTypeId
+				stayPlanId
+				reservationStatus
+				reservationPlanType
+				reservationQty
+				reservationTotalPrice
+				reservationCheckIn
+				reservationCheckOut
+				reservationDate
+				reservationCheckInAt
+				reservationCheckOutAt
+				createdAt
+				updatedAt
+			}
 		}
 	}
 `;
