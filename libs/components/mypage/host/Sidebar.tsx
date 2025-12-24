@@ -52,10 +52,12 @@ export default function Sidebar({ activeMenu, setActiveMenu }: SidebarProps) {
 				onMouseEnter={() => setIsExpanded(true)}
 				onMouseLeave={() => setIsExpanded(false)}
 			>
-				<div className="sidebar-header">
-					<div className="logo">V</div>
-					{isExpanded && <span className="brand-text">LunoTel</span>}
-				</div>
+				<Link href={'/mypage/property-management'}>
+					<div className="sidebar-header">
+						<div className="logo">V</div>
+						{isExpanded && <span className="brand-text">LunoTel</span>}
+					</div>
+				</Link>
 
 				<div className="menu-section">
 					{menuItems.map((item) => (

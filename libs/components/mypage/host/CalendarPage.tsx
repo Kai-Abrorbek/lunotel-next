@@ -92,7 +92,6 @@ const CalendarPage = () => {
 
 	const roomList = getMyRoomsData?.getMyRooms?.list;
 	const room: RoomType = getRoomData?.getRoom;
-	console.log(room);
 	/*****************
 	 **  	LIFESICLE   **
 	 *****************/

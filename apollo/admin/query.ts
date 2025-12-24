@@ -149,7 +149,6 @@ export const GET_COMMENTS = gql`
 					basePriceDayUse
 					basePriceOvernight
 					roomDiscountPrice
-					roombedInfo
 					roomImages
 					roomStatus
 					createdAt

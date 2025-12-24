@@ -419,13 +419,13 @@ export const CREATE_ROOM = gql`
 			basePriceDayUse
 			basePriceOvernight
 			roomDiscountPrice
-			roombedInfo
 			roomImages
 			roomStatus
 			createdAt
 			updatedAt
 			roomMaxPersonal
 			roomStandPersonal
+			roomAmenities
 		}
 	}
 `;
@@ -436,7 +436,6 @@ export const UPDATE_ROOM = gql`
 			_id
 			propertyId
 			roomName
-			roombedInfo
 			roomImages
 			roomStatus
 			createdAt
@@ -446,6 +445,7 @@ export const UPDATE_ROOM = gql`
 			basePriceOvernight
 			roomMaxPersonal
 			roomStandPersonal
+			roomAmenities
 		}
 	}
 `;

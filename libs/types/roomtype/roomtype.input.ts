@@ -1,9 +1,9 @@
 import { Direction } from '../../enums/common.enum';
-import { RoomStatus } from '../../enums/propertyRoomtype.enum';
+import { RoomAmenity, RoomStatus } from '../../enums/propertyRoomtype.enum';
 
 /** CREATE ROOM TYPE */
 export interface SPRules {
-	durationHours?: number;
+	durationHours?: string;
 	windowStart: string;
 	windowEnd: string;
 	lastCheckInBy: string;
@@ -12,13 +12,15 @@ export interface SPRules {
 export interface RoomTypeInput {
 	propertyId: string;
 	roomName: string;
+	roomStatus: string;
 	roomMaxPersonal: number;
 	roomStandPersonal: number;
 	basePriceOvernight: number;
 	basePriceDayUse: number;
-	roomDiscountPrice?: number;
-	roombedInfo?: string;
-	roomImages?: string[];
+	roomDiscountPrice: number;
+	roomImages: string[];
+	roomAmenity: RoomAmenity[];
+	roomAmenities: string[];
 	stayPlanRules: SPRules;
 }
 

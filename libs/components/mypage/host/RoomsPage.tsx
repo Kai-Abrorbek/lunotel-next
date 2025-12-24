@@ -9,156 +9,10 @@ import RoomAddModal from './RoomAddModal';
 import { sweetMixinErrorAlert } from '../../../sweetAlert';
 import { ReservationInput } from '../../../types/reservation/reservation.input';
 import { useRouter } from 'next/router';
-
-interface Room {
-	id: string;
-	code: string;
-	name: string;
-	type: string;
-	floor: number;
-	capacity: number;
-	size: number;
-	price: number;
-	status: RoomStatus;
-	imageType: 'bed' | 'wave' | 'building';
-	amenities: string[];
-	guestName?: string;
-	checkoutDate?: string; // YYYY-MM-DD
-}
-
-interface RoomReservation {
-	roomId: string;
-	checkIn: string;
-	checkOut: string;
-}
-
-const ROOMS: Room[] = [
-	{
-		id: '1',
-		code: 'R101',
-		name: 'Deluxe Double Room',
-		type: 'Deluxe Double Room',
-		floor: 1,
-		capacity: 2,
-		size: 32,
-		price: 180,
-		status: RoomStatus.AVAILABLE,
-		imageType: 'bed',
-		amenities: ['WiFi', 'TV', 'Mini Bar', 'Bathtub'],
-	},
-	{
-		id: '2',
-		code: 'R102',
-		name: 'Deluxe Double Room',
-		type: 'Deluxe Double Room',
-		floor: 1,
-		capacity: 2,
-		size: 32,
-		price: 180,
-		status: RoomStatus.OCCUPIED,
-		imageType: 'bed',
-		amenities: ['WiFi', 'TV', 'Mini Bar', 'Bathtub'],
-		guestName: 'John Doe',
-		checkoutDate: '2024-11-28',
-	},
-	{
-		id: '3',
-		code: 'R201',
-		name: 'Oceanview Suite',
-		type: 'Oceanview Suite',
-		floor: 2,
-		capacity: 3,
-		size: 48,
-		price: 320,
-		status: RoomStatus.AVAILABLE,
-		imageType: 'wave',
-		amenities: ['WiFi', 'TV', 'Mini Bar', 'Ocean View', 'Balcony'],
-	},
-	{
-		id: '4',
-		code: 'R202',
-		name: 'Oceanview Suite',
-		type: 'Oceanview Suite',
-		floor: 2,
-		capacity: 3,
-		size: 48,
-		price: 320,
-		status: RoomStatus.OCCUPIED,
-		imageType: 'wave',
-		amenities: ['WiFi', 'TV', 'Mini Bar', 'Ocean View', 'Balcony'],
-		guestName: 'Maria Kim',
-		checkoutDate: '2024-11-29',
-	},
-	{
-		id: '5',
-		code: 'R301',
-		name: 'Standard Twin',
-		type: 'Standard Twin',
-		floor: 3,
-		capacity: 2,
-		size: 28,
-		price: 150,
-		status: RoomStatus.MAINTENANCE,
-		imageType: 'building',
-		amenities: ['WiFi', 'TV', 'Desk'],
-	},
-	{
-		id: '6',
-		code: 'R301',
-		name: 'Standard Twin',
-		type: 'Standard Twin',
-		floor: 3,
-		capacity: 2,
-		size: 28,
-		price: 150,
-		status: RoomStatus.AVAILABLE,
-		imageType: 'building',
-		amenities: ['WiFi', 'TV', 'Desk'],
-	},
-	{
-		id: '7',
-		code: 'R301',
-		name: 'Standard Twin',
-		type: 'Standard Twin',
-		floor: 3,
-		capacity: 2,
-		size: 28,
-		price: 150,
-		status: RoomStatus.AVAILABLE,
-		imageType: 'building',
-		amenities: ['WiFi', 'TV', 'Desk'],
-	},
-	{
-		id: '8',
-		code: 'R301',
-		name: 'Standard Twin',
-		type: 'Standard Twin',
-		floor: 3,
-		capacity: 2,
-		size: 28,
-		price: 150,
-		status: RoomStatus.AVAILABLE,
-		imageType: 'building',
-		amenities: ['WiFi', 'TV', 'Desk'],
-	},
-];
-
-// 예시 예약 데이터 (실제에선 API 응답으로 교체하면 됨)
-const ROOM_RESERVATIONS: RoomReservation[] = [
-	{ roomId: '1', checkIn: '2025-11-10', checkOut: '2025-11-13' },
-	{ roomId: '1', checkIn: '2025-11-20', checkOut: '2025-11-23' },
-	{ roomId: '2', checkIn: '2025-11-05', checkOut: '2025-11-09' },
-	{ roomId: '2', checkIn: '2025-11-25', checkOut: '2025-11-29' },
-	{ roomId: '3', checkIn: '2025-11-18', checkOut: '2025-11-21' },
-	{ roomId: '4', checkIn: '2025-11-27', checkOut: '2025-11-30' },
-
-	{ roomId: '5', checkIn: '2025-12-10', checkOut: '2025-12-13' },
-	{ roomId: '6', checkIn: '2025-12-20', checkOut: '2025-12-23' },
-	{ roomId: '7', checkIn: '2025-12-05', checkOut: '2025-12-09' },
-	{ roomId: '8', checkIn: '2025-12-25', checkOut: '2025-12-29' },
-	{ roomId: '9', checkIn: '2025-12-18', checkOut: '2025-12-21' },
-	{ roomId: '10', checkIn: '2025-12-27', checkOut: '2025-12-30' },
-];
+import { GET_MYROOMS } from '../../../../apollo/user/query';
+import { useQuery } from '@apollo/client';
+import { RoomType } from '../../../types/roomtype/roomtype';
+import { Reservation } from '../../../types/reservation/reservation';
 
 const dateTypeToString = (date: Date): string => {
 	return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(
@@ -173,14 +27,13 @@ const WEEK_DAYS = ['일', '월', '화', '수', '목', '금', '토'];
 
 const RoomsPage: React.FC = () => {
 	const router = useRouter();
-	const propertyId = router.query.propertyId?.slice(router.query.propertyId.length - 1) as string;
 	const [activeTab, setActiveTab] = useState<TabKey>('all');
 	const [calendarOpenRoomId, setCalendarOpenRoomId] = useState<string | null>(null);
 	const [checkIn, setCheckIn] = useState<Date | null>(null);
 	const [checkOut, setCheckOut] = useState<Date | null>(null);
 	const [isOpenAddRoom, setIsOpenAddRoom] = useState<boolean>(false);
 	const [isOpenUpdateRoom, setIsOpenUpdateRoom] = useState<boolean>(false);
-	const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
+	const [selectRoom, setSelectRoom] = useState<RoomType | null>(null);
 	const [searchTerm, setSearchTerm] = useState('');
 	const [calendarMonth, setCalendarMonth] = useState<Date>(() => {
 		const d = new Date();
@@ -191,30 +44,63 @@ const RoomsPage: React.FC = () => {
 		return new Date(d.getFullYear(), d.getMonth(), d.getDate());
 	}, []);
 
-	const filteredRooms = ROOMS.filter((room) => {
-		const matchesStatus = activeTab === 'all' || room.status === activeTab;
+	const todayStr = useMemo(() => {
+		const d = new Date();
+		return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+	}, []);
+
+	/** APOLLO REQUEST **/
+	const {
+		loading: getMyProperttRoomsLoading,
+		data: getMyProperttRoomsData,
+		error: getMyProperttRoomsError,
+		refetch: getMyProperttRoomsRefetch,
+	} = useQuery(GET_MYROOMS, {
+		fetchPolicy: 'cache-and-network',
+		variables: {
+			input: {
+				page: 1,
+				limit: 20,
+				sort: 'createdAt',
+				direction: 'DESC',
+				search: {
+					propertyId: router.query.propertyId,
+				},
+			},
+		},
+		notifyOnNetworkStatusChange: true,
+		skip: !router.query.propertyId,
+	});
+
+	const roomList = getMyProperttRoomsData?.getMyRooms.list;
+
+	const filteredRooms = roomList?.filter((room: RoomType) => {
+		const matchesStatus = activeTab === 'all' || room.roomStatus === activeTab;
 		const matchesSearch =
-			room.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-			room.code.toLowerCase().includes(searchTerm.toLowerCase());
+			room.roomName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+			room._id.toLowerCase().includes(searchTerm.toLowerCase());
 		return matchesStatus && matchesSearch;
 	});
 
 	const counts = useMemo(() => {
 		const base = {
-			all: ROOMS.length,
+			all: roomList?.length,
 			AVAILABLE: 0,
 			UNAVAILABLE: 0,
 			OCCUPIED: 0,
 			CLEANING: 0,
 			MAINTENANCE: 0,
 		};
-		ROOMS.forEach((r) => {
-			base[r.status]++;
+		roomList?.forEach((r: RoomType) => {
+			base[r.roomStatus]++;
 		});
 		return base;
-	}, [ROOMS]);
+	}, [roomList]);
 
-	const selectedRoom = useMemo(() => ROOMS.find((r) => r.id === calendarOpenRoomId) ?? null, [calendarOpenRoomId]);
+	const selectedRoom: RoomType = useMemo(
+		() => roomList?.find((r: RoomType) => r._id === calendarOpenRoomId) ?? null,
+		[calendarOpenRoomId],
+	);
 
 	/** UTIL */
 	const renderStatusChip = (status: RoomStatus) => {
@@ -258,11 +144,10 @@ const RoomsPage: React.FC = () => {
 
 	const isReservedDay = (roomId: string, day: Date): boolean => {
 		const t = new Date(day.getFullYear(), day.getMonth(), day.getDate()).getTime();
-		const reservations = ROOM_RESERVATIONS.filter((r) => r.roomId === roomId);
-
-		return reservations.some((r) => {
-			const start = toMidnight(r.checkIn).getTime();
-			const end = toMidnight(r.checkOut).getTime(); // [start, end)
+		const reservations = selectedRoom?.reservationData?.filter((r: Reservation) => r.roomTypeId === roomId);
+		return reservations!.some((r) => {
+			const start = toMidnight(r.reservationCheckIn!).getTime();
+			const end = toMidnight(r.reservationCheckOut!).getTime(); // [start, end)
 			return t >= start && t < end;
 		});
 	};
@@ -291,7 +176,7 @@ const RoomsPage: React.FC = () => {
 
 	/** HANDLERS */
 	const handleSelectDay = async (day: Date) => {
-		if (isReservedDay(selectedRoom?.id!, day)) return;
+		if (isReservedDay(selectedRoom?._id!, day)) return;
 
 		if (!checkIn || (checkIn && checkOut)) {
 			setCheckIn(day);
@@ -299,7 +184,7 @@ const RoomsPage: React.FC = () => {
 			return;
 		}
 
-		if (hasReservedBetween(selectedRoom?.id!, checkIn, day)) {
+		if (hasReservedBetween(selectedRoom?._id!, checkIn, day)) {
 			await sweetMixinErrorAlert('해당 기간에 이미 예약이 있습니다');
 			return;
 		}
@@ -318,8 +203,8 @@ const RoomsPage: React.FC = () => {
 		return t > checkIn.getTime() && t < checkOut.getTime();
 	};
 
-	const handleOpenCalendar = (room: Room) => {
-		setCalendarOpenRoomId(room.id);
+	const handleOpenCalendar = (room: RoomType) => {
+		setCalendarOpenRoomId(room._id);
 		const d = new Date();
 		setCalendarMonth(new Date(d.getFullYear(), d.getMonth(), 1));
 	};
@@ -338,18 +223,17 @@ const RoomsPage: React.FC = () => {
 		setCalendarMonth((prev) => new Date(prev.getFullYear(), prev.getMonth() + 1, 1));
 	};
 
-	const handlePushReservationPage = (roomId: string, stayPlan: string, stayPlanId: string) => {
+	const handlePushReservationPage = (room: RoomType) => {
 		// 나중에 room 자체를 가겨와서 data 거내기
 		const reservationInput: ReservationInput = {
-			propertyId: propertyId,
-			roomTypeId: roomId,
-			stayPlanId: stayPlanId,
+			propertyId: router.query.propertyId as string,
+			roomTypeId: room._id,
+			stayPlanId: room?.stayPlans?.[1]._id!,
 			reservationCheckIn: dateTypeToString(checkIn!),
 			reservationCheckOut: dateTypeToString(checkOut!),
 			reservationCheckInAt: '15:00',
 			reservationCheckOutAt: '11:00',
-			stayPlan: stayPlan,
-			propertyName: 'propertyName',
+			stayPlan: room?.stayPlans?.[1].stayPlanType!,
 		};
 
 		router.push(
@@ -373,13 +257,19 @@ const RoomsPage: React.FC = () => {
 				>
 					+ 객실 추가
 				</Button>
-				<RoomAddModal isOpen={isOpenAddRoom} setIsOpen={setIsOpenAddRoom} />
-				<RoomUpdateModal
-					isOpen={isOpenUpdateRoom}
-					setIsOpen={setIsOpenUpdateRoom}
-					selectedRoomId={selectedRoomId!}
-					setSelectedRoomId={setSelectedRoomId}
+				<RoomAddModal
+					isOpen={isOpenAddRoom}
+					setIsOpen={setIsOpenAddRoom}
+					getMyProperttRoomsRefetch={getMyProperttRoomsRefetch}
 				/>
+				{selectRoom?._id && (
+					<RoomUpdateModal
+						isOpen={isOpenUpdateRoom}
+						setIsOpen={setIsOpenUpdateRoom}
+						selectRoom={selectRoom!}
+						getMyProperttRoomsRefetch={getMyProperttRoomsRefetch}
+					/>
+				)}
 			</Box>
 
 			<Box className="rooms-page__tabs">
@@ -435,88 +325,95 @@ const RoomsPage: React.FC = () => {
 				</div>
 			</Box>
 
-			<Box className="rooms-page__grid">
-				{filteredRooms.map((room) => (
-					<Box key={room.id} className="room-card">
-						<img
-							src="https://images.pexels.com/photos/338504/pexels-photo-338504.jpeg?auto=compress&cs=tinysrgb&w=800"
-							className={`room-card__image room-card__image--`}
-						/>
+			{roomList?.length !== 0 && (
+				<Box className="rooms-page__grid">
+					{filteredRooms?.map((room: RoomType) => {
+						const reservationData = room?.reservationData?.filter((r) => r.reservationCheckIn === todayStr)[0];
+						return (
+							<Box key={room._id} className="room-card">
+								<img
+									src={`${process.env.REACT_APP_API_URL}/${room.roomImages[0]}`}
+									className={`room-card__image room-card__image--`}
+								/>
 
-						<Box className="room-card__body">
-							<Box className="room-card__header">
-								<div>
-									<div className="room-card__code">{room.code}</div>
-									<div className="room-card__name">{room.name}</div>
-								</div>
-								{renderStatusChip(room.status)}
-							</Box>
+								<Box className="room-card__body">
+									<Box className="room-card__header">
+										<div>
+											<div className="room-card__code">R: {room._id.slice(0, 5)}</div>
+											<div className="room-card__name">{room.roomName}</div>
+										</div>
+										{renderStatusChip(room.roomStatus)}
+									</Box>
 
-							{room.status === RoomStatus.OCCUPIED && room.guestName && room.checkoutDate && (
-								<Box className="room-card__current-stay">
-									<div className="room-card__stay-line">
-										<span className="room-card__stay-label">투숙객:</span>
-										<span className="room-card__stay-value">{room.guestName}</span>
-									</div>
-									<div className="room-card__stay-line">
-										<span className="room-card__stay-label">체크아웃:</span>
-										<span className="room-card__stay-value">{room.checkoutDate}</span>
-									</div>
+									{room.roomStatus === RoomStatus.OCCUPIED &&
+										reservationData?.memberInfo?.guestName &&
+										reservationData?.reservationCheckOut && (
+											<Box className="room-card__current-stay">
+												<div className="room-card__stay-line">
+													<span className="room-card__stay-label">투숙객:</span>
+													<span className="room-card__stay-value">{reservationData?.memberInfo.guestName}</span>
+												</div>
+												<div className="room-card__stay-line">
+													<span className="room-card__stay-label">체크아웃:</span>
+													<span className="room-card__stay-value">{reservationData?.reservationCheckOut}</span>
+												</div>
+											</Box>
+										)}
+
+									<Box className="room-card__meta">
+										<div className="room-card__meta-row">
+											<span>층수</span>
+											<span>인원</span>
+											<span>면적</span>
+										</div>
+										<div className="room-card__meta-row room-card__meta-row--bold">
+											<span>{1}층</span>
+											<span>{room.roomMaxPersonal}명</span>
+											<span>{28}m²</span>
+										</div>
+									</Box>
+
+									<Box className="room-card__amenities">
+										{room?.roomAmenities?.map((a) => (
+											<Chip key={a} label={a} size="small" className="room-card__amenity-chip" />
+										))}
+									</Box>
+
+									<Box className="room-card__footer">
+										<div className="room-card__price">
+											<span className="room-card__price-label">1박 요금</span>
+											<span className="room-card__price-value">${room.basePriceOvernight.toLocaleString()}</span>
+										</div>
+										<div className="room-card__actions">
+											<Button
+												onClick={() => {
+													setIsOpenUpdateRoom(true);
+													setSelectRoom(room);
+												}}
+												variant="contained"
+												size="large"
+												className="room-card__reserve-btn"
+											>
+												수정
+											</Button>
+											{room.roomStatus !== RoomStatus.MAINTENANCE && (
+												<Button
+													onClick={() => handleOpenCalendar(room)}
+													variant="contained"
+													size="large"
+													className="room-card__reserve-btn"
+												>
+													예약
+												</Button>
+											)}
+										</div>
+									</Box>
 								</Box>
-							)}
-
-							<Box className="room-card__meta">
-								<div className="room-card__meta-row">
-									<span>층수</span>
-									<span>인원</span>
-									<span>면적</span>
-								</div>
-								<div className="room-card__meta-row room-card__meta-row--bold">
-									<span>{room.floor}층</span>
-									<span>{room.capacity}명</span>
-									<span>{room.size}m²</span>
-								</div>
 							</Box>
-
-							<Box className="room-card__amenities">
-								{room.amenities.map((a) => (
-									<Chip key={a} label={a} size="small" className="room-card__amenity-chip" />
-								))}
-							</Box>
-
-							<Box className="room-card__footer">
-								<div className="room-card__price">
-									<span className="room-card__price-label">1박 요금</span>
-									<span className="room-card__price-value">${room.price}</span>
-								</div>
-								<div className="room-card__actions">
-									<Button
-										onClick={() => {
-											setIsOpenUpdateRoom(true);
-											setSelectedRoomId(room.id);
-										}}
-										variant="contained"
-										size="large"
-										className="room-card__reserve-btn"
-									>
-										수정
-									</Button>
-									{room.status !== RoomStatus.MAINTENANCE && (
-										<Button
-											onClick={() => handleOpenCalendar(room)}
-											variant="contained"
-											size="large"
-											className="room-card__reserve-btn"
-										>
-											예약
-										</Button>
-									)}
-								</div>
-							</Box>
-						</Box>
-					</Box>
-				))}
-			</Box>
+						);
+					})}
+				</Box>
+			)}
 			<Stack className="rooms-page__pagination">
 				<Pagination count={Math.ceil(15 / 9 || 1)} color="primary" />
 			</Stack>
@@ -533,7 +430,7 @@ const RoomsPage: React.FC = () => {
 						<Box className="room-calendar__header">
 							<div>
 								<div className="room-calendar__room-code">
-									{selectedRoom.code} - {selectedRoom.name}
+									{selectedRoom._id.slice(0, 5)} - {selectedRoom.roomName}
 								</div>
 								<div className="room-calendar__room-subtitle">예약 현황 달력</div>
 							</div>
@@ -571,7 +468,7 @@ const RoomsPage: React.FC = () => {
 								const isToday = isSameDate(day, today);
 								const isStart = isSameDate(day, checkIn);
 								const isEnd = isSameDate(day, checkOut);
-								const reserved = isReservedDay(selectedRoom.id, day);
+								const reserved = isReservedDay(selectedRoom._id, day);
 								const isRange = inRange(day);
 								const isPast = isPastDate(day, calendarMonth);
 								const cellClasses = [
@@ -618,7 +515,7 @@ const RoomsPage: React.FC = () => {
 								{checkIn && checkOut ? (
 									<button
 										className="room-calendar__reservation-btn"
-										onClick={() => handlePushReservationPage(String(selectedRoom.id), 'stay', '13asdas1dasd1dasdd')}
+										onClick={() => handlePushReservationPage(selectedRoom)}
 									>
 										{' '}
 										➕ 예약

@@ -14,13 +14,12 @@ import {
 } from '../../../enums/property.enum';
 import { Box, Button, Grid, IconButton, TextField } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { useMutation, useQuery } from '@apollo/client';
-import { CREATE_PROPERTY, UPDATE_PROPERTY } from '../../../../apollo/user/mutation';
+import { useMutation } from '@apollo/client';
+import { UPDATE_PROPERTY } from '../../../../apollo/user/mutation';
 import axios from 'axios';
 import { getJwtToken } from '../../../auth';
 import { sweetErrorAlert, sweetMixinErrorAlert } from '../../../sweetAlert';
 import { Property } from '../../../types/property/property';
-import { GET_PROPERTY } from '../../../../apollo/user/query';
 import { useRouter } from 'next/router';
 import { PropertyUpdate } from '../../../types/property/property.update';
 

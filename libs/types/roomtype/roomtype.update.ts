@@ -1,7 +1,7 @@
-import { RoomStatus } from '../../enums/propertyRoomtype.enum';
+import { RoomAmenity, RoomStatus } from '../../enums/propertyRoomtype.enum';
 
 export interface STPRules {
-	durationHours?: number;
+	durationHours?: string;
 	windowStart?: string;
 	windowEnd?: string;
 	lastCheckInBy?: string;
@@ -16,9 +16,8 @@ export interface RoomTypeUpdate {
 	basePriceDayUse?: number;
 	basePriceOvernight?: number;
 	roomDiscountPrice?: number;
-	roombedInfo?: string;
 	roomAmenities?: string[];
 	roomImages?: string[];
 	roomStatus?: RoomStatus;
-	stayPlanRules: STPRules;
+	stayPlanRules?: STPRules;
 }

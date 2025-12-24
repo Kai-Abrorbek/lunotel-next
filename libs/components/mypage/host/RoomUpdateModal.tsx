@@ -1,10 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { RoomStatus } from '../../../enums/propertyRoomtype.enum';
-import { RoomTypeUpdate, STPRules } from '../../../types/roomtype/roomtype.update';
-import { sweetConfirmAlert } from '../../../sweetAlert';
-import { Box, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import { RoomTypeUpdate } from '../../../types/roomtype/roomtype.update';
+import { sweetErrorAlert, sweetTopSmallSuccessAlert } from '../../../sweetAlert';
+import { InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import { SPRules } from '../../../types/roomtype/roomtype.input';
 import { useRouter } from 'next/router';
+import { RoomType } from '../../../types/roomtype/roomtype';
+import { amenitiesList } from '../../../enums/property.enum';
+import axios from 'axios';
+import { getJwtToken } from '../../../auth';
+import { UPDATE_ROOM } from '../../../../apollo/user/mutation';
+import { useMutation } from '@apollo/client';
 
 interface RoomUpdateData {
 	_id: string;
@@ -15,7 +21,6 @@ interface RoomUpdateData {
 	basePriceDayUse: number;
 	basePriceOvernight: number;
 	roomDiscountPrice: number;
-	roombedInfo: string;
 	roomAmenities: string[];
 	roomImages: string[];
 	roomStatus: 'AVAILABLE' | 'UNAVAILABLE' | 'MAINTENANCE';
@@ -24,85 +29,49 @@ interface RoomUpdateData {
 interface RoomAddAndUpdateModalProps {
 	isOpen: boolean;
 	setIsOpen: (v: boolean) => void;
-	selectedRoomId: string;
-	setSelectedRoomId: (v: string | null) => void;
 	initialInput: RoomTypeUpdate;
+	selectRoom: RoomType;
+	getMyProperttRoomsRefetch: (v: any) => void;
 }
-
-const amenitiesList = [
-	{ key: 'wifi', name: '무료 Wi-Fi', en: 'Free Wi-Fi', icon: '📶' },
-	{ key: 'air_conditioner', name: '에어컨', en: 'Air Conditioner', icon: '❄️' },
-	{ key: 'tv', name: 'TV', en: 'Television', icon: '📺' },
-	{ key: 'minibar', name: '미니바', en: 'Minibar', icon: '🍷' },
-	{ key: 'refrigerator', name: '냉장고', en: 'Refrigerator', icon: '🧊' },
-	{ key: 'coffee_machine', name: '커피머신', en: 'Coffee Machine', icon: '☕' },
-	{ key: 'hair_dryer', name: '헤어드라이어', en: 'Hair Dryer', icon: '💨' },
-	{ key: 'bathtub', name: '욕조', en: 'Bathtub', icon: '🛁' },
-	{ key: 'shower_booth', name: '샤워부스', en: 'Shower Booth', icon: '🚿' },
-	{ key: 'microwave', name: '전자레인지', en: 'Microwave', icon: '🔥' },
-	{ key: 'washing_machine', name: '세탁기', en: 'Washing Machine', icon: '🧺' },
-	{ key: 'iron', name: '다리미', en: 'Iron', icon: '👔' },
-	{ key: 'safe', name: '금고', en: 'Safe', icon: '🔐' },
-	{ key: 'balcony', name: '발코니', en: 'Balcony', icon: '🌅' },
-	{ key: 'bed', name: '침대', en: 'Bed', icon: '🛏️' },
-	{ key: 'sofa', name: '소파', en: 'Sofa', icon: '🛋️' },
-	{ key: 'desk', name: '책상', en: 'Desk', icon: '🪑' },
-	{ key: 'wardrobe', name: '옷장', en: 'Wardrobe', icon: '👗' },
-	{ key: 'slippers', name: '슬리퍼', en: 'Slippers', icon: '🩴' },
-	{ key: 'towels', name: '수건', en: 'Towels', icon: '🧻' },
-	{ key: 'shampoo', name: '샴푸', en: 'Shampoo', icon: '🧴' },
-	{ key: 'body_wash', name: '바디워시', en: 'Body Wash', icon: '🧼' },
-	{ key: 'toothbrush', name: '칫솔', en: 'Toothbrush', icon: '🪥' },
-	{ key: 'telephone', name: '전화기', en: 'Telephone', icon: '☎️' },
-	{ key: 'clock', name: '시계', en: 'Clock', icon: '⏰' },
-	{ key: 'blinds', name: '블라인드', en: 'Blinds', icon: '🪟' },
-	{ key: 'air_purifier', name: '공기청정기', en: 'Air Purifier', icon: '🌬️' },
-	{ key: 'humidifier', name: '가습기', en: 'Humidifier', icon: '💧' },
-	{ key: 'heating', name: '난방', en: 'Heating', icon: '🔥' },
-	{ key: 'non_smoking', name: '객실금연', en: 'Non-Smoking Room', icon: '🚭' },
-];
-
-const room = {
-	_id: '6742abc123def456',
-	propertyId: '6742xyz789ghi012',
-	roomName: '디럭스 더블룸',
-	roomMaxPersonal: 4,
-	roomStandPersonal: 2,
-	basePriceDayUse: 50000,
-	basePriceOvernight: 80000,
-	roomDiscountPrice: 10000,
-	roombedInfo: '더블베드 1개',
-	roomAmenities: ['무료 Wi-Fi', '에어컨', 'TV', '미니바'],
-	roomImages: [],
-	roomStatus: RoomStatus.AVAILABLE,
-	stayPlanRules: {
-		windowStart: '14:00',
-		windowEnd: '11:00',
-		lastCheckInBy: '20:00',
-	},
-};
 
 const RoomUpdateModal = ({
 	isOpen,
 	setIsOpen,
-	selectedRoomId,
-	setSelectedRoomId,
 	initialInput,
+	selectRoom,
+	getMyProperttRoomsRefetch,
 }: RoomAddAndUpdateModalProps) => {
 	const router = useRouter();
 	const [roomImgfiles, setRoomImgfiles] = useState<File[]>([]);
 	const [previewImages, setPreviewImages] = useState<string[]>([]);
 	const [roomData, setRoomData] = useState<RoomTypeUpdate>(initialInput);
 	const fileInputRef = useRef<HTMLInputElement>(null);
+	const token = getJwtToken();
+
+	const [updateRoom] = useMutation(UPDATE_ROOM);
 
 	/************
 	 * LIFESICLE *
 	 ***********/
 	useEffect(() => {
-		//TODO  서버에서 실제 데이터 가져오는 코드
-		const data = room;
-		setRoomData({ ...roomData, ...data });
-	}, [selectedRoomId]);
+		setRoomData({
+			...roomData,
+			_id: selectRoom._id,
+			propertyId: selectRoom.propertyId ?? '',
+			roomName: selectRoom.roomName ?? '',
+			roomMaxPersonal: selectRoom.roomMaxPersonal ?? 0,
+			roomStandPersonal: selectRoom.roomStandPersonal ?? 0,
+			basePriceDayUse: selectRoom.basePriceDayUse ?? '',
+			basePriceOvernight: selectRoom.basePriceOvernight ?? '',
+			roomDiscountPrice: selectRoom.roomDiscountPrice ?? 0,
+			roomAmenities: selectRoom.roomAmenities ?? [],
+			roomImages: selectRoom.roomImages ?? [],
+			roomStatus: selectRoom.roomStatus ?? '',
+			stayPlanRules: selectRoom?.stayPlans?.[0].stayPlanRules,
+		});
+
+		setPreviewImages(selectRoom.roomImages);
+	}, [selectRoom]);
 
 	/************
 	 * HANDLER *
@@ -147,7 +116,9 @@ const RoomUpdateModal = ({
 
 	const removeImage = (index: number) => {
 		const newImages = previewImages.filter((_, i) => i !== index);
+		const result = roomImgfiles.filter((_, i) => i !== index);
 		setPreviewImages(newImages);
+		setRoomImgfiles(result);
 	};
 
 	const triggerFileInput = () => {
@@ -155,32 +126,84 @@ const RoomUpdateModal = ({
 	};
 
 	const handleSubmit = async () => {
-		if (await sweetConfirmAlert('방 정보 수정하시겠슨니까?')) {
-			console.log('Updated Room Data:', roomData);
-			console.log(roomImgfiles);
-			setIsOpen(false);
+		try {
+			const formData = new FormData();
+			const selectedFiles = roomImgfiles;
+
+			if (selectedFiles?.length === 0) return false;
+			if (selectedFiles!.length > 5) throw new Error('Cannot upload more than 5 images!');
+
+			formData.append(
+				'operations',
+				JSON.stringify({
+					query: `mutation ImagesUploader($files: [Upload!]!, $target: String!) {
+						imagesUploader(files: $files, target: $target)
+				}`,
+					variables: {
+						files: [null, null, null, null, null],
+						target: 'test',
+					},
+				}),
+			);
+			formData.append(
+				'map',
+				JSON.stringify({
+					'0': ['variables.files.0'],
+					'1': ['variables.files.1'],
+					'2': ['variables.files.2'],
+					'3': ['variables.files.3'],
+					'4': ['variables.files.4'],
+				}),
+			);
+			for (const key in selectedFiles) {
+				if (/^\d+$/.test(key)) formData.append(`${key}`, selectedFiles[key]);
+			}
+
+			const response = await axios.post(`${process.env.REACT_APP_API_GRAPHQL_URL}`, formData, {
+				headers: {
+					'Content-Type': 'multipart/form-data',
+					'apollo-require-preflight': true,
+					Authorization: `Bearer ${token}`,
+				},
+			});
+
+			const responseImages = response.data.data.imagesUploader;
+			const next = { ...roomData, roomImages: responseImages };
+			setRoomData(next);
+			await updateRoom({ variables: { input: next } });
+			handleClose();
+			await getMyProperttRoomsRefetch({
+				variables: {
+					input: {
+						page: 1,
+						limit: 20,
+						sort: 'createdAt',
+						direction: 'DESC',
+						search: {
+							propertyId: router.query.propertyId,
+						},
+					},
+				},
+			});
+			await sweetTopSmallSuccessAlert('새 숙소가 추가 되었습니다!');
+			console.log('+responseImages: ', responseImages);
+		} catch (err: any) {
+			await sweetErrorAlert(err.message);
 		}
 	};
 
 	const handleClose = () => {
 		setIsOpen(false);
-		setSelectedRoomId(null);
-	};
-
-	const handleOverlayClick = (e: React.MouseEvent) => {
-		if (e.target === e.currentTarget) {
-			handleClose();
-		}
 	};
 
 	return (
 		<div className={`add-room-page ${isOpen ? 'active' : ''}`}>
-			<div className="modal-overlay" onClick={handleOverlayClick}>
+			<div className="modal-overlay">
 				<div className="modal">
 					<div className="modal-header">
 						<div>
 							<div className="modal-title">객실 정보 수정</div>
-							<div className="room-id">Room ID: {roomData._id}</div>
+							<div className="room-id">Room ID: {selectRoom._id}</div>
 						</div>
 						<button className="close-btn" onClick={handleClose}>
 							✕
@@ -264,7 +287,7 @@ const RoomUpdateModal = ({
 											type="time"
 											size="small"
 											style={{ width: '100%' }}
-											value={roomData.stayPlanRules.lastCheckInBy ?? ''}
+											value={roomData?.stayPlanRules?.lastCheckInBy ?? ''}
 											onChange={(e) => roomRelatedTimeChange('lastCheckInBy', e.target.value as string)}
 										/>
 									</div>
@@ -279,7 +302,7 @@ const RoomUpdateModal = ({
 									sx={{ width: '20%' }}
 									labelId="check-in-label"
 									label="check-in-label"
-									value={roomData.stayPlanRules.durationHours ?? ''}
+									value={roomData?.stayPlanRules?.durationHours ?? ''}
 									onChange={(e) => {
 										const v = e.target.value;
 										roomRelatedTimeChange('durationHours', v === '' ? undefined : Number(v));
@@ -403,13 +426,13 @@ const RoomUpdateModal = ({
 								{amenitiesList.map((amenity) => (
 									<div
 										key={amenity.name}
-										className={`amenity-item ${roomData.roomAmenities!.includes(amenity.key) ? 'selected' : ''}`}
+										className={`amenity-item ${roomData?.roomAmenities!.includes(amenity.key) ? 'selected' : ''}`}
 										onClick={() => toggleAmenity(amenity.key)}
 									>
 										<input
 											type="checkbox"
 											className="amenity-checkbox"
-											checked={roomData.roomAmenities!.includes(amenity.key)}
+											checked={roomData?.roomAmenities!.includes(amenity.key)}
 											onChange={() => {}}
 										/>
 										<span className="amenity-icon">{amenity.icon}</span>
@@ -438,11 +461,15 @@ const RoomUpdateModal = ({
 									style={{ display: 'none' }}
 									onChange={handleImageUpload}
 								/>
-								{previewImages.length > 0 && (
+								{previewImages!.length > 0 && (
 									<div className="image-preview-grid">
-										{previewImages.map((img, index) => (
+										{previewImages!.map((img, index) => (
 											<div key={index} className="image-preview">
-												<img src={img} alt={`room ${index + 1}`} className="preview-image" />
+												<img
+													src={`${process.env.REACT_APP_API_URL}/${img}`}
+													alt={`room ${index + 1}`}
+													className="preview-image"
+												/>
 												<button className="remove-image" onClick={() => removeImage(index)}>
 													✕
 												</button>
@@ -478,11 +505,11 @@ RoomUpdateModal.defaultProps = {
 		basePriceDayUse: 0,
 		basePriceOvernight: 0,
 		roomDiscountPrice: 0,
-		roombedInfo: '',
 		roomAmenities: [],
-		roomStatus: RoomStatus.AVAILABLE,
+		roomImages: [],
+		roomStatus: '',
 		stayPlanRules: {
-			durationHours: 5,
+			durationHours: '',
 			windowStart: '',
 			windowEnd: '',
 			lastCheckInBy: '',

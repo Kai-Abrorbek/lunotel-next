@@ -68,7 +68,6 @@ const PropertyManagementPage = () => {
 			property?.propertyName!.toLowerCase().includes(lower) || property?.propertyAddress!.toLowerCase().includes(lower);
 		return matchesTab && matchesSearch;
 	});
-	console.log(filteredProperties);
 
 	const getStatusColor = (status: PropertyStatus) => {
 		switch (status) {
@@ -100,6 +99,7 @@ const PropertyManagementPage = () => {
 		setUpdatePropertyOpen(true);
 		setSelectedProperty(property);
 	};
+
 	return (
 		<Box className="property-page">
 			{/* 메인 컨테이너 */}

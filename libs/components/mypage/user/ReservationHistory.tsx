@@ -128,7 +128,9 @@ const ReservationHistory = (props: ReservationHistoryProps) => {
 											<Typography className="my-res-item-title">
 												{reservation.propertyData?.[0].propertyName}
 											</Typography>
-											<Typography className="my-res-item-meta">{reservation.reservationDate}</Typography>
+											<Typography className="my-res-item-meta">
+												{reservation.reservationDate} ~ {reservation.reservationCheckOut}
+											</Typography>
 											<Typography className="my-res-item-meta">
 												{reservation?.propertyData?.[0].propertyAddress} · {2}명
 											</Typography>
@@ -179,7 +181,9 @@ const ReservationHistory = (props: ReservationHistoryProps) => {
 											<Typography className="my-res-history-item-title">
 												{reservation.propertyData?.[0].propertyName}
 											</Typography>
-											<Typography className="my-res-history-item-meta">{reservation.reservationDate}</Typography>
+											<Typography className="my-res-history-item-meta">
+												{reservation.reservationDate} ~ {reservation.reservationCheckOut}
+											</Typography>
 											<Typography className="my-res-history-item-meta">
 												{reservation?.propertyData?.[0].propertyAddress} · {2}명
 											</Typography>

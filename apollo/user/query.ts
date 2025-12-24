@@ -141,7 +141,6 @@ export const GET_PROPERTY = gql`
 				basePriceDayUse
 				basePriceOvernight
 				roomDiscountPrice
-				roombedInfo
 				roomImages
 				roomStatus
 				createdAt
@@ -256,7 +255,6 @@ export const GET_PROPERTIES = gql`
 					roomStatus
 					createdAt
 					updatedAt
-					roombedInfo
 					basePriceDayUse
 					basePriceOvernight
 					roomMaxPersonal
@@ -397,7 +395,6 @@ export const GET_FAVORITES = gql`
 					basePriceDayUse
 					basePriceOvernight
 					roomDiscountPrice
-					roombedInfo
 					roomImages
 					roomStatus
 					createdAt
@@ -502,7 +499,6 @@ export const GET_ROOM = gql`
 			basePriceDayUse
 			basePriceOvernight
 			roomDiscountPrice
-			roombedInfo
 			roomImages
 			roomStatus
 			createdAt
@@ -607,7 +603,6 @@ export const GET_MY_COMMENTS = gql`
 					basePriceDayUse
 					basePriceOvernight
 					roomDiscountPrice
-					roombedInfo
 					roomImages
 					roomStatus
 					createdAt
@@ -806,7 +801,6 @@ export const GET_MYROOMS = gql`
 				basePriceDayUse
 				basePriceOvernight
 				roomDiscountPrice
-				roombedInfo
 				roomImages
 				roomStatus
 				createdAt
@@ -833,6 +827,35 @@ export const GET_MYROOMS = gql`
 						updatedAt
 					}
 				}
+				reservationData {
+					_id
+					memberId
+					propertyId
+					roomTypeId
+					stayPlanId
+					reservationStatus
+					reservationPlanType
+					reservationQty
+					reservationTotalPrice
+					reservationCheckIn
+					reservationCheckOut
+					reservationDate
+					reservationCheckInAt
+					reservationCheckOutAt
+					createdAt
+					updatedAt
+					memberInfo {
+						guestName
+						guestPhone
+					}
+					priceBreakdown {
+						date
+						unitPrice
+						qty
+						subtotal
+					}
+				}
+				roomAmenities
 			}
 			metaCounter {
 				total
@@ -904,7 +927,6 @@ export const GET_AGENT_RESERVATIONS = gql`
 					basePriceDayUse
 					basePriceOvernight
 					roomDiscountPrice
-					roombedInfo
 					roomImages
 					roomStatus
 					createdAt

@@ -1,27 +1,40 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { RoomStatus } from '../../../enums/propertyRoomtype.enum';
 import { RoomTypeUpdate } from '../../../types/roomtype/roomtype.update';
-import { sweetConfirmAlert } from '../../../sweetAlert';
+import { sweetConfirmAlert, sweetErrorAlert, sweetTopSmallSuccessAlert } from '../../../sweetAlert';
 import { Box, InputLabel, MenuItem, Select, TextField } from '@mui/material';
-import { SPRules } from '../../../types/roomtype/roomtype.input';
+import { RoomTypeInput, SPRules } from '../../../types/roomtype/roomtype.input';
 import { amenitiesList } from '../../../enums/property.enum';
+import { getJwtToken } from '../../../auth';
+import axios from 'axios';
+import { useMutation } from '@apollo/client';
+import { CREATE_ROOM } from '../../../../apollo/user/mutation';
+import { useRouter } from 'next/router';
 
 interface RoomAddAndUpdateModalProps {
 	isOpen: boolean;
 	setIsOpen: (v: boolean) => void;
-	initialInput: RoomTypeUpdate;
+	initialInput: RoomTypeInput;
+	getMyProperttRoomsRefetch: (v: any) => void;
 }
 
-const RoomAddModal = ({ isOpen, setIsOpen, initialInput }: RoomAddAndUpdateModalProps) => {
+const RoomAddModal = ({ isOpen, setIsOpen, initialInput, getMyProperttRoomsRefetch }: RoomAddAndUpdateModalProps) => {
+	const router = useRouter();
 	const [roomImgfiles, setRoomImgfiles] = useState<File[]>([]);
 	const [previewImages, setPreviewImages] = useState<string[]>([]);
-	const [roomData, setRoomData] = useState<RoomTypeUpdate>(initialInput);
-	const fileInputRef = useRef<HTMLInputElement>(null);
+	const [roomData, setRoomData] = useState<RoomTypeInput>(initialInput);
+	const fileInputRef = useRef<any>(null);
+	const token = getJwtToken();
 
+	const [createRoom] = useMutation(CREATE_ROOM);
 	/************
 	 * LIFESICLE *
 	 ***********/
-
+	useEffect(() => {
+		if (router.isReady) {
+			setRoomData({ ...roomData, propertyId: router.query.propertyId as string });
+		}
+	}, [router.query.propertyId]);
 	/************
 	 * HANDLER *
 	 ***********/
@@ -65,7 +78,9 @@ const RoomAddModal = ({ isOpen, setIsOpen, initialInput }: RoomAddAndUpdateModal
 
 	const removeImage = (index: number) => {
 		const newImages = previewImages.filter((_, i) => i !== index);
+		const result = roomImgfiles.filter((_, i) => i !== index);
 		setPreviewImages(newImages);
+		setRoomImgfiles(result);
 	};
 
 	const triggerFileInput = () => {
@@ -73,34 +88,87 @@ const RoomAddModal = ({ isOpen, setIsOpen, initialInput }: RoomAddAndUpdateModal
 	};
 
 	const handleSubmit = async () => {
-		if (await sweetConfirmAlert('방 정보 수정하시겠슨니까?')) {
-			console.log('Updated Room Data:', roomData);
-			console.log(roomImgfiles);
-			setIsOpen(false);
-			setRoomData(initialInput);
-			setPreviewImages([]);
-			setRoomImgfiles([]);
+		try {
+			const formData = new FormData();
+			const selectedFiles = roomImgfiles;
+
+			if (selectedFiles?.length === 0) return false;
+			if (selectedFiles!.length > 5) throw new Error('Cannot upload more than 5 images!');
+
+			formData.append(
+				'operations',
+				JSON.stringify({
+					query: `mutation ImagesUploader($files: [Upload!]!, $target: String!) {
+						imagesUploader(files: $files, target: $target)
+				}`,
+					variables: {
+						files: [null, null, null, null, null],
+						target: 'test',
+					},
+				}),
+			);
+			formData.append(
+				'map',
+				JSON.stringify({
+					'0': ['variables.files.0'],
+					'1': ['variables.files.1'],
+					'2': ['variables.files.2'],
+					'3': ['variables.files.3'],
+					'4': ['variables.files.4'],
+				}),
+			);
+			for (const key in selectedFiles) {
+				if (/^\d+$/.test(key)) formData.append(`${key}`, selectedFiles[key]);
+			}
+
+			const response = await axios.post(`${process.env.REACT_APP_API_GRAPHQL_URL}`, formData, {
+				headers: {
+					'Content-Type': 'multipart/form-data',
+					'apollo-require-preflight': true,
+					Authorization: `Bearer ${token}`,
+				},
+			});
+
+			const responseImages = response.data.data.imagesUploader;
+			const next = { ...roomData, roomImages: responseImages };
+			setRoomData(next);
+			await createRoom({ variables: { input: next } });
+			handleClose();
+			await getMyProperttRoomsRefetch({
+				variables: {
+					input: {
+						page: 1,
+						limit: 20,
+						sort: 'createdAt',
+						direction: 'DESC',
+						search: {
+							propertyId: router.query.propertyId,
+						},
+					},
+				},
+			});
+			await sweetTopSmallSuccessAlert('새 숙소가 추가 되었습니다!');
+			console.log('+responseImages: ', responseImages);
+		} catch (err: any) {
+			await sweetErrorAlert(err.message);
 		}
 	};
 
 	const handleClose = () => {
 		setIsOpen(false);
-	};
-
-	const handleOverlayClick = (e: React.MouseEvent) => {
-		if (e.target === e.currentTarget) {
-			handleClose();
-		}
+		setRoomData(initialInput);
+		setPreviewImages([]);
+		setRoomImgfiles([]);
 	};
 
 	return (
 		<div className={`add-room-page ${isOpen ? 'active' : ''}`}>
-			<div className="modal-overlay" onClick={handleOverlayClick}>
+			<div className="modal-overlay">
 				<div className="modal">
 					<div className="modal-header">
 						<div>
 							<div className="modal-title">객실 정보 수정</div>
-							<div className="room-id">Room ID: {roomData._id}</div>
+							{/* <div className="room-id">Room ID: {roomData._id}</div> */}
 						</div>
 						<button className="close-btn" onClick={handleClose}>
 							✕
@@ -120,7 +188,7 @@ const RoomAddModal = ({ isOpen, setIsOpen, initialInput }: RoomAddAndUpdateModal
 									<input
 										type="text"
 										className="form-input"
-										value={roomData.roomName}
+										value={roomData.roomName ?? ''}
 										onChange={(e) => handleChange('roomName', e.target.value)}
 									/>
 								</div>
@@ -387,7 +455,6 @@ const RoomAddModal = ({ isOpen, setIsOpen, initialInput }: RoomAddAndUpdateModal
 
 RoomAddModal.defaultProps = {
 	initialInput: {
-		_id: '',
 		propertyId: '',
 		roomName: '',
 		roomMaxPersonal: 0,
@@ -395,9 +462,9 @@ RoomAddModal.defaultProps = {
 		basePriceDayUse: 0,
 		basePriceOvernight: 0,
 		roomDiscountPrice: 0,
-		roombedInfo: '',
 		roomAmenities: [],
-		roomStatus: RoomStatus.AVAILABLE,
+		roomImages: [],
+		roomStatus: '',
 		stayPlanRules: {},
 	},
 };
