@@ -444,7 +444,7 @@ const RoomAddModal = ({ isOpen, setIsOpen, initialInput, getMyProperttRoomsRefet
 							취소
 						</button>
 						<button className="btn btn-submit" onClick={handleSubmit}>
-							수정 완료
+							등록 완료
 						</button>
 					</div>
 				</div>

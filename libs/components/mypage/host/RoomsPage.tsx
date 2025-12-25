@@ -107,6 +107,8 @@ const RoomsPage: React.FC = () => {
 		switch (status) {
 			case 'AVAILABLE':
 				return <span className="room-card__status room-card__status--available">예약 가능</span>;
+			case 'UNAVAILABLE':
+				return <span className="room-card__status room-card__status--unavailable">예약 불가</span>;
 			case 'OCCUPIED':
 				return <span className="room-card__status room-card__status--occupied">투숙중</span>;
 			case 'CLEANING':
@@ -287,6 +289,12 @@ const RoomsPage: React.FC = () => {
 						예약 가능 ({counts.AVAILABLE})
 					</button>
 					<button
+						className={`rooms-tab ${activeTab === RoomStatus.UNAVAILABLE ? 'rooms-tab--active' : ''}`}
+						onClick={() => setActiveTab(RoomStatus.UNAVAILABLE)}
+					>
+						예약 불가 ({counts.UNAVAILABLE})
+					</button>
+					<button
 						className={`rooms-tab ${activeTab === RoomStatus.OCCUPIED ? 'rooms-tab--active' : ''}`}
 						onClick={() => setActiveTab(RoomStatus.OCCUPIED)}
 					>
@@ -396,7 +404,7 @@ const RoomsPage: React.FC = () => {
 											>
 												수정
 											</Button>
-											{room.roomStatus !== RoomStatus.MAINTENANCE && (
+											{room.roomStatus === RoomStatus.AVAILABLE && (
 												<Button
 													onClick={() => handleOpenCalendar(room)}
 													variant="contained"

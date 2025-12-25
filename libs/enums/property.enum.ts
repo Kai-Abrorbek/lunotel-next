@@ -267,4 +267,9 @@ export const locationOptions = [
 	{ value: 'GYEONGBUK', label: '경북' },
 	{ value: 'GYEONGNAM', label: '경남' },
 	{ value: 'JEJU', label: '제주' },
+	{ value: 'GAPYEONG', label: '가평' },
+	{ value: 'YEOSU', label: '여수' },
+	{ value: 'SOKCHO', label: '속초' },
+	{ value: 'GANGNEUNG', label: '가릉' },
+	{ value: 'GYEONGJU', label: '경주' },
 ];

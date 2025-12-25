@@ -12,13 +12,13 @@ import {
 	statusOptions,
 	typeOptions,
 } from '../../../enums/property.enum';
-import { Box, Button, Grid, IconButton, TextField } from '@mui/material';
+import { Box, Button, FormControl, Grid, IconButton, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { useMutation } from '@apollo/client';
 import { CREATE_PROPERTY } from '../../../../apollo/user/mutation';
 import axios from 'axios';
 import { getJwtToken } from '../../../auth';
-import { sweetErrorAlert, sweetMixinErrorAlert } from '../../../sweetAlert';
+import { sweetMixinErrorAlert } from '../../../sweetAlert';
 
 declare global {
 	interface Window {
@@ -34,6 +34,8 @@ interface PropertyUpdateModalProps {
 }
 const PropertyAddModal = ({ isOpen, setIsOpen, initialInput, getMyPropertiesRefetch }: PropertyUpdateModalProps) => {
 	const [propertyData, setPropertyData] = useState<PropertyInput>(initialInput!);
+	const [propertyImgfiles, setPropertyImgfiles] = useState<File[]>([]);
+	const [previewImages, setPreviewImages] = useState<string[]>([]);
 	const fileInputRef = useRef<any>(null);
 	const token = getJwtToken();
 	/** APOLLO REQUESTS **/
@@ -48,7 +50,7 @@ const PropertyAddModal = ({ isOpen, setIsOpen, initialInput, getMyPropertiesRefe
 			propertyData.propertyDetailAddress === '' || // @ts-ignore
 			propertyData.propertyName === '' || // @ts-ignore
 			propertyData.propertyStars === 0 ||
-			propertyData.propertyImages!.length === 0 ||
+			propertyImgfiles.length === 0 ||
 			propertyData.propertyAmenities?.length === 0 ||
 			propertyData.propertyOtherAmenities?.length === 0 ||
 			propertyData.propertyLat === '' ||
@@ -58,7 +60,6 @@ const PropertyAddModal = ({ isOpen, setIsOpen, initialInput, getMyPropertiesRefe
 			return true;
 		}
 	};
-
 	const handleChange = <K extends keyof PropertyInput>(field: K, value: PropertyInput[K]) => {
 		setPropertyData((prev) => ({ ...prev, [field]: value }));
 	};
@@ -67,7 +68,7 @@ const PropertyAddModal = ({ isOpen, setIsOpen, initialInput, getMyPropertiesRefe
 		setPropertyData((prev) => ({ ...prev, [field]: '' as any }));
 	};
 
-	const handleImageUpload2 = (e: React.ChangeEvent<HTMLInputElement>) => {
+	const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const files = e.target.files;
 		if (files) {
 			const newImages: string[] = [];
@@ -76,7 +77,8 @@ const PropertyAddModal = ({ isOpen, setIsOpen, initialInput, getMyPropertiesRefe
 				reader.onloadend = () => {
 					newImages.push(reader.result as string);
 					if (newImages.length === files.length) {
-						setPropertyData({ ...propertyData, propertyImages: [...propertyData.propertyImages!, ...newImages] });
+						setPropertyImgfiles([...propertyImgfiles, ...Array.from(files)]);
+						setPreviewImages([...previewImages, ...newImages]);
 					}
 				};
 				reader.readAsDataURL(file);
@@ -84,11 +86,22 @@ const PropertyAddModal = ({ isOpen, setIsOpen, initialInput, getMyPropertiesRefe
 		}
 	};
 
-	async function handleImageUpload() {
+	const removeImage = (index: number) => {
+		const newImages = previewImages.filter((_, i) => i !== index);
+		const result = propertyImgfiles.filter((_, i) => i !== index);
+		setPreviewImages(newImages);
+		setPropertyImgfiles(result);
+	};
+
+	const triggerFileInput = () => {
+		fileInputRef.current?.click();
+	};
+
+	const handleSubmit = async () => {
 		try {
 			const formData = new FormData();
-			const selectedFiles = fileInputRef?.current?.files;
-
+			const selectedFiles = propertyImgfiles;
+			console.log(propertyImgfiles);
 			if (selectedFiles?.length === 0) return false;
 			if (selectedFiles!.length > 5) throw new Error('Cannot upload more than 5 images!');
 
@@ -127,27 +140,10 @@ const PropertyAddModal = ({ isOpen, setIsOpen, initialInput, getMyPropertiesRefe
 			});
 
 			const responseImages = response.data.data.imagesUploader;
-
-			console.log('+responseImages: ', responseImages);
-			setPropertyData({ ...propertyData, propertyImages: responseImages });
-		} catch (err: any) {
-			console.log('err: ', err.message);
-			await sweetMixinErrorAlert(err.message);
-		}
-	}
-
-	const removeImage = (index: number) => {
-		const newImages = propertyData.propertyImages!.filter((_, i) => i !== index);
-		setPropertyData({ ...propertyData, propertyImages: newImages });
-	};
-
-	const triggerFileInput = () => {
-		fileInputRef.current?.click();
-	};
-
-	const handleSubmit = async () => {
-		try {
-			await createProperty({ variables: { input: propertyData } });
+			const next = { ...propertyData, propertyImages: responseImages };
+			console.log(next);
+			setPropertyData(next);
+			await createProperty({ variables: { input: next } });
 			handleClose();
 			await getMyPropertiesRefetch({
 				variables: {
@@ -161,21 +157,14 @@ const PropertyAddModal = ({ isOpen, setIsOpen, initialInput, getMyPropertiesRefe
 				},
 			});
 		} catch (err: any) {
-			sweetErrorAlert(err.message);
+			console.log('err: ', err.message);
+			await sweetMixinErrorAlert(err.message);
 		}
-		console.log('Updated Property Data:', propertyData);
-		setIsOpen(false);
 	};
 
 	const handleClose = () => {
 		setPropertyData(initialInput!);
 		setIsOpen(false);
-	};
-
-	const handleOverlayClick = (e: React.MouseEvent) => {
-		if (e.target === e.currentTarget) {
-			handleClose();
-		}
 	};
 
 	const renderStars = () => {
@@ -231,7 +220,7 @@ const PropertyAddModal = ({ isOpen, setIsOpen, initialInput, getMyPropertiesRefe
 
 	return (
 		<div className={`property-update-modal ${isOpen ? 'active' : ''}`}>
-			<div className="modal-overlay" onClick={handleOverlayClick}>
+			<div className="modal-overlay">
 				<div className="modal">
 					<div className="modal-header">
 						<div>
@@ -279,20 +268,36 @@ const PropertyAddModal = ({ isOpen, setIsOpen, initialInput, getMyPropertiesRefe
 							</div>
 
 							<div className="form-row">
-								<div className="form-group">
-									<label className="form-label">지역</label>
-									<select
+								<FormControl fullWidth size="small">
+									<InputLabel id="region-label" className="form-label">
+										지역
+									</InputLabel>
+									<Select
 										className="form-select"
+										labelId="region-label"
 										value={propertyData.propertyLocation}
+										label="지역"
 										onChange={(e) => handleChange('propertyLocation', e.target.value as PropertyLocation)}
+										MenuProps={{
+											PaperProps: {
+												sx: {
+													maxHeight: 240, // ✅ 열렸을 때 드롭다운 창 높이
+													overflowY: 'auto', // ✅ 넘치면 스크롤
+												},
+											},
+										}}
 									>
 										{locationOptions.map((location) => (
-											<option key={location.value} value={location.value}>
+											<MenuItem
+												key={location.value}
+												value={location.value}
+												sx={{ minHeight: 32, fontSize: 14 }} // ✅ 옵션 한 줄 높이/글씨 크기
+											>
 												{location.label}
-											</option>
+											</MenuItem>
 										))}
-									</select>
-								</div>
+									</Select>
+								</FormControl>
 
 								<div className="form-group">
 									<label className="form-label">별점</label>
@@ -489,15 +494,11 @@ const PropertyAddModal = ({ isOpen, setIsOpen, initialInput, getMyPropertiesRefe
 									style={{ display: 'none' }}
 									onChange={handleImageUpload}
 								/>
-								{propertyData.propertyImages!.length > 0 && (
+								{previewImages.length > 0 && (
 									<div className="image-preview-grid">
-										{propertyData.propertyImages!.map((img, index) => (
+										{previewImages.map((img, index) => (
 											<div key={index} className="image-preview">
-												<img
-													src={`${process.env.REACT_APP_API_URL}/${img}`}
-													alt={`property ${index + 1}`}
-													className="preview-image"
-												/>
+												<img src={img} alt={`property ${index + 1}`} className="preview-image" />
 												<button className="remove-image" onClick={() => removeImage(index)}>
 													✕
 												</button>
@@ -513,7 +514,11 @@ const PropertyAddModal = ({ isOpen, setIsOpen, initialInput, getMyPropertiesRefe
 						<button className="btn btn-cancel" onClick={handleClose}>
 							취소
 						</button>
-						<button className="btn btn-submit" onClick={handleSubmit} disabled={doDisabledCheck()}>
+						<button
+							className={`btn btn-submit ${!doDisabledCheck() ? 'active' : ''}`}
+							onClick={handleSubmit}
+							disabled={doDisabledCheck()}
+						>
 							등록 완료
 						</button>
 					</div>

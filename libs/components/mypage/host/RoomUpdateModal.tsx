@@ -129,46 +129,51 @@ const RoomUpdateModal = ({
 		try {
 			const formData = new FormData();
 			const selectedFiles = roomImgfiles;
+			let responseImages = previewImages;
+			if (selectedFiles.length !== 0) {
+				if (selectedFiles?.length === 0) return false;
+				if (selectedFiles!.length > 5) throw new Error('Cannot upload more than 5 images!');
 
-			if (selectedFiles?.length === 0) return false;
-			if (selectedFiles!.length > 5) throw new Error('Cannot upload more than 5 images!');
-
-			formData.append(
-				'operations',
-				JSON.stringify({
-					query: `mutation ImagesUploader($files: [Upload!]!, $target: String!) {
+				formData.append(
+					'operations',
+					JSON.stringify({
+						query: `mutation ImagesUploader($files: [Upload!]!, $target: String!) {
 						imagesUploader(files: $files, target: $target)
 				}`,
-					variables: {
-						files: [null, null, null, null, null],
-						target: 'test',
+						variables: {
+							files: [null, null, null, null, null],
+							target: 'test',
+						},
+					}),
+				);
+				formData.append(
+					'map',
+					JSON.stringify({
+						'0': ['variables.files.0'],
+						'1': ['variables.files.1'],
+						'2': ['variables.files.2'],
+						'3': ['variables.files.3'],
+						'4': ['variables.files.4'],
+					}),
+				);
+				for (const key in selectedFiles) {
+					if (/^\d+$/.test(key)) formData.append(`${key}`, selectedFiles[key]);
+				}
+
+				const response = await axios.post(`${process.env.REACT_APP_API_GRAPHQL_URL}`, formData, {
+					headers: {
+						'Content-Type': 'multipart/form-data',
+						'apollo-require-preflight': true,
+						Authorization: `Bearer ${token}`,
 					},
-				}),
-			);
-			formData.append(
-				'map',
-				JSON.stringify({
-					'0': ['variables.files.0'],
-					'1': ['variables.files.1'],
-					'2': ['variables.files.2'],
-					'3': ['variables.files.3'],
-					'4': ['variables.files.4'],
-				}),
-			);
-			for (const key in selectedFiles) {
-				if (/^\d+$/.test(key)) formData.append(`${key}`, selectedFiles[key]);
+				});
+
+				responseImages = [...responseImages, ...response.data.data.imagesUploader];
 			}
 
-			const response = await axios.post(`${process.env.REACT_APP_API_GRAPHQL_URL}`, formData, {
-				headers: {
-					'Content-Type': 'multipart/form-data',
-					'apollo-require-preflight': true,
-					Authorization: `Bearer ${token}`,
-				},
-			});
-
-			const responseImages = response.data.data.imagesUploader;
+			responseImages = responseImages.filter((img) => img.startsWith('uploads'));
 			const next = { ...roomData, roomImages: responseImages };
+			console.log(next);
 			setRoomData(next);
 			await updateRoom({ variables: { input: next } });
 			handleClose();
@@ -185,7 +190,7 @@ const RoomUpdateModal = ({
 					},
 				},
 			});
-			await sweetTopSmallSuccessAlert('새 숙소가 추가 되었습니다!');
+			await sweetTopSmallSuccessAlert('방이 정보가 변경되었습니다!');
 			console.log('+responseImages: ', responseImages);
 		} catch (err: any) {
 			await sweetErrorAlert(err.message);
@@ -416,6 +421,18 @@ const RoomUpdateModal = ({
 								>
 									{roomData.roomStatus === 'MAINTENANCE' && '✓ '}정비 중
 								</div>
+								<div
+									className={`status-badge maintenance ${roomData.roomStatus === 'OCCUPIED' ? 'selected' : ''}`}
+									onClick={() => handleChange('roomStatus', 'OCCUPIED')}
+								>
+									{roomData.roomStatus === 'OCCUPIED' && '✓ '}투숙 중
+								</div>
+								<div
+									className={`status-badge maintenance ${roomData.roomStatus === 'CLEANING' ? 'selected' : ''}`}
+									onClick={() => handleChange('roomStatus', 'CLEANING')}
+								>
+									{roomData.roomStatus === 'CLEANING' && '✓ '}청소 중
+								</div>
 							</div>
 						</div>
 
@@ -463,18 +480,17 @@ const RoomUpdateModal = ({
 								/>
 								{previewImages!.length > 0 && (
 									<div className="image-preview-grid">
-										{previewImages!.map((img, index) => (
-											<div key={index} className="image-preview">
-												<img
-													src={`${process.env.REACT_APP_API_URL}/${img}`}
-													alt={`room ${index + 1}`}
-													className="preview-image"
-												/>
-												<button className="remove-image" onClick={() => removeImage(index)}>
-													✕
-												</button>
-											</div>
-										))}
+										{previewImages!.map((img, index) => {
+											const imgUrl = img.startsWith('data') ? img : `${process.env.REACT_APP_API_URL}/${img}`;
+											return (
+												<div key={index} className="image-preview">
+													<img src={imgUrl} alt={`room ${index + 1}`} className="preview-image" />
+													<button className="remove-image" onClick={() => removeImage(index)}>
+														✕
+													</button>
+												</div>
+											);
+										})}
 									</div>
 								)}
 							</div>

@@ -18,7 +18,7 @@ import { useMutation } from '@apollo/client';
 import { UPDATE_PROPERTY } from '../../../../apollo/user/mutation';
 import axios from 'axios';
 import { getJwtToken } from '../../../auth';
-import { sweetErrorAlert, sweetMixinErrorAlert } from '../../../sweetAlert';
+import { sweetErrorAlert, sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../../sweetAlert';
 import { Property } from '../../../types/property/property';
 import { useRouter } from 'next/router';
 import { PropertyUpdate } from '../../../types/property/property.update';
@@ -40,6 +40,8 @@ const PropertyUpdateModal = (props: PropertyUpdateModalProps) => {
 	const router = useRouter();
 	const { isOpen, setIsOpen, initialInput, getMyPropertiesRefetch, selectedProperty } = props;
 	const [propertyData, setPropertyData] = useState<PropertyUpdate>(initialInput!);
+	const [propertyImgfiles, setPropertyImgfiles] = useState<File[]>([]);
+	const [previewImages, setPreviewImages] = useState<string[]>([]);
 	const fileInputRef = useRef<any>(null);
 	const token = getJwtToken();
 	/** APOLLO REQUESTS **/
@@ -64,6 +66,8 @@ const PropertyUpdateModal = (props: PropertyUpdateModalProps) => {
 			propertyLng: selectedProperty ? selectedProperty.propertyLng : '',
 			propertyDesc: selectedProperty ? selectedProperty?.propertyDesc : '',
 		});
+
+		setPreviewImages(selectedProperty.propertyImages);
 	}, [selectedProperty]);
 
 	/** HANDLERS **/
@@ -75,78 +79,29 @@ const PropertyUpdateModal = (props: PropertyUpdateModalProps) => {
 		setPropertyData((prev) => ({ ...prev, [field]: '' as any }));
 	};
 
-	// const handleImageUpload2 = (e: React.ChangeEvent<HTMLInputElement>) => {
-	// 	const files = e.target.files;
-	// 	if (files) {
-	// 		const newImages: string[] = [];
-	// 		Array.from(files).forEach((file) => {
-	// 			const reader = new FileReader();
-	// 			reader.onloadend = () => {
-	// 				newImages.push(reader.result as string);
-	// 				if (newImages.length === files.length) {
-	// 					setPropertyData({ ...propertyData, propertyImages: [...propertyData.propertyImages!, ...newImages] });
-	// 				}
-	// 			};
-	// 			reader.readAsDataURL(file);
-	// 		});
-	// 	}
-	// };
-
-	async function handleImageUpload() {
-		try {
-			const formData = new FormData();
-			const selectedFiles = fileInputRef?.current?.files;
-
-			if (selectedFiles?.length === 0) return false;
-			if (selectedFiles!.length > 5) throw new Error('Cannot upload more than 5 images!');
-
-			formData.append(
-				'operations',
-				JSON.stringify({
-					query: `mutation ImagesUploader($files: [Upload!]!, $target: String!) {
-						imagesUploader(files: $files, target: $target)
-				}`,
-					variables: {
-						files: [null, null, null, null, null],
-						target: 'property',
-					},
-				}),
-			);
-			formData.append(
-				'map',
-				JSON.stringify({
-					'0': ['variables.files.0'],
-					'1': ['variables.files.1'],
-					'2': ['variables.files.2'],
-					'3': ['variables.files.3'],
-					'4': ['variables.files.4'],
-				}),
-			);
-			for (const key in selectedFiles) {
-				if (/^\d+$/.test(key)) formData.append(`${key}`, selectedFiles[key]);
-			}
-
-			const response = await axios.post(`${process.env.REACT_APP_API_GRAPHQL_URL}`, formData, {
-				headers: {
-					'Content-Type': 'multipart/form-data',
-					'apollo-require-preflight': true,
-					Authorization: `Bearer ${token}`,
-				},
+	const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const files = e.target.files;
+		if (files) {
+			const newImages: string[] = [];
+			Array.from(files).forEach((file) => {
+				const reader = new FileReader();
+				reader.onloadend = () => {
+					newImages.push(reader.result as string);
+					if (newImages.length === files.length) {
+						setPropertyImgfiles([...propertyImgfiles, ...Array.from(files)]);
+						setPreviewImages([...previewImages, ...newImages]);
+					}
+				};
+				reader.readAsDataURL(file);
 			});
-
-			const responseImages = response.data.data.imagesUploader;
-
-			console.log('+responseImages: ', responseImages);
-			setPropertyData({ ...propertyData, propertyImages: responseImages });
-		} catch (err: any) {
-			console.log('err: ', err.message);
-			await sweetMixinErrorAlert(err.message);
 		}
-	}
+	};
 
 	const removeImage = (index: number) => {
-		const newImages = propertyData.propertyImages!.filter((_, i) => i !== index);
-		setPropertyData({ ...propertyData, propertyImages: newImages });
+		const newImages = previewImages.filter((_, i) => i !== index);
+		const result = propertyImgfiles.filter((_, i) => i !== index);
+		setPreviewImages(newImages);
+		setPropertyImgfiles(result);
 	};
 
 	const triggerFileInput = () => {
@@ -155,8 +110,55 @@ const PropertyUpdateModal = (props: PropertyUpdateModalProps) => {
 
 	const handleSubmit = async () => {
 		try {
-			await updateProperty({ variables: { input: propertyData } });
-			handleClose();
+			const formData = new FormData();
+			const selectedFiles = propertyImgfiles;
+			let responseImages = previewImages;
+			if (selectedFiles.length !== 0) {
+				if (selectedFiles?.length === 0) return false;
+				if (selectedFiles!.length > 5) throw new Error('Cannot upload more than 5 images!');
+
+				formData.append(
+					'operations',
+					JSON.stringify({
+						query: `mutation ImagesUploader($files: [Upload!]!, $target: String!) {
+						imagesUploader(files: $files, target: $target)
+				}`,
+						variables: {
+							files: [null, null, null, null, null],
+							target: 'property',
+						},
+					}),
+				);
+				formData.append(
+					'map',
+					JSON.stringify({
+						'0': ['variables.files.0'],
+						'1': ['variables.files.1'],
+						'2': ['variables.files.2'],
+						'3': ['variables.files.3'],
+						'4': ['variables.files.4'],
+					}),
+				);
+				for (const key in selectedFiles) {
+					if (/^\d+$/.test(key)) formData.append(`${key}`, selectedFiles[key]);
+				}
+
+				const response = await axios.post(`${process.env.REACT_APP_API_GRAPHQL_URL}`, formData, {
+					headers: {
+						'Content-Type': 'multipart/form-data',
+						'apollo-require-preflight': true,
+						Authorization: `Bearer ${token}`,
+					},
+				});
+
+				responseImages = [...responseImages, ...response.data.data.imagesUploader];
+			}
+
+			responseImages = responseImages.filter((img) => img.startsWith('uploads'));
+			const next = { ...propertyData, propertyImages: responseImages };
+
+			setPropertyData(next);
+			await updateProperty({ variables: { input: next } });
 			await getMyPropertiesRefetch({
 				variables: {
 					input: {
@@ -168,22 +170,17 @@ const PropertyUpdateModal = (props: PropertyUpdateModalProps) => {
 					},
 				},
 			});
+			await sweetTopSmallSuccessAlert('숙소 정보가 변경 되었습니다!');
+			handleClose();
 		} catch (err: any) {
-			sweetErrorAlert(err.message);
+			console.log('err: ', err.message);
+			await sweetMixinErrorAlert(err.message);
 		}
-		console.log('Updated Property Data:', propertyData);
-		setIsOpen(false);
 	};
 
 	const handleClose = () => {
 		setPropertyData(initialInput!);
 		setIsOpen(false);
-	};
-
-	const handleOverlayClick = (e: React.MouseEvent) => {
-		if (e.target === e.currentTarget) {
-			handleClose();
-		}
 	};
 
 	const renderStars = () => {
@@ -239,7 +236,7 @@ const PropertyUpdateModal = (props: PropertyUpdateModalProps) => {
 
 	return (
 		<div className={`property-update-modal ${isOpen ? 'active' : ''}`}>
-			<div className="modal-overlay" onClick={handleOverlayClick}>
+			<div className="modal-overlay">
 				<div className="modal">
 					<div className="modal-header">
 						<div>
@@ -497,20 +494,19 @@ const PropertyUpdateModal = (props: PropertyUpdateModalProps) => {
 									style={{ display: 'none' }}
 									onChange={handleImageUpload}
 								/>
-								{propertyData.propertyImages!.length > 0 && (
+								{previewImages.length > 0 && (
 									<div className="image-preview-grid">
-										{propertyData.propertyImages!.map((img, index) => (
-											<div key={index} className="image-preview">
-												<img
-													src={`${process.env.REACT_APP_API_URL}/${img}`}
-													alt={`property ${index + 1}`}
-													className="preview-image"
-												/>
-												<button className="remove-image" onClick={() => removeImage(index)}>
-													✕
-												</button>
-											</div>
-										))}
+										{previewImages.map((img, index) => {
+											const imgUrl = img.startsWith('data') ? img : `${process.env.REACT_APP_API_URL}/${img}`;
+											return (
+												<div key={index} className="image-preview">
+													<img src={imgUrl} alt={`property ${index + 1}`} className="preview-image" />
+													<button className="remove-image" onClick={() => removeImage(index)}>
+														✕
+													</button>
+												</div>
+											);
+										})}
 									</div>
 								)}
 							</div>
@@ -521,7 +517,7 @@ const PropertyUpdateModal = (props: PropertyUpdateModalProps) => {
 						<button className="btn btn-cancel" onClick={handleClose}>
 							취소
 						</button>
-						<button className="btn btn-submit" onClick={handleSubmit}>
+						<button className="btn btn-submit-update" onClick={handleSubmit}>
 							수정 완료
 						</button>
 					</div>

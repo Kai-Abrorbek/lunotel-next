@@ -950,6 +950,7 @@ export const GET_AGENT_PROPERTIES = gql`
 				propertyStatus
 				propertyLocation
 				propertyAddress
+				propertyDetailAddress
 				propertyName
 				propertyPrice
 				propertyRooms

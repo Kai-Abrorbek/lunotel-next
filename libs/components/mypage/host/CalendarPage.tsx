@@ -42,7 +42,7 @@ const CalendarPage = () => {
 		const d = new Date();
 		return new Date(d.getFullYear(), d.getMonth());
 	});
-	const [selectedRoom, setSelectedRoom] = useState<string>('');
+	const [selectedRoom, setSelectedRoom] = useState<string>('방을 선택해주세요!');
 	const [roomId, setRoomId] = useState<string>('');
 	const cells = useMemo(() => buildCalendar(currentMonth), [currentMonth]);
 	const formattedMonthLabel = `${currentMonth.getFullYear()}년 ${currentMonth.getMonth() + 1}월`;

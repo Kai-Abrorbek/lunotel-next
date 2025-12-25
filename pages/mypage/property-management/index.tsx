@@ -5,7 +5,6 @@ import StarIcon from '@mui/icons-material/Star';
 import LayoutHome from '../../../libs/components/layout/LayoutHome';
 import Link from 'next/link';
 import PropertyUpdateModal from '../../../libs/components/mypage/property-management/PropertyUpdateData ';
-import { AgentPropertiesInquiry } from '../../../libs/types/property/property.input';
 import { PropertyStatus } from '../../../libs/enums/property.enum';
 import { Property } from '../../../libs/types/property/property';
 import PropertyAddModal from '../../../libs/components/mypage/property-management/PropertyAddData';

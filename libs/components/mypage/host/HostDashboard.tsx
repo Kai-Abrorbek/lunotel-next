@@ -18,7 +18,7 @@ const HostDashboard = () => {
 		{ id: 'checkins', label: '오늘의 체크인', value: 0 },
 		{ id: 'checkouts', label: '오늘의 체크아웃', value: 0 },
 		{ id: 'reservations', label: '오늘의 예약', value: 5 },
-		{ id: 'revenue', label: '이번 주 수익', value: 24580 },
+		{ id: 'revenue', label: '이번 주 수익', value: 0 },
 	]);
 	/** APOLLO REQUEST **/
 	const {
@@ -58,7 +58,7 @@ const HostDashboard = () => {
 		reservations?.filter((r: Reservation) => r.reservationCheckOut?.slice(0, 10) === todayLocalYMD).length ?? 0;
 	const todayReservations =
 		reservations?.filter((r: Reservation) => r.createdAt?.toString()?.slice(0, 10) === todayYMD).length ?? 0;
-	const revenueTotal = reservations?.reduce((a, b) => a + b.reservationTotalPrice!, 0);
+	const revenueTotal = reservations?.reduce((a, b) => a + b.reservationTotalPrice!, 0) ?? 0;
 
 	useEffect(() => {
 		setStats((prev) => {

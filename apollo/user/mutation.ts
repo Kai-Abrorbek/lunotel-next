@@ -192,6 +192,7 @@ export const CREATE_PROPERTY = gql`
 			propertyStars
 			propertyImages
 			propertyDesc
+			soldAt
 			memberId
 			createdAt
 			updatedAt
