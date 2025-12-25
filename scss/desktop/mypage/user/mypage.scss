@@ -1359,11 +1359,16 @@
 								}
 
 								.btn-submit {
+									background: #e9ecef;
+									color: #495057;
+								}
+
+								.btn-submit.active {
 									background: #ff5722;
 									color: white;
 								}
 
-								.btn-submit:hover {
+								.btn-submit.active:hover {
 									background: #e6324f;
 								}
 

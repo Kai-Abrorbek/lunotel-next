@@ -1171,3 +1171,115 @@ body::-webkit-scrollbar {
 		}
 	}
 }
+
+.logout-btn {
+	width: 100%;
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 40px;
+	padding: 6px 26px;
+	border-radius: 999px;
+	border: none;
+	background: linear-gradient(135deg, #2d323b, #1d4ed8);
+	color: #e5e7eb;
+	font-size: 16px;
+	cursor: pointer;
+	overflow: hidden;
+	box-shadow: 0 10px 25px rgba(15, 23, 42, 0.7);
+
+	.logout-btn__label {
+		z-index: 1;
+	}
+
+	.logout-btn__icon-wrap {
+		position: relative;
+		width: 60px;
+		height: 30px;
+		border-radius: 20px;
+		background: #eff2f5;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		overflow: visible;
+		.logout-btn__person,
+		.logout-btn__door {
+			position: absolute;
+			font-size: 18px;
+			transition: transform 0.2s ease-out;
+		}
+		.logout-btn__person {
+			right: 4px;
+		}
+		.logout-btn__door {
+			left: 2px;
+			transform-origin: left center;
+		}
+	}
+}
+
+/* 버튼 흔들림 */
+.logout-btn--animating {
+	animation: logout-shake 0.18s 2;
+}
+
+@keyframes logout-shake {
+	0% {
+		transform: rotate(0deg);
+	}
+	25% {
+		transform: rotate(-1deg);
+	}
+	75% {
+		transform: rotate(2deg);
+	}
+	100% {
+		transform: rotate(0deg);
+	}
+}
+
+/* 문 열림 */
+.logout-btn--animating .logout-btn__door {
+	animation: logout-door-open 0.6s forwards;
+}
+
+@keyframes logout-door-open {
+	0% {
+		transform: rotateY(0deg);
+	}
+	40% {
+		transform: rotateY(-75deg);
+	}
+	70% {
+		transform: rotateY(-75deg);
+	}
+	100% {
+		transform: rotateY(0deg);
+	}
+}
+
+/* 사람 이동 + 아래로 떨어지기 */
+.logout-btn--animating .logout-btn__person {
+	animation: logout-person-walk-fall 1.5s forwards;
+}
+
+@keyframes logout-person-walk-fall {
+	0% {
+		transform: translate(0, 0);
+		opacity: 1;
+	}
+	35% {
+		transform: translate(-30px, 0); /* 문 쪽으로 */
+	}
+	55% {
+		transform: translate(-34px, 4px); /* 문 앞 */
+	}
+	75% {
+		transform: translate(-34px, 18px) rotate(25deg); /* 헛디딤 */
+	}
+	100% {
+		transform: translate(-34px, 100px) rotate(90deg); /* 아래로 떨어짐 */
+		opacity: 1;
+	}
+}

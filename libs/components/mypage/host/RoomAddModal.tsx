@@ -103,7 +103,7 @@ const RoomAddModal = ({ isOpen, setIsOpen, initialInput, getMyProperttRoomsRefet
 				}`,
 					variables: {
 						files: [null, null, null, null, null],
-						target: 'test',
+						target: 'rooms',
 					},
 				}),
 			);

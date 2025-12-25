@@ -11,8 +11,6 @@ import { UPDATE_RESERVATION } from '../../../../apollo/user/mutation';
 import { ReservationUpdateInput } from '../../../types/reservation/reservation.update';
 import { sweetErrorAlert, sweetMixinErrorAlert } from '../../../sweetAlert';
 
-type TripStatus = 'upcoming' | 'completed' | 'canceled';
-type TripType = 'domestic' | 'overseas' | 'package';
 type TabValue = 'domestic' | 'overseas' | 'package';
 
 interface ReservationHistoryProps {
@@ -204,7 +202,7 @@ const ReservationHistory = (props: ReservationHistoryProps) => {
 													<Button className="add-review-btn" onClick={() => setOpenReview(true)} variant="outlined">
 														리뷰 작성
 													</Button>
-													<ReviewPage isOpen={openReview} setIsOpen={setOpenReview} />
+													<ReviewPage isOpen={openReview} setIsOpen={setOpenReview} reservation={reservation} />
 												</Box>
 											) : (
 												''

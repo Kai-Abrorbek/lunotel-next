@@ -61,8 +61,8 @@ const HostDashboard = () => {
 		reservations?.filter((r: Reservation) => r.createdAt?.toString()?.slice(0, 10) === todayYMD).length ?? 0;
 	const revenueTotal =
 		reservations
-			.filter((reservation: Reservation) => reservation.reservationStatus !== ReservationStatus.CANCELLED)
-			.reduce((a, b) => a + b.reservationTotalPrice!, 0) ?? 0;
+			?.filter((reservation: Reservation) => reservation.reservationStatus !== ReservationStatus.CANCELLED)
+			?.reduce((a, b) => a + b.reservationTotalPrice!, 0) ?? 0;
 
 	useEffect(() => {
 		setStats((prev) => {

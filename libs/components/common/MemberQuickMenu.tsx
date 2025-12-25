@@ -6,6 +6,7 @@ import { signOut } from 'next-auth/react';
 import { logOut } from '../../auth';
 import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../../apollo/store';
+import LogoutButton from './LogoutButton';
 
 interface MemberQuickMenuProps {
 	open: boolean;
@@ -15,7 +16,7 @@ interface MemberQuickMenuProps {
 export default function MemberQuickMenu({ open, setOpen, notifications }: MemberQuickMenuProps) {
 	const user = useReactiveVar(userVar);
 
-	const handleNaverLogOut = async () => {
+	const handleLogOut = async () => {
 		await signOut({ redirect: false });
 		logOut();
 	};
@@ -30,7 +31,7 @@ export default function MemberQuickMenu({ open, setOpen, notifications }: Member
 			style={{ backgroundColor: 'rgba(0,0,0,0)' }}
 		>
 			<Box className={`member-menu ${open ? 'active' : ''}`}>
-				<Card elevation={3} className="member-menu__card">
+				<Card elevation={3} className="member-menu__card" sx={{ padding: '0px' }}>
 					{/* 상단 프로필 영역 */}
 
 					<Box className="member-menu__header">
@@ -92,10 +93,12 @@ export default function MemberQuickMenu({ open, setOpen, notifications }: Member
 							<button className="member-menu__item">고객 센터</button>
 						</Link>
 					</Box>
+
 					<Box className="member-menu__section member-menu__section--last">
-						<button className="member-menu__item member-menu__item--logout" onClick={handleNaverLogOut}>
+						<LogoutButton onLogout={handleLogOut} />
+						{/* <button className="member-menu__item member-menu__item--logout" onClick={handleLogOut}>
 							로그아웃
-						</button>
+						</button> */}
 					</Box>
 				</Card>
 			</Box>

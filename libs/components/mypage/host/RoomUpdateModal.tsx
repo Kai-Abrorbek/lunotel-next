@@ -142,7 +142,7 @@ const RoomUpdateModal = ({
 				}`,
 						variables: {
 							files: [null, null, null, null, null],
-							target: 'test',
+							target: 'rooms',
 						},
 					}),
 				);

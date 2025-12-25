@@ -1,53 +1,46 @@
-import React, { useRef, useState } from 'react';
-
-interface ReviewData {
-	overallRating: number;
-	cleanlinessRating: number;
-	serviceRating: number;
-	facilityRating: number;
-	locationRating: number;
-	title: string;
-	content: string;
-	images: string[];
-	pros: string[];
-	cons: string[];
-	visitPurpose: string;
-	roomType: string;
-}
+import React, { useEffect, useRef, useState } from 'react';
+import { Reservation } from '../../../types/reservation/reservation';
+import { CommentInput } from '../../../types/comment/comment.input';
+import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../../sweetAlert';
+import { getJwtToken } from '../../../auth';
+import axios from 'axios';
+import { useMutation } from '@apollo/client';
+import { CREATE_COMMENT } from '../../../../apollo/user/mutation';
 
 interface ReviewPageProps {
 	isOpen: boolean;
 	setIsOpen: (v: boolean) => void;
+	reservation: Reservation;
+	initialInput: CommentInput;
 }
 
-export default function ReviewPage({ isOpen, setIsOpen }: ReviewPageProps) {
-	const [reviewData, setReviewData] = useState<ReviewData>({
-		overallRating: 0,
-		cleanlinessRating: 0,
-		serviceRating: 0,
-		facilityRating: 0,
-		locationRating: 0,
-		title: '',
-		content: '',
-		images: [],
-		pros: [],
-		cons: [],
-		visitPurpose: '',
-		roomType: '',
-	});
-
+const ReviewPage = ({ isOpen, setIsOpen, reservation, initialInput }: ReviewPageProps) => {
+	const [reviewData, setReviewData] = useState<CommentInput>(initialInput);
 	const [hoverRating, setHoverRating] = useState<{ [key: string]: number }>({});
 	const fileInputRef = useRef<HTMLInputElement>(null);
+	const [previewImg, setPreviewImg] = useState<string[]>([]);
+	const [commentImgfiles, setcommentImgfiles] = useState<File[]>([]);
+	const token = getJwtToken();
 
-	const bookingInfo = {
-		propertyName: '서울 호텔 명동',
-		checkIn: '2024.11.15',
-		checkOut: '2024.11.17',
-		roomType: '스탠다드 더블',
-		nights: 2,
+	const [createComment] = useMutation(CREATE_COMMENT);
+
+	useEffect(() => {
+		if (reservation._id) {
+			setReviewData({
+				...reviewData,
+				commentRefId: reservation.propertyData?.[0]._id!,
+				commentTargetId: reservation._id,
+			});
+		}
+	}, [reservation]);
+
+	const doDisabledCheck = () => {
+		if (reviewData.commentContent === '' || reviewData.commentRating === 0 || commentImgfiles.length === 0) {
+			return true;
+		}
 	};
 
-	const handleRatingClick = (category: keyof ReviewData, rating: number) => {
+	const handleRatingClick = (category: keyof CommentInput, rating: number) => {
 		setReviewData({ ...reviewData, [category]: rating });
 	};
 
@@ -70,7 +63,8 @@ export default function ReviewPage({ isOpen, setIsOpen }: ReviewPageProps) {
 				reader.onloadend = () => {
 					newImages.push(reader.result as string);
 					if (newImages.length === files.length) {
-						setReviewData({ ...reviewData, images: [...reviewData.images, ...newImages] });
+						setcommentImgfiles([...commentImgfiles, ...Array.from(files)]);
+						setPreviewImg([...previewImg, ...newImages]);
 					}
 				};
 				reader.readAsDataURL(file);
@@ -79,23 +73,84 @@ export default function ReviewPage({ isOpen, setIsOpen }: ReviewPageProps) {
 	};
 
 	const removeImage = (index: number) => {
-		const newImages = reviewData.images.filter((_, i) => i !== index);
-		setReviewData({ ...reviewData, images: newImages });
+		const newImages = previewImg.filter((_, i) => i !== index);
+		const result = commentImgfiles.filter((_, i) => i !== index);
+		setPreviewImg(newImages);
+		setcommentImgfiles(result);
 	};
 
 	const triggerFileInput = () => {
 		fileInputRef.current?.click();
 	};
 
-	const addTag = (type: 'pros' | 'cons', tag: string) => {
-		if (tag && !reviewData[type].includes(tag)) {
-			setReviewData({ ...reviewData, [type]: [...reviewData[type], tag] });
+	const handleSubmit = async () => {
+		try {
+			const formData = new FormData();
+			const selectedFiles = commentImgfiles;
+			if (selectedFiles?.length === 0) return false;
+			if (selectedFiles!.length > 5) throw new Error('Cannot upload more than 5 images!');
+
+			formData.append(
+				'operations',
+				JSON.stringify({
+					query: `mutation ImagesUploader($files: [Upload!]!, $target: String!) {
+						imagesUploader(files: $files, target: $target)
+				}`,
+					variables: {
+						files: [null, null, null, null, null],
+						target: 'test',
+					},
+				}),
+			);
+			formData.append(
+				'map',
+				JSON.stringify({
+					'0': ['variables.files.0'],
+					'1': ['variables.files.1'],
+					'2': ['variables.files.2'],
+					'3': ['variables.files.3'],
+					'4': ['variables.files.4'],
+				}),
+			);
+			for (const key in selectedFiles) {
+				if (/^\d+$/.test(key)) formData.append(`${key}`, selectedFiles[key]);
+			}
+
+			const response = await axios.post(`${process.env.REACT_APP_API_GRAPHQL_URL}`, formData, {
+				headers: {
+					'Content-Type': 'multipart/form-data',
+					'apollo-require-preflight': true,
+					Authorization: `Bearer ${token}`,
+				},
+			});
+
+			const responseImages = response.data.data.imagesUploader;
+			const next = { ...reviewData, commentImages: responseImages };
+			setReviewData(next);
+			await createComment({ variables: { input: next } });
+			await sweetTopSmallSuccessAlert('댓글이 만들어졌습니다!');
+			handleClose();
+		} catch (err: any) {
+			console.log('err: ', err.message);
+			await sweetMixinErrorAlert(err.message);
 		}
 	};
 
-	const removeTag = (type: 'pros' | 'cons', tag: string) => {
-		setReviewData({ ...reviewData, [type]: reviewData[type].filter((t) => t !== tag) });
+	const handleClose = () => {
+		setIsOpen(false);
+		setReviewData({ ...initialInput });
+		setPreviewImg([]);
+		setcommentImgfiles([]);
 	};
+	// const addTag = (type: 'pros' | 'cons', tag: string) => {
+	// 	if (tag && !reviewData[type].includes(tag)) {
+	// 		setReviewData({ ...reviewData, [type]: [...reviewData[type], tag] });
+	// 	}
+	// };
+
+	// const removeTag = (type: 'pros' | 'cons', tag: string) => {
+	// 	setReviewData({ ...reviewData, [type]: reviewData[type].filter((t) => t !== tag) });
+	// };
 
 	const handleOverlayClick = (e: React.MouseEvent) => {
 		if (e.target === e.currentTarget) {
@@ -103,7 +158,7 @@ export default function ReviewPage({ isOpen, setIsOpen }: ReviewPageProps) {
 		}
 	};
 
-	const renderStars = (category: keyof ReviewData, categoryName: string) => {
+	const renderStars = (category: keyof CommentInput, categoryName: string) => {
 		const rating = reviewData[category] as number;
 		const hover = hoverRating[categoryName] || 0;
 
@@ -162,23 +217,23 @@ export default function ReviewPage({ isOpen, setIsOpen }: ReviewPageProps) {
 						<div className="booking-info-card">
 							<img
 								className="booking-image"
-								src="https://images.pexels.com/photos/258154/pexels-photo-258154.jpeg?auto=compress&cs=tinysrgb&w=800"
+								src={`${process.env.REACT_APP_API_URL}/${reservation?.propertyData?.[0].propertyImages[0]}`}
 								alt=""
 							/>
 							<div className="booking-details">
-								<div className="property-name">{bookingInfo.propertyName}</div>
+								<div className="property-name">{reservation.propertyData?.[0].propertyName}</div>
 								<div className="booking-detail-row">
 									<span className="detail-label">체크인</span>
-									<span>{bookingInfo.checkIn}</span>
+									<span>{reservation.reservationCheckIn}</span>
 								</div>
 								<div className="booking-detail-row">
 									<span className="detail-label">체크아웃</span>
-									<span>{bookingInfo.checkOut}</span>
+									<span>{reservation.reservationCheckOut}</span>
 								</div>
 								<div className="booking-detail-row">
 									<span className="detail-label">객실</span>
 									<span>
-										{bookingInfo.roomType} · {bookingInfo.nights}박
+										{'객실스탠다드 더블'} · {reservation.priceBreakdown.length}박
 									</span>
 								</div>
 							</div>
@@ -194,8 +249,8 @@ export default function ReviewPage({ isOpen, setIsOpen }: ReviewPageProps) {
 									{[1, 2, 3, 4, 5].map((star) => (
 										<span
 											key={star}
-											className={`star ${star <= (hoverRating['overall'] || reviewData.overallRating) ? 'filled' : ''}`}
-											onClick={() => handleRatingClick('overallRating', star)}
+											className={`star ${star <= (hoverRating['overall'] || reviewData.commentRating) ? 'filled' : ''}`}
+											onClick={() => handleRatingClick('commentRating', star)}
 											onMouseEnter={() => handleRatingHover('overall', star)}
 											onMouseLeave={() => handleRatingLeave('overall')}
 										>
@@ -203,13 +258,13 @@ export default function ReviewPage({ isOpen, setIsOpen }: ReviewPageProps) {
 										</span>
 									))}
 								</div>
-								{reviewData.overallRating > 0 && (
-									<div className="overall-rating-value">{reviewData.overallRating.toFixed(1)}</div>
+								{reviewData.commentRating > 0 && (
+									<div className="overall-rating-value">{reviewData.commentRating.toFixed(1)}</div>
 								)}
 							</div>
 						</div>
 
-						<div className="section">
+						{/* <div className="section">
 							<div className="section-title">세부 평가</div>
 							<div className="detailed-ratings">
 								<div className="rating-row">
@@ -306,34 +361,34 @@ export default function ReviewPage({ isOpen, setIsOpen }: ReviewPageProps) {
 									</div>
 								)}
 							</div>
-						</div>
+						</div> */}
 
 						<div className="section">
 							<div className="section-title">
 								상세 리뷰 <span className="required">*</span>
 							</div>
-							<div className="form-group">
+							{/* <div className="form-group">
 								<label className="form-label">리뷰 제목</label>
 								<input
 									type="text"
 									className="form-input"
 									placeholder="리뷰 제목을 입력해주세요"
-									value={reviewData.title}
-									onChange={(e) => setReviewData({ ...reviewData, title: e.target.value })}
+									value={reviewData.commentContent}
+									onChange={(e) => setReviewData({ ...reviewData, commentContent: e.target.value })}
 									maxLength={50}
 								/>
-								<div className="char-count">{reviewData.title.length}/50</div>
-							</div>
+								<div className="char-count">{reviewData.commentContent.length}/50</div>
+							</div> */}
 							<div className="form-group">
 								<label className="form-label">리뷰 내용</label>
 								<textarea
 									className="form-textarea"
 									placeholder="숙소 이용 경험을 자세히 공유해주세요."
-									value={reviewData.content}
-									onChange={(e) => setReviewData({ ...reviewData, content: e.target.value })}
+									value={reviewData.commentContent}
+									onChange={(e) => setReviewData({ ...reviewData, commentContent: e.target.value })}
 									maxLength={1000}
 								/>
-								<div className="char-count">{reviewData.content.length}/1000</div>
+								<div className="char-count">{reviewData.commentContent.length}/1000</div>
 								<div className="helper-text">※ 욕설, 비방, 허위 내용이 포함된 리뷰는 삭제될 수 있습니다.</div>
 							</div>
 						</div>
@@ -341,7 +396,7 @@ export default function ReviewPage({ isOpen, setIsOpen }: ReviewPageProps) {
 						<div className="section">
 							<div className="section-title">📷 사진 첨부 (선택)</div>
 							<div className="image-upload-section">
-								{reviewData.images.length < 10 && (
+								{previewImg.length < 10 && (
 									<div className="upload-area" onClick={triggerFileInput}>
 										<div className="upload-icon">📤</div>
 										<div className="upload-text">사진을 업로드해주세요</div>
@@ -356,9 +411,9 @@ export default function ReviewPage({ isOpen, setIsOpen }: ReviewPageProps) {
 									style={{ display: 'none' }}
 									onChange={handleImageUpload}
 								/>
-								{reviewData.images.length > 0 && (
+								{previewImg.length > 0 && (
 									<div className="image-preview-grid">
-										{reviewData.images.map((img, index) => (
+										{previewImg.map((img, index) => (
 											<div key={index} className="image-preview">
 												<img src={img} alt={`preview ${index + 1}`} className="preview-image" />
 												<button className="remove-image" onClick={() => removeImage(index)}>
@@ -376,7 +431,11 @@ export default function ReviewPage({ isOpen, setIsOpen }: ReviewPageProps) {
 						<button className="btn btn-cancel" onClick={() => setIsOpen(false)}>
 							취소
 						</button>
-						<button className="btn btn-submit" onClick={() => setIsOpen(false)}>
+						<button
+							className={`btn btn-submit ${!doDisabledCheck() ? 'active' : ''}`}
+							onClick={() => handleSubmit()}
+							disabled={doDisabledCheck()}
+						>
 							리뷰 등록하기
 						</button>
 					</div>
@@ -384,4 +443,16 @@ export default function ReviewPage({ isOpen, setIsOpen }: ReviewPageProps) {
 			</div>
 		</div>
 	);
-}
+};
+
+ReviewPage.defaultProps = {
+	initialInput: {
+		commentRefId: '',
+		commentTargetId: '',
+		commentGroup: 'PROPERTY',
+		commentRating: 0,
+		commentContent: '',
+		commentImages: [],
+	},
+};
+export default ReviewPage;

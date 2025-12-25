@@ -76,7 +76,6 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 
 	const [likeTargetProperty] = useMutation(LIKE_TARGET_PROPERTY);
 
-	console.log(router.pathname);
 	/** APOLLO REQUESTS **/
 	const {
 		loading: getPropertyLoading,

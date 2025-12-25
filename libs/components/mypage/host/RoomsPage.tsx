@@ -74,7 +74,6 @@ const RoomsPage: React.FC = () => {
 	});
 
 	const roomList = getMyProperttRoomsData?.getMyRooms.list;
-	console.log(roomList);
 	const filteredRooms = roomList?.filter((room: RoomType) => {
 		const matchesStatus = activeTab === 'all' || room.roomStatus === activeTab;
 		const matchesSearch =

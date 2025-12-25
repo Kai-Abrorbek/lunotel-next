@@ -12,6 +12,8 @@ import { GET_AGENT_PROPERTIES } from '../../../apollo/user/query';
 import { useQuery, useReactiveVar } from '@apollo/client';
 import { userVar } from '../../../apollo/store';
 import { useRouter } from 'next/router';
+import { Reservation } from '../../../libs/types/reservation/reservation';
+import { ReservationStatus } from '../../../libs/enums/reservation';
 
 type TabKey = 'all' | PropertyStatus;
 
@@ -88,6 +90,7 @@ const PropertyManagementPage = () => {
 	const totalBookings = properties?.reduce((acc, p) => acc + p.propertyReservations!, 0);
 	const totalRevenue = properties
 		?.flatMap((p) => p.reservationData || [])
+		.filter((r: Reservation) => r.reservationStatus !== ReservationStatus.CANCELLED)
 		.reduce((acc, r) => acc + (r.reservationTotalPrice || 0), 0);
 
 	const operatingCount = properties?.filter((p) => p.propertyStatus === PropertyStatus.ACTIVE).length;
@@ -234,7 +237,9 @@ const PropertyManagementPage = () => {
 											<p className="property-card__stat-label">이번 달 매출</p>
 											<p className="property-card__stat-value">
 												{formatCurrency(
-													property.reservationData?.reduce((acc, r) => acc + (r.reservationTotalPrice || 0), 0)!,
+													property.reservationData
+														?.filter((r) => r.reservationStatus !== ReservationStatus.CANCELLED)
+														.reduce((acc, r) => acc + (r.reservationTotalPrice || 0), 0)!,
 												)}
 											</p>
 										</Box>
