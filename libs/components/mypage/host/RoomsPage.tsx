@@ -13,6 +13,7 @@ import { GET_MYROOMS } from '../../../../apollo/user/query';
 import { useQuery } from '@apollo/client';
 import { RoomType } from '../../../types/roomtype/roomtype';
 import { Reservation } from '../../../types/reservation/reservation';
+import { ReservationStatus } from '../../../enums/reservation';
 
 const dateTypeToString = (date: Date): string => {
 	return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(
@@ -73,7 +74,7 @@ const RoomsPage: React.FC = () => {
 	});
 
 	const roomList = getMyProperttRoomsData?.getMyRooms.list;
-
+	console.log(roomList);
 	const filteredRooms = roomList?.filter((room: RoomType) => {
 		const matchesStatus = activeTab === 'all' || room.roomStatus === activeTab;
 		const matchesSearch =
@@ -146,7 +147,9 @@ const RoomsPage: React.FC = () => {
 
 	const isReservedDay = (roomId: string, day: Date): boolean => {
 		const t = new Date(day.getFullYear(), day.getMonth(), day.getDate()).getTime();
-		const reservations = selectedRoom?.reservationData?.filter((r: Reservation) => r.roomTypeId === roomId);
+		const reservations = selectedRoom?.reservationData?.filter(
+			(r: Reservation) => r.roomTypeId === roomId && r.reservationStatus === ReservationStatus.UPCOMING,
+		);
 		return reservations!.some((r) => {
 			const start = toMidnight(r.reservationCheckIn!).getTime();
 			const end = toMidnight(r.reservationCheckOut!).getTime(); // [start, end)

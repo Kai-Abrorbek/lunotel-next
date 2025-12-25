@@ -81,6 +81,8 @@ const ReservationsPage = (props: ReservationsPageProps) => {
 							propertyId: reservation.propertyId,
 							roomTypeId: reservation.roomTypeId,
 							stayPlanId: reservation.stayPlanId,
+							reservationCheckIn: reservation.reservationCheckIn,
+							reservationCheckOut: reservation.reservationCheckOut,
 							reservationStatus: ReservationStatus.CANCELLED,
 						},
 					},

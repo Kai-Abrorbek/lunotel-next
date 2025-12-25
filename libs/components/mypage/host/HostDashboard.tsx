@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import { GET_AGENT_RESERVATIONS } from '../../../../apollo/user/query';
 import { useQuery } from '@apollo/client';
 import { Reservation } from '../../../types/reservation/reservation';
+import { ReservationStatus } from '../../../enums/reservation';
 
 type StatItem = {
 	id: string;
@@ -58,7 +59,10 @@ const HostDashboard = () => {
 		reservations?.filter((r: Reservation) => r.reservationCheckOut?.slice(0, 10) === todayLocalYMD).length ?? 0;
 	const todayReservations =
 		reservations?.filter((r: Reservation) => r.createdAt?.toString()?.slice(0, 10) === todayYMD).length ?? 0;
-	const revenueTotal = reservations?.reduce((a, b) => a + b.reservationTotalPrice!, 0) ?? 0;
+	const revenueTotal =
+		reservations
+			.filter((reservation: Reservation) => reservation.reservationStatus !== ReservationStatus.CANCELLED)
+			.reduce((a, b) => a + b.reservationTotalPrice!, 0) ?? 0;
 
 	useEffect(() => {
 		setStats((prev) => {
