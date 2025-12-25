@@ -12,7 +12,6 @@ export function useAuthSync() {
 
 		if (jwtToken) {
 			updateStorage({ jwtToken });
-			console.log('useAuthSync', jwtToken);
 			updateUserInfo(jwtToken);
 		}
 	}, [session, status]);

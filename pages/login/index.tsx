@@ -7,6 +7,10 @@ import LoginModal from '../../libs/components/auth/LoginModal';
 import { signIn } from 'next-auth/react';
 
 const LoginPage: React.FC = () => {
+	const [isOn, setIsOn] = useState(false);
+
+	const toggleLamp = () => setIsOn((prev) => !prev);
+
 	const [open, setOpen] = useState<boolean>(false);
 
 	const handleGoogleLogin = () => {
@@ -22,8 +26,15 @@ const LoginPage: React.FC = () => {
 	};
 
 	return (
-		<Stack className="container">
-			<Box className="login-page">
+		<div className={`lamp-scene ${isOn ? 'lamp-scene--on' : ''}`}>
+			<div className="lamp">
+				<button type="button" className="lamp__shade-btn">
+					{isOn ? 'OFF' : 'ON'}
+				</button>
+				<div className="lamp__string" />
+				<div className="lamp__bulb" onClick={toggleLamp} />
+			</div>
+			<Box className={`login-page ${isOn ? 'lamp-scene--on' : ''}`}>
 				<Box className="login-page__card">
 					{/* 로고 */}
 					<img className="login-page__logo" src="/img/logo.png" alt="" />
@@ -31,7 +42,9 @@ const LoginPage: React.FC = () => {
 
 					{/* 구분선 + 타이틀 */}
 					<Divider className="login-page__divider" />
-					<Typography className="login-page__subtitle">로그인/회원가입</Typography>
+					<p style={{ marginBottom: '20px' }} className="login-page__subtitle">
+						로그인/회원가입
+					</p>
 
 					{/* 버튼 영역 */}
 					<Box className="login-page__buttons">
@@ -63,7 +76,8 @@ const LoginPage: React.FC = () => {
 					<LoginModal open={open} onClose={() => setOpen(false)} />
 				</Box>
 			</Box>
-		</Stack>
+			<div className="lamp__light-cone" />
+		</div>
 	);
 };
 

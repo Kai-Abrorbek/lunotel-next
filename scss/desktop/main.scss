@@ -1283,3 +1283,99 @@ body::-webkit-scrollbar {
 		opacity: 1;
 	}
 }
+
+/* 전체 씬 */
+.lamp-scene {
+	top: 75px;
+	position: relative;
+	width: 100%;
+	height: 91vh;
+	overflow: hidden;
+	display: flex;
+	align-items: flex-start;
+	justify-content: center;
+	background: radial-gradient(circle at bottom, #fbbf24 0%, #1e293b 45%, #020617 80%);
+	color: #f9fafb;
+}
+
+/* 배경 어둡게/밝게 */
+.lamp-scene::before {
+	content: '';
+	position: absolute;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.6);
+	transition: opacity 0.4s ease;
+	pointer-events: none;
+}
+.lamp-scene--on::before {
+	opacity: 0.15;
+}
+
+/* 램프 본체 */
+.lamp {
+	position: relative;
+	margin-top: 40px;
+	z-index: 2;
+	left: 140px;
+}
+
+/* 갓 + 버튼 */
+.lamp__shade-btn {
+	position: relative;
+	padding: 8px 40px;
+	border: none;
+	border-radius: 4px 4px 10px 10px;
+	background: #111827;
+	color: #facc15;
+	font-size: 12px;
+	letter-spacing: 1px;
+	cursor: pointer;
+	text-transform: uppercase;
+	box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+}
+
+/* 줄 */
+.lamp__string {
+	width: 2px;
+	height: 70px;
+	margin: 0 auto;
+	background: #e5e7eb;
+}
+
+/* 전구 */
+.lamp__bulb {
+	width: 34px;
+	height: 34px;
+	border-radius: 999px;
+	margin: 4px auto 0;
+	background: #fde68a;
+	box-shadow: 0 0 0 rgba(250, 204, 21, 0);
+	transition: box-shadow 0.3s ease, opacity 0.3s ease;
+	opacity: 0.3;
+}
+
+.lamp-scene--on .lamp__bulb {
+	opacity: 1;
+	box-shadow: 0 0 12px rgba(250, 204, 21, 0.9), 0 0 32px rgba(250, 204, 21, 0.7);
+}
+
+/* 조명 삼각형 */
+.lamp__light-cone {
+	position: absolute;
+	top: 90px;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 0;
+	height: 0;
+	border-left: 260px solid transparent;
+	border-right: 260px solid transparent;
+	border-top: 420px solid rgba(250, 204, 21, 0.35);
+	filter: blur(1px);
+	opacity: 0;
+	transition: opacity 0.4s ease;
+	pointer-events: none;
+}
+
+.lamp-scene--on .lamp__light-cone {
+	opacity: 1;
+}

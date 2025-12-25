@@ -96,9 +96,6 @@ export default function MemberQuickMenu({ open, setOpen, notifications }: Member
 
 					<Box className="member-menu__section member-menu__section--last">
 						<LogoutButton onLogout={handleLogOut} />
-						{/* <button className="member-menu__item member-menu__item--logout" onClick={handleLogOut}>
-							로그아웃
-						</button> */}
 					</Box>
 				</Card>
 			</Box>

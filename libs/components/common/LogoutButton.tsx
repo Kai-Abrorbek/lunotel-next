@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 interface LogoutButtonProps {
-	onLogout?: () => void; // 진짜 로그아웃 로직 넣고 싶으면 옵션
+	onLogout?: () => void;
 }
 
 const LogoutButton = ({ onLogout }: LogoutButtonProps) => {
@@ -12,16 +12,15 @@ const LogoutButton = ({ onLogout }: LogoutButtonProps) => {
 
 		setIsAnimating(true);
 
-		// 애니메이션 중간이나 끝에 실제 로그아웃 실행
 		if (onLogout) {
 			setTimeout(() => {
 				onLogout();
-			}, 1100); // 사람 떨어지기 직전에 호출 (원하면 숫자 조정)
+			}, 1100);
 		}
 
 		setTimeout(() => {
 			setIsAnimating(false);
-		}, 1200); // keyframes 총 길이랑 맞춤
+		}, 1200);
 	};
 
 	return (
