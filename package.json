@@ -84,7 +84,7 @@
 		"@types/assert": "^1.5.6",
 		"@types/axios": "^0.14.0",
 		"@types/js-cookie": "^3.0.2",
-		"@types/node": "20.10.0",
+		"@types/node": "25.0.3",
 		"@types/numeral": "^2.0.2",
 		"@types/react": "18.2.0",
 		"@types/react-beautiful-dnd": "^13.1.2",
@@ -98,6 +98,6 @@
 		"eslint-config-next": "12.1.0",
 		"prettier": "2.7.1",
 		"standard-version": "^9.5.0",
-		"typescript": "4.6.2"
+		"typescript": "5.3.3"
 	}
 }

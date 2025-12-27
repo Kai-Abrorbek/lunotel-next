@@ -70,7 +70,7 @@ const requestJwtToken = async ({
 };
 
 export const signUpServer = async (input: SignupInput) => {
-	const res = await fetch(process.env.REACT_APP_API_GRAPHQL_URL!, {
+	const res = await fetch(process.env.LUNOTEL_API_GRAPHQL_URL!, {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
 		body: JSON.stringify({ query: SOCIAL_LOGIN_OR_SIGN_UP_NOGQL, variables: { input } }),

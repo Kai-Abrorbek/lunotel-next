@@ -27,6 +27,10 @@ const PropertyManagementPage = () => {
 	const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
 	const [properties, setProperties] = useState<Property[]>([]);
 
+	useEffect(() => {
+		if (!user?._id) router.push('/');
+	}, [user?._id]);
+
 	/** APOLLO REQUEST **/
 	const {
 		loading: getMyPropertiesLoading,

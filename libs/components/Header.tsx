@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Moon, Sun, Globe, Search } from 'lucide-react';
 import Box from '@mui/material/Box';
 import ButtonBase from '@mui/material/ButtonBase';
@@ -13,15 +13,35 @@ import { useQuery, useReactiveVar } from '@apollo/client';
 import { userVar } from '../../apollo/store';
 import { GET_MY_NOTIFICATIONS } from '../../apollo/user/query';
 import { Notification } from '../types/notification/notification';
+import { useTranslation } from 'react-i18next';
+import { useRouter } from 'next/router';
 
 const Header = () => {
 	const user = useReactiveVar(userVar);
+	const router = useRouter();
 	const [openMenu, setOpenMenu] = useState<boolean>(false);
 	const [isDarkMode, setIsDarkMode] = useState(false);
-	const [language, setLanguage] = useState('KO');
+	const [language, setLanguage] = useState<string | null>('en');
 	const [isLanguageOpen, setIsLanguageOpen] = useState(false);
 	const device = useDeviceDetect();
+	const { t, i18n } = useTranslation('common');
 
+	/** LIFECYCLES **/
+	useEffect(() => {
+		if (localStorage.getItem('locale') === null) {
+			localStorage.setItem('locale', 'kr');
+			setLanguage('kr');
+		} else {
+			setLanguage(localStorage.getItem('locale'));
+		}
+	}, [router]);
+
+	const langChoice = async (e: any) => {
+		setLanguage(e.target.id);
+		console.log(e.target.id);
+		localStorage.setItem('locale', e.target.id);
+		await router.push(router.asPath, router.asPath, { locale: e.target.id });
+	};
 	/** APOLLO REQUESTS **/
 	const {
 		loading: getMyNotificationsLoading,
@@ -74,36 +94,40 @@ const Header = () => {
 								{isLanguageOpen && (
 									<Box className="language-dropdown">
 										<Box
-											className={`language-option ${language === 'KO' ? 'active' : ''}`}
-											onClick={() => {
-												setLanguage('KO');
+											id={'kr'}
+											className={`language-option ${language === 'kr' ? 'active' : ''}`}
+											onClick={(e) => {
+												langChoice(e);
+												setLanguage('kr');
 												setIsLanguageOpen(false);
 											}}
 										>
 											한국어
 										</Box>
 										<Box
-											className={`language-option ${language === 'EN' ? 'active' : ''}`}
-											onClick={() => {
-												setLanguage('EN');
+											id={'en'}
+											className={`language-option ${language === 'en' ? 'active' : ''}`}
+											onClick={(e) => {
+												langChoice(e);
+												setLanguage('en');
 												setIsLanguageOpen(false);
 											}}
 										>
 											English
 										</Box>
 										<Box
-											className={`language-option ${language === 'JA' ? 'active' : ''}`}
+											className={`language-option ${language === 'ja' ? 'active' : ''}`}
 											onClick={() => {
-												setLanguage('JA');
+												setLanguage('ja');
 												setIsLanguageOpen(false);
 											}}
 										>
 											日本語
 										</Box>
 										<Box
-											className={`language-option ${language === 'ZH' ? 'active' : ''}`}
+											className={`language-option ${language === 'zh' ? 'active' : ''}`}
 											onClick={() => {
-												setLanguage('ZH');
+												setLanguage('zh');
 												setIsLanguageOpen(false);
 											}}
 										>
@@ -122,7 +146,7 @@ const Header = () => {
 									<Link href={'/reservation/check'}>
 										<ButtonBase className="guest-booking-button" disableRipple>
 											<Search size={16} />
-											비회원 예약조회
+											{t('비회원 예약조회')}
 										</ButtonBase>
 									</Link>
 									<Link href={'/login'}>
@@ -130,7 +154,7 @@ const Header = () => {
 											로그인
 										</ButtonBase> */}
 										<ButtonBase className="auth-button signup-button" disableRipple>
-											로그인/회원가입
+											{t('로그인/회원가입')}
 										</ButtonBase>
 									</Link>
 								</>
@@ -169,7 +193,7 @@ const Header = () => {
 											<MenuIcon sx={{ fontSize: 30 }} />
 										</Badge>
 									</IconButton>
-									<MemberQuickMenu open={openMenu} setOpen={setOpenMenu} notifications={notifications} />
+									{user._id && <MemberQuickMenu open={openMenu} setOpen={setOpenMenu} notifications={notifications} />}
 								</>
 							)}
 						</Box>

@@ -114,6 +114,11 @@ const LoginModal = (props: LoginModalProps) => {
 																id="logpass"
 																autoComplete="off"
 																value={input.password}
+																onKeyDown={(e) => {
+																	if (e.key === 'Enter') {
+																		handleLoginSubmit();
+																	}
+																}}
 																onChange={(e) => handleInput('password', e.target.value)}
 															/>
 															<i className="input-icon uil uil-lock-alt" />

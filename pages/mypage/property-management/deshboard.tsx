@@ -31,8 +31,8 @@ const HostMyPage = () => {
 				return <ReviewsPage />;
 			case 'customer-inquiry':
 				return <CustomerInquiryPage />;
-			case 'notifications':
-				return <NotificationsPage />;
+			// case 'notifications':
+			// 	return <NotificationsPage />;
 		}
 	};
 

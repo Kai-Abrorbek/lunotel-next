@@ -260,7 +260,7 @@ const OtherHeader = (props: MiniHeaderProps) => {
 									<MenuIcon sx={{ fontSize: 30 }} />
 								</Badge>
 							</IconButton>
-							<MemberQuickMenu open={openMenu} setOpen={setOpenMenu} notifications={notifications} />
+							{user._id && <MemberQuickMenu open={openMenu} setOpen={setOpenMenu} notifications={notifications} />}
 						</Box>
 					</Box>
 				</Box>

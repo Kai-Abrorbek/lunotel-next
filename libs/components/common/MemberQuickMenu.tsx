@@ -89,7 +89,7 @@ export default function MemberQuickMenu({ open, setOpen, notifications }: Member
 						<Link href={'/mypage/user/?category=settings'}>
 							<button className="member-menu__item">설정</button>
 						</Link>
-						<Link href={'/mypage/user/?category=settings'}>
+						<Link href={'/cs'}>
 							<button className="member-menu__item">고객 센터</button>
 						</Link>
 					</Box>

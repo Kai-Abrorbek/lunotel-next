@@ -31,9 +31,9 @@ const MyReservationsPage: React.FC = () => {
 		setCategory((router.query.category as string) ?? 'reservation-details');
 	}, [router.isReady, router.query.category]);
 
-	// useEffect(() => {
-	// 	if (!user?._id) router.push('/');
-	// }, [user?._id]);
+	useEffect(() => {
+		if (!user?._id) router.push('/');
+	}, [user?._id]);
 
 	if (!mounted || !router.isReady) return null;
 
@@ -68,7 +68,7 @@ const MyReservationsPage: React.FC = () => {
 					<Paper
 						className="my-res-side-menu"
 						elevation={0}
-						style={{ height: `${user.memberType === MemberType.AGENT ? '391px' : '339px'}` }}
+						style={{ height: `${user.memberType === MemberType.AGENT ? '395px' : '339px'}` }}
 					>
 						<Stack className="my-res-side-menu-list">
 							<Link href={'/mypage/user?category=reservation-details'}>
@@ -123,7 +123,7 @@ const MyReservationsPage: React.FC = () => {
 							<Divider />
 							{user.memberType === MemberType.AGENT ? (
 								<Link href={'/mypage/property-management'}>
-									<Box className="my-res-side-menu-box ">
+									<Box className="my-res-side-menu-box  my-res-side-menu-box--special">
 										<Button className={`my-res-side-menu-item ${category === 'property-management' ? 'active' : ''}`}>
 											숙소 관리
 										</Button>

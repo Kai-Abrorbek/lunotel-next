@@ -7,6 +7,7 @@ import { light } from '../scss/MaterialTheme';
 import React, { useState } from 'react';
 import { SessionProvider } from 'next-auth/react';
 import { useAuthSync } from '../libs/hooks/useAuthSync';
+import { appWithTranslation } from 'next-i18next';
 
 import '../scss/app.scss';
 import '../scss/desktop/main.scss';
@@ -16,7 +17,7 @@ function AuthSyncGate() {
 	useAuthSync();
 	return null;
 }
-export default function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
+const App = ({ Component, pageProps: { session, ...pageProps } }: AppProps) => {
 	// @ts-ignore
 	const [theme, setTheme] = useState(createTheme(light));
 	const client = useApollo(pageProps.initialApolloState);
@@ -31,4 +32,6 @@ export default function App({ Component, pageProps: { session, ...pageProps } }:
 			</ThemeProvider>
 		</ApolloProvider>
 	);
-}
+};
+
+export default appWithTranslation(App);

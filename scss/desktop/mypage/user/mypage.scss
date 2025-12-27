@@ -29,6 +29,15 @@
 						width: 100%;
 						flex-direction: row;
 						align-items: center;
+
+						position: relative;
+						background: #fff7ed; // 연한 주황
+						border-left: 4px solid #f97316; // 포인트 바
+						font-weight: 700;
+						&:hover {
+							background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+							border-radius: 10px;
+						}
 						.my-res-side-menu-item {
 							display: flex;
 							align-items: center;
@@ -39,13 +48,46 @@
 							font-size: 16px;
 							color: #111827;
 							font-weight: 600;
-
+							&:hover {
+								color: white;
+							}
 							&.active {
 								color: #2563eb;
 								.MuiListItemText-primary {
 									color: #2563eb;
 									font-weight: 600;
 								}
+							}
+						}
+						&--special {
+							position: relative;
+							background: #fff7ed; // 연한 주황
+							border-left: 4px solid #f97316; // 포인트 바
+							font-weight: 700;
+
+							// "HOST" 같은 라벨(선택)
+							&::after {
+								content: 'HOST';
+								position: absolute;
+								right: 44px;
+								top: 50%;
+								transform: translateY(-50%);
+								font-size: 11px;
+								font-weight: 800;
+								padding: 4px 8px;
+								border-radius: 999px;
+								background: rgba(249, 115, 22, 0.15);
+								color: #f97316;
+								letter-spacing: 0.5px;
+							}
+
+							.mypage-menu__chev {
+								opacity: 1;
+								color: #f97316;
+							}
+
+							&:hover {
+								background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 							}
 						}
 					}

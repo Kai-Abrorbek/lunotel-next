@@ -1,0 +1,190 @@
+#pc-wrap {
+	$primary-blue: #1273e4;
+	$text-black: #333333;
+	$text-gray: #888888;
+	$text-light-gray: #999999;
+	$bg-light: #f5f7fa;
+	$border-color: #e6e6e6;
+	$hover-gray: #f2f2f2;
+
+	.customer-center-container {
+		position: relative;
+		top: 75px;
+		max-width: 800px;
+		margin: 0 auto;
+		padding: 40px 20px;
+		font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+		color: $text-black;
+
+		.page-header {
+			margin-bottom: 30px;
+			h1 {
+				font-size: 24px;
+				font-weight: 700;
+				margin-bottom: 8px;
+			}
+			p {
+				font-size: 16px;
+				color: $text-light-gray;
+			}
+		}
+
+		.contact-card {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			background-color: $bg-light;
+			border-radius: 12px;
+			padding: 30px;
+			margin-bottom: 40px;
+			.info-area {
+				.phone-number-row {
+					display: flex;
+					align-items: center;
+					margin-bottom: 10px;
+					gap: 8px;
+					h2 {
+						font-size: 28px;
+						margin: 0;
+					}
+				}
+				.operating-hours {
+					p {
+						margin: 4px 0;
+						font-size: 14px;
+						color: $text-light-gray;
+					}
+				}
+			}
+			.chat-button {
+				display: flex;
+				align-items: center;
+				background-color: #fff;
+				border: 1px solid $border-color;
+				border-radius: 8px;
+				padding: 12px 24px;
+				font-weight: 600;
+				cursor: pointer;
+				transition: background 0.2s;
+				&:hover {
+					background-color: $hover-gray;
+				}
+			}
+		}
+
+		.faq-section {
+			h3 {
+				font-size: 18px;
+				font-weight: 700;
+				margin-bottom: 20px;
+			}
+
+			.category-tabs {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 8px;
+				margin-bottom: 30px;
+				.tab-item {
+					padding: 8px 16px;
+					border-radius: 20px;
+					border: 1px solid $border-color;
+					background-color: #fff;
+					font-size: 14px;
+					cursor: pointer;
+					transition: all 0.2s;
+					&.active {
+						background-color: $primary-blue;
+						color: #fff;
+						border-color: $primary-blue;
+					}
+				}
+			}
+
+			.faq-list {
+				list-style: none;
+				padding: 0;
+				margin: 0;
+				border-top: 1px solid $border-color;
+
+				.faq-item {
+					border-bottom: 1px solid $border-color;
+
+					.question-row {
+						display: flex;
+						align-items: center;
+						padding: 20px 0;
+						cursor: pointer;
+						background: #fff;
+						// 질문 행이 항상 위에 오도록 z-index 설정 (선택사항)
+						position: relative;
+						z-index: 2;
+
+						.q-icon {
+							font-size: 18px;
+							font-weight: 700;
+							color: #ccc;
+							margin-right: 12px;
+						}
+						.question-text {
+							flex: 1;
+							font-size: 16px;
+						}
+						.arrow-icon {
+							display: flex;
+							align-items: center;
+							margin-left: 10px;
+							transition: transform 0.3s ease;
+						}
+					}
+
+					// --- 부드러운 애니메이션 핵심 코드 ---
+					.answer-wrapper {
+						max-height: 0; // 기본적으로 닫힘 (높이 0)
+						opacity: 0; // 투명하게
+						overflow: hidden; // 넘치는 내용 숨김
+						transition: max-height 0.35s ease-in-out, opacity 0.35s ease-in-out;
+
+						// 실제 콘텐츠 스타일
+						.answer-content {
+							padding: 20px;
+							background-color: $bg-light;
+							border-radius: 8px;
+							margin-bottom: 20px;
+							font-size: 15px;
+							line-height: 1.6;
+							color: #555;
+						}
+					}
+
+					// --- 활성화(Open) 상태 ---
+					&.open {
+						.question-row .arrow-icon {
+							transform: rotate(180deg);
+						}
+						.question-row .question-text {
+							font-weight: 600;
+						}
+
+						.answer-wrapper {
+							max-height: 500px; // 충분히 큰 값 (텍스트 양에 따라 조절)
+							opacity: 1; // 불투명하게
+						}
+					}
+				}
+			}
+		}
+	}
+
+	// 모바일
+	@media (max-width: 600px) {
+		.customer-center-container .contact-card {
+			flex-direction: column;
+			align-items: flex-start;
+			gap: 20px;
+			.chat-button {
+				width: 100%;
+				justify-content: center;
+			}
+		}
+	}
+}
