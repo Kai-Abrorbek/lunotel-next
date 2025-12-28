@@ -10,6 +10,7 @@ import axios from 'axios';
 import { useMutation } from '@apollo/client';
 import { CREATE_ROOM } from '../../../../apollo/user/mutation';
 import { useRouter } from 'next/router';
+import PropertyId from '../../../../pages/property/[propertyId]';
 
 interface RoomAddAndUpdateModalProps {
 	isOpen: boolean;
@@ -130,7 +131,7 @@ const RoomAddModal = ({ isOpen, setIsOpen, initialInput, getMyProperttRoomsRefet
 			});
 
 			const responseImages = response.data.data.imagesUploader;
-			const next = { ...roomData, roomImages: responseImages };
+			const next = { ...roomData, roomImages: responseImages, propertyId: router.query.propertyId as string };
 			setRoomData(next);
 			await createRoom({ variables: { input: next } });
 			handleClose();

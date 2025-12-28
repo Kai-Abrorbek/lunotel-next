@@ -98,7 +98,7 @@ const ReviewPage = ({ isOpen, setIsOpen, reservation, initialInput }: ReviewPage
 				}`,
 					variables: {
 						files: [null, null, null, null, null],
-						target: 'test',
+						target: 'comments',
 					},
 				}),
 			);
