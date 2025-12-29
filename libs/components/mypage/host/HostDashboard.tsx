@@ -52,7 +52,7 @@ const HostDashboard = () => {
 		return `${yyyy}-${mm}-${dd}`;
 	})();
 
-	const todayYMD = new Date().toISOString().slice(0, 10);
+	const todayYMD = new Date().toLocaleDateString('sv-SE'); // YYYY-MM-DD
 	const todayCheckInCount =
 		reservations?.filter((r: Reservation) => r.reservationCheckIn?.slice(0, 10) === todayLocalYMD).length ?? 0;
 	const todayCheckOutCount =

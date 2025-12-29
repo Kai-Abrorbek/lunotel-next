@@ -489,11 +489,7 @@ const HeroCard = (props: HeroCardProps) => {
 									.filter(Boolean)
 									.join(' ');
 								return (
-									<button
-										key={day.toISOString()}
-										className={classes}
-										onClick={() => !isPastDay && handleSelectDay(day)}
-									>
+									<button key={day.getTime()} className={classes} onClick={() => !isPastDay && handleSelectDay(day)}>
 										{day.getDate()}
 									</button>
 								);
@@ -540,11 +536,7 @@ const HeroCard = (props: HeroCardProps) => {
 									.join(' ');
 
 								return (
-									<button
-										key={day.toISOString()}
-										className={classes}
-										onClick={() => !isPastDay && handleSelectDay(day)}
-									>
+									<button key={day.getTime()} className={classes} onClick={() => !isPastDay && handleSelectDay(day)}>
 										{day.getDate()}
 									</button>
 								);

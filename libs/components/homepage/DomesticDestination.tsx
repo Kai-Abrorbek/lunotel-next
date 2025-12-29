@@ -61,16 +61,17 @@ export default function DomesticDestination() {
 
 	/**HANDLER**/
 	const handleSelectLocation = async (location: string) => {
+		if (typeof window === 'undefined') return;
+
 		const data = localStorage.getItem('searchFilter');
-		if (data) {
-			const searchFilter = JSON.parse(data);
-			searchFilter.search.location = location;
-			localStorage.setItem('searchFilter', JSON.stringify(searchFilter));
-			await router.push(
-				`/property?input=${JSON.stringify(searchFilter)}`,
-				`/property?input=${JSON.stringify(searchFilter)}`,
-			);
-		}
+		const searchFilter = data ? JSON.parse(data) : { search: {} };
+
+		searchFilter.search.location = location;
+
+		const input = encodeURIComponent(JSON.stringify(searchFilter));
+		localStorage.setItem('searchFilter', JSON.stringify(searchFilter));
+
+		await router.push(`/property?input=${input}`);
 	};
 	/**HANDLER**/
 	const getList = () => {

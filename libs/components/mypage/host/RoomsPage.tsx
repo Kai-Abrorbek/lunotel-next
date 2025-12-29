@@ -495,7 +495,7 @@ const RoomsPage: React.FC = () => {
 
 								return (
 									<button
-										key={day.toISOString()}
+										key={day.getTime()}
 										className={cellClasses}
 										onClick={() => !isPast && !reserved && handleSelectDay(day)}
 									>
