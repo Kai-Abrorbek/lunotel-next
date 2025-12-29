@@ -14,10 +14,11 @@ services:
 
     environment:
       - PORT=3000
-      - NEXTAUTH_URL=http://72.62.75.97:3000
+      - NEXTAUTH_URL=https://lunotel.cloud
       - NEXTAUTH_SECRET=8f3a1c9d2e4b7a6c9f0d1e2a3b4c5d6e
       - LUNOTEL_API_GRAPHQL_URL=http://lunotel-api:3001/graphql
-      - REACT_APP_API_GRAPHQL_URL=http://72.62.75.97:5001/graphql
+      - REACT_APP_API_GRAPHQL_URL=https://lunotel.cloud/graphql
+      - KAKAO_JAVASCRIPT_KEY_MAP=5695263fbc5fdbf1b714d88bf87de922
     dns:
       - 8.8.8.8
       - 1.1.1.1
