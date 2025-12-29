@@ -18,6 +18,7 @@ import { useQuery, useReactiveVar } from '@apollo/client';
 import { userVar } from '../../apollo/store';
 import { GET_MY_NOTIFICATIONS } from '../../apollo/user/query';
 import { Notification } from '../types/notification/notification';
+import { useTranslation } from 'react-i18next';
 
 interface MiniHeaderProps {
 	initialInput: PropertiesInquiry;
@@ -46,9 +47,10 @@ const OtherHeader = (props: MiniHeaderProps) => {
 	const user = useReactiveVar(userVar);
 	const [openMenu, setOpenMenu] = useState<boolean>(false);
 	const [isDarkMode, setIsDarkMode] = useState(false);
-	const [language, setLanguage] = useState('KO');
+	const [language, setLanguage] = useState<string | null>('en');
 	const [isLanguageOpen, setIsLanguageOpen] = useState(false);
 	const device = useDeviceDetect();
+	const { t, i18n } = useTranslation('common');
 	const [searchFilter, setSearchFilter] = useState<PropertiesInquiry>(
 		router?.query?.input ? JSON.parse(router?.query?.input as string) : initialInput,
 	);
@@ -62,6 +64,21 @@ const OtherHeader = (props: MiniHeaderProps) => {
 	const guestLabel = searchFilter?.search?.personal;
 	const property = router?.query?.input ? JSON.parse(router?.query?.input as string) : '';
 
+	/** LIFECYCLES **/
+	useEffect(() => {
+		if (localStorage.getItem('locale') === null) {
+			localStorage.setItem('locale', 'kr');
+			setLanguage('kr');
+		} else {
+			setLanguage(localStorage.getItem('locale'));
+		}
+	}, [router]);
+
+	const langChoice = async (e: any) => {
+		setLanguage(e.target.id);
+		localStorage.setItem('locale', e.target.id);
+		await router.push(router.asPath, router.asPath, { locale: e.target.id });
+	};
 	/** APOLLO REQUESTS **/
 	const {
 		loading: getMyNotificationsLoading,
@@ -167,36 +184,44 @@ const OtherHeader = (props: MiniHeaderProps) => {
 								{isLanguageOpen && (
 									<Box className="language-dropdown">
 										<Box
-											className={`language-option ${language === 'KO' ? 'active' : ''}`}
-											onClick={() => {
-												setLanguage('KO');
+											id={'kr'}
+											className={`language-option ${language === 'kr' ? 'active' : ''}`}
+											onClick={(e) => {
+												langChoice(e);
+												setLanguage('kr');
 												setIsLanguageOpen(false);
 											}}
 										>
 											한국어
 										</Box>
 										<Box
-											className={`language-option ${language === 'EN' ? 'active' : ''}`}
-											onClick={() => {
-												setLanguage('EN');
+											id={'en'}
+											className={`language-option ${language === 'en' ? 'active' : ''}`}
+											onClick={(e) => {
+												langChoice(e);
+												setLanguage('en');
 												setIsLanguageOpen(false);
 											}}
 										>
 											English
 										</Box>
 										<Box
-											className={`language-option ${language === 'JA' ? 'active' : ''}`}
-											onClick={() => {
-												setLanguage('JA');
+											id={'js'}
+											className={`language-option ${language === 'js' ? 'active' : ''}`}
+											onClick={(e) => {
+												langChoice(e);
+												setLanguage('ja');
 												setIsLanguageOpen(false);
 											}}
 										>
 											日本語
 										</Box>
 										<Box
-											className={`language-option ${language === 'ZH' ? 'active' : ''}`}
-											onClick={() => {
-												setLanguage('ZH');
+											id={'zh'}
+											className={`language-option ${language === 'zh' ? 'active' : ''}`}
+											onClick={(e) => {
+												langChoice(e);
+												setLanguage('zh');
 												setIsLanguageOpen(false);
 											}}
 										>
@@ -215,7 +240,7 @@ const OtherHeader = (props: MiniHeaderProps) => {
 									<Link href={'/reservation/check'}>
 										<ButtonBase className="guest-booking-button" disableRipple>
 											<Search size={16} />
-											비회원 예약조회
+											{t('비회원 예약조회')}
 										</ButtonBase>
 									</Link>
 									<Link href={'/login'}>

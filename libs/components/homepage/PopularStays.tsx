@@ -22,6 +22,7 @@ import { Message } from '../../enums/common.enum';
 import { userVar } from '../../../apollo/store';
 import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../sweetAlert';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'react-i18next';
 
 const CATEGORIES_K: PropertyTypeKorean[] = Object.values(PropertyTypeKorean);
 const CATEGORIES_EN: PropertyType[] = Object.values(PropertyType);
@@ -32,6 +33,7 @@ interface PopularStaysProps {
 
 const PopularStays = (props: PopularStaysProps) => {
 	const router = useRouter();
+	const { t, i18n } = useTranslation('common');
 	const { initialInput } = props;
 	const user = useReactiveVar(userVar);
 	const [activeCategory, setActiveCategory] = useState<PropertyType>(PropertyType.ALL);
@@ -99,7 +101,7 @@ const PopularStays = (props: PopularStaysProps) => {
 			<Box className="popular-container">
 				{/* 헤더 */}
 				<Box className="popular-header">
-					<Typography className="popular-title">인기 추천 숙소</Typography>
+					<Typography className="popular-title">{t('인기 추천 숙소')}</Typography>
 
 					<Box className="popular-tabs">
 						{CATEGORIES_EN.map((c, idx) => (
@@ -108,7 +110,7 @@ const PopularStays = (props: PopularStaysProps) => {
 								className={`popular-tab ${activeCategory === c ? 'active' : ''}`}
 								onClick={() => setActiveCategory(c)}
 							>
-								{CATEGORIES_K[idx]}
+								{t(`${CATEGORIES_K[idx]}`)}
 							</Button>
 						))}
 					</Box>

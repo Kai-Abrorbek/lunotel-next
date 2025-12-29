@@ -5,6 +5,7 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
+import { useTranslation } from 'react-i18next';
 
 const ITEMS = [
 	{
@@ -35,11 +36,12 @@ const ITEMS = [
 ];
 
 export default function BlackPick() {
+	const { t, i18n } = useTranslation('common');
 	return (
 		<Stack className="container">
 			<Box className="blackpick-container">
-				<Typography className="blackpick-title">블랙 PICK</Typography>
-				<Typography className="blackpick-sub">여행 전문가가 경험하고 선별한 숙소 큐레이션</Typography>
+				<Typography className="blackpick-title">{t('블랙 PICK')}</Typography>
+				<Typography className="blackpick-sub">{t('여행 전문가가 경험하고 선별한 숙소 큐레이션')}</Typography>
 
 				{ITEMS.length !== 0 ? (
 					<Box className="blackpick-wrapper">

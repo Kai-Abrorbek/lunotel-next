@@ -1,6 +1,13 @@
 import React, { useState } from 'react';
 import LayoutHome from '../../libs/components/layout/LayoutHome';
 import ChatWindow from '../../libs/components/cs/ChatWindow';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+
+export const getStaticProps = async ({ locale }: any) => ({
+	props: {
+		...(await serverSideTranslations(locale, ['common'])),
+	},
+});
 
 // --- 아이콘 컴포넌트 (그대로 유지) ---
 const PhoneIcon = () => (
@@ -69,6 +76,30 @@ const FAQ_LIST: FAQItem[] = [
 	},
 	{
 		id: 2,
+		category: '공통',
+		question: '천재지변/감염병으로 인한 예약취소는 어떻게 하나요?',
+		answer: '천재지변이나 감염병으로 인한 취소는 고객센터로 직접 문의해주시면 상황 확인 후 처리를 도와드리고 있습니다.',
+	},
+	{
+		id: 3,
+		category: '공통',
+		question: '천재지변/감염병으로 인한 예약취소는 어떻게 하나요?',
+		answer: '천재지변이나 감염병으로 인한 취소는 고객센터로 직접 문의해주시면 상황 확인 후 처리를 도와드리고 있습니다.',
+	},
+	{
+		id: 4,
+		category: '공통',
+		question: '천재지변/감염병으로 인한 예약취소는 어떻게 하나요?',
+		answer: '천재지변이나 감염병으로 인한 취소는 고객센터로 직접 문의해주시면 상황 확인 후 처리를 도와드리고 있습니다.',
+	},
+	{
+		id: 4,
+		category: '공통',
+		question: '천재지변/감염병으로 인한 예약취소는 어떻게 하나요?',
+		answer: '천재지변이나 감염병으로 인한 취소는 고객센터로 직접 문의해주시면 상황 확인 후 처리를 도와드리고 있습니다.',
+	},
+	{
+		id: 5,
 		category: '공통',
 		question: '천재지변/감염병으로 인한 예약취소는 어떻게 하나요?',
 		answer: '천재지변이나 감염병으로 인한 취소는 고객센터로 직접 문의해주시면 상황 확인 후 처리를 도와드리고 있습니다.',

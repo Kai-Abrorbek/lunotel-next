@@ -5,6 +5,7 @@ import HeroCard from '../common/HeroCard';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, EffectCoverflow } from 'swiper';
 import 'swiper/css';
+import { useTranslation } from 'react-i18next';
 interface HeroSearchProps {
 	initialInput: PropertiesInquiry;
 }
@@ -18,6 +19,7 @@ const HERO_IMAGES = [
 const HeroSearch = (props: HeroSearchProps) => {
 	const { initialInput } = props;
 	const [heroCardOpen, setHeroCardOpen] = useState<boolean>(false);
+	const { t, i18n } = useTranslation('common');
 	return (
 		<Box className="hero-section">
 			<Swiper
@@ -37,7 +39,7 @@ const HeroSearch = (props: HeroSearchProps) => {
 
 			<Box className="hero-overlay" />
 			<Box className="hero-inner">
-				<Typography className="hero-title">국내부터 해외까지 루노텔</Typography>
+				<Typography className="hero-title">{t('국내부터 해외까지 루노텔')}</Typography>
 				<HeroCard setHeroCardOpen={setHeroCardOpen} initialInput={initialInput} refElement={null} propertyName={null} />
 			</Box>
 		</Box>

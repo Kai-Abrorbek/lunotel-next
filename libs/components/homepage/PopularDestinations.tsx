@@ -7,6 +7,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import { useRouter } from 'next/router';
 import { PropertyLocation } from '../../enums/property.enum';
+import { useTranslation } from 'react-i18next';
 
 const Locations = [
 	{ name: '제주도', image: `/img/${PropertyLocation.JEJU}.jfif`, value: PropertyLocation.GAPYEONG },
@@ -22,6 +23,7 @@ const Locations = [
 ];
 
 export default function PopularDestinations() {
+	const { t, i18n } = useTranslation('common');
 	const router = useRouter();
 	/**LIFESICLE**/
 
@@ -45,7 +47,7 @@ export default function PopularDestinations() {
 	return (
 		<Stack className="container">
 			<Box className="dest-container">
-				<Typography className="dest-title">국내 인기 여행지</Typography>
+				<Typography className="dest-title">{t('국내 인기 여행지')}</Typography>
 
 				{Locations.length !== 0 ? (
 					<Box className="dest-wrapper">

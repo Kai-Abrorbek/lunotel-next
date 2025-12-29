@@ -14,6 +14,13 @@ import NotificationsPage from '../../../libs/components/mypage/user/Notification
 import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../../apollo/store';
 import { MemberType } from '../../../libs/enums/member.enum';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+
+export const getStaticProps = async ({ locale }: any) => ({
+	props: {
+		...(await serverSideTranslations(locale, ['common'])),
+	},
+});
 
 const MyReservationsPage: React.FC = () => {
 	const router = useRouter();

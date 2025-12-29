@@ -23,6 +23,13 @@ import { GET_ROOM } from '../../../apollo/user/query';
 import { RoomType } from '../../../libs/types/roomtype/roomtype';
 import { userVar } from '../../../apollo/store';
 import { CREATE_RESERVATION } from '../../../apollo/user/mutation';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+
+export const getStaticProps = async ({ locale }: any) => ({
+	props: {
+		...(await serverSideTranslations(locale, ['common'])),
+	},
+});
 
 const PAYMENT_METHODS = [
 	'카카오페이',

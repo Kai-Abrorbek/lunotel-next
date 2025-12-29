@@ -36,6 +36,13 @@ import { amenitiesList, PropertyAmenity } from '../../../libs/enums/property.enu
 import { GET_COMMENTS } from '../../../apollo/admin/query';
 import { Comment } from '../../../libs/types/comment/comment';
 import { COMMENT_SORT_OPTIONS } from '../../../libs/enums/propertyRoomtype.enum';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+
+export const getStaticProps = async ({ locale }: any) => ({
+	props: {
+		...(await serverSideTranslations(locale, ['common'])),
+	},
+});
 
 interface PropertyDetailPageProps {
 	initialInput: PropertiesInquiry;

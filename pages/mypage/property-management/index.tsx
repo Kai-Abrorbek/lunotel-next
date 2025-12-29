@@ -14,6 +14,13 @@ import { userVar } from '../../../apollo/store';
 import { useRouter } from 'next/router';
 import { Reservation } from '../../../libs/types/reservation/reservation';
 import { ReservationStatus } from '../../../libs/enums/reservation';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+
+export const getStaticProps = async ({ locale }: any) => ({
+	props: {
+		...(await serverSideTranslations(locale, ['common'])),
+	},
+});
 
 type TabKey = 'all' | PropertyStatus;
 

@@ -12,10 +12,10 @@ export default function Document() {
 				{/* <!-- Theme color --> */}
 				<meta name="theme-color" content="#ffb45a" />
 				{/* SEO */}
-				<meta name="title" content="Lunotel — 귀엽고 빠른 호텔 예약 플랫폼" />
+				<meta name="title" content="Lunotel — 빠른 호텔 예약 플랫폼" />
 				<meta
 					name="description"
-					content="Find and book hotels anytime with Lunotel. Affordable cozy stays, quick booking, and easy search. | Бронируйте отели легко и удобно с Lunotel. Лучшие цены и комфортные номера. | Lunotel에서 빠르고 귀엽게 호텔을 예약하세요. 최적의 가격과 최고의 숙소를 만나보세요."
+					content="Find and book hotels anytime with Lunotel. Affordable cozy stays, quick booking, and easy search. | Бронируйте отели легко и удобно с Lunotel. Лучшие цены и комфортные номера. | Lunotel에서 빠르게 호텔을 예약하세요. 최적의 가격과 최고의 숙소를 만나보세요."
 				/>
 
 				<meta
@@ -31,8 +31,8 @@ export default function Document() {
 					property="og:description"
 					content="즉시 검색하고 예약하세요. Lunotel에서 최적의 가격으로 최고의 숙소를 만나보세요."
 				/>
-				<meta property="og:image" content="/lunotel-og-image.png" />
-				<meta property="og:url" content="https://lunotel.com" />
+				<meta property="og:image" content="/lunotel-favicon.png" />
+				<meta property="og:url" content="https://lunotel.cloud" />
 				<meta
 					name="description"
 					content={

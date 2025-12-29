@@ -9,7 +9,7 @@ export enum PropertyType {
 }
 
 export enum PropertyTypeKorean {
-	ALL = '천제',
+	ALL = '전체',
 	MOTEL = '모텔',
 	HOTEL = '호텔',
 	PENSION = '펜션',

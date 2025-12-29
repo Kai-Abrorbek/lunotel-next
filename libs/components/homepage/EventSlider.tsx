@@ -5,8 +5,10 @@ import { Autoplay, Pagination } from 'swiper';
 import 'swiper/css';
 
 import 'swiper/css/pagination';
+import { useTranslation } from 'react-i18next';
 
 const EventSlider = () => {
+	const { t, i18n } = useTranslation('common');
 	const events = [
 		{
 			title1: '지금 예약하면 연말까지 최대할인!',
@@ -54,7 +56,7 @@ const EventSlider = () => {
 		<Stack className="container">
 			<Box className="event-container">
 				<Box className="event-header">
-					<Typography className="event-title">이벤트</Typography>
+					<Typography className="event-title">{t('이벤트')}</Typography>
 					{/* <Typography className="event-more">더보기</Typography> */}
 				</Box>
 

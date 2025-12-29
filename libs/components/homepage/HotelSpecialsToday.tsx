@@ -20,12 +20,14 @@ import { Message } from '../../enums/common.enum';
 import { userVar } from '../../../apollo/store';
 import { useRouter } from 'next/router';
 import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../sweetAlert';
+import { useTranslation } from 'react-i18next';
 
 interface HotelSpecialsTodayProps {
 	initialInput: PropertiesInquiry;
 }
 const HotelSpecialsToday = (props: HotelSpecialsTodayProps) => {
 	const router = useRouter();
+	const { t, i18n } = useTranslation('common');
 	const { initialInput } = props;
 	const user = useReactiveVar(userVar);
 	const checkIn = useMemo(() => {
@@ -90,7 +92,7 @@ const HotelSpecialsToday = (props: HotelSpecialsTodayProps) => {
 			<Box className="hotelspecials-container">
 				{/* 헤더 */}
 				<Box className="popular-header">
-					<Typography className="popular-title">오늘 체크인 호텔 특가</Typography>
+					<Typography className="popular-title">{t('오늘 체크인 호텔 특가')}</Typography>
 				</Box>
 
 				{/* 슬라이더 래퍼 + 화살표 버튼 */}

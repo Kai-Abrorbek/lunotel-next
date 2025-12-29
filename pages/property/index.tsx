@@ -49,6 +49,13 @@ import { Property } from '../../libs/types/property/property';
 import { Message } from '../../libs/enums/common.enum';
 import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../libs/sweetAlert';
 import { userVar } from '../../apollo/store';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+
+export const getStaticProps = async ({ locale }: any) => ({
+	props: {
+		...(await serverSideTranslations(locale, ['common'])),
+	},
+});
 
 const tags_EN: PropertyAmenity[] = Object.values(PropertyAmenity);
 const tags_KR: PropertyAmenityKorean[] = Object.values(PropertyAmenityKorean);

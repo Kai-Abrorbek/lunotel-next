@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Box, Button, Typography, Divider, Stack } from '@mui/material';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'react-i18next';
 
 type TabKey = 'region' | 'city' | 'spot';
 
@@ -53,11 +54,18 @@ const SPOT_LIST = [
 ];
 
 export default function DomesticDestination() {
+	const { t, i18n } = useTranslation('common');
 	const [activeTab, setActiveTab] = useState<TabKey>('region');
 	const router = useRouter();
+	const [lang, setLang] = useState<string | null>(null);
 	/**LIFESICLE**/
 
 	/**LIFESICLE**/
+	useEffect(() => {
+		if (typeof window === 'undefined') return;
+		const lang = localStorage.getItem('locale');
+		setLang(lang);
+	}, [router]);
 
 	/**HANDLER**/
 	const handleSelectLocation = async (location: string) => {
@@ -79,33 +87,32 @@ export default function DomesticDestination() {
 		if (activeTab === 'city') return CITY_LIST;
 		return SPOT_LIST;
 	};
-
 	const list = getList();
 	return (
 		<Stack className="container">
 			<Box className="domestic-container ">
-				<Typography className="domestic-title">국내 여행지</Typography>
+				<Typography className="domestic-title">{t('국내 여행지')}</Typography>
 
 				<Box className="domestic-tabs">
 					<Button
 						className={`domestic-tab ${activeTab === 'region' ? 'active' : ''}`}
 						onClick={() => setActiveTab('region')}
 					>
-						지역
+						{t('지역')}
 					</Button>
 
 					<Button
 						className={`domestic-tab ${activeTab === 'city' ? 'active' : ''}`}
 						onClick={() => setActiveTab('city')}
 					>
-						도시
+						{t('도시')}
 					</Button>
 
 					<Button
 						className={`domestic-tab ${activeTab === 'spot' ? 'active' : ''}`}
 						onClick={() => setActiveTab('spot')}
 					>
-						명소
+						{t('명소')}
 					</Button>
 				</Box>
 
@@ -113,7 +120,8 @@ export default function DomesticDestination() {
 					<Box className="domestic-list">
 						{list.map((item) => (
 							<Box key={item.name} onClick={() => handleSelectLocation(item.value)} className="domestic-item">
-								{item.name}
+								{lang === 'en' ? item.value : item.name}
+								{/* {item.name} */}
 							</Box>
 						))}
 					</Box>

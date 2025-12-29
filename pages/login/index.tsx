@@ -5,6 +5,13 @@ import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import LayoutHome from '../../libs/components/layout/LayoutHome';
 import LoginModal from '../../libs/components/auth/LoginModal';
 import { signIn } from 'next-auth/react';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+
+export const getStaticProps = async ({ locale }: any) => ({
+	props: {
+		...(await serverSideTranslations(locale, ['common'])),
+	},
+});
 
 const LoginPage: React.FC = () => {
 	const [isOn, setIsOn] = useState(false);

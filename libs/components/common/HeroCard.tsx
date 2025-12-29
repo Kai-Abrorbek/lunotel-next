@@ -12,6 +12,7 @@ import { PropertiesInquiry, PropertyInquiry } from '../../types/property/propert
 import { PropertyLocation } from '../../enums/property.enum';
 import { bubbleAlert } from '../../sweetAlert';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'react-i18next';
 
 type TabKey = 'domestic' | 'overseas' | 'package';
 
@@ -50,6 +51,7 @@ interface HeroCardProps {
 }
 
 const HeroCard = (props: HeroCardProps) => {
+	const { t, i18n } = useTranslation('common');
 	const { initialInput, refElement, setHeroCardOpen, propertyName } = props;
 	const router = useRouter();
 	const [searchFilter, setSearchFilter] = useState<PropertiesInquiry>(initialInput);
@@ -270,7 +272,7 @@ const HeroCard = (props: HeroCardProps) => {
 				setHeroCardOpen(false);
 			} else {
 				if (!searchFilter.search?.location) {
-					await bubbleAlert('여행지를 선택해주세요!');
+					await bubbleAlert(t('여행지를 선택해주세요!'));
 				} else {
 					await router.push(
 						`/property?input=${JSON.stringify({ ...searchFilter })}`,
@@ -309,7 +311,7 @@ const HeroCard = (props: HeroCardProps) => {
 						className={`hero-tab ${activeTab === tab.key ? 'active' : ''}`}
 						onClick={() => setActiveTab(tab.key)}
 					>
-						{tab.label}
+						{t(tab.label)}
 						{tab.badgeNew && <span className="hero-tab-badge">N</span>}
 					</button>
 				))}
@@ -324,7 +326,7 @@ const HeroCard = (props: HeroCardProps) => {
 						<div className="input-base-wrapper">
 							<InputBase
 								className="hero-input"
-								placeholder="여행지나 숙소를 검색해보세요."
+								placeholder={t('여행지나 숙소를 검색해보세요.')}
 								value={currentProperty ? currentProperty : searchFilter?.search?.location}
 								onChange={(e) => {
 									setCurrentProperty(e.target.value);
@@ -364,21 +366,23 @@ const HeroCard = (props: HeroCardProps) => {
 							<Box className="hero-keyword-location">
 								<button className="hero-location-btn">
 									<PlaceIcon className="hero-location-icon" />
-									현재 위치 주변
+									{t('현재 위치 주변')}
 								</button>
 							</Box>
 
 							{/* 최근 검색 조건 */}
 							<Box className="hero-keyword-section">
 								<Box className="hero-keyword-section-header">
-									<span>최근 검색 조건</span>
+									<span>{t('최근 검색 조건')}</span>
 									<button className="hero-clear-btn" onClick={handleClearRecent}>
-										전체삭제
+										{t('전체삭제')}
 									</button>
 								</Box>
 
 								<Box className="hero-recent-list">
-									{recentSearches?.length === 0 && <div className="hero-empty-text">최근 검색어가 없습니다.</div>}
+									{recentSearches?.length === 0 && (
+										<div className="hero-empty-text">{t('최근 검색어가 없습니다')}.</div>
+									)}
 									{recentSearches?.map((word) => (
 										<Box key={word} className="hero-recent-item">
 											<button className="hero-recent-main" onClick={() => handleSelectKeyword(word)}>
@@ -398,7 +402,7 @@ const HeroCard = (props: HeroCardProps) => {
 							{/* 여기어때 검색 순위 */}
 							<Box className="hero-keyword-section">
 								<Box className="hero-keyword-section-header">
-									<span>여기어때 검색 순위</span>
+									<span>{t('LUNOTEL 검색 순위')}</span>
 								</Box>
 
 								<Box className="hero-ranking-list">
@@ -435,12 +439,14 @@ const HeroCard = (props: HeroCardProps) => {
 					}}
 				>
 					<PersonOutlineIcon className="hero-field-icon" />
-					<span className="hero-field-text">인원 {searchFilter.search?.personal}</span>
+					<span className="hero-field-text">
+						{t('인원')} {searchFilter.search?.personal}
+					</span>
 				</Box>
 
 				{/* 검색 버튼 */}
 				<Button className="hero-search-button" onClick={pushSearchHandler}>
-					검색
+					{t('검색')}
 				</Button>
 			</Box>
 
@@ -550,7 +556,7 @@ const HeroCard = (props: HeroCardProps) => {
 			{showGuestPicker && (
 				<Box className="hero-guestpicker" ref={pesonalRef}>
 					<div className="hero-guest-row">
-						<span className="hero-guest-label">인원</span>
+						<span className="hero-guest-label">{t('인원')}</span>
 						<div className="hero-guest-counter">
 							<button
 								onClick={(e) => {

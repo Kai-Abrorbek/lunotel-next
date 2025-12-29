@@ -20,6 +20,7 @@ import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../sweetAler
 import { Property } from '../../types/property/property';
 import { useRouter } from 'next/router';
 import { userVar } from '../../../apollo/store';
+import { useTranslation } from 'react-i18next';
 
 type CategoryKey = 'all' | 'motel' | 'hotel_resort' | 'pension' | 'premium' | 'camping' | 'home_villa' | 'guesthouse';
 
@@ -165,6 +166,7 @@ interface WeeklyHotPensionsProps {
 
 const WeeklyHotPensions = (props: WeeklyHotPensionsProps) => {
 	const { initialInput } = props;
+	const { t, i18n } = useTranslation('common');
 	const router = useRouter();
 	const user = useReactiveVar(userVar);
 	const checkIn = useMemo(() => {
@@ -229,7 +231,7 @@ const WeeklyHotPensions = (props: WeeklyHotPensionsProps) => {
 			<Box className="weeklyhotpensions-container">
 				{/* 헤더 */}
 				<Box className="popular-header">
-					<Typography className="popular-title">이번 주 HOT 인기 펜션</Typography>
+					<Typography className="popular-title">{t('이번 주 HOT 인기 펜션')}</Typography>
 				</Box>
 
 				{/* 슬라이더 래퍼 + 화살표 버튼 */}

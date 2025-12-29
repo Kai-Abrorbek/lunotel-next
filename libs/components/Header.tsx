@@ -38,7 +38,6 @@ const Header = () => {
 
 	const langChoice = async (e: any) => {
 		setLanguage(e.target.id);
-		console.log(e.target.id);
 		localStorage.setItem('locale', e.target.id);
 		await router.push(router.asPath, router.asPath, { locale: e.target.id });
 	};
@@ -117,7 +116,8 @@ const Header = () => {
 										</Box>
 										<Box
 											className={`language-option ${language === 'ja' ? 'active' : ''}`}
-											onClick={() => {
+											onClick={(e) => {
+												langChoice(e);
 												setLanguage('ja');
 												setIsLanguageOpen(false);
 											}}
@@ -126,7 +126,8 @@ const Header = () => {
 										</Box>
 										<Box
 											className={`language-option ${language === 'zh' ? 'active' : ''}`}
-											onClick={() => {
+											onClick={(e) => {
+												langChoice(e);
 												setLanguage('zh');
 												setIsLanguageOpen(false);
 											}}
