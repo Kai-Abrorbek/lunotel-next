@@ -58,7 +58,6 @@ export default function DomesticDestination() {
 	const [activeTab, setActiveTab] = useState<TabKey>('region');
 	const router = useRouter();
 	const [lang, setLang] = useState<string | null>(null);
-	/**LIFESICLE**/
 
 	/**LIFESICLE**/
 	useEffect(() => {

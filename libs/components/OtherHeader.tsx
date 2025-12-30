@@ -185,10 +185,10 @@ const OtherHeader = (props: MiniHeaderProps) => {
 									<Box className="language-dropdown">
 										<Box
 											id={'kr'}
-											className={`language-option ${language === 'kr' ? 'active' : ''}`}
+											className={`language-option ${language === 'KR' ? 'active' : ''}`}
 											onClick={(e) => {
 												langChoice(e);
-												setLanguage('kr');
+												setLanguage('KR');
 												setIsLanguageOpen(false);
 											}}
 										>
@@ -196,36 +196,36 @@ const OtherHeader = (props: MiniHeaderProps) => {
 										</Box>
 										<Box
 											id={'en'}
-											className={`language-option ${language === 'en' ? 'active' : ''}`}
+											className={`language-option ${language === 'EN' ? 'active' : ''}`}
 											onClick={(e) => {
 												langChoice(e);
-												setLanguage('en');
+												setLanguage('EN');
 												setIsLanguageOpen(false);
 											}}
 										>
 											English
 										</Box>
 										<Box
-											id={'js'}
-											className={`language-option ${language === 'js' ? 'active' : ''}`}
+											id={'uz'}
+											className={`language-option ${language === 'UZ' ? 'active' : ''}`}
 											onClick={(e) => {
 												langChoice(e);
-												setLanguage('ja');
+												setLanguage('UZ');
 												setIsLanguageOpen(false);
 											}}
 										>
-											日本語
+											Uzbek
 										</Box>
 										<Box
-											id={'zh'}
-											className={`language-option ${language === 'zh' ? 'active' : ''}`}
+											id={'ru'}
+											className={`language-option ${language === 'RU' ? 'active' : ''}`}
 											onClick={(e) => {
 												langChoice(e);
-												setLanguage('zh');
+												setLanguage('RU');
 												setIsLanguageOpen(false);
 											}}
 										>
-											中文
+											Russia
 										</Box>
 									</Box>
 								)}
@@ -248,7 +248,7 @@ const OtherHeader = (props: MiniHeaderProps) => {
 											로그인
 										</ButtonBase> */}
 										<ButtonBase className="auth-button signup-button" disableRipple>
-											로그인/회원가입
+											{t('로그인/회원가입')}
 										</ButtonBase>
 									</Link>
 								</>

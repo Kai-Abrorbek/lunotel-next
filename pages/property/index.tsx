@@ -50,6 +50,7 @@ import { Message } from '../../libs/enums/common.enum';
 import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../libs/sweetAlert';
 import { userVar } from '../../apollo/store';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useTranslation } from 'react-i18next';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -68,6 +69,7 @@ interface SearchResultPageProps {
 
 const SearchResultPage = (props: SearchResultPageProps) => {
 	const { initialInput } = props;
+	const { t, i18n } = useTranslation('common');
 	const router = useRouter();
 	const user = useReactiveVar(userVar);
 	const [price, setPrice] = React.useState<[number, number]>([0, 500000]);
@@ -89,6 +91,7 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 	const locationRef: any = useRef();
 	const currentLabel = SORT_OPTIONS.find((o) => o.value === sort)?.label ?? '정렬';
 	const open = Boolean(anchorEl);
+	const [lang, setLang] = useState<string | null>(null);
 
 	const [likeTargetProperty] = useMutation(LIKE_TARGET_PROPERTY);
 
@@ -110,6 +113,12 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 
 	/** LIFECYCLES **/
 	useEffect(() => {
+		if (typeof window === 'undefined') return;
+		const lang = localStorage.getItem('locale');
+		setLang(lang);
+	}, [router]);
+
+	useEffect(() => {
 		if (!router.isReady) return;
 
 		if (router.query.input) {
@@ -122,7 +131,7 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 	useEffect(() => {
 		if (searchFilter?.search?.propertyStarsList?.length === 0) {
 			delete searchFilter.search.propertyStarsList;
-			router.push(
+			router.replace(
 				`/property?input=${JSON.stringify({
 					...searchFilter,
 					search: {
@@ -141,7 +150,7 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 
 		if (searchFilter?.search?.amenityList?.length === 0) {
 			delete searchFilter.search.amenityList;
-			router.push(
+			router.replace(
 				`/property?input=${JSON.stringify({
 					...searchFilter,
 					search: {
@@ -160,7 +169,7 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 
 		if (searchFilter?.search?.otherAmenityList?.length === 0) {
 			delete searchFilter.search.otherAmenityList;
-			router.push(
+			router.replace(
 				`/property?input=${JSON.stringify({
 					...searchFilter,
 					search: {
@@ -177,7 +186,6 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 			);
 		}
 	}, [searchFilter, router]);
-
 	/** --- HANDLER **/
 	const likePropertyHandler = async (user: T, id: string) => {
 		try {
@@ -219,9 +227,9 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 		setAnchorEl(e.currentTarget);
 	};
 
-	const paginationHandler = (e: any, value: number) => {
+	const paginationHandler = async (e: any, value: number) => {
 		searchFilter.page = value;
-		router.push(
+		await router.push(
 			`/property?input=${JSON.stringify({
 				...searchFilter,
 				search: {
@@ -242,8 +250,8 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 		setCurrentPage(value);
 	};
 
-	const selectPropertyTypeHandler = (value: any) => {
-		router.push(
+	const selectPropertyTypeHandler = async (value: any) => {
+		await router.push(
 			`/property?input=${JSON.stringify({
 				...searchFilter,
 				search: {
@@ -264,10 +272,10 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 		);
 	};
 
-	const selectSortTypeHandler = (next: string, sort: string, direction: string) => {
+	const selectSortTypeHandler = async (next: string, sort: string, direction: string) => {
 		setSort(next);
 		setAnchorEl(null);
-		router.push(
+		await router.push(
 			`/property?input=${JSON.stringify({
 				...searchFilter,
 				sort: sort,
@@ -284,8 +292,8 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 		);
 	};
 
-	const selectRangePriceHandler = (price: number[]) => {
-		router.push(
+	const selectRangePriceHandler = async (price: number[]) => {
+		await router.push(
 			`/property?input=${JSON.stringify({
 				...searchFilter,
 				search: {
@@ -312,9 +320,9 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 		);
 	};
 
-	const selectStarsHandler = (star: number, selected: boolean) => {
+	const selectStarsHandler = async (star: number, selected: boolean) => {
 		if (!selected) {
-			router.push(
+			await router.push(
 				`/property?input=${JSON.stringify({
 					...searchFilter,
 					search: {
@@ -334,7 +342,7 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 				},
 			);
 		} else if (selected) {
-			router.push(
+			await router.push(
 				`/property?input=${JSON.stringify({
 					...searchFilter,
 					search: {
@@ -356,9 +364,9 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 		}
 	};
 
-	const selectAmenityListHandler = (amenity: string, selected: boolean) => {
+	const selectAmenityListHandler = async (amenity: string, selected: boolean) => {
 		if (!selected) {
-			router.push(
+			await router.push(
 				`/property?input=${JSON.stringify({
 					...searchFilter,
 					search: {
@@ -378,7 +386,7 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 				},
 			);
 		} else if (selected) {
-			router.push(
+			await router.push(
 				`/property?input=${JSON.stringify({
 					...searchFilter,
 					search: {
@@ -400,9 +408,9 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 		}
 	};
 
-	const selectOtehrAmenityListHandler = (otherAmenity: string, selected: boolean) => {
+	const selectOtehrAmenityListHandler = async (otherAmenity: string, selected: boolean) => {
 		if (!selected) {
-			router.push(
+			await router.push(
 				`/property?input=${JSON.stringify({
 					...searchFilter,
 					search: {
@@ -422,7 +430,7 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 				},
 			);
 		} else if (selected) {
-			router.push(
+			await router.push(
 				`/property?input=${JSON.stringify({
 					...searchFilter,
 					search: {
@@ -476,26 +484,30 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 						<Box className="map-card">
 							<Box component={'img'} src="/img/map.webp" className="map-image" />
 							<Button variant="contained" className="map-button" onClick={() => setMapOpen(true)}>
-								지도 보기
+								{t('지도 보기')}
 							</Button>
 						</Box>
 
 						{/* Filter title */}
 						<Box className="filter-header">
-							<Typography className="filter-title">필터</Typography>
+							<Typography className="filter-title">{t('필터')}</Typography>
 							<Button className="filter-reset" disableRipple onClick={resetSearchFilter}>
 								<RestartAltIcon className={spin ? 'rotate-once' : ''} />
-								초기화
+								{t('초기화')}
 							</Button>
 						</Box>
 
-						<FormControlLabel control={<Checkbox size="small" />} label="매진 숙소 제외" className="soldout-checkbox" />
+						<FormControlLabel
+							control={<Checkbox size="small" />}
+							label={t('매진 숙소 제외')}
+							className="soldout-checkbox"
+						/>
 
 						<Divider className="filter-divider" />
 
 						{/* 숙소 유형 */}
 						<Box className="section">
-							<Typography className="section-title">숙소유형</Typography>
+							<Typography className="section-title">{t('숙소유형')}</Typography>
 							<RadioGroup
 								defaultValue={type}
 								className="roomtype-group"
@@ -512,7 +524,7 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 											key={idx}
 											value={`${type}`}
 											control={<Radio size="small" />}
-											label={`${type_krName}`}
+											label={t(`${type_krName}`)}
 										/>
 									);
 								})}
@@ -522,7 +534,7 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 						{/* Price */}
 						<Box className="section">
 							<Typography className="section-title">
-								가격 <span className="section-sub">1박 기준</span>
+								가격 <span className="section-sub">1{t('박 기준')}</span>
 							</Typography>
 							<Box className="price-slider-wrapper">
 								<Slider
@@ -539,12 +551,14 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 								/>
 							</Box>
 							<Typography className="price-range">
-								{price[0].toLocaleString()}원 ~ {price[1].toLocaleString()}원 이상
+								{price[0].toLocaleString()}
+								{t('원')} ~ {price[1].toLocaleString()}
+								{t('원 이상')}
 							</Typography>
 						</Box>
 						{/* Rating */}
 						<Box className="section">
-							<Typography className="section-title">등급</Typography>
+							<Typography className="section-title">{t('등급')}</Typography>
 							<Box className="rating-list">
 								{[5, 4, 3, 2].map((rating) => {
 									const isInc = selectRatingIds.includes(rating);
@@ -553,7 +567,7 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 											{isInc ? (
 												<Chip
 													key={rating}
-													label={rating + '성급'}
+													label={rating + t('성급')}
 													className="rating-chip active"
 													onClick={() => {
 														selectStarsHandler(rating, isInc);
@@ -565,7 +579,7 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 											) : (
 												<Chip
 													key={rating}
-													label={rating + '성급'}
+													label={rating + t('성급')}
 													className="rating-chip"
 													onClick={() => {
 														selectStarsHandler(rating, isInc);
@@ -582,7 +596,7 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 						</Box>
 						{/* Tags */}
 						<Box className="section">
-							<Typography className="section-title">시설</Typography>
+							<Typography className="section-title">{t('시설')}</Typography>
 							<Box className={`hashtag-list ${openMoreTags ? 'active' : ''}`}>
 								{tags_EN.map((tag, idx) => {
 									const isInc = selectTagIds.includes(tag);
@@ -591,7 +605,7 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 											{isInc ? (
 												<Chip
 													key={tag}
-													label={'#' + tags_KR[idx]}
+													label={lang === 'en' ? `#${tag}` : `#${tags_KR[idx]}`}
 													className="hashtag-chip active"
 													onClick={() => {
 														selectAmenityListHandler(tag, isInc);
@@ -603,7 +617,7 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 											) : (
 												<Chip
 													key={tag}
-													label={'#' + tags_KR[idx]}
+													label={lang === 'en' ? `#${tag}` : `#${tags_KR[idx]}`}
 													className="hashtag-chip"
 													onClick={() => {
 														selectAmenityListHandler(tag, isInc);
@@ -618,10 +632,10 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 								})}
 							</Box>
 							<Button className="more-link" disableRipple onClick={() => setOpenMoreTags(!openMoreTags)}>
-								더 보기
+								{t('더 보기')}
 							</Button>
 
-							<Typography className="section-title">기타시설</Typography>
+							<Typography className="section-title">{t('기타시설')}</Typography>
 							<Box className={`hashtag-list ${openMoreOtherTags ? 'active' : ''}`}>
 								{otherTags_EN.map((tag, idx) => {
 									const isInc = selectOtheragIds.includes(tag);
@@ -630,7 +644,7 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 											{isInc ? (
 												<Chip
 													key={tag}
-													label={'#' + otherTags_KR[idx]}
+													label={lang === 'en' ? `#${tag}` : `#${otherTags_KR[idx]}`}
 													className="hashtag-chip active"
 													onClick={() => {
 														selectOtehrAmenityListHandler(tag, isInc);
@@ -642,7 +656,7 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 											) : (
 												<Chip
 													key={tag}
-													label={'#' + otherTags_KR[idx]}
+													label={lang === 'en' ? `#${tag}` : `#${otherTags_KR[idx]}`}
 													className="hashtag-chip"
 													onClick={() => {
 														selectOtehrAmenityListHandler(tag, isInc);
@@ -657,7 +671,7 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 								})}
 							</Box>
 							<Button className="more-link" disableRipple onClick={() => setOpenMoreOtherTags(!openMoreOtherTags)}>
-								더 보기
+								{t('더 보기')}
 							</Button>
 						</Box>
 					</Box>
@@ -667,7 +681,8 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 						{/* header */}
 						<Box className="results-header">
 							<Typography className="results-count">
-								{searchFilter.search?.location} 검색 결과 {total}개
+								{searchFilter.search?.location} {t('검색 결과')} {total}
+								{t('개')}
 							</Typography>
 							<Button
 								variant="outlined"
@@ -675,7 +690,7 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 								className={`sort-trigger ${open ? 'open' : ''}`}
 								endIcon={<KeyboardArrowDownIcon className={open ? 'sort-arrow open' : 'sort-arrow'} />}
 							>
-								{currentLabel}
+								{t(`${currentLabel}`)}
 							</Button>
 							<Menu
 								anchorEl={anchorEl}
@@ -695,7 +710,7 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 											className="sort-menu-item"
 										>
 											<ListItemText
-												primary={opt.label}
+												primary={t(`${opt.label}`)}
 												style={selected ? { color: '#1976d2' } : {}}
 												className={selected ? 'selected-text' : ''}
 											/>

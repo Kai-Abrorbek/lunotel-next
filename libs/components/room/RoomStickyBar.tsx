@@ -1,6 +1,7 @@
 // RoomStickyBar.tsx
 import React, { useEffect, useState } from 'react';
 import { Box, Button, Stack, Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 type TabKey = 'overview' | 'rooms' | 'amenities' | 'location' | 'reviews';
 const TABS: { key: TabKey; label: string }[] = [
@@ -27,6 +28,7 @@ const RoomStickyBar: React.FC<RoomStickyBarProps> = ({
 	activeTab,
 }) => {
 	const [visible, setVisible] = useState(false);
+	const { t, i18n } = useTranslation('common');
 
 	useEffect(() => {
 		const handleScroll = () => {
@@ -69,7 +71,7 @@ const RoomStickyBar: React.FC<RoomStickyBarProps> = ({
 								}
 								onClick={() => handleTabClick(tab.key)}
 							>
-								{tab.label}
+								{t(`${tab.label}`)}
 								{tab.key === activeTab && <span className="room-sticky-bar__underline" />}
 							</button>
 						))}

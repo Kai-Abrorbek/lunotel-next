@@ -37,20 +37,22 @@ import { GET_COMMENTS } from '../../../apollo/admin/query';
 import { Comment } from '../../../libs/types/comment/comment';
 import { COMMENT_SORT_OPTIONS } from '../../../libs/enums/propertyRoomtype.enum';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useTranslation } from 'react-i18next';
 
-export const getStaticProps = async ({ locale }: any) => ({
+export const getServerSideProps = async ({ locale }: any) => ({
 	props: {
 		...(await serverSideTranslations(locale, ['common'])),
 	},
 });
 
 interface PropertyDetailPageProps {
-	initialInput: PropertiesInquiry;
+	initialInput: PropertyInquiry;
 }
 type TabKey = 'overview' | 'rooms' | 'amenities' | 'location' | 'reviews';
 
 const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 	const { initialInput } = props;
+	const { t, i18n } = useTranslation('common');
 	const user = useReactiveVar(userVar);
 	const router = useRouter();
 	const propertyId = router.query.propertyId?.slice(11) as string;
@@ -67,6 +69,7 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 	const [selectRoomName, setSelectRoomName] = useState<string>('');
 	const isSortMenuOpen = Boolean(sortAnchorEl);
 	const [currentPage, setCurrentPage] = useState<number>(1);
+	const [lang, setLang] = useState<string | null>(null);
 	const [targetCommnetsInput, setTargetCommnetsInput] = useState<CommentsInquiry>({
 		page: 1,
 		limit: 10,
@@ -135,6 +138,12 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 	const totalCount = propertyImages?.length;
 
 	/** LIFECYCLES **/
+	useEffect(() => {
+		if (typeof window === 'undefined') return;
+		const lang = localStorage.getItem('locale');
+		setLang(lang);
+	}, [router]);
+
 	useEffect(() => {
 		if (!router.isReady) return;
 
@@ -289,7 +298,8 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 
 							{/* <Typography className="property-info__coupon-price">3000원 쿠폰 적용가</Typography> */}
 							<Typography className="property-info__basic-price">
-								{targetProperty?.propertyPrice!.toLocaleString()}원
+								{targetProperty?.propertyPrice!.toLocaleString()}
+								{t('원')}
 							</Typography>
 						</Stack>
 					</Stack>
@@ -304,7 +314,10 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 									<StarIcon fontSize="small" />
 									<span>{targetProperty?.propertyRank.toFixed(1)}</span>
 								</Box>
-								<span className="rating-chip__count">{targetProperty?.propertyComments.toLocaleString()}명 평가</span>
+								<span className="rating-chip__count">
+									{targetProperty?.propertyComments.toLocaleString() + ' '}
+									{t('명 평가')}
+								</span>
 							</Box>
 							<Typography className="rating-snippet" noWrap>
 								{'예전에도 들렀던 모텔인데 이번에도 근처 방문할 일이 생겨서 또 숙박했습니다...'}
@@ -317,15 +330,15 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 							onClick={() => handleTabClick('amenities')}
 						>
 							<Box className="card-header">
-								<Typography className="card-title">서비스 및 부대시설</Typography>
-								<Typography className="card-link">자세히 보기 &gt;</Typography>
+								<Typography className="card-title">{t('서비스 및 부대시설')}</Typography>
+								<Typography className="card-link">{t('자세히 보기')} &gt;</Typography>
 							</Box>
 							<Box className="service-icons">
 								{propertyAmenitiesList.map((amenit) => {
 									return (
 										<div key={amenit.key} className="amenit-box">
 											<span>{amenit.icon}</span>
-											<span>{amenit.name}</span>
+											{lang === 'en' ? <span>{amenit.en}</span> : <span>{amenit.name}</span>}
 										</div>
 									);
 								})}
@@ -338,8 +351,8 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 							onClick={() => handleTabClick('location')}
 						>
 							<Box className="card-header">
-								<Typography className="card-title">위치 정보</Typography>
-								<Typography className="card-link">지도보기 &gt;</Typography>
+								<Typography className="card-title">{t('위치 정보')}</Typography>
+								<Typography className="card-link">{t('지도보기')} &gt;</Typography>
 							</Box>
 							<Box className="location-lines">
 								<Box className="location-line">
@@ -357,8 +370,11 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 				<section id="section-rooms">
 					{targetProperty?.rooms?.length === 0 && (
 						<div className="no-data">
-							<h1>검색 결과가 없어요.</h1>
-							<p>'asdd'에 대한 철자를 확인하거나 긴 문구는 띄어쓰기를 해보세요.</p>
+							<h1>{t('검색 결과가 없어요')}.</h1>
+							<p>
+								{`${searchFilter.propertyName}`}
+								{t('에 대한 철자를 확인하거나 긴 문구는 띄어쓰기를 해보세요')}.
+							</p>
 						</div>
 					)}
 					<ImageGalleryModal
@@ -394,14 +410,16 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 								<Box className="room-card__content">
 									<Box className="room-card__header">
 										<Typography className="room-card__title">{room?.roomName}</Typography>
-										<Typography className="room-card__link">상세 정보 &gt;</Typography>
+										<Typography className="room-card__link">{t('상세 정보')} &gt;</Typography>
 									</Box>
 
 									<Box className="room-card__section">
-										<Typography className="room-card__section-title">대실</Typography>
+										<Typography className="room-card__section-title">{t('대실')}</Typography>
 										{isDayUse?.length !== 0 ? (
 											<>
-												<Typography className="room-card__sub">무한대실 · {String(maxUsageTime)}시간 이용</Typography>
+												<Typography className="room-card__sub">
+													{t('무한대실')} · {String(maxUsageTime)}시간 이용
+												</Typography>
 												<Box className="room-card__price-row">
 													<Box className="room-card__price-left">
 														{room?.roomDiscountPrice! > 0 && (
@@ -423,24 +441,24 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 															className="room-card__button room-card__button--day"
 															onClick={() => handlePushReservationPage(room, 0)}
 														>
-															대실 예약
+															{t('대실 예약')}
 														</Button>
 													</Box>
 												</Box>
 											</>
 										) : (
-											<p style={{ color: 'red', fontSize: '13px', fontWeight: '600' }}>다른 날짜 확인</p>
+											<p style={{ color: 'red', fontSize: '13px', fontWeight: '600' }}>{t('다른 날짜 확인')}</p>
 										)}
 									</Box>
 
 									<Box className="room-card__divider" />
 
 									<Box className="room-card__section">
-										<Typography className="room-card__section-title">숙박</Typography>
+										<Typography className="room-card__section-title">{t('숙박')}</Typography>
 										{isOvernight?.length !== 0 ? (
 											<>
 												<Typography className="room-card__sub">
-													숙박 베이직 룸 · 입실 {String(checkinOverNight)} · 퇴실 {String(checkOutOverNight)}
+													숙박 베이직 룸 · 입실 {String(checkinOverNight)} · {t('퇴실')} {String(checkOutOverNight)}
 												</Typography>
 												<Box className="room-card__price-row">
 													<Box className="room-card__price-left">
@@ -463,7 +481,7 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 															className="room-card__button room-card__button--stay"
 															onClick={() => handlePushReservationPage(room, 1)}
 														>
-															숙박 예약
+															{t('숙박 예약')}
 														</Button>
 													</Box>
 												</Box>
@@ -474,9 +492,13 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 									</Box>
 								</Box>
 								<Stack className="room-card__info">
-									<Typography>객실정보</Typography>
+									<Typography>{t('객실정보')}</Typography>
 									<Typography>
-										기준{room?.roomStandPersonal}인 · 최대{room?.roomMaxPersonal}인
+										{t('기준')}
+										{room?.roomStandPersonal + ''}
+										{t('인')} · {t('최대')}
+										{room?.roomMaxPersonal + ''}
+										{t('인')}
 									</Typography>
 								</Stack>
 							</Box>
@@ -486,13 +508,13 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 				<section id="section-amenities">
 					<Box className="room-amenities__divider" />
 					<Stack className="amenities-card">
-						<Typography className="amenities-card__title">서비스 및 부대시설</Typography>
+						<Typography className="amenities-card__title">{t('서비스 및 부대시설')}</Typography>
 						<Box className="amenities-card__icons">
 							{propertyAmenitiesList.map((amenit) => {
 								return (
 									<div key={amenit.key} className="amenit-box">
 										<span>{amenit.icon}</span>
-										<span>{amenit.name}</span>
+										{lang === 'en' ? <span>{amenit.en}</span> : <span>{amenit.name}</span>}
 									</div>
 								);
 							})}
@@ -500,13 +522,13 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 					</Stack>
 					<Box className="room-amenities__divider" />
 					<Stack className="amenities-card">
-						<Typography className="amenities-card__title">취소 및 환불 규정</Typography>
-						<Typography className="">객실별 취소 정책이 상이하니 객실 상세정보에서 확인해주세요.</Typography>
+						<Typography className="amenities-card__title">{t('취소 및 환불 규정')}</Typography>
+						<Typography className="">{t('객실별 취소 정책이 상이하니 객실 상세정보에서 확인해주세요')}.</Typography>
 					</Stack>
 					<Box className="room-amenities__divider" />
 				</section>
 				<section id="section-location">
-					<Typography className="section-location_title">위치</Typography>
+					<Typography className="section-location_title">{t('위치')}</Typography>
 					<PropertyLocationMap address={targetProperty?.propertyAddress} />
 				</section>
 				<section id="section-reviews">
@@ -514,11 +536,13 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 						<Box className="reviews-page__header-left">
 							<span className="reviews-page__header-star">★</span>
 							<span className="reviews-page__header-title">
-								리얼 리뷰 <span className="reviews-page__header-score">{targetProperty?.propertyRank?.toFixed(1)}</span>
+								{t('리얼 리뷰')}{' '}
+								<span className="reviews-page__header-score">{targetProperty?.propertyRank?.toFixed(1)}</span>
 							</span>
 							<span className="reviews-page__header-meta">
-								{targetProperty?.propertyComments.toLocaleString()}명 평가 ·{' '}
-								{targetProperty?.propertyComments.toLocaleString()}개 리뷰
+								{targetProperty?.propertyComments.toLocaleString() + ' '}
+								{t('명 평가')} · {targetProperty?.propertyComments.toLocaleString() + ' '}
+								{t('개 리뷰')}
 							</span>
 						</Box>
 
@@ -617,7 +641,7 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 						<Box className="hotelspecials-container">
 							{/* 헤더 */}
 							<Box className="popular-header">
-								<Typography className="popular-title">다른 고객이 본 비슷한 숙소</Typography>
+								<Typography className="popular-title">{t('다른 고객이 본 비슷한 숙소')}</Typography>
 							</Box>
 
 							{/* 슬라이더 래퍼 + 화살표 버튼 */}
@@ -687,7 +711,8 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 																	<span className="popular-rating-score">{property.propertyRank.toFixed(1)}</span>
 																</Box>
 																<span className="popular-rating-count">
-																	{property.propertyComments.toLocaleString()}명 평가
+																	{property.propertyComments.toLocaleString()}
+																	{t('명 평가')}
 																</span>
 															</Box>
 
@@ -697,11 +722,13 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 
 															<Box className="popular-price-row">
 																<span className="popular-price-current">
-																	{property.propertyPrice.toLocaleString()}원
+																	{property.propertyPrice.toLocaleString() + ' '}
+																	{t('원')}
 																</span>
 																{property.propertyPrice && (
 																	<span className="popular-price-origin">
-																		{property.propertyPrice.toLocaleString()}원
+																		{property.propertyPrice.toLocaleString() + ' '}
+																		{t('원')}
 																	</span>
 																)}
 															</Box>
