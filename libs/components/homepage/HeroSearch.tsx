@@ -47,10 +47,17 @@ const HeroSearch = (props: HeroSearchProps) => {
 };
 
 function formatDate(date: Date, day: number = 0) {
-	const y = date.getFullYear();
-	const m = String(date.getMonth() + 1).padStart(2, '0');
-	const d = String(date.getDate() + day).padStart(2, '0');
-	return `${y}-${m}-${d}`;
+	if (date.getMonth() === 11 && date.getDate() === 31 && day === 1) {
+		const y = date.getFullYear() + 1;
+		const m = String(1).padStart(2, '0');
+		const d = String(1).padStart(2, '0');
+		return `${y}-${m}-${d}`;
+	} else {
+		const y = date.getFullYear();
+		const m = String(date.getMonth() + 1).padStart(2, '0');
+		const d = String(date.getDate() + day).padStart(2, '0');
+		return `${y}-${m}-${d}`;
+	}
 }
 
 HeroSearch.defaultProps = {

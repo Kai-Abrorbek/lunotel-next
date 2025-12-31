@@ -82,7 +82,6 @@ const HeroCard = (props: HeroCardProps) => {
 	function toDate(value: string | undefined): Date | undefined {
 		return value ? new Date(value) : undefined;
 	}
-
 	/** LIFESICLE **/
 	useEffect(() => {
 		const clickHandler = (event: MouseEvent) => {
@@ -252,7 +251,6 @@ const HeroCard = (props: HeroCardProps) => {
 	const pushSearchHandler = async () => {
 		try {
 			if (router.pathname === '/property/[propertyId]') {
-				console.log(searchFilter);
 				const propertyId = router.query.propertyId?.slice(11);
 				const propertyInqiry: PropertyInquiry = {
 					_id: propertyId! as string,
