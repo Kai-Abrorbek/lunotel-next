@@ -4,6 +4,7 @@ import { Box, Paper, Typography, IconButton } from '@mui/material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../../../apollo/store';
+import { useTranslation } from 'react-i18next';
 
 type PointFilter = 'all' | 'earn' | 'use' | 'expire';
 type PointType = 'earn' | 'use' | 'expire';
@@ -24,10 +25,10 @@ const POINT_HISTORY: PointHistory[] = [
 ];
 
 const PointPage: React.FC = () => {
+	const { t, i18n } = useTranslation('common');
 	const [filter, setFilter] = useState<PointFilter>('all');
 	const user = useReactiveVar(userVar);
 	const totalPoints = useMemo(() => POINT_HISTORY.reduce((sum, h) => sum + h.amount, 0), []);
-
 	const expiringPoints = useMemo(
 		() => POINT_HISTORY.filter((h) => h.type === 'expire').reduce((sum, h) => sum + Math.abs(h.amount), 0),
 		[],
@@ -45,12 +46,12 @@ const PointPage: React.FC = () => {
 	return (
 		<Box className="point-page">
 			<Box className="point-page__inner">
-				<Typography className="point-page__title">포인트</Typography>
+				<Typography className="point-page__title">{t('포인트')}</Typography>
 
 				{/* 요약 카드 */}
 				<Paper className="point-summary" elevation={0}>
 					<Box className="point-summary__header">
-						<Typography className="point-summary__label">내 포인트</Typography>
+						<Typography className="point-summary__label">{t('내 포인트')}</Typography>
 						<IconButton size="small" className="point-summary__info-btn">
 							<InfoOutlinedIcon fontSize="small" />
 						</IconButton>
@@ -79,7 +80,7 @@ const PointPage: React.FC = () => {
 							onClick={() => setFilter(item.key as PointFilter)}
 							className={'point-filter__chip' + (filter === item.key ? ' point-filter__chip--active' : '')}
 						>
-							{item.label}
+							{t(`${item.label}`)}
 						</button>
 					))}
 				</Box>
@@ -109,7 +110,7 @@ const PointPage: React.FC = () => {
 					</Box>
 				) : (
 					<Box className="point-empty">
-						<Typography className="point-empty__text">포인트 내역이 없어요</Typography>
+						<Typography className="point-empty__text">{t('포인트 내역이 없어요')}</Typography>
 					</Box>
 				)}
 			</Box>

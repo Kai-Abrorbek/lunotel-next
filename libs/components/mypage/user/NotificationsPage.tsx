@@ -5,6 +5,7 @@ import { GET_MY_NOTIFICATIONS } from '../../../../apollo/user/query';
 import { Notification } from '../../../types/notification/notification';
 import { DELETE_NOTIFICATION, UPDATE_NOTIFICATION } from '../../../../apollo/user/mutation';
 import { sweetErrorAlert } from '../../../sweetAlert';
+import { useTranslation } from 'react-i18next';
 
 interface NotificationsPageProps {
 	currentPage: number;
@@ -12,6 +13,7 @@ interface NotificationsPageProps {
 }
 
 export default function NotificationsPage(props: NotificationsPageProps) {
+	const { t, i18n } = useTranslation('common');
 	const { currentPage, setTotal } = props;
 	const user = useReactiveVar(userVar);
 	const [filter, setFilter] = useState('all');
@@ -40,7 +42,7 @@ export default function NotificationsPage(props: NotificationsPageProps) {
 	});
 
 	const notificationsList = getMyNotificationsData?.getMyNotifications.list;
-	const notificationsTotal = getMyNotificationsData?.getMyNotifications?.metaCounter?.[0].total;
+	const notificationsTotal = getMyNotificationsData?.getMyNotifications?.metaCounter?.[0]?.total ?? 0;
 
 	useEffect(() => {
 		if (notificationsList?.length !== 0) {
@@ -55,10 +57,10 @@ export default function NotificationsPage(props: NotificationsPageProps) {
 		const past = new Date(createdAt).getTime();
 		const diff = Math.floor((now - past) / 1000); // seconds
 
-		if (diff < 60) return `${diff}초 전`;
-		if (diff < 3600) return `${Math.floor(diff / 60)}분 전`;
-		if (diff < 86400) return `${Math.floor(diff / 3600)}시간 전`;
-		return `${Math.floor(diff / 86400)}일 전`;
+		if (diff < 60) return `${diff}${t('초 전')}`;
+		if (diff < 3600) return `${Math.floor(diff / 60)}${t('분 전')}`;
+		if (diff < 86400) return `${Math.floor(diff / 3600)}${t('시간 전')}`;
+		return `${Math.floor(diff / 86400)}${t('일 전')}`;
 	}
 
 	const getCategoryInfo = (category: string) => {
@@ -160,45 +162,45 @@ export default function NotificationsPage(props: NotificationsPageProps) {
 	return (
 		<div className="notifications-container">
 			<div className="page-header">
-				<h1 className="page-title">알림센터</h1>
+				<h1 className="page-title">{t('알림센터')}</h1>
 				<div className="header-actions">
 					<button className="btn btn-secondary" onClick={markAllAsRead}>
-						✓ 모두 읽음으로 표시
+						✓ {t('모두 읽음으로 표시')}
 					</button>
-					<button className="btn btn-primary">⚙️ 설정</button>
+					<button className="btn btn-primary">⚙️ {t('설정')}</button>
 				</div>
 			</div>
 
 			<div className="stats-grid">
 				<div className="stat-card">
-					<div className="stat-label">총 알림</div>
+					<div className="stat-label">{t('총 알림')}</div>
 					<div className="stat-value">{notificationsTotal}</div>
 				</div>
 				<div className="stat-card">
-					<div className="stat-label">읽히지 않는</div>
+					<div className="stat-label">{t('읽히지 않는')}</div>
 					<div className="stat-value">{unreadCount}</div>
 				</div>
 				<div className="stat-card">
-					<div className="stat-label">오늘</div>
+					<div className="stat-label">{t('오늘')}</div>
 					<div className="stat-value">{todayCount}</div>
 				</div>
 			</div>
 
 			<div className="filter-tabs">
 				<button className={`filter-tab ${filter === 'all' ? 'active' : ''}`} onClick={() => setFilter('all')}>
-					전체
+					{t('전체')}
 				</button>
 				<button className={`filter-tab ${filter === 'unread' ? 'active' : ''}`} onClick={() => setFilter('unread')}>
-					읽지 않는 ({unreadCount})
+					{t('읽지 않는')} ({unreadCount})
 				</button>
 				<button className={`filter-tab ${filter === 'read' ? 'active' : ''}`} onClick={() => setFilter('read')}>
-					읽음
+					{t('읽음')}
 				</button>
 				<button
 					className={`filter-tab ${filter === 'important' ? 'active' : ''}`}
 					onClick={() => setFilter('important')}
 				>
-					중요한
+					{t('중요한')}
 				</button>
 			</div>
 
@@ -218,7 +220,7 @@ export default function NotificationsPage(props: NotificationsPageProps) {
 								</div>
 								<div className="notification-content">
 									<div className="notification-title">
-										{notif.title}
+										{t(`${notif.title}`)}
 										{/* {notif.isImportant && <span className="important-badge">! 중요한</span>} */}
 									</div>
 									<div className="notification-description">{notif.message}</div>
@@ -244,7 +246,7 @@ export default function NotificationsPage(props: NotificationsPageProps) {
 												markAsRead(notif._id);
 											}}
 										>
-											읽음으로 표시
+											{t('읽음으로 표시')}
 										</button>
 									)}
 									<button
@@ -254,7 +256,7 @@ export default function NotificationsPage(props: NotificationsPageProps) {
 											deleteNotification(notif._id);
 										}}
 									>
-										삭제
+										{t('삭제')}
 									</button>
 								</div>
 							</div>

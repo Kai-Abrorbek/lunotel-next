@@ -13,6 +13,7 @@ import { useRouter } from 'next/router';
 import { T } from '../../../types/common';
 import { Message } from '../../../enums/common.enum';
 import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../../sweetAlert';
+import { useTranslation } from 'react-i18next';
 
 interface MyFavoritsProps {
 	currentPage: number;
@@ -20,6 +21,7 @@ interface MyFavoritsProps {
 }
 const MyFavorits = (props: MyFavoritsProps) => {
 	const router = useRouter();
+	const { t, i18n } = useTranslation('common');
 	const user = useReactiveVar(userVar);
 	const { currentPage, setTotal } = props;
 
@@ -90,7 +92,7 @@ const MyFavorits = (props: MyFavoritsProps) => {
 
 	return (
 		<Box className="room-page">
-			<Typography className="my-res-main-title">찜 목록</Typography>
+			<Typography className="my-res-main-title">{t('찜 목록')}</Typography>
 
 			<Box className="room-card-box">
 				{myFavorits?.length !== 0 ? (
@@ -121,7 +123,10 @@ const MyFavorits = (props: MyFavoritsProps) => {
 													size="small"
 													className="room-card-rating-chip"
 												/>
-												<Typography className="room-card-rating-text">{property.propertyComments}명 평가</Typography>
+												<Typography className="room-card-rating-text">
+													{property.propertyComments}
+													{t('명 평가')}
+												</Typography>
 											</Box>
 										</Box>
 
@@ -138,20 +143,22 @@ const MyFavorits = (props: MyFavoritsProps) => {
 
 									<Box className="room-card-middle">
 										<Box className="room-card-line">
-											<p className="room-card-line-label">대실</p>
-											<p className="room-card-line-value">최대 8시간</p>
+											<p className="room-card-line-label">{t('대실')}</p>
+											<p className="room-card-line-value">
+												{t('최대')} 8{t('시간')}
+											</p>
 										</Box>
 										<Box className="room-card-line">
-											<p className="room-card-line-label">숙박</p>
-											<p className="room-card-line-value">21:00 체크인</p>
+											<p className="room-card-line-label">{t('숙박')}</p>
+											<p className="room-card-line-value">21:00 {t('체크인')}</p>
 										</Box>
 									</Box>
 
 									<Box className="room-card-bottom">
-										<p className="room-card-date-link">다른 날짜 확인</p>
+										<p className="room-card-date-link">{t('다른 날짜 확인')}</p>
 										<Box className="room-card-price-wrap">
 											<Typography className="room-card-price">
-												45,000<span className="room-card-price-unit">원</span>
+												45,000<span className="room-card-price-unit">{t('원')}</span>
 											</Typography>
 											{/* <Typography className="room-card-remaining">이 가격으로 남은 객실 2개</Typography> */}
 										</Box>
@@ -163,7 +170,7 @@ const MyFavorits = (props: MyFavoritsProps) => {
 				) : (
 					<div>
 						<div className="no-data">
-							<h1>찜한 숙소가 없습니다~</h1>
+							<h1>{t('찜한 숙소가 없습니다')}~</h1>
 						</div>
 					</div>
 				)}

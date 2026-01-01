@@ -18,8 +18,10 @@ import { MemberUpdate } from '../../../types/member/member.update';
 import { sweetConfirmAlert, sweetErrorAlert, sweetErrorHandling, sweetMixinSuccessAlert } from '../../../sweetAlert';
 import { UPDATE_MEMBER } from '../../../../apollo/user/mutation';
 import { updateStorage, updateUserInfo } from '../../../auth';
+import { useTranslation } from 'react-i18next';
 
 const MyInfoPage = () => {
+	const { t, i18n } = useTranslation('common');
 	const [visible, setVisible] = useState(false);
 	const user = useReactiveVar(userVar);
 	const [userInfo, setUserInfo] = useState<MemberUpdate>({
@@ -95,21 +97,21 @@ const MyInfoPage = () => {
 	return (
 		<Box className="myinfo-page">
 			<Box className="myinfo-header">
-				<Typography className="myinfo-title">내 정보 관리</Typography>
+				<Typography className="myinfo-title">{t('내 정보 관리')}</Typography>
 				<Button variant="contained" className="myinfo-save-btn" onClick={handleUpdateMemberInfo}>
-					저장
+					{t('저장')}
 				</Button>
 			</Box>
 
-			<Typography className="myinfo-subtitle">회원 정보</Typography>
-			<Typography className="myinfo-text">현재 정보 수정은 여기에서 가능합니다.</Typography>
+			<Typography className="myinfo-subtitle">{t('회원 정보')}</Typography>
+			<Typography className="myinfo-text">{t('현재 정보 수정은 여기에서 가능합니다')}.</Typography>
 
 			{/* visibility toggle */}
 			<Paper className="myinfo-visibility-card">
 				<Box className="visibility-row">
 					<Switch checked={visible} onChange={(e) => setVisible(e.target.checked)} />
 					<Typography className="visibility-text">
-						{visible ? '내 정보가 보여지고 있어요.' : '내 정보가 숨겨져 있어요.'}
+						{visible ? '내 정보가 보여지고 있어요.' : t('내 정보가 숨겨져 있어요')}
 					</Typography>
 				</Box>
 			</Paper>
@@ -118,11 +120,11 @@ const MyInfoPage = () => {
 				{/* 닉네임 / 예약자 */}
 				<Box className="form-row">
 					<Box className="form-item">
-						<Typography className="form-label">닉네임</Typography>
+						<Typography className="form-label">{t('닉네임')}</Typography>
 						<TextField
 							fullWidth
 							value={maskText(userInfo.memberNick! ?? '')}
-							placeholder="닉네임 입력"
+							placeholder={t('닉네임 입력')}
 							onChange={(e) => handleChange('memberNick', e.target.value)}
 							InputProps={{
 								readOnly: !visible,
@@ -138,10 +140,10 @@ const MyInfoPage = () => {
 					</Box>
 
 					<Box className="form-item">
-						<Typography className="form-label">예약자 이름</Typography>
+						<Typography className="form-label">{t('예약자 이름')}</Typography>
 						<TextField
 							fullWidth
-							placeholder="예약자 이름"
+							placeholder={t('예약자 이름')}
 							value={maskText(userInfo.memberFullName! ?? '')}
 							onChange={(e) => handleChange('memberFullName', e.target.value)}
 							InputProps={{
@@ -161,7 +163,7 @@ const MyInfoPage = () => {
 				{/* 휴대폰 / 생일 */}
 				<Box className="form-row">
 					<Box className="form-item">
-						<Typography className="form-label">휴대폰 번호</Typography>
+						<Typography className="form-label">{t('휴대폰 번호')}</Typography>
 						<TextField
 							fullWidth
 							value={maskText(userInfo.memberPhone! ?? '')}
@@ -180,7 +182,7 @@ const MyInfoPage = () => {
 					</Box>
 
 					<Box className="form-item">
-						<Typography className="form-label">이메일</Typography>
+						<Typography className="form-label">{t('이메일')}</Typography>
 						<TextField
 							fullWidth
 							value={maskText(userInfo.memberEmail! ?? '')}
@@ -202,7 +204,7 @@ const MyInfoPage = () => {
 				{/* 성별 */}
 				<Box className="form-row">
 					<Box className="form-item">
-						<Typography className="form-label">주소</Typography>
+						<Typography className="form-label">{t('주소')}</Typography>
 						<TextField
 							fullWidth
 							value={maskText(userInfo.memberAddress! ?? '')}
@@ -226,7 +228,7 @@ const MyInfoPage = () => {
 							size="small"
 							className="property-modal__zipcode-button"
 						>
-							우편번호 검색
+							{t('우편번호 검색')}
 						</Button>
 					</Grid>
 				</Box>
@@ -234,13 +236,13 @@ const MyInfoPage = () => {
 
 			{/* access device */}
 			<Box className="myinfo-section">
-				<Typography className="myinfo-device-title">접속 기기 관리</Typography>
-				<Typography className="myinfo-device-text">로그인 된 모든 기기에서 로그아웃 돼요.</Typography>
-				<Button className="logout-all">전체 로그아웃</Button>
+				<Typography className="myinfo-device-title">{t('접속 기기 관리')}</Typography>
+				<Typography className="myinfo-device-text">{t('로그인 된 모든 기기에서 로그아웃 돼요')}.</Typography>
+				<Button className="logout-all">{t('전체 로그아웃')}</Button>
 			</Box>
 
 			<Box className="myinfo-footer">
-				더 이상 여기어때 이용을 원하지 않으신가요? <span className="leave-text">회원탈퇴</span>
+				{t('더 이상 여기어때 이용을 원하지 않으신가요?')} <span className="leave-text">{t('회원탈퇴')}</span>
 			</Box>
 		</Box>
 	);

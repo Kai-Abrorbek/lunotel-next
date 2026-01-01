@@ -10,6 +10,7 @@ import { ReservationStatus } from '../../../enums/reservation';
 import { UPDATE_RESERVATION } from '../../../../apollo/user/mutation';
 import { ReservationUpdateInput } from '../../../types/reservation/reservation.update';
 import { sweetErrorAlert, sweetMixinErrorAlert } from '../../../sweetAlert';
+import { useTranslation } from 'react-i18next';
 
 type TabValue = 'domestic' | 'overseas' | 'package';
 
@@ -20,6 +21,7 @@ interface ReservationHistoryProps {
 
 const ReservationHistory = (props: ReservationHistoryProps) => {
 	const { currentPage, setTotal } = props;
+	const { t, i18n } = useTranslation('common');
 	const [tab, setTab] = useState<TabValue>('domestic');
 	const [openReview, setOpenReview] = useState<boolean>(false);
 	const user = useReactiveVar(userVar);
@@ -82,7 +84,7 @@ const ReservationHistory = (props: ReservationHistoryProps) => {
 
 	return (
 		<>
-			<Typography className="my-res-main-title">예약내역</Typography>
+			<Typography className="my-res-main-title">{t('예약내역')}</Typography>
 
 			{/* TABS + UPCOMING CARD */}
 			<Box className="my-res-card-wrap">
@@ -102,11 +104,11 @@ const ReservationHistory = (props: ReservationHistoryProps) => {
 					{upcoming.length === 0 ? (
 						<Box className="my-res-empty">
 							<Box className="my-res-empty-text">
-								<Typography className="my-res-empty-title">예정된 여행이 없습니다.</Typography>
-								<Typography className="my-res-empty-sub">지금 새로 예약을 진행해보세요.</Typography>
+								<Typography className="my-res-empty-title">{t('예정된 여행이 없습니다')}.</Typography>
+								<Typography className="my-res-empty-sub">{t('예정된 여행이 없습니다')}.</Typography>
 								<Link href={'/'}>
 									<Button variant="contained" className="my-res-empty-button">
-										여행지 찾아보기
+										{t('여행지 찾아보기')}
 									</Button>
 								</Link>
 							</Box>
@@ -130,7 +132,8 @@ const ReservationHistory = (props: ReservationHistoryProps) => {
 												{reservation.reservationDate} ~ {reservation.reservationCheckOut}
 											</Typography>
 											<Typography className="my-res-item-meta">
-												{reservation?.propertyData?.[0].propertyAddress} · {2}명
+												{reservation?.propertyData?.[0].propertyAddress} · {2}
+												{t('명')}
 											</Typography>
 										</Box>
 									</Box>
@@ -145,10 +148,10 @@ const ReservationHistory = (props: ReservationHistoryProps) => {
 											return today <= reservationDay;
 										})() && (
 											<Button onClick={() => handleCancelReservation(reservation)} variant="outlined">
-												취소하기
+												{t('취소하기')}
 											</Button>
 										)}
-										<Button variant="outlined">상세 보기</Button>
+										<Button variant="outlined">{t('상세 보기')}</Button>
 									</Box>
 								</Stack>
 							))}
@@ -159,10 +162,10 @@ const ReservationHistory = (props: ReservationHistoryProps) => {
 
 			{/* HISTORY SECTION */}
 			<Box className="my-res-history">
-				<Typography className="my-res-history-title">이용완료 및 예약취소</Typography>
+				<Typography className="my-res-history-title">{t('이용완료 및 예약취소')}</Typography>
 
 				{history.length === 0 ? (
-					<Box className="my-res-history-empty">해당되는 예약 내역이 없습니다.</Box>
+					<Box className="my-res-history-empty">{t('해당되는 예약 내역이 없습니다')}.</Box>
 				) : (
 					<Paper className="my-res-history-card" elevation={0}>
 						{history.map((reservation: Reservation, idx: number) => (
@@ -183,7 +186,8 @@ const ReservationHistory = (props: ReservationHistoryProps) => {
 												{reservation.reservationDate} ~ {reservation.reservationCheckOut}
 											</Typography>
 											<Typography className="my-res-history-item-meta">
-												{reservation?.propertyData?.[0].propertyAddress} · {2}명
+												{reservation?.propertyData?.[0].propertyAddress} · {2}
+												{t('명')}
 											</Typography>
 										</Box>
 										<Box className="my-res-history-item-btns">
@@ -200,7 +204,7 @@ const ReservationHistory = (props: ReservationHistoryProps) => {
 											{reservation.reservationStatus === ReservationStatus.COMPLETED ? (
 												<Box>
 													<Button className="add-review-btn" onClick={() => setOpenReview(true)} variant="outlined">
-														리뷰 작성
+														{t('리뷰 작성')}
 													</Button>
 													<ReviewPage isOpen={openReview} setIsOpen={setOpenReview} reservation={reservation} />
 												</Box>

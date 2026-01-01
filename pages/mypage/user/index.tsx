@@ -15,6 +15,7 @@ import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../../apollo/store';
 import { MemberType } from '../../../libs/enums/member.enum';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useTranslation } from 'react-i18next';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -24,6 +25,7 @@ export const getStaticProps = async ({ locale }: any) => ({
 
 const MyReservationsPage: React.FC = () => {
 	const router = useRouter();
+	const { t, i18n } = useTranslation('common');
 	const boxRef = useRef<HTMLDivElement>(null);
 	const [mounted, setMounted] = useState(false);
 	const [category, setCategory] = useState('reservation-details');
@@ -81,7 +83,7 @@ const MyReservationsPage: React.FC = () => {
 							<Link href={'/mypage/user?category=reservation-details'}>
 								<Box className="my-res-side-menu-box ">
 									<Button className={`my-res-side-menu-item ${category === 'reservation-details' ? 'active' : ''}`}>
-										예약 내역
+										{t('예약 내역')}
 									</Button>
 									<ChevronRightIcon />
 								</Box>
@@ -90,7 +92,7 @@ const MyReservationsPage: React.FC = () => {
 							<Link href={'/mypage/user?category=my-favorits'}>
 								<Box className="my-res-side-menu-box ">
 									<Button className={`my-res-side-menu-item ${category === 'my-favorits' ? 'active' : ''}`}>
-										찜 목록
+										{t('찜 목록')}
 									</Button>
 									<ChevronRightIcon />
 								</Box>
@@ -98,7 +100,9 @@ const MyReservationsPage: React.FC = () => {
 							<Divider />
 							<Link href={'/mypage/user?category=points'}>
 								<Box className="my-res-side-menu-box ">
-									<Button className={`my-res-side-menu-item ${category === 'points' ? 'active' : ''}`}>포인트</Button>
+									<Button className={`my-res-side-menu-item ${category === 'points' ? 'active' : ''}`}>
+										{t('포인트')}
+									</Button>
 									<ChevronRightIcon />
 								</Box>
 							</Link>
@@ -106,7 +110,7 @@ const MyReservationsPage: React.FC = () => {
 							<Link href={'/mypage/user?category=my-info'}>
 								<Box className="my-res-side-menu-box ">
 									<Button className={`my-res-side-menu-item ${category === 'my-info' ? 'active' : ''}`}>
-										내 정보 관리
+										{t('내 정보 관리')}
 									</Button>
 									<ChevronRightIcon />
 								</Box>
@@ -114,7 +118,9 @@ const MyReservationsPage: React.FC = () => {
 							<Divider />
 							<Link href={'/mypage/user?category=settings'}>
 								<Box className="my-res-side-menu-box ">
-									<Button className={`my-res-side-menu-item ${category === 'settings' ? 'active' : ''}`}>설정</Button>
+									<Button className={`my-res-side-menu-item ${category === 'settings' ? 'active' : ''}`}>
+										{t('설정')}
+									</Button>
 									<ChevronRightIcon />
 								</Box>
 							</Link>
@@ -122,7 +128,7 @@ const MyReservationsPage: React.FC = () => {
 							<Link href={'/mypage/user?category=notifications'}>
 								<Box className="my-res-side-menu-box ">
 									<Button className={`my-res-side-menu-item ${category === 'notifications' ? 'active' : ''}`}>
-										알림센터
+										{t('알림센터')}
 									</Button>
 									<ChevronRightIcon />
 								</Box>
@@ -132,7 +138,7 @@ const MyReservationsPage: React.FC = () => {
 								<Link href={'/mypage/property-management'}>
 									<Box className="my-res-side-menu-box  my-res-side-menu-box--special">
 										<Button className={`my-res-side-menu-item ${category === 'property-management' ? 'active' : ''}`}>
-											숙소 관리
+											{t('숙소 관리')}
 										</Button>
 										<ChevronRightIcon />
 									</Box>

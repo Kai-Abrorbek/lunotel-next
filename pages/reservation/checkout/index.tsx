@@ -24,6 +24,7 @@ import { RoomType } from '../../../libs/types/roomtype/roomtype';
 import { userVar } from '../../../apollo/store';
 import { CREATE_RESERVATION } from '../../../apollo/user/mutation';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useTranslation } from 'react-i18next';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -61,6 +62,7 @@ function changeStrTimeToNumber(time?: string): number {
 }
 const ReservationCheckoutPage = (props: ReservationCheckoutPageProps) => {
 	const { initialInput } = props;
+	const { t, i18n } = useTranslation('common');
 	const router = useRouter();
 	const user = useReactiveVar(userVar);
 	const [selectedTimeStart, setSelectedTimeStart] = useState<string>('09:00');
@@ -101,9 +103,11 @@ const ReservationCheckoutPage = (props: ReservationCheckoutPageProps) => {
 	useEffect(() => {
 		if (rangeTimeSolts.length < maxUsageTime * 2 + 1) {
 			sweetBasicAlert(
-				`${selectedTimeStart.replace(':', '시 ')}분에 입실하시면 [${Math.floor((rangeTimeSolts.length - 1) / 2)}]시간 ${
-					((rangeTimeSolts.length - 1) / 2) % 1 ? '30분' : ''
-				}이용하실 수 있습니다.`,
+				t(
+					`${selectedTimeStart.replace(':', '시 ')}분에 입실하시면 [${Math.floor(
+						(rangeTimeSolts.length - 1) / 2,
+					)}]시간 ${((rangeTimeSolts.length - 1) / 2) % 1 ? '30분' : ''}이용하실 수 있습니다.`,
+				),
 			);
 		}
 	}, [selectedTimeStart]);
@@ -145,7 +149,7 @@ const ReservationCheckoutPage = (props: ReservationCheckoutPageProps) => {
 
 	const handleCreatReservation = async () => {
 		if (!guestName || !guestPhone) {
-			sweetBasicAlert('예약자 정보를 모두 입력해주세요!');
+			sweetBasicAlert(t('예약자 정보를 모두 입력해주세요!'));
 			return;
 		}
 		try {
@@ -163,10 +167,10 @@ const ReservationCheckoutPage = (props: ReservationCheckoutPageProps) => {
 
 			await createReservation({ variables: { input: reservationInput } });
 			if (user._id) {
-				sweetTopSmallSuccessAlert('예약이 완료 되었습니다!');
+				sweetTopSmallSuccessAlert(t('예약이 완료 되었습니다!'));
 				router.push('/mypage/user?category=reservation-details');
 			} else {
-				sweetTopSmallSuccessAlert('예약이 완료 되었습니다!');
+				sweetTopSmallSuccessAlert(t('예약이 완료 되었습니다!'));
 				router.push('/');
 			}
 		} catch (err: any) {
@@ -180,15 +184,18 @@ const ReservationCheckoutPage = (props: ReservationCheckoutPageProps) => {
 				{/* LEFT */}
 				<Box className="reservation-main">
 					<Typography variant="h5" className="reservation-title">
-						예약 확인 및 결제
+						{t('예약 확인 및 결제')}
 					</Typography>
 
 					{/* 이용시간 */}
 					{searchFilter?.stayPlan === 'DAY_USE' && (
 						<Box className="section">
 							<Box className="section-header">
-								<Typography className="section-title">이용시간</Typography>
-								<Typography className="section-sub">최대 {maxUsageTime}시간 이용 가능</Typography>
+								<Typography className="section-title">{t('이용시간')}</Typography>
+								<Typography className="section-sub">
+									{t('최대')} {maxUsageTime}
+									{t('시간 이용 가능')}
+								</Typography>
 							</Box>
 							<Box className="time-chip-wrap">
 								{TIME_SLOTS.map((time) => {
@@ -218,10 +225,10 @@ const ReservationCheckoutPage = (props: ReservationCheckoutPageProps) => {
 
 					{/* 예약자 정보 (폭 50%) */}
 					<Box className="section section--half">
-						<Typography className="section-title">예약자 정보</Typography>
+						<Typography className="section-title">{t('예약자 정보')}</Typography>
 
 						<Box className="field-group">
-							<Typography className="field-label">예약자 이름</Typography>
+							<Typography className="field-label">{t('예약자 이름')}</Typography>
 							<TextField
 								size="small"
 								fullWidth
@@ -264,7 +271,7 @@ const ReservationCheckoutPage = (props: ReservationCheckoutPageProps) => {
 						</Box>
 
 						<Box className="field-group">
-							<Typography className="field-label">휴대폰 번호</Typography>
+							<Typography className="field-label">{t('휴대폰 번호')}</Typography>
 							<TextField
 								size="small"
 								fullWidth
@@ -303,23 +310,25 @@ const ReservationCheckoutPage = (props: ReservationCheckoutPageProps) => {
 									),
 								}}
 							/>
-							<Typography className="field-help">입력한 휴대폰 번호는 안심번호로 변경되어 숙소에 전달돼요.</Typography>
+							<Typography className="field-help">
+								{t('입력한 휴대폰 번호는 안심번호로 변경되어 숙소에 전달돼요')}.
+							</Typography>
 						</Box>
 
 						<Box className="field-group">
-							<Typography className="field-label">방문 방법</Typography>
+							<Typography className="field-label">{t('방문 방법')}</Typography>
 							<Box className="visit-method-wrap">
 								<Button
 									className={'visit-btn' + (visitMethod === 'walk' ? ' visit-btn--active' : '')}
 									onClick={() => setVisitMethod('walk')}
 								>
-									🚶 도보 방문
+									🚶 {t('도보 방문')}
 								</Button>
 								<Button
 									className={'visit-btn' + (visitMethod === 'car' ? ' visit-btn--active' : '')}
 									onClick={() => setVisitMethod('car')}
 								>
-									🚗 차량 방문
+									🚗 {t('차량 방문')}
 								</Button>
 							</Box>
 						</Box>
@@ -329,7 +338,7 @@ const ReservationCheckoutPage = (props: ReservationCheckoutPageProps) => {
 
 					{/* 결제 수단 */}
 					<Box className="section">
-						<Typography className="section-title">결제 수단</Typography>
+						<Typography className="section-title">{t('결제 수단')}</Typography>
 
 						<Box className="payment-grid">
 							{PAYMENT_METHODS.map((method) => (
@@ -338,7 +347,7 @@ const ReservationCheckoutPage = (props: ReservationCheckoutPageProps) => {
 									className={'payment-chip' + (paymentMethod === method ? ' payment-chip--selected' : '')}
 									onClick={() => setPaymentMethod(method)}
 								>
-									{method}
+									{t(`${method}`)}
 								</Button>
 							))}
 						</Box>
@@ -346,7 +355,7 @@ const ReservationCheckoutPage = (props: ReservationCheckoutPageProps) => {
 						<FormControlLabel
 							className="remember-check"
 							control={<Checkbox checked={agreeAll} onChange={(e) => setAgreeAll(e.target.checked)} size="small" />}
-							label="이 결제 수단을 다음에도 사용"
+							label={t('이 결제 수단을 다음에도 사용')}
 						/>
 					</Box>
 				</Box>
@@ -360,18 +369,18 @@ const ReservationCheckoutPage = (props: ReservationCheckoutPageProps) => {
 								<img className="room-thumb" src={`${process.env.REACT_APP_API_URL}/${roomData?.roomImages[0]}`} />
 								<Box className="room-meta">
 									<Box className="room-meta-row">
-										<span className="room-meta-label">객실</span>
+										<span className="room-meta-label">{t('객실')}</span>
 										<span className="room-meta-value">{roomData?.roomName}</span>
 									</Box>
 									<Box className="room-meta-row">
-										<span className="room-meta-label">일정</span>
+										<span className="room-meta-label">{t('일정')}</span>
 										{searchFilter.stayPlan === 'DAY_USE' ? (
 											<span className="room-meta-value">
 												{formatToMD(searchFilter.reservationCheckIn!)} (
 												{fweek(new Date(searchFilter.reservationCheckIn!))}) {selectedTimeStart} ~{' '}
 												{formatToMD(searchFilter.reservationCheckOut!)} (
 												{fweek(new Date(searchFilter.reservationCheckOut!))}){' '}
-												{rangeTimeSolts[rangeTimeSolts.length - 1]} (대실)
+												{rangeTimeSolts[rangeTimeSolts.length - 1]} {t('대실')}
 											</span>
 										) : (
 											<span className="room-meta-value">
@@ -379,7 +388,7 @@ const ReservationCheckoutPage = (props: ReservationCheckoutPageProps) => {
 												{fweek(new Date(searchFilter.reservationCheckIn!))}) {searchFilter.reservationCheckInAt} ~{' '}
 												{formatToMD(searchFilter.reservationCheckOut!)} (
 												{fweek(new Date(searchFilter.reservationCheckOut!))}) {searchFilter.reservationCheckOutAt}{' '}
-												(숙박)
+												{t('숙박')}
 											</span>
 										)}
 									</Box>
@@ -390,30 +399,37 @@ const ReservationCheckoutPage = (props: ReservationCheckoutPageProps) => {
 
 					<Card className="payment-card" variant="outlined">
 						<CardContent>
-							<Typography className="section-title mb-16">결제 정보</Typography>
+							<Typography className="section-title mb-16">{t('결제 정보')}</Typography>
 							<Box className="payment-row">
-								<span className="payment-label">객실 가격</span>
-								<span className="payment-value">{roomPrice?.toLocaleString()}원</span>
+								<span className="payment-label">{t('객실 가격')}</span>
+								<span className="payment-value">
+									{roomPrice?.toLocaleString() + ''}
+									{t('원')}
+								</span>
 							</Box>
 							<Box className="payment-row">
-								<span className="payment-label">할인 금액</span>
-								<span className="payment-value">{discount ? `-${discount}원` : '0원'}</span>
+								<span className="payment-label">{t('할인 금액')}</span>
+								<span className="payment-value">{discount ? `-${discount}${t('원')}` : `0${t('원')}`}</span>
 							</Box>
 							<Divider className="divider-sm" />
 							<Box className="payment-row total">
-								<span className="payment-label">총 결제 금액</span>
-								<span className="payment-total">{totalPrice.toLocaleString()}원</span>
+								<span className="payment-label">{t('총 결제 금액')}</span>
+								<span className="payment-total">
+									{totalPrice.toLocaleString()}
+									{t('원')}
+								</span>
 							</Box>
 
 							<Box className="agree-wrap">
 								<FormControlLabel
 									control={<Checkbox size="small" checked={agreeAll} onChange={(e) => setAgreeAll(e.target.checked)} />}
-									label="약관 전체동의"
+									label={t('약관 전체동의')}
 								/>
 							</Box>
 
 							<Button fullWidth className="pay-button" disabled={!agreeAll} onClick={handleCreatReservation}>
-								{totalPrice.toLocaleString()}원 결제하기
+								{totalPrice.toLocaleString()}
+								{t('원')} {t('결제하기')}
 							</Button>
 						</CardContent>
 					</Card>
