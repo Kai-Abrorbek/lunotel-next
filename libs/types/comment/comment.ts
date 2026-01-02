@@ -7,6 +7,7 @@ export interface Comment {
 	commentStatus: CommentStatus;
 	commentGroup: CommentGroup;
 	commentContent: string;
+	commentResponse?: string;
 	commentImages: string[];
 	commentRefId: string;
 	commentRating: number;
@@ -15,7 +16,7 @@ export interface Comment {
 	updatedAt: Date;
 	/** from aggregation **/
 	memberData?: Member;
-	roomDate?: RoomType;
+	roomData?: RoomType;
 }
 
 export interface Comments {

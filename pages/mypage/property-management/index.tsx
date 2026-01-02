@@ -34,9 +34,9 @@ const PropertyManagementPage = () => {
 	const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
 	const [properties, setProperties] = useState<Property[]>([]);
 
-	useEffect(() => {
-		if (!user?._id) router.push('/');
-	}, [user?._id]);
+	// useEffect(() => {
+	// 	if (!user?._id) router.push('/');
+	// }, [user?._id]);
 
 	/** APOLLO REQUEST **/
 	const {
@@ -98,15 +98,16 @@ const PropertyManagementPage = () => {
 		return `₩${amount?.toLocaleString()}`;
 	};
 
-	const totalBookings = properties?.reduce((acc, p) => acc + p.propertyReservations!, 0);
-	const totalRevenue = properties
-		?.flatMap((p) => p.reservationData || [])
-		.filter((r: Reservation) => r.reservationStatus !== ReservationStatus.CANCELLED)
-		.reduce((acc, r) => acc + (r.reservationTotalPrice || 0), 0);
+	const totalBookings = properties?.reduce((acc, p) => acc + p.propertyReservations!, 0) ?? 0;
+	const totalRevenue =
+		properties
+			?.flatMap((p) => p.reservationData || [])
+			.filter((r: Reservation) => r.reservationStatus !== ReservationStatus.CANCELLED)
+			.reduce((acc, r) => acc + (r.reservationTotalPrice || 0), 0) ?? 0;
 
-	const operatingCount = properties?.filter((p) => p.propertyStatus === PropertyStatus.ACTIVE).length;
-	const waitingCount = properties?.filter((p) => p.propertyStatus === PropertyStatus.DRAFT).length;
-	const stoppedCount = properties?.filter((p) => p.propertyStatus === PropertyStatus.INACTIVE).length;
+	const operatingCount = properties?.filter((p) => p.propertyStatus === PropertyStatus.ACTIVE).length ?? 0;
+	const waitingCount = properties?.filter((p) => p.propertyStatus === PropertyStatus.DRAFT).length ?? 0;
+	const stoppedCount = properties?.filter((p) => p.propertyStatus === PropertyStatus.INACTIVE).length ?? 0;
 
 	const handleOpenUpdatePropertyModal = async (property: Property) => {
 		setUpdatePropertyOpen(true);
@@ -135,7 +136,7 @@ const PropertyManagementPage = () => {
 					<Grid item xs={12} sm={6} md={3}>
 						<Paper className="property-page__stat-card" elevation={0}>
 							<p className="property-page__stat-label">전체 숙소</p>
-							<p className="property-page__stat-value">{properties?.length}</p>
+							<p className="property-page__stat-value">{properties?.length ?? 0}</p>
 							<p className="property-page__stat-change property-page__stat-change--positive">↑ 2개 증가</p>
 						</Paper>
 					</Grid>

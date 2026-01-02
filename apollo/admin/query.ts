@@ -140,7 +140,7 @@ export const GET_COMMENTS = gql`
 					updatedAt
 					accessToken
 				}
-				roomDate {
+				roomData {
 					_id
 					propertyId
 					roomName
@@ -156,6 +156,7 @@ export const GET_COMMENTS = gql`
 				}
 				commentRating
 				commentImages
+				commentResponse
 			}
 		}
 	}

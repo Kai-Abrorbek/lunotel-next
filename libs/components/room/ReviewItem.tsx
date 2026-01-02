@@ -96,7 +96,7 @@ const ReviewItem: React.FC<ReviewItemProps> = ({
 				</Box>
 
 				{/* 객실 이름 */}
-				<Typography className="review-item__room-name">{comment.roomDate?.roomName}</Typography>
+				<Typography className="review-item__room-name">{comment.roomData?.roomName}</Typography>
 
 				{/* 리뷰 텍스트 + 더보기 */}
 				<Box className="review-item__text-wrap">

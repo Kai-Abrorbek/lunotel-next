@@ -4,8 +4,8 @@ import CSCenter from '../../libs/components/admin/CScenter';
 import HostManagement from '../../libs/components/admin/HostManagement ';
 import UserManagement from '../../libs/components/admin/UserManagement';
 import Dashboard from '../../libs/components/admin/Dashboard';
-import propertyManagement from '../mypage/property-management';
 import PropertyManagement from '../../libs/components/admin/PropertyManagement';
+import Link from 'next/link';
 
 // 메인 컴포넌트
 const AdminPanel = () => {
@@ -33,9 +33,11 @@ const AdminPanel = () => {
 				>
 					<div className="sidebar-header">
 						<div className="logo">
-							<div className="logo-circle">
-								<span className="logo-text-circle">Lunotel</span>
-							</div>
+							<Link href={'/'}>
+								<div className="logo-circle">
+									<span className="logo-text-circle">Lunotel</span>
+								</div>
+							</Link>
 						</div>
 						<button className="toggle-btn" onClick={() => setIsExpanded(!isExpanded)}>
 							{/* {isExpanded ? <X size={20} /> : <Menu size={20} />} */}

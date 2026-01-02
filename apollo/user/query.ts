@@ -542,6 +542,9 @@ export const GET_ROOM = gql`
 export const GET_COMMENTS = gql`
 	query GetComments($input: CommentsInquiry!) {
 		getComments(input: $input) {
+			metaCounter {
+				total
+			}
 			list {
 				_id
 				commentStatus
@@ -558,25 +561,39 @@ export const GET_COMMENTS = gql`
 					memberAuthType
 					memberPhone
 					memberNick
+					memberEmail
 					memberFullName
 					memberImage
 					memberAddress
 					memberDesc
+					memberProperties
+					memberComments
+					memberPoints
 					memberWarnings
 					memberBlocks
-					memberProperties
-					memberRank
-					memberPoints
-					memberLikes
-					memberViews
 					deletedAt
 					createdAt
 					updatedAt
 					accessToken
 				}
-			}
-			metaCounter {
-				total
+				commentRating
+				commentImages
+				roomData {
+					_id
+					propertyId
+					roomName
+					roomMaxPersonal
+					roomStandPersonal
+					basePriceDayUse
+					basePriceOvernight
+					roomDiscountPrice
+					roomImages
+					roomAmenities
+					roomStatus
+					createdAt
+					updatedAt
+				}
+				commentResponse
 			}
 		}
 	}
@@ -594,7 +611,7 @@ export const GET_MY_COMMENTS = gql`
 				memberId
 				createdAt
 				updatedAt
-				roomDate {
+				roomData {
 					_id
 					propertyId
 					roomName

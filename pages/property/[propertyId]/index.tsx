@@ -606,7 +606,7 @@ const PropertyDetailPage = (props: PropertyDetailPageProps) => {
 									<ReviewItem
 										comment={review}
 										key={review._id}
-										replyText={'yoqqqqqq'}
+										replyText={review.commentResponse}
 										setOpenReviewImage={setOpenReviewImage}
 										setReviewImgIndex={setReviewImgIndex}
 										setselectCommentImg={setselectCommentImg}

@@ -33,7 +33,7 @@ const menuItems: MenuItem[] = [
 	{ id: 'revenue', icon: <DollarSign size={24} />, label: 'Revenue' },
 	{ id: 'reviews', icon: <Star size={24} />, label: 'Reviews' },
 	{ id: 'customer-inquiry', icon: <MessageCircle size={24} />, label: 'Customer Inquiry' },
-	{ id: 'notifications', icon: <Bell size={24} />, label: 'Notifications', badge: 3 },
+	// { id: 'notifications', icon: <Bell size={24} />, label: 'Notifications', badge: 3 },
 ];
 
 const bottomMenuItems: MenuItem[] = [

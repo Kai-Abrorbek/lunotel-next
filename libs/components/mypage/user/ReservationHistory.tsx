@@ -24,6 +24,7 @@ const ReservationHistory = (props: ReservationHistoryProps) => {
 	const { t, i18n } = useTranslation('common');
 	const [tab, setTab] = useState<TabValue>('domestic');
 	const [openReview, setOpenReview] = useState<boolean>(false);
+	const [reservation, setReservation] = useState<Reservation>();
 	const user = useReactiveVar(userVar);
 
 	const [updateReservation] = useMutation(UPDATE_RESERVATION);
@@ -60,6 +61,11 @@ const ReservationHistory = (props: ReservationHistoryProps) => {
 			r.reservationStatus === ReservationStatus.COMPLETED || r.reservationStatus === ReservationStatus.CANCELLED,
 	);
 	/** HANDLER **/
+	const handelOpenReviewModal = (reservation: Reservation) => {
+		setReservation(reservation);
+		setOpenReview(true);
+	};
+
 	const handleTabChange = (_: React.SyntheticEvent, value: TabValue) => {
 		setTab(value);
 	};
@@ -203,10 +209,13 @@ const ReservationHistory = (props: ReservationHistoryProps) => {
 											</Typography>
 											{reservation.reservationStatus === ReservationStatus.COMPLETED ? (
 												<Box>
-													<Button className="add-review-btn" onClick={() => setOpenReview(true)} variant="outlined">
+													<Button
+														className="add-review-btn"
+														onClick={() => handelOpenReviewModal(reservation)}
+														variant="outlined"
+													>
 														{t('리뷰 작성')}
 													</Button>
-													<ReviewPage isOpen={openReview} setIsOpen={setOpenReview} reservation={reservation} />
 												</Box>
 											) : (
 												''
@@ -216,6 +225,7 @@ const ReservationHistory = (props: ReservationHistoryProps) => {
 								</Stack>
 							</React.Fragment>
 						))}
+						{reservation?._id && <ReviewPage isOpen={openReview} setIsOpen={setOpenReview} reservation={reservation} />}
 					</Paper>
 				)}
 			</Box>
