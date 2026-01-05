@@ -6,6 +6,7 @@ $your-msg-bg: #ffffff;
 $text-dark: #333;
 $text-gray: #888;
 $green-status: #2ecc71;
+$red-status: #d84a08;
 
 // 전체 래퍼 (화면 중앙 배치용)
 .chat-modal-overlay {
@@ -24,8 +25,8 @@ $green-status: #2ecc71;
 	// ★ 실제 채팅창 Wrapper 스타일 수정
 	.chat-window-wrapper {
 		width: 90%;
-		max-width: 400px;
-		height: 600px;
+		max-width: 540px;
+		height: 700px;
 		max-height: 90vh; // 화면이 작을 때 삐져나가지 않게
 		background-color: $chat-bg;
 		border-radius: 20px;
@@ -57,9 +58,16 @@ $green-status: #2ecc71;
 				font-weight: 700;
 				color: $text-dark;
 			}
-			.status-badge {
+			.status-badge-possible {
 				font-size: 12px;
 				color: $green-status;
+				font-weight: 600;
+				margin-top: 2px;
+				display: block;
+			}
+			.status-badge-inbossible {
+				font-size: 12px;
+				color: $red-status;
 				font-weight: 600;
 				margin-top: 2px;
 				display: block;
@@ -108,7 +116,7 @@ $green-status: #2ecc71;
 
 		.message-bubble {
 			display: flex;
-			align-items: flex-end;
+			align-items: flex-start;
 			gap: 8px;
 			max-width: 80%;
 			animation: fadeIn 0.3s ease;
@@ -120,7 +128,7 @@ $green-status: #2ecc71;
 				position: relative;
 				font-size: 14px;
 				line-height: 1.5;
-				box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+				box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 
 				.time {
 					position: absolute;
@@ -131,8 +139,7 @@ $green-status: #2ecc71;
 				}
 			}
 
-			// 상대방(상담원) 스타일
-			&.agent {
+			&.AGENT {
 				align-self: flex-start;
 				.bubble-content {
 					background-color: $white;
@@ -141,6 +148,7 @@ $green-status: #2ecc71;
 					.time {
 						right: -65px;
 						text-align: left;
+						color: #ccc;
 					}
 				}
 				.avatar-small {
@@ -151,7 +159,7 @@ $green-status: #2ecc71;
 			}
 
 			// 나(사용자) 스타일
-			&.user {
+			&.USER {
 				align-self: flex-end;
 				flex-direction: row-reverse; // 아바타 없이 시간 위치 조정용
 				.bubble-content {
@@ -164,6 +172,14 @@ $green-status: #2ecc71;
 						color: #ccc;
 					}
 				}
+			}
+			.user-avatar {
+				width: 44px;
+				height: 44px;
+				border-radius: 50%;
+				object-fit: cover;
+				border: 3px solid white;
+				box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 			}
 		}
 

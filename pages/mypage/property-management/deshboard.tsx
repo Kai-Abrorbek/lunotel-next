@@ -11,6 +11,7 @@ import NotificationsPage from '../../../libs/components/mypage/host/Notification
 import CustomerInquiryPage from '../../../libs/components/mypage/host/CustomerInquiryPage';
 import { useRouter } from 'next/router';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import AdminSupportChat from '../../../libs/components/mypage/host/AgentSupportChat';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -37,7 +38,7 @@ const HostMyPage = () => {
 			case 'reviews':
 				return <ReviewsPage />;
 			case 'customer-inquiry':
-				return <CustomerInquiryPage />;
+				return <AdminSupportChat />;
 			// case 'notifications':
 			// 	return <NotificationsPage />;
 		}

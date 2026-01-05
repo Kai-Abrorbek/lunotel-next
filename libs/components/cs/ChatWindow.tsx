@@ -1,4 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useReactiveVar } from '@apollo/client';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
+import { getJwtToken } from '../../auth';
+import { userVar } from '../../../apollo/store';
 
 // --- 아이콘 컴포넌트 ---
 const SendIcon = () => (
@@ -39,38 +42,62 @@ const AgentAvatar = () => (
 		<line x1="15" y1="9" x2="15.01" y2="9" />
 	</svg>
 );
-
-// --- 타입 정의 ---
-interface Message {
-	id: number;
-	text: string;
-	sender: 'user' | 'agent';
-	timestamp: string;
-}
-
-const INITIAL_MESSAGES: Message[] = [
-	{ id: 1, text: '안녕하세요! 무엇을 도와드릴까요? 😊', sender: 'agent', timestamp: getCurrentTime() },
-];
+const UserAvatar = () => (
+	<svg width="40" height="40" viewBox="0 0 24 24" fill="#f5f5f5" stroke="#6b7280" strokeWidth="1.5">
+		<circle cx="12" cy="12" r="10" />
+		<circle cx="12" cy="10" r="3" />
+		<path d="M7 18c0-2.5 2.5-4 5-4s5 1.5 5 4" />
+	</svg>
+);
 
 // 현재 시간 구하는 헬퍼 함수
-function getCurrentTime() {
-	const now = new Date();
-	return now.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
-}
-
+const formatTime = (at: number) =>
+	new Date(at).toLocaleTimeString('ko-KR', {
+		hour: '2-digit',
+		minute: '2-digit',
+	});
 interface ChatWindowProps {
 	onClose: () => void;
 }
 
+type OnlineUser = {
+	_id: string;
+	memberNick: string;
+	memberImage?: string;
+};
+
+type Message = {
+	event: 'message';
+	roomId: string;
+	text: string;
+	from: 'ADMIN' | 'USER' | 'AGENT';
+	memberData?: { memberNick?: string; memberImage: string };
+	at: number;
+	timestamp: string;
+};
+
+type Incoming =
+	| { event: 'getMessages'; roomId: string; list: Message[] }
+	| Message
+	| { event: 'onlineUsers'; roomId: string; totalClients: number; users: OnlineUser[]; at: number };
+
 const ChatWindow: React.FC<ChatWindowProps> = ({ onClose }) => {
-	const [messages, setMessages] = useState<Message[]>(INITIAL_MESSAGES);
-	const [inputText, setInputText] = useState('');
 	const [isAgentTyping, setIsAgentTyping] = useState(false);
+	const [status, setStatus] = useState<'connecting' | 'online' | 'offline'>('connecting');
+	const [messages, setMessages] = useState<Message[]>([]);
+	const [onlineUsers, setOnlineUsers] = useState<OnlineUser[]>([]);
+	const [input, setInput] = useState('');
 
-	// 스크롤 제어를 위한 Ref
+	const wsRef = useRef<WebSocket | null>(null);
+	const user = useReactiveVar(userVar);
+	const token = getJwtToken();
+	const userId = user._id;
+	const wsUrl = useMemo(() => {
+		if (!token || !userId) return '';
+		return `ws://localhost:3001?token=${token}&roomId=support:${userId}`;
+	}, [token, userId]);
+
 	const messagesEndRef = useRef<HTMLDivElement>(null);
-
-	// 메시지 추가될 때마다 스크롤 아래로 이동
 	const scrollToBottom = () => {
 		messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
 	};
@@ -79,40 +106,46 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ onClose }) => {
 		scrollToBottom();
 	}, [messages, isAgentTyping]);
 
-	// 메시지 전송 핸들러
-	const handleSendMessage = (text: string) => {
-		if (!text.trim()) return;
+	useEffect(() => {
+		if (!token || !userId) return;
 
-		const newMessage: Message = {
-			id: Date.now(),
-			text: text,
-			sender: 'user',
-			timestamp: getCurrentTime(),
+		fetch(`${process.env.REACT_APP_API_URL}/admin/support/messages?roomId=support:${userId}`, {
+			headers: { Authorization: `Bearer ${token}` },
+		})
+			.then((res) => res.json())
+			.then((list) => setMessages(list));
+	}, [token, userId]);
+
+	useEffect(() => {
+		if (!wsUrl) return; // ✅ 추가 (준비될 때까지 대기)
+		setStatus('connecting');
+
+		const ws = new WebSocket(wsUrl);
+		wsRef.current = ws;
+
+		ws.onopen = () => setStatus('online');
+		ws.onclose = () => setStatus('offline');
+		ws.onerror = () => setStatus('offline');
+
+		ws.onmessage = (e) => {
+			const data: Incoming = JSON.parse(e.data);
+			console.log(data);
+			if (data.event === 'getMessages') setMessages(data.list); // ✅ 여기서 "대화 내역" 불러옴
+			if (data.event === 'message') setMessages((prev) => [...prev, data]);
+			if (data.event === 'onlineUsers') setOnlineUsers(data.users);
 		};
 
-		setMessages((prev) => [...prev, newMessage]);
-		setInputText('');
-		setIsAgentTyping(true); // 상담원 입력중 표시 시작
+		return () => ws.close();
+	}, [wsUrl]);
 
-		// 1.5초 뒤에 상담원 자동 응답 시뮬레이션
-		setTimeout(() => {
-			const replyText = getAutoReply(text);
-			const agentMessage: Message = {
-				id: Date.now() + 1,
-				text: replyText,
-				sender: 'agent',
-				timestamp: getCurrentTime(),
-			};
-			setMessages((prev) => [...prev, agentMessage]);
-			setIsAgentTyping(false); // 입력중 표시 끝
-		}, 1500);
-	};
+	// 메시지 전송 핸들러
+	const sendMessage = () => {
+		const text = input.trim();
+		if (!text) return;
+		if (!wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) return;
 
-	// 간단한 응답 로직 (실제로는 서버 통신)
-	const getAutoReply = (msg: string) => {
-		if (msg.includes('취소')) return '취소 수수료는 숙소 규정에 따라 다릅니다. 예약 상세 페이지를 확인해주세요.';
-		if (msg.includes('시간')) return '기본 체크인은 15:00, 체크아웃은 11:00 입니다.';
-		return '네, 확인 후 안내해 드리겠습니다. 잠시만 기다려 주세요.';
+		wsRef.current.send(JSON.stringify({ event: 'message', data: { text } }));
+		setInput('');
 	};
 
 	return (
@@ -123,33 +156,40 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ onClose }) => {
 						<AgentAvatar />
 						<div className="text-info">
 							<h3>고객행복센터</h3>
-							<span className="status-badge">● 상담 가능</span>
+							{onlineUsers.length >= 2 && <span className="status-badge-possible">● 상담 가능</span>}
+							{onlineUsers.length < 2 && <span className="status-badge-inbossible">● 상담 대기중</span>}
 						</div>
 					</div>
-					{/* ★ 닫기 버튼에 onClose 연결 */}
 					<button className="close-btn" onClick={onClose}>
 						<CloseIcon />
 					</button>
 				</header>
 
-				{/* ... (이하 내용은 기존 ChatWindow와 완전히 동일) ... */}
 				<div className="chat-messages">
 					<div className="date-divider">
 						<span>오늘</span>
 					</div>
-					{messages.map((msg) => (
-						<div key={msg.id} className={`message-bubble ${msg.sender}`}>
-							{msg.sender === 'agent' && (
-								<div className="avatar-small">
-									<AgentAvatar />
+					{messages.map((msg) => {
+						console.log(msg);
+						return (
+							<div key={`${msg.roomId}-${msg.at}`} className={`message-bubble ${msg.from}`}>
+								{msg.from === 'AGENT' && (
+									<div className="avatar-small">
+										<AgentAvatar />
+									</div>
+								)}
+								{msg.from === 'USER' && (
+									<div className="avatar-small">
+										<UserAvatar />
+									</div>
+								)}
+								<div className="bubble-content">
+									<p>{msg.text}</p>
+									<span className="time">{formatTime(msg.at)}</span>
 								</div>
-							)}
-							<div className="bubble-content">
-								<p>{msg.text}</p>
-								<span className="time">{msg.timestamp}</span>
 							</div>
-						</div>
-					))}
+						);
+					})}
 					{isAgentTyping && (
 						<div className="message-bubble agent typing">
 							<div className="avatar-small">
@@ -169,11 +209,11 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ onClose }) => {
 					<input
 						type="text"
 						placeholder="메시지를 입력해주세요..."
-						value={inputText}
-						onChange={(e) => setInputText(e.target.value)}
-						onKeyPress={(e) => e.key === 'Enter' && handleSendMessage(inputText)}
+						value={input}
+						onChange={(e) => setInput(e.target.value)}
+						onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
 					/>
-					<button className="send-btn" onClick={() => handleSendMessage(inputText)} disabled={!inputText.trim()}>
+					<button className="send-btn" onClick={sendMessage} disabled={!input.trim()}>
 						<SendIcon />
 					</button>
 				</footer>
