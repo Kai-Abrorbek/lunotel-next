@@ -22,144 +22,6 @@ import { useRouter } from 'next/router';
 import { userVar } from '../../../apollo/store';
 import { useTranslation } from 'react-i18next';
 
-type CategoryKey = 'all' | 'motel' | 'hotel_resort' | 'pension' | 'premium' | 'camping' | 'home_villa' | 'guesthouse';
-
-interface Stay {
-	id: number;
-	categoryKey: CategoryKey;
-	categoryLabel: string;
-	name: string;
-	location: string;
-	subLocation: string;
-	rating: number;
-	reviewCount: number;
-	price: number;
-	originalPrice?: number;
-	badgeText?: string;
-	imageUrl: string;
-}
-
-const STAYS: Stay[] = [
-	{
-		id: 1,
-		categoryKey: 'hotel_resort',
-		categoryLabel: '블랙 · 특급 · 호텔',
-		name: '★당일특가★ 세인트존스 호텔',
-		location: '강릉시',
-		subLocation: '강릉 강문해변 앞',
-		rating: 9.2,
-		reviewCount: 10235,
-		price: 99750,
-		imageUrl: 'https://images.pexels.com/photos/258154/pexels-photo-258154.jpeg?auto=compress&cs=tinysrgb&w=800',
-	},
-	{
-		id: 2,
-		categoryKey: 'motel',
-		categoryLabel: '모텔',
-		name: '길동 MARI-마리',
-		location: '길동역',
-		subLocation: '도보 3분',
-		rating: 9.3,
-		reviewCount: 4934,
-		price: 44000,
-		originalPrice: 50000,
-		imageUrl: 'https://images.pexels.com/photos/265004/pexels-photo-265004.jpeg?auto=compress&cs=tinysrgb&w=800',
-	},
-	{
-		id: 3,
-		categoryKey: 'hotel_resort',
-		categoryLabel: '가족호텔 · 호텔',
-		name: '★당일특가★ 체스터톤스 호텔',
-		location: '속초시',
-		subLocation: '속초터미널 차량 11분',
-		rating: 9.1,
-		reviewCount: 3368,
-		price: 65490,
-		originalPrice: 350000,
-		imageUrl: 'https://images.pexels.com/photos/338504/pexels-photo-338504.jpeg?auto=compress&cs=tinysrgb&w=800',
-	},
-	{
-		id: 5,
-		categoryKey: 'motel',
-		categoryLabel: '모텔',
-		name: '구월 호텔반월',
-		location: '인천',
-		subLocation: '인천터미널역 도보 14분',
-		rating: 9.4,
-		reviewCount: 13877,
-		price: 40000,
-		originalPrice: 45000,
-		imageUrl: 'https://images.pexels.com/photos/189296/pexels-photo-189296.jpeg?auto=compress&cs=tinysrgb&w=800',
-	},
-	{
-		id: 6,
-		categoryKey: 'motel',
-		categoryLabel: '모텔',
-		name: '구월 호텔반월',
-		location: '인천',
-		subLocation: '인천터미널역 도보 14분',
-		rating: 9.4,
-		reviewCount: 13877,
-		price: 40000,
-		originalPrice: 45000,
-		imageUrl: 'https://images.pexels.com/photos/189296/pexels-photo-189296.jpeg?auto=compress&cs=tinysrgb&w=800',
-	},
-	{
-		id: 7,
-		categoryKey: 'motel',
-		categoryLabel: '모텔',
-		name: '구월 호텔반월',
-		location: '인천',
-		subLocation: '인천터미널역 도보 14분',
-		rating: 9.4,
-		reviewCount: 13877,
-		price: 40000,
-		originalPrice: 45000,
-		imageUrl: 'https://images.pexels.com/photos/189296/pexels-photo-189296.jpeg?auto=compress&cs=tinysrgb&w=800',
-	},
-	{
-		id: 8,
-		categoryKey: 'motel',
-		categoryLabel: '모텔',
-		name: '구월 호텔반월',
-		location: '인천',
-		subLocation: '인천터미널역 도보 14분',
-		rating: 9.4,
-		reviewCount: 13877,
-		price: 40000,
-		originalPrice: 45000,
-		imageUrl: 'https://images.pexels.com/photos/189296/pexels-photo-189296.jpeg?auto=compress&cs=tinysrgb&w=800',
-	},
-	{
-		id: 9,
-		categoryKey: 'motel',
-		categoryLabel: '모텔',
-		name: '구월 호텔반월',
-		location: '인천',
-		subLocation: '인천터미널역 도보 14분',
-		rating: 9.4,
-		reviewCount: 13877,
-		price: 40000,
-		originalPrice: 45000,
-		imageUrl: 'https://images.pexels.com/photos/189296/pexels-photo-189296.jpeg?auto=compress&cs=tinysrgb&w=800',
-	},
-	{
-		id: 10,
-		categoryKey: 'motel',
-		categoryLabel: '모텔',
-		name: '구월 호텔반월',
-		location: '인천',
-		subLocation: '인천터미널역 도보 14분',
-		rating: 9.4,
-		reviewCount: 13877,
-		price: 40000,
-		originalPrice: 45000,
-		imageUrl: 'https://images.pexels.com/photos/189296/pexels-photo-189296.jpeg?auto=compress&cs=tinysrgb&w=800',
-	},
-
-	// 필요하면 더 추가
-];
-
 interface WeeklyHotPensionsProps {
 	initialInput: PropertiesInquiry;
 }
@@ -171,11 +33,14 @@ const WeeklyHotPensions = (props: WeeklyHotPensionsProps) => {
 	const user = useReactiveVar(userVar);
 	const checkIn = useMemo(() => {
 		const d = new Date();
-		return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+		return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 	}, []);
 	const checkOut = useMemo(() => {
 		const d = new Date();
-		return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate() + 1}`;
+		return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate() + 1).padStart(
+			2,
+			'0',
+		)}`;
 	}, []);
 
 	const [likeTargetProperty] = useMutation(LIKE_TARGET_PROPERTY);

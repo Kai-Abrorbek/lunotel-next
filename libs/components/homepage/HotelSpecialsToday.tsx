@@ -32,11 +32,14 @@ const HotelSpecialsToday = (props: HotelSpecialsTodayProps) => {
 	const user = useReactiveVar(userVar);
 	const checkIn = useMemo(() => {
 		const d = new Date();
-		return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+		return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 	}, []);
 	const checkOut = useMemo(() => {
 		const d = new Date();
-		return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate() + 1}`;
+		return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate() + 1).padStart(
+			2,
+			'0',
+		)}`;
 	}, []);
 
 	const [likeTargetProperty] = useMutation(LIKE_TARGET_PROPERTY);
@@ -77,7 +80,6 @@ const HotelSpecialsToday = (props: HotelSpecialsTodayProps) => {
 			personal: 2,
 			propertyName: encodeURIComponent(property.propertyName),
 		};
-
 		router.push(
 			`/property/propertyId=${property._id}?input=${JSON.stringify({ ...url })}`,
 			`/property/propertyId=${property._id}?input=${JSON.stringify({ ...url })}`,

@@ -39,11 +39,14 @@ const PopularStays = (props: PopularStaysProps) => {
 	const [activeCategory, setActiveCategory] = useState<PropertyType>(PropertyType.ALL);
 	const checkIn = useMemo(() => {
 		const d = new Date();
-		return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+		return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 	}, []);
 	const checkOut = useMemo(() => {
 		const d = new Date();
-		return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate() + 1}`;
+		return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate() + 1).padStart(
+			2,
+			'0',
+		)}`;
 	}, []);
 
 	const [likeTargetProperty] = useMutation(LIKE_TARGET_PROPERTY);
