@@ -52,12 +52,9 @@ const AdminSupportChat = () => {
 	const user = useReactiveVar(userVar);
 	const token = getJwtToken();
 
-	const API_BASE = process.env.REACT_APP_API_URL;
-	const WS_BASE = process.env.REACT_APP_API_WS;
-
 	const lobbyWsUrl = useMemo(() => {
 		if (!token) return '';
-		return `${WS_BASE}?token=${token}&roomId=adminLobby`;
+		return `${process.env.REACT_APP_API_WS}?token=${token}&roomId=adminLobby`;
 	}, [token]);
 
 	useEffect(() => {
@@ -73,7 +70,7 @@ const AdminSupportChat = () => {
 
 	const fetchRooms = async () => {
 		try {
-			const res = await fetch(`${API_BASE}/admin/support/rooms`, {
+			const res = await fetch(`${process.env.REACT_APP_API_URL}/admin/support/rooms`, {
 				headers: { Authorization: `Bearer ${token}` },
 			});
 			const data = await res.json();
@@ -122,9 +119,12 @@ const AdminSupportChat = () => {
 		setWsStatus('connecting');
 
 		try {
-			const res = await fetch(`${API_BASE}/admin/support/messages?roomId=${encodeURIComponent(roomId)}`, {
-				headers: { Authorization: `Bearer ${token}` },
-			});
+			const res = await fetch(
+				`${process.env.REACT_APP_API_URL}/admin/support/messages?roomId=${encodeURIComponent(roomId)}`,
+				{
+					headers: { Authorization: `Bearer ${token}` },
+				},
+			);
 			const list = await res.json();
 			setMessages(list);
 		} catch (e) {
@@ -138,7 +138,7 @@ const AdminSupportChat = () => {
 	const connectToRoom = (roomId: string) => {
 		if (!token) return;
 
-		const ws = new WebSocket(`${WS_BASE}?token=${token}&roomId=${encodeURIComponent(roomId)}`);
+		const ws = new WebSocket(`${process.env.REACT_APP_API_WS}?token=${token}&roomId=${encodeURIComponent(roomId)}`);
 		roomWsRef.current = ws;
 
 		ws.onopen = () => setWsStatus('online');
