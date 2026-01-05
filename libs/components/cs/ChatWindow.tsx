@@ -94,9 +94,8 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ onClose }) => {
 	const userId = user._id;
 	const wsUrl = useMemo(() => {
 		if (!token || !userId) return '';
-		return `ws://localhost:3001?token=${token}&roomId=support:${userId}`;
+		return `${process.env.REACT_APP_API_WS}?token=${token}&roomId=support:${userId}`;
 	}, [token, userId]);
-
 	const messagesEndRef = useRef<HTMLDivElement>(null);
 	const scrollToBottom = () => {
 		messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -117,7 +116,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ onClose }) => {
 	}, [token, userId]);
 
 	useEffect(() => {
-		if (!wsUrl) return; // ✅ 추가 (준비될 때까지 대기)
+		if (!wsUrl) return;
 		setStatus('connecting');
 
 		const ws = new WebSocket(wsUrl);

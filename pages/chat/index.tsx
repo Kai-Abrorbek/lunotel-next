@@ -32,7 +32,7 @@ const SupportChatUser = () => {
 	const userId = user._id;
 
 	const roomId = useMemo(() => `support:${userId}`, [userId]);
-	const wsUrl = useMemo(() => `ws://localhost:3001?token=${token}&roomId=${roomId}`, [token, roomId]);
+	const wsUrl = useMemo(() => `${process.env.REACT_APP_API_WS}?token=${token}&roomId=${roomId}`, [token, roomId]);
 	const [status, setStatus] = useState<'connecting' | 'online' | 'offline'>('connecting');
 	const [messages, setMessages] = useState<Message[]>([]);
 	const [onlineUsers, setOnlineUsers] = useState<OnlineUser[]>([]);
