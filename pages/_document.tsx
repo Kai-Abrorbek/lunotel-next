@@ -26,7 +26,7 @@ export default function Document() {
 				{/* Open Graph (SNS 공유용)  */}
 				<meta property="og:type" content="website" />
 				<meta property="og:site_name" content="Lunotel" />
-				<meta property="og:title" content="Lunotel — 귀여운 호텔 예약 플랫폼" />
+				<meta property="og:title" content="Lunotel — 호텔 예약 플랫폼" />
 				<meta
 					property="og:description"
 					content="즉시 검색하고 예약하세요. Lunotel에서 최적의 가격으로 최고의 숙소를 만나보세요."
