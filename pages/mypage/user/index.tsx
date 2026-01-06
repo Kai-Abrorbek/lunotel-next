@@ -143,6 +143,15 @@ const MyReservationsPage: React.FC = () => {
 										<ChevronRightIcon />
 									</Box>
 								</Link>
+							) : user.memberType === MemberType.ADMIN ? (
+								<Link href={'/_admin'}>
+									<Box className="my-res-side-menu-box  my-res-side-menu-box--special">
+										<Button className={`my-res-side-menu-item ${category === 'admin-panel' ? 'active' : ''}`}>
+											{t('어드민 파낼')}
+										</Button>
+										<ChevronRightIcon />
+									</Box>
+								</Link>
 							) : (
 								''
 							)}

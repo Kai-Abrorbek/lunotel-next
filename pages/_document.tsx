@@ -6,7 +6,7 @@ export default function Document() {
 			<Head>
 				{/* <!-- Favicon --> */}
 				<meta name="robots" content="index,follow" />
-				<link rel="icon" type="image/png" href="/lunotel-favicon.png" />
+				<link rel="icon" type="image/png" href="/newlogo2.png" />
 				<link rel="apple-touch-icon" href="/favicon-lunotel.png" />
 
 				{/* <!-- Theme color --> */}
