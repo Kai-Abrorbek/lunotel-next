@@ -52,7 +52,7 @@ const WeeklyHotPensions = (props: WeeklyHotPensionsProps) => {
 		error: getHotPensionsError,
 		refetch: getHotPensionsRefetch,
 	} = useQuery(GET_PROPERTIES, {
-		fetchPolicy: 'network-only',
+		fetchPolicy: 'cache-and-network',
 		variables: { input: initialInput },
 		notifyOnNetworkStatusChange: true,
 	});

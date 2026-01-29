@@ -58,7 +58,7 @@ const PopularStays = (props: PopularStaysProps) => {
 		error: getPopularStaysError,
 		refetch: getPopularStaysRefetch,
 	} = useQuery(GET_PROPERTIES, {
-		fetchPolicy: 'network-only',
+		fetchPolicy: 'cache-and-network',
 		variables: { input: initialInput },
 		notifyOnNetworkStatusChange: true,
 	});

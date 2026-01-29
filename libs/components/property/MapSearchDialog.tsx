@@ -88,7 +88,7 @@ const MapSearchDialog: React.FC<MapSearchDialogProps> = ({ open, onClose, initia
 		error: getPropertiesError,
 		refetch: getPropertiesRefetch,
 	} = useQuery(GET_PROPERTIES, {
-		fetchPolicy: 'network-only',
+		fetchPolicy: 'cache-and-network',
 		variables: { input: searchFilter },
 		notifyOnNetworkStatusChange: true,
 		skip: !hasRouterApplied,

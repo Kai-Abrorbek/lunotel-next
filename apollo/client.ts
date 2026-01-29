@@ -36,17 +36,17 @@ class LoggingWebSocket {
 		this.socket = new WebSocket(`${url}?token=${getJwtToken()}`);
 		socketVar(this.socket);
 
-		this.socket.onopen = () => {
-			console.log('WebSocket Connection');
-		};
+		// this.socket.onopen = () => {
+		// 	console.log('WebSocket Connection');
+		// };
 
-		this.socket.onmessage = (msg) => {
-			console.log('WebSocket Message:', msg.data);
-		};
+		// this.socket.onmessage = (msg) => {
+		// 	console.log('WebSocket Message:', msg.data);
+		// };
 
-		this.socket.onopen = (error) => {
-			console.log('WebSocket Error: ', error);
-		};
+		// this.socket.onopen = (error) => {
+		// 	console.log('WebSocket Error: ', error);
+		// };
 	}
 
 	send(data: string | ArrayBuffer | SharedArrayBuffer | Blob | ArrayBufferView) {
@@ -67,7 +67,7 @@ function createIsomorphicLink() {
 					...getHeaders(),
 				},
 			}));
-			console.warn('requesting.. ', operation);
+			// console.warn('requesting.. ', operation);
 			return forward(operation);
 		});
 

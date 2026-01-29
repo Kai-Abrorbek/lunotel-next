@@ -51,7 +51,7 @@ const HotelSpecialsToday = (props: HotelSpecialsTodayProps) => {
 		error: getHotelSpecialsError,
 		refetch: getHotelSpecialsRefetch,
 	} = useQuery(GET_PROPERTIES, {
-		fetchPolicy: 'network-only',
+		fetchPolicy: 'cache-and-network',
 		variables: { input: initialInput },
 		notifyOnNetworkStatusChange: true,
 	});
