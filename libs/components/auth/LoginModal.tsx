@@ -63,7 +63,7 @@ const LoginModal = (props: LoginModalProps) => {
 			<div className="auth3d-page">
 				<div className="section">
 					<div className="container">
-						<div className="row full-height justify-content-center">
+						<div className="row full-height justify-content-center" style={{ marginTop: 40 }}>
 							<div className="col-12 text-center align-self-center py-5">
 								<button className="close-btn" onClick={() => onClose(false)}>
 									<ClearIcon />

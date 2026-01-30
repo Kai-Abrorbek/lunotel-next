@@ -451,6 +451,7 @@ const HeroCard = (props: HeroCardProps) => {
 			{/* 날짜 선택 팝업 */}
 			{showDatePicker && (
 				<Stack
+					className="hero-datepicker-row"
 					style={{ display: 'flex', flexDirection: 'row', width: '100%', justifyContent: 'space-evenly' }}
 					ref={dateRef}
 				>

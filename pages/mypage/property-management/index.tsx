@@ -173,7 +173,7 @@ const PropertyManagementPage = () => {
 							variant="scrollable"
 							scrollButtons="auto"
 						>
-							<Tab label={`전체 (${properties?.length})`} value="all" className="property-page__tab" />
+							<Tab label={`전체 (${properties?.length ?? 0})`} value="all" className="property-page__tab" />
 							<Tab label={`운영중 (${operatingCount})`} value={PropertyStatus.ACTIVE} className="property-page__tab" />
 							<Tab label={`대기중 (${waitingCount})`} value={PropertyStatus.DRAFT} className="property-page__tab" />
 							<Tab label={`중지 (${stoppedCount})`} value={PropertyStatus.INACTIVE} className="property-page__tab" />

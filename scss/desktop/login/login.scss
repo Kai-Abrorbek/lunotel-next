@@ -8,7 +8,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		top: 250px;
+		top: 165px;
 		right: 54px;
 		&__card {
 			display: flex;
@@ -16,7 +16,7 @@
 			align-items: center;
 			width: 100%;
 			max-width: 420px;
-			padding: 40px 16px 60px;
+			// padding: 40px 16px 60px;
 			box-sizing: border-box;
 		}
 
@@ -240,6 +240,7 @@
 
 	.mb-4 {
 		margin-bottom: 1.5rem !important;
+		color: #000000;
 	}
 
 	.mt-2 {
@@ -251,7 +252,7 @@
 	}
 
 	.pb-3 {
-		padding-bottom: 1rem !important;
+		// padding-bottom: 1rem !important;
 	}
 
 	.pb-5 {
@@ -308,11 +309,11 @@
 	}
 
 	h6 span {
-		padding: 11px 22px;
+		padding: 2px 20px;
 		text-transform: uppercase;
 		font-weight: 700;
-		font-size: 25px;
-		color: #000000;
+		font-size: 16px;
+		color: #f9f9f9;
 	}
 
 	/* ===== 토글용 체크박스 ===== */
@@ -331,7 +332,7 @@
 		height: 16px;
 		border-radius: 8px;
 		padding: 0;
-		margin: 10px auto;
+		margin: 3px auto;
 		cursor: pointer;
 		background-color: #ffeba7;
 	}
@@ -363,9 +364,9 @@
 	/* ===== 3D 카드 ===== */
 	.card-3d-wrap {
 		position: relative;
-		width: 500px;
-		max-width: 100%;
-		height: 550px;
+		width: 38%;
+		max-width: 40%;
+		height: 475px;
 		transform-style: preserve-3d;
 		perspective: 800px;
 		margin-top: 30px;
