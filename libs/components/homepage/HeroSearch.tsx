@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Box, Typography } from '@mui/material';
 import { PropertiesInquiry } from '../../types/property/property.input';
 import HeroCard from '../common/HeroCard';
@@ -6,6 +6,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, EffectCoverflow } from 'swiper';
 import 'swiper/css';
 import { useTranslation } from 'react-i18next';
+import useDateHook from '../../hooks/useDate';
 
 interface HeroSearchProps {
 	initialInput: PropertiesInquiry;
@@ -18,6 +19,7 @@ const HERO_IMAGES = [
 ];
 
 const HeroSearch = (props: HeroSearchProps) => {
+	const { formatDate } = useDateHook();
 	const { initialInput } = props;
 	const [heroCardOpen, setHeroCardOpen] = useState<boolean>(false);
 	const { t, i18n } = useTranslation('common');

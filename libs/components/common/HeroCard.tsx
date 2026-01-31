@@ -13,6 +13,8 @@ import { PropertyLocation } from '../../enums/property.enum';
 import { bubbleAlert } from '../../sweetAlert';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
+import useDateHook from '../../hooks/useDate';
+import useCalendar from '../../hooks/useCalendar';
 
 type TabKey = 'domestic' | 'overseas' | 'package';
 
@@ -22,27 +24,6 @@ const TABS: { key: TabKey; label: string; badgeNew?: boolean }[] = [
 	{ key: 'package', label: '패키지 여행', badgeNew: true },
 ];
 
-const WEEK_DAYS = ['일', '월', '화', '수', '목', '금', '토'];
-
-function formatRangeLabel(checkIn: Date | undefined, checkOut: Date | undefined) {
-	if (!checkIn || !checkOut) return '날짜를 선택하세요';
-
-	const nights = (checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24);
-
-	const fmonth = (d: Date) => (d.getMonth() + 1).toString().padStart(2, '0');
-	const fday = (d: Date) => d.getDate().toString().padStart(2, '0');
-	const fweek = (d: Date) => WEEK_DAYS[d.getDay()];
-
-	return `${fmonth(checkIn)}.${fday(checkIn)} ${fweek(checkIn)} - ${fmonth(checkOut)}.${fday(checkOut)} ${fweek(
-		checkOut,
-	)} (${nights}박)`;
-}
-
-function isSameDate(a: Date | undefined, b: Date | undefined) {
-	if (!a || !b) return false;
-	return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
-}
-
 interface HeroCardProps {
 	initialInput: PropertiesInquiry;
 	refElement: any;
@@ -51,14 +32,12 @@ interface HeroCardProps {
 }
 
 const HeroCard = (props: HeroCardProps) => {
+	const { isSameDate, formatDate, toDate, inRange, isPastDate } = useDateHook();
+	const { WEEK_DAYS, currentMonth, nextMonth, formatRangeLabel, buildCalendarCells, changeMonth } = useCalendar();
 	const { t, i18n } = useTranslation('common');
 	const { initialInput, refElement, setHeroCardOpen, propertyName } = props;
 	const router = useRouter();
 	const [searchFilter, setSearchFilter] = useState<PropertiesInquiry>(initialInput);
-	const today = useMemo(() => {
-		const d = new Date();
-		return new Date(d.getFullYear(), d.getMonth(), d.getDate()); // 00:00
-	}, []);
 	const locationRef: any = useRef();
 	const dateRef: any = useRef();
 	const pesonalRef: any = useRef();
@@ -70,18 +49,7 @@ const HeroCard = (props: HeroCardProps) => {
 	const [showGuestPicker, setShowGuestPicker] = useState(false);
 	const [showKeywordPanel, setShowKeywordPanel] = useState(false);
 	const [recentSearches, setRecentSearches] = useState<string[]>([]);
-	const [currentMonth, setCurrentMonth] = useState<Date>(() => {
-		const d = new Date();
-		return new Date(d.getFullYear(), d.getMonth(), 1);
-	});
-	const [nextMonth, setNextMonth] = useState<Date>(() => {
-		const d = new Date();
-		return new Date(d.getFullYear(), d.getMonth() + 1, 1);
-	});
 
-	function toDate(value: string | undefined): Date | undefined {
-		return value ? new Date(value) : undefined;
-	}
 	/** LIFESICLE **/
 	useEffect(() => {
 		const clickHandler = (event: MouseEvent) => {
@@ -111,52 +79,6 @@ const HeroCard = (props: HeroCardProps) => {
 		}
 	}, [searchFilter]);
 	/** LIFESICLE **/
-
-	/**UTIL FANCTION**/
-	const changeMonth = (offset: number) => {
-		setCurrentMonth((prev) => {
-			const year = prev.getFullYear();
-			const month = prev.getMonth() + offset;
-			return new Date(year, month, 1);
-		});
-
-		setNextMonth((prev) => {
-			const year = prev.getFullYear();
-			const month = prev.getMonth() + offset;
-			return new Date(year, month, 1);
-		});
-	};
-
-	const buildCalendarCells = (monthDate: Date) => {
-		const year = monthDate.getFullYear();
-		const month = monthDate.getMonth();
-		const firstDay = new Date(year, month, 1);
-		const firstDow = firstDay.getDay();
-		const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-		const cells: (Date | null)[] = [];
-
-		for (let i = 0; i < firstDow; i++) cells.push(null);
-		for (let d = 1; d <= daysInMonth; d++) {
-			cells.push(new Date(year, month, d));
-		}
-		while (cells.length % 7 !== 0) cells.push(null);
-
-		return cells;
-	};
-
-	const inRange = (day: Date) => {
-		if (!checkIn || !checkOut) return false;
-		const t = day.getTime();
-		return t > checkIn.getTime() && t < checkOut.getTime();
-	};
-
-	function isPastDate(day: Date | null, baseMonth: Date) {
-		if (!day) return false;
-		const cellDate = new Date(baseMonth.getFullYear(), baseMonth.getMonth(), day.getDate());
-		return cellDate < today;
-	}
-	/**UTIL FANCTION**/
 
 	/** HANDLER **/
 	const handleSelectKeyword = useCallback(
@@ -482,7 +404,7 @@ const HeroCard = (props: HeroCardProps) => {
 
 								const isStart = isSameDate(day, checkIn);
 								const isEnd = isSameDate(day, checkOut);
-								const inSelectedRange = inRange(day);
+								const inSelectedRange = inRange(day, checkIn, checkOut);
 								const isPastDay = isPastDate(day, currentMonth);
 								const classes = [
 									'hero-datepicker-cell',
@@ -528,7 +450,7 @@ const HeroCard = (props: HeroCardProps) => {
 
 								const isStart = isSameDate(day, checkIn);
 								const isEnd = isSameDate(day, checkOut);
-								const inSelectedRange = inRange(day);
+								const inSelectedRange = inRange(day, checkIn, checkOut);
 								const isPastDay = isPastDate(day, nextMonth);
 								const classes = [
 									'hero-datepicker-cell',
@@ -581,12 +503,5 @@ const HeroCard = (props: HeroCardProps) => {
 		</Box>
 	);
 };
-
-function formatDate(date: Date, day: number = 0) {
-	const y = date.getFullYear();
-	const m = String(date.getMonth() + 1).padStart(2, '0');
-	const d = String(date.getDate() + day).padStart(2, '0');
-	return `${y}-${m}-${d}`;
-}
 
 export default HeroCard;
