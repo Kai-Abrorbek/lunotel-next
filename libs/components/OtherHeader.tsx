@@ -294,18 +294,14 @@ const OtherHeader = (props: MiniHeaderProps) => {
 	}
 };
 
-function formatDate(date: Date, day: number = 0) {
-	if (date.getMonth() === 11 && date.getDate() === 31 && day === 1) {
-		const y = date.getFullYear() + 1;
-		const m = String(1).padStart(2, '0');
-		const d = String(1).padStart(2, '0');
-		return `${y}-${m}-${d}`;
-	} else {
-		const y = date.getFullYear();
-		const m = String(date.getMonth() + 1).padStart(2, '0');
-		const d = String(date.getDate() + day).padStart(2, '0');
-		return `${y}-${m}-${d}`;
-	}
+function formatDate(date: Date, addDays = 0) {
+	const d = new Date(date);
+	d.setDate(d.getDate() + addDays);
+
+	const y = d.getFullYear();
+	const m = String(d.getMonth() + 1).padStart(2, '0');
+	const day = String(d.getDate()).padStart(2, '0');
+	return `${y}-${m}-${day}`;
 }
 
 OtherHeader.defaultProps = {
