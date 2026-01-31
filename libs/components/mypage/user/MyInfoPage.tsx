@@ -1,21 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import {
-	Box,
-	Paper,
-	TextField,
-	Typography,
-	Button,
-	Switch,
-	IconButton,
-	InputAdornment,
-	Stack,
-	Grid,
-} from '@mui/material';
+import { Box, Paper, TextField, Typography, Button, Switch, IconButton, InputAdornment, Grid } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import { useMutation, useReactiveVar } from '@apollo/client';
 import { userVar } from '../../../../apollo/store';
 import { MemberUpdate } from '../../../types/member/member.update';
-import { sweetConfirmAlert, sweetErrorAlert, sweetErrorHandling, sweetMixinSuccessAlert } from '../../../sweetAlert';
+import { sweetConfirmAlert, sweetErrorAlert, sweetMixinSuccessAlert } from '../../../sweetAlert';
 import { UPDATE_MEMBER } from '../../../../apollo/user/mutation';
 import { updateStorage, updateUserInfo } from '../../../auth';
 import { useTranslation } from 'react-i18next';

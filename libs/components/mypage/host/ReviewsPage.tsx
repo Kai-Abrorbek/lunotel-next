@@ -6,8 +6,10 @@ import { useMutation, useQuery } from '@apollo/client';
 import { Comment } from '../../../types/comment/comment';
 import { UPDATE_COMMENT } from '../../../../apollo/user/mutation';
 import { sweetErrorAlert } from '../../../sweetAlert';
+import { useTranslation } from 'react-i18next';
 
 const ReviewsPage = () => {
+	const { t, i18n } = useTranslation('common');
 	const router = useRouter();
 	const [filterRating, setFilterRating] = useState<'all' | '1' | '2' | '3' | '4' | '5'>('all');
 	const [searchTerm, setSearchTerm] = useState('');
@@ -133,7 +135,7 @@ const ReviewsPage = () => {
 	return (
 		<Box className="reviews-page">
 			<Typography component="h1" className="reviews-page__title">
-				리뷰
+				{t('리뷰')}
 			</Typography>
 
 			<Card className="reviews-page__rating-overview">
@@ -142,7 +144,10 @@ const ReviewsPage = () => {
 						<Box className="reviews-page__overall-rating">
 							<div className="reviews-page__overall-rating-score">{averageRating}</div>
 							<div className="reviews-page__overall-rating-stars">★★★★★</div>
-							<div className="reviews-page__overall-rating-count">{allReviews.length}개 리뷰</div>
+							<div className="reviews-page__overall-rating-count">
+								{allReviews.length}
+								{t('개 리뷰')}
+							</div>
 						</Box>
 
 						<Box className="reviews-page__rating-breakdown">
@@ -168,7 +173,7 @@ const ReviewsPage = () => {
 							<TextField
 								fullWidth
 								variant="outlined"
-								placeholder="투숙객 이름 또는 리뷰 내용으로 검색..."
+								placeholder={t('투숙객 이름 또는 리뷰 내용으로 검색') + '...'}
 								value={searchTerm}
 								onChange={(e) => setSearchTerm(e.target.value)}
 								className="reviews-page__search-input"
@@ -184,7 +189,7 @@ const ReviewsPage = () => {
 							variant="outlined"
 							onClick={() => setFilterRating('all')}
 						>
-							전체
+							{t('전체')}
 						</Button>
 
 						{[5, 4, 3, 2, 1].map((rating) => (
@@ -213,7 +218,7 @@ const ReviewsPage = () => {
 									<Box className="reviews-page__review-author-info">
 										<div className="reviews-page__review-author-name">{review?.memberData?.memberNick}</div>
 										<div className="reviews-page__review-author-meta">
-											{review.memberData && <span className="reviews-page__verified-badge">✓ 인증된 투숙</span>}
+											{review.memberData && <span className="reviews-page__verified-badge">✓ {t('인증된 투숙')}</span>}
 										</div>
 									</Box>
 								</Box>
@@ -234,7 +239,7 @@ const ReviewsPage = () => {
 										className="review-item__more-btn"
 										onClick={() => handleToggle(review._id)}
 									>
-										{review.isExpanded ? '접기 ▲' : '더보기 ▼'}
+										{review.isExpanded ? `${t('접기')} ▲` : `${t('더보기')} ▼`}
 									</Button>
 								)}
 							</Box>
@@ -246,7 +251,7 @@ const ReviewsPage = () => {
 
 								<Box className="reviews-page__review-actions">
 									<Button variant="outlined" className="reviews-page__review-action-btn">
-										👍 도움돼요
+										👍 {t('도움돼요')}
 									</Button>
 
 									<Button
@@ -262,26 +267,26 @@ const ReviewsPage = () => {
 											}
 										}}
 									>
-										💬 답글 달기
+										💬 {t('답글 달기')}
 									</Button>
 								</Box>
 							</Box>
 
 							{review.commentResponse && (
 								<Box className="reviews-page__review-response">
-									<div className="reviews-page__review-response-header">🏨 호스트 답변</div>
+									<div className="reviews-page__review-response-header">🏨 {t('호스트 답변')}</div>
 									<div className="reviews-page__review-response-text">{review.commentResponse}</div>
 								</Box>
 							)}
 
 							{replyOpenId === review._id && (
 								<Box className="reviews-page__reply-section">
-									<div className="reviews-page__reply-header">🏨 호스트 답변 작성</div>
+									<div className="reviews-page__reply-header">🏨 {t('호스트 답변 작성')}</div>
 									<TextField
 										multiline
 										minRows={3}
 										fullWidth
-										placeholder="답글을 입력하세요..."
+										placeholder={t('답글을 입력하세요') + '...'}
 										value={replyText}
 										onChange={(e) => setReplyText(e.target.value)}
 										className="reviews-page__reply-textfield"
@@ -294,14 +299,14 @@ const ReviewsPage = () => {
 												setReplyText('');
 											}}
 										>
-											취소
+											{t('취소')}
 										</Button>
 										<Button
 											variant="contained"
 											onClick={() => handleSubmitReply(review._id)}
 											disabled={!replyText.trim()}
 										>
-											답글 등록
+											{t('답글 등록')}
 										</Button>
 									</Box>
 								</Box>
@@ -313,8 +318,8 @@ const ReviewsPage = () => {
 				<Card className="reviews-page__empty-state">
 					<CardContent>
 						<div className="reviews-page__empty-state-icon">⭐</div>
-						<div className="reviews-page__empty-state-title">조건에 맞는 리뷰가 없습니다</div>
-						<div className="reviews-page__empty-state-text">검색어나 필터 조건을 변경해 보세요</div>
+						<div className="reviews-page__empty-state-title">{t('조건에 맞는 리뷰가 없습니다')}</div>
+						<div className="reviews-page__empty-state-text">{t('검색어나 필터 조건을 변경해 보세요')}</div>
 					</CardContent>
 				</Card>
 			)}

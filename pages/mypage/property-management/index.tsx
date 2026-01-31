@@ -11,10 +11,10 @@ import PropertyAddModal from '../../../libs/components/mypage/property-managemen
 import { GET_AGENT_PROPERTIES } from '../../../apollo/user/query';
 import { useQuery, useReactiveVar } from '@apollo/client';
 import { userVar } from '../../../apollo/store';
-import { useRouter } from 'next/router';
 import { Reservation } from '../../../libs/types/reservation/reservation';
 import { ReservationStatus } from '../../../libs/enums/reservation';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useTranslation } from 'react-i18next';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -25,8 +25,8 @@ export const getStaticProps = async ({ locale }: any) => ({
 type TabKey = 'all' | PropertyStatus;
 
 const PropertyManagementPage = () => {
+	const { t, i18n } = useTranslation('common');
 	const user = useReactiveVar(userVar);
-	const router = useRouter();
 	const [selectedTab, setSelectedTab] = useState<TabKey>('all');
 	const [searchTerm, setSearchTerm] = useState('');
 	const [addPropertyOpen, setAddPropertyOpen] = useState<boolean>(false);
@@ -120,9 +120,9 @@ const PropertyManagementPage = () => {
 			<Stack className="container">
 				{/* 타이틀 + 새 숙소 버튼 */}
 				<Box className="property-page__header">
-					<h1 className="property-page__title">숙소 관리</h1>
+					<h1 className="property-page__title">{t('숙소 관리')}</h1>
 					<Button variant="contained" className="property-page__add-button" onClick={() => setAddPropertyOpen(true)}>
-						+ 새 숙소 등록
+						+ {t('새 숙소 등록')}
 					</Button>
 					<PropertyAddModal
 						isOpen={addPropertyOpen}
@@ -135,30 +135,30 @@ const PropertyManagementPage = () => {
 				<Grid container spacing={2} className="property-page__stats-grid">
 					<Grid item xs={12} sm={6} md={3}>
 						<Paper className="property-page__stat-card" elevation={0}>
-							<p className="property-page__stat-label">전체 숙소</p>
+							<p className="property-page__stat-label">{t('전체 숙소')}</p>
 							<p className="property-page__stat-value">{properties?.length ?? 0}</p>
-							<p className="property-page__stat-change property-page__stat-change--positive">↑ 2개 증가</p>
+							<p className="property-page__stat-change property-page__stat-change--positive">↑ 2 {t('개 증가')}</p>
 						</Paper>
 					</Grid>
 					<Grid item xs={12} sm={6} md={3}>
 						<Paper className="property-page__stat-card" elevation={0}>
-							<p className="property-page__stat-label">운영중 숙소</p>
+							<p className="property-page__stat-label">{t('운영중 숙소')}</p>
 							<p className="property-page__stat-value">{operatingCount}</p>
-							<p className="property-page__stat-change property-page__stat-change--positive">↑ 1개 증가</p>
+							<p className="property-page__stat-change property-page__stat-change--positive">↑ 1 {t('개 증가')}</p>
 						</Paper>
 					</Grid>
 					<Grid item xs={12} sm={6} md={3}>
 						<Paper className="property-page__stat-card" elevation={0}>
-							<p className="property-page__stat-label">이번 달 예약</p>
+							<p className="property-page__stat-label">{t('이번 달 예약')}</p>
 							<p className="property-page__stat-value">{totalBookings}</p>
-							<p className="property-page__stat-change property-page__stat-change--positive">↑ 12% 증가</p>
+							<p className="property-page__stat-change property-page__stat-change--positive">↑ 12% {t('증가')}</p>
 						</Paper>
 					</Grid>
 					<Grid item xs={12} sm={6} md={3}>
 						<Paper className="property-page__stat-card" elevation={0}>
-							<p className="property-page__stat-label">이번 달 매출</p>
+							<p className="property-page__stat-label">{t('이번 달 매출')}</p>
 							<p className="property-page__stat-value">{formatCurrency(totalRevenue)}</p>
-							<p className="property-page__stat-change property-page__stat-change--positive">↑ 8% 증가</p>
+							<p className="property-page__stat-change property-page__stat-change--positive">↑ 8% {t('증가')}</p>
 						</Paper>
 					</Grid>
 				</Grid>
@@ -173,10 +173,22 @@ const PropertyManagementPage = () => {
 							variant="scrollable"
 							scrollButtons="auto"
 						>
-							<Tab label={`전체 (${properties?.length ?? 0})`} value="all" className="property-page__tab" />
-							<Tab label={`운영중 (${operatingCount})`} value={PropertyStatus.ACTIVE} className="property-page__tab" />
-							<Tab label={`대기중 (${waitingCount})`} value={PropertyStatus.DRAFT} className="property-page__tab" />
-							<Tab label={`중지 (${stoppedCount})`} value={PropertyStatus.INACTIVE} className="property-page__tab" />
+							<Tab label={`${t('전체')} (${properties?.length ?? 0})`} value="all" className="property-page__tab" />
+							<Tab
+								label={`${t('운영중')} (${operatingCount})`}
+								value={PropertyStatus.ACTIVE}
+								className="property-page__tab"
+							/>
+							<Tab
+								label={`${t('대기중')} (${waitingCount})`}
+								value={PropertyStatus.DRAFT}
+								className="property-page__tab"
+							/>
+							<Tab
+								label={`${t('중지')} (${stoppedCount})`}
+								value={PropertyStatus.INACTIVE}
+								className="property-page__tab"
+							/>
 						</Tabs>
 					</Box>
 
@@ -186,7 +198,7 @@ const PropertyManagementPage = () => {
 							size="small"
 							value={searchTerm}
 							onChange={handleSearchChange}
-							placeholder="숙소명 또는 주소로 검색..."
+							placeholder={`${t('숙소명 또는 주소로 검색')}...`}
 							InputProps={{
 								startAdornment: (
 									<IconButton edge="start" disableRipple className="property-page__search-icon">
@@ -238,15 +250,20 @@ const PropertyManagementPage = () => {
 
 									<Box className="property-card__stats">
 										<Box className="property-card__stat">
-											<p className="property-card__stat-label">객실 수</p>
-											<p className="property-card__stat-value">{property.propertyRooms}개</p>
+											<p className="property-card__stat-label">{t('객실 수')}</p>
+											<p className="property-card__stat-value">
+												{property.propertyRooms + ' '} {t('개')}
+											</p>
 										</Box>
 										<Box className="property-card__stat">
-											<p className="property-card__stat-label">이번 달 예약</p>
-											<p className="property-card__stat-value">{property.propertyReservations}건</p>
+											<p className="property-card__stat-label">{t('이번 달 예약')}</p>
+											<p className="property-card__stat-value">
+												{property.propertyReservations + ' '}
+												{t('건')}
+											</p>
 										</Box>
 										<Box className="property-card__stat">
-											<p className="property-card__stat-label">이번 달 매출</p>
+											<p className="property-card__stat-label">{t('이번 달 매출')}</p>
 											<p className="property-card__stat-value">
 												{formatCurrency(
 													property.reservationData
@@ -256,7 +273,7 @@ const PropertyManagementPage = () => {
 											</p>
 										</Box>
 										<Box className="property-card__stat">
-											<p className="property-card__stat-label">가동률</p>
+											<p className="property-card__stat-label">{t('가동률')}</p>
 											<p className="property-card__stat-value">
 												{property.propertyStatus === PropertyStatus.ACTIVE
 													? `${Math.round((property.propertyReservations! ?? 0 / property?.propertyRooms!) * 100)}%`
@@ -267,7 +284,7 @@ const PropertyManagementPage = () => {
 
 									<Box className="property-card__actions">
 										<Button variant="outlined" size="small" className="property-card__action-btn">
-											상세보기
+											{t('상세보기')}
 										</Button>
 										<Button
 											onClick={() => handleOpenUpdatePropertyModal(property)}
@@ -275,7 +292,7 @@ const PropertyManagementPage = () => {
 											size="small"
 											className="property-card__action-btn"
 										>
-											수정
+											{t('수정')}
 										</Button>
 										<Link href={`/mypage/property-management/deshboard?category=dashboard&propertyId=${property._id}`}>
 											<Button
@@ -283,7 +300,7 @@ const PropertyManagementPage = () => {
 												size="small"
 												className="property-card__action-btn property-card__action-btn--primary"
 											>
-												대시보드
+												{t('대시보드')}
 											</Button>
 										</Link>
 									</Box>
@@ -304,8 +321,8 @@ const PropertyManagementPage = () => {
 				) : (
 					<Paper elevation={0} className="property-page__empty">
 						<p className="property-page__empty-icon">🏨</p>
-						<p className="property-page__empty-title">검색 결과가 없습니다</p>
-						<p className="property-page__empty-description">다른 검색어로 시도해보세요.</p>
+						<p className="property-page__empty-title">{t('검색 결과가 없습니다')}!</p>
+						<p className="property-page__empty-description">{t('다른 검색어로 시도해보세요')}!</p>
 					</Paper>
 				)}
 			</Stack>

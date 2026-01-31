@@ -26,8 +26,10 @@ import {
 	BarChart,
 	Bar,
 } from 'recharts';
+import { useTranslation } from 'react-i18next';
 
 const RevenuePage: React.FC = () => {
+	const { t, i18n } = useTranslation('common');
 	const [period, setPeriod] = useState<'today' | 'week' | 'month' | 'year'>('week');
 
 	const revenueData = [

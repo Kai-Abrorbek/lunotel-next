@@ -101,7 +101,7 @@ const ReservationHistory = (props: ReservationHistoryProps) => {
 					textColor="primary"
 					indicatorColor="primary"
 				>
-					<Tab label="국내숙소" value="domestic" />
+					<Tab label={t('국내숙소')} value="domestic" />
 					{/* <Tab label="해외숙소" value="ㅐverseas" /> */}
 					{/* <Tab label="국내숙소" value="domestic" /> */}
 				</Tabs>
@@ -205,7 +205,7 @@ const ReservationHistory = (props: ReservationHistoryProps) => {
 														: 'my-res-history-status--canceled')
 												}
 											>
-												{reservation.reservationStatus === ReservationStatus.COMPLETED ? '이용완료' : '예약취소'}
+												{reservation.reservationStatus === ReservationStatus.COMPLETED ? t('이용완료') : t('예약취소')}
 											</Typography>
 											{reservation.reservationStatus === ReservationStatus.COMPLETED ? (
 												<Box>

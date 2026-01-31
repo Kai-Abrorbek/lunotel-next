@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { RoomStatus } from '../../../enums/propertyRoomtype.enum';
 import { RoomTypeUpdate } from '../../../types/roomtype/roomtype.update';
-import { sweetConfirmAlert, sweetErrorAlert, sweetTopSmallSuccessAlert } from '../../../sweetAlert';
-import { Box, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import { sweetErrorAlert, sweetTopSmallSuccessAlert } from '../../../sweetAlert';
+import { InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import { RoomTypeInput, SPRules } from '../../../types/roomtype/roomtype.input';
 import { amenitiesList } from '../../../enums/property.enum';
 import { getJwtToken } from '../../../auth';
@@ -10,7 +10,7 @@ import axios from 'axios';
 import { useMutation } from '@apollo/client';
 import { CREATE_ROOM } from '../../../../apollo/user/mutation';
 import { useRouter } from 'next/router';
-import PropertyId from '../../../../pages/property/[propertyId]';
+import { useTranslation } from 'react-i18next';
 
 interface RoomAddAndUpdateModalProps {
 	isOpen: boolean;
@@ -20,6 +20,7 @@ interface RoomAddAndUpdateModalProps {
 }
 
 const RoomAddModal = ({ isOpen, setIsOpen, initialInput, getMyProperttRoomsRefetch }: RoomAddAndUpdateModalProps) => {
+	const { t, i18n } = useTranslation('common');
 	const router = useRouter();
 	const [roomImgfiles, setRoomImgfiles] = useState<File[]>([]);
 	const [previewImages, setPreviewImages] = useState<string[]>([]);
@@ -168,7 +169,7 @@ const RoomAddModal = ({ isOpen, setIsOpen, initialInput, getMyProperttRoomsRefet
 				<div className="modal">
 					<div className="modal-header">
 						<div>
-							<div className="modal-title">객실 정보 수정</div>
+							<div className="modal-title">{t('객실 추가')}</div>
 							{/* <div className="room-id">Room ID: {roomData._id}</div> */}
 						</div>
 						<button className="close-btn" onClick={handleClose}>
@@ -180,11 +181,11 @@ const RoomAddModal = ({ isOpen, setIsOpen, initialInput, getMyProperttRoomsRefet
 						{/* 기본 정보 */}
 						<div className="section">
 							<div className="section-title">
-								기본 정보 <span className="required">*</span>
+								{t('기본 정보')} <span className="required">*</span>
 							</div>
 
 							<div className="form-group">
-								<label className="form-label">객실명</label>
+								<label className="form-label">{t('객실명')}</label>
 								<div className="input-wrapper">
 									<input
 										type="text"
@@ -197,7 +198,7 @@ const RoomAddModal = ({ isOpen, setIsOpen, initialInput, getMyProperttRoomsRefet
 
 							<div className="form-row">
 								<div className="form-group">
-									<label className="form-label">기준 인원</label>
+									<label className="form-label">{t('기준 인원')}</label>
 									<div className="input-wrapper">
 										<input
 											type="number"
@@ -206,12 +207,12 @@ const RoomAddModal = ({ isOpen, setIsOpen, initialInput, getMyProperttRoomsRefet
 											onChange={(e) => handleChange('roomStandPersonal', parseInt(e.target.value))}
 											min={1}
 										/>
-										<span className="input-unit">명</span>
+										<span className="input-unit">{t('명')}</span>
 									</div>
 								</div>
 
 								<div className="form-group">
-									<label className="form-label">최대 인원</label>
+									<label className="form-label">{t('최대 인원')}</label>
 									<div className="input-wrapper">
 										<input
 											type="number"
@@ -220,7 +221,7 @@ const RoomAddModal = ({ isOpen, setIsOpen, initialInput, getMyProperttRoomsRefet
 											onChange={(e) => handleChange('roomMaxPersonal', parseInt(e.target.value))}
 											min={1}
 										/>
-										<span className="input-unit">명</span>
+										<span className="input-unit">{t('명')}</span>
 									</div>
 								</div>
 							</div>
@@ -228,7 +229,7 @@ const RoomAddModal = ({ isOpen, setIsOpen, initialInput, getMyProperttRoomsRefet
 							<div className="form-group">
 								<div>
 									<div className="room-time-row">
-										<label className="form-label">체크인 시간</label>
+										<label className="form-label">{t('체크인 시간')}</label>
 										<TextField
 											type="time"
 											size="small"
@@ -238,7 +239,7 @@ const RoomAddModal = ({ isOpen, setIsOpen, initialInput, getMyProperttRoomsRefet
 										/>
 									</div>
 									<div className="room-time-row">
-										<label className="form-label">체크아웃 시간</label>
+										<label className="form-label">{t('체크아웃 시간')}</label>
 										<TextField
 											type="time"
 											size="small"
@@ -248,7 +249,7 @@ const RoomAddModal = ({ isOpen, setIsOpen, initialInput, getMyProperttRoomsRefet
 										/>
 									</div>
 									<div className="room-time-row">
-										<label className="form-label">마지막 체크인 시간</label>
+										<label className="form-label">{t('마지막 체크인 시간')}</label>
 										<TextField
 											type="time"
 											size="small"
@@ -262,12 +263,12 @@ const RoomAddModal = ({ isOpen, setIsOpen, initialInput, getMyProperttRoomsRefet
 
 							<div className="form-group">
 								<InputLabel className="form-label" id="check-in-label">
-									최대 이용 시간
+									{t('최대 이용 시간')}
 								</InputLabel>
 								<Select
 									sx={{ width: '20%' }}
 									labelId="check-in-label"
-									label="체크인"
+									label={t('체크인')}
 									value={roomData.stayPlanRules?.durationHours ?? ''}
 									onChange={(e) => roomRelatedTimeChange('durationHours', e.target.value as string)}
 								>
@@ -283,12 +284,12 @@ const RoomAddModal = ({ isOpen, setIsOpen, initialInput, getMyProperttRoomsRefet
 						{/* 가격 정보 */}
 						<div className="section">
 							<div className="section-title">
-								가격 정보 <span className="required">*</span>
+								{t('가격 정보')} <span className="required">*</span>
 							</div>
 
 							<div className="form-row">
 								<div className="form-group">
-									<label className="form-label">대실 기본가</label>
+									<label className="form-label">{t('대실 기본가')}</label>
 									<div className="input-wrapper">
 										<input
 											type="number"
@@ -300,12 +301,12 @@ const RoomAddModal = ({ isOpen, setIsOpen, initialInput, getMyProperttRoomsRefet
 											}}
 											min={0}
 										/>
-										<span className="input-unit">원</span>
+										<span className="input-unit">{t('원')}</span>
 									</div>
 								</div>
 
 								<div className="form-group">
-									<label className="form-label">숙박 기본가</label>
+									<label className="form-label">{t('숙박 기본가')}</label>
 									<div className="input-wrapper">
 										<input
 											type="number"
@@ -317,13 +318,13 @@ const RoomAddModal = ({ isOpen, setIsOpen, initialInput, getMyProperttRoomsRefet
 											}}
 											min={0}
 										/>
-										<span className="input-unit">원</span>
+										<span className="input-unit">{t('원')}</span>
 									</div>
 								</div>
 							</div>
 
 							<div className="form-group">
-								<label className="form-label">할인가</label>
+								<label className="form-label">{t('할인가')}</label>
 								<div className="input-wrapper">
 									<input
 										type="number"
@@ -335,19 +336,19 @@ const RoomAddModal = ({ isOpen, setIsOpen, initialInput, getMyProperttRoomsRefet
 										}}
 										min={0}
 									/>
-									<span className="input-unit">원</span>
+									<span className="input-unit">{t('원')}</span>
 								</div>
 							</div>
 
 							<div className="price-info">
 								<div className="price-row">
-									<span className="price-label">대실 할인 적용가</span>
+									<span className="price-label">{t('대실 할인 적용가')}</span>
 									<span className="price-value discount">
 										{(roomData.basePriceDayUse! - roomData.roomDiscountPrice!).toLocaleString()}원
 									</span>
 								</div>
 								<div className="price-row">
-									<span className="price-label">숙박 할인 적용가</span>
+									<span className="price-label">{t('숙박 할인 적용가')}</span>
 									<span className="price-value discount">
 										{(roomData.basePriceOvernight! - roomData.roomDiscountPrice!).toLocaleString()}원
 									</span>
@@ -357,13 +358,14 @@ const RoomAddModal = ({ isOpen, setIsOpen, initialInput, getMyProperttRoomsRefet
 
 						{/* 객실 상태 */}
 						<div className="section">
-							<div className="section-title">객실 상태</div>
+							<div className="section-title">{t('객실 상태')}</div>
 							<div>
 								<div
 									className={`status-badge available ${roomData.roomStatus === 'AVAILABLE' ? 'selected' : ''}`}
 									onClick={() => handleChange('roomStatus', 'AVAILABLE')}
 								>
-									{roomData.roomStatus === 'AVAILABLE' && '✓ '}예약 가능
+									{roomData.roomStatus === 'AVAILABLE' && '✓ '}
+									{t('예약 가능')}
 								</div>
 								<div
 									className={`status-badge unavailable ${
@@ -371,20 +373,36 @@ const RoomAddModal = ({ isOpen, setIsOpen, initialInput, getMyProperttRoomsRefet
 									}`}
 									onClick={() => handleChange('roomStatus', 'UNAVAILABLE')}
 								>
-									{roomData.roomStatus === RoomStatus.UNAVAILABLE && '✓ '}예약 불가
+									{roomData.roomStatus === RoomStatus.UNAVAILABLE && '✓ '}
+									{t('예약 불가')}
 								</div>
 								<div
 									className={`status-badge maintenance ${roomData.roomStatus === 'MAINTENANCE' ? 'selected' : ''}`}
 									onClick={() => handleChange('roomStatus', 'MAINTENANCE')}
 								>
-									{roomData.roomStatus === 'MAINTENANCE' && '✓ '}정비 중
+									{roomData.roomStatus === 'MAINTENANCE' && '✓ '}
+									{t('정비 중')}
+								</div>
+								<div
+									className={`status-badge maintenance ${roomData.roomStatus === 'OCCUPIED' ? 'selected' : ''}`}
+									onClick={() => handleChange('roomStatus', 'OCCUPIED')}
+								>
+									{roomData.roomStatus === 'OCCUPIED' && '✓ '}
+									{t('투숙 중')}
+								</div>
+								<div
+									className={`status-badge maintenance ${roomData.roomStatus === 'CLEANING' ? 'selected' : ''}`}
+									onClick={() => handleChange('roomStatus', 'CLEANING')}
+								>
+									{roomData.roomStatus === 'CLEANING' && '✓ '}
+									{t('청소 중')}
 								</div>
 							</div>
 						</div>
 
 						{/* 편의시설 */}
 						<div className="section">
-							<div className="section-title">객실 편의시설</div>
+							<div className="section-title">{t('객실 편의시설')}</div>
 							<div className="amenities-grid">
 								{amenitiesList.map((amenity) => (
 									<div
@@ -399,7 +417,7 @@ const RoomAddModal = ({ isOpen, setIsOpen, initialInput, getMyProperttRoomsRefet
 											onChange={() => {}}
 										/>
 										<span className="amenity-icon">{amenity.icon}</span>
-										{amenity.name}
+										{localStorage.getItem('locale') === 'kr' ? amenity.name : amenity.en}
 									</div>
 								))}
 							</div>
@@ -407,13 +425,13 @@ const RoomAddModal = ({ isOpen, setIsOpen, initialInput, getMyProperttRoomsRefet
 
 						{/* 객실 이미지 */}
 						<div className="section">
-							<div className="section-title">객실 이미지</div>
+							<div className="section-title">{t('객실 이미지')}</div>
 							<div className="image-upload-section">
 								{previewImages.length < 10 && (
 									<div className="upload-area" onClick={triggerFileInput}>
 										<div className="upload-icon">📤</div>
-										<div className="upload-text">객실 사진을 업로드해주세요</div>
-										<div className="upload-hint">최대 10장까지 업로드 가능</div>
+										<div className="upload-text">{t('객실 사진을 업로드해주세요')}</div>
+										<div className="upload-hint">{t('최대 10장까지 업로드 가능')}</div>
 									</div>
 								)}
 								<input
@@ -442,10 +460,10 @@ const RoomAddModal = ({ isOpen, setIsOpen, initialInput, getMyProperttRoomsRefet
 
 					<div className="modal-footer">
 						<button className="btn btn-cancel" onClick={handleClose}>
-							취소
+							{t('취소')}
 						</button>
 						<button className="btn btn-submit" onClick={handleSubmit}>
-							등록 완료
+							{t('등록 완료')}
 						</button>
 					</div>
 				</div>

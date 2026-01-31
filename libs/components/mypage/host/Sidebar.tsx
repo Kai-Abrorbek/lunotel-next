@@ -7,12 +7,13 @@ import {
 	DollarSign,
 	Star,
 	MessageCircle,
-	Bell,
 	User,
 	Settings,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'react-i18next';
+
 interface SidebarProps {
 	activeMenu: string;
 	setActiveMenu: (id: string) => void;
@@ -25,17 +26,6 @@ interface MenuItem {
 	badge?: number;
 }
 
-const menuItems: MenuItem[] = [
-	{ id: 'dashboard', icon: <LayoutDashboard size={24} />, label: 'Dashboard' },
-	{ id: 'reservations', icon: <CalendarCheck size={24} />, label: 'Reservations', badge: 5 },
-	{ id: 'calendar', icon: <Calendar size={24} />, label: 'Calendar' },
-	{ id: 'rooms', icon: <Hotel size={24} />, label: 'Rooms' },
-	{ id: 'revenue', icon: <DollarSign size={24} />, label: 'Revenue' },
-	{ id: 'reviews', icon: <Star size={24} />, label: 'Reviews' },
-	{ id: 'customer-inquiry', icon: <MessageCircle size={24} />, label: 'Customer Inquiry' },
-	// { id: 'notifications', icon: <Bell size={24} />, label: 'Notifications', badge: 3 },
-];
-
 const bottomMenuItems: MenuItem[] = [
 	{ id: 'account', icon: <User size={24} />, label: 'Account' },
 	{ id: 'settings', icon: <Settings size={24} />, label: 'Settings' },
@@ -44,6 +34,17 @@ const bottomMenuItems: MenuItem[] = [
 export default function Sidebar({ activeMenu, setActiveMenu }: SidebarProps) {
 	const [isExpanded, setIsExpanded] = useState(false);
 	const router = useRouter();
+	const { t, i18n } = useTranslation('common');
+
+	const menuItems: MenuItem[] = [
+		{ id: 'dashboard', icon: <LayoutDashboard size={24} />, label: t('대시보드') },
+		{ id: 'reservations', icon: <CalendarCheck size={24} />, label: t('예약 내역'), badge: 5 },
+		{ id: 'calendar', icon: <Calendar size={24} />, label: t('달력') },
+		{ id: 'rooms', icon: <Hotel size={24} />, label: t('객실') },
+		{ id: 'revenue', icon: <DollarSign size={24} />, label: t('매출') },
+		{ id: 'reviews', icon: <Star size={24} />, label: t('리뷰 관리') },
+		{ id: 'customer-inquiry', icon: <MessageCircle size={24} />, label: t('고객 문의') },
+	];
 
 	return (
 		<div className="sidebar-container">
@@ -79,7 +80,7 @@ export default function Sidebar({ activeMenu, setActiveMenu }: SidebarProps) {
 
 				<div className="menu-divider" />
 
-				<div className="bottom-menu">
+				{/* <div className="bottom-menu">
 					{bottomMenuItems.map((item) => (
 						<button
 							key={item.id}
@@ -90,7 +91,7 @@ export default function Sidebar({ activeMenu, setActiveMenu }: SidebarProps) {
 							<span className="menu-label">{item.label}</span>
 						</button>
 					))}
-				</div>
+				</div> */}
 			</div>
 		</div>
 	);

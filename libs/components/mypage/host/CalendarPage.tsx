@@ -6,6 +6,7 @@ import { RoomType } from '../../../types/roomtype/roomtype';
 import { Reservation } from '../../../types/reservation/reservation';
 import { GET_MYROOMS, GET_ROOM } from '../../../../apollo/user/query';
 import { useQuery } from '@apollo/client';
+import { useTranslation } from 'react-i18next';
 
 const weekdays = ['일', '월', '화', '수', '목', '금', '토'];
 
@@ -33,19 +34,20 @@ function buildCalendar(monthDate: Date): CalendarCell[] {
 }
 
 const CalendarPage = () => {
+	const { t, i18n } = useTranslation('common');
 	const router = useRouter();
 	const today = useMemo(() => {
 		const d = new Date();
-		return new Date(d.getFullYear(), d.getMonth(), d.getDate()); // 00:00
+		return new Date(d.getFullYear(), d.getMonth(), d.getDate());
 	}, []);
 	const [currentMonth, setCurrentMonth] = useState<Date>(() => {
 		const d = new Date();
 		return new Date(d.getFullYear(), d.getMonth());
 	});
-	const [selectedRoom, setSelectedRoom] = useState<string>('방을 선택해주세요!');
+	const [selectedRoom, setSelectedRoom] = useState<string>(t('방을 선택해주세요')!);
 	const [roomId, setRoomId] = useState<string>('');
 	const cells = useMemo(() => buildCalendar(currentMonth), [currentMonth]);
-	const formattedMonthLabel = `${currentMonth.getFullYear()}년 ${currentMonth.getMonth() + 1}월`;
+	const formattedMonthLabel = `${currentMonth.getFullYear()}${t('년')} ${currentMonth.getMonth() + 1}${t('월')}`;
 
 	/** APOLLO REQUEST **/
 	const {
@@ -142,7 +144,6 @@ const CalendarPage = () => {
 	function getReservationColorStyles(reservation: Reservation | undefined) {
 		if (!reservation) return {};
 
-		// id 숫자 추출해서 대충 해시처럼 사용 (예시는 아주 단순하게)
 		const num = parseInt(reservation._id.replace(/\D/g, ''), 10) || 1;
 		const hue = (num * 157) % 360;
 
@@ -157,7 +158,7 @@ const CalendarPage = () => {
 		<Box className="calendar-page">
 			{/* 상단 제목 + 셀렉트 */}
 			<Box className="calendar-page__header">
-				<Typography className="calendar-page__title">달력</Typography>
+				<Typography className="calendar-page__title">{t('달력')}</Typography>
 
 				<FormControl size="small" className="calendar-page__room-select">
 					<Select
@@ -181,7 +182,7 @@ const CalendarPage = () => {
 				{/* 카드 헤더: 이전/다음 달 + 년/월 */}
 				<Box className="calendar-page__card-header">
 					<Button variant="outlined" className="calendar-page__nav-button" onClick={handlePrevMonth}>
-						← 이전 달
+						← {t('이전 달')}
 					</Button>
 
 					<Typography className="calendar-page__month-label">{formattedMonthLabel}</Typography>
@@ -191,7 +192,7 @@ const CalendarPage = () => {
 						className="calendar-page__nav-button calendar-page__nav-button--right"
 						onClick={handleNextMonth}
 					>
-						다음 달 →
+						{t('다음 달')} →
 					</Button>
 				</Box>
 
@@ -204,7 +205,7 @@ const CalendarPage = () => {
 								index === 0 ? 'calendar-page__weekday--sun' : index === 6 ? 'calendar-page__weekday--sat' : ''
 							}`}
 						>
-							{day}
+							{t(day)}
 						</Box>
 					))}
 				</Box>

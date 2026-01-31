@@ -8,6 +8,7 @@ import { useRouter } from 'next/router';
 import { Reservation } from '../../../types/reservation/reservation';
 import { UPDATE_RESERVATION } from '../../../../apollo/user/mutation';
 import { sweetErrorAlert, sweetTopSmallSuccessAlert } from '../../../sweetAlert';
+import { useTranslation } from 'react-i18next';
 
 interface ReservationsPageProps {
 	initialInput: ReservationsInquiry;
@@ -15,6 +16,7 @@ interface ReservationsPageProps {
 
 const ReservationsPage = (props: ReservationsPageProps) => {
 	const { initialInput } = props;
+	const { t, i18n } = useTranslation('common');
 	const router = useRouter();
 	const [filterStatus, setFilterStatus] = useState('all');
 	const [searchTerm, setSearchTerm] = useState('');
@@ -67,7 +69,7 @@ const ReservationsPage = (props: ReservationsPageProps) => {
 					},
 				});
 
-				await sweetTopSmallSuccessAlert('예약 내역이 변경되었습니다!');
+				await sweetTopSmallSuccessAlert(t('예약 내역이 변경되었습니다')!);
 				setSelectedReservation(null);
 			} catch (err: any) {
 				await sweetErrorAlert(err);
@@ -87,7 +89,7 @@ const ReservationsPage = (props: ReservationsPageProps) => {
 						},
 					},
 				});
-				await sweetTopSmallSuccessAlert('예약 내역이 변경되었습니다!');
+				await sweetTopSmallSuccessAlert(t('예약 내역이 변경되었습니다')!);
 				setSelectedReservation(null);
 			} catch (err: any) {
 				await sweetErrorAlert(err);
@@ -97,14 +99,14 @@ const ReservationsPage = (props: ReservationsPageProps) => {
 
 	const getStatusInfo = (status: string) => {
 		const statusMap: { [key: string]: { label: string; class: string } } = {
-			UPCOMING: { label: '예정', class: 'status-upcoming' },
-			CONFIRMED: { label: '예약 확정', class: 'status-confirmed' },
-			CHECKED_IN: { label: '체크인 완료', class: 'status-checked-in' },
-			PENDING: { label: '확인 대기중', class: 'status-pending' },
-			COMPLETED: { label: '완료', class: 'status-completed' },
-			CANCELLED: { label: '취소됨', class: 'status-cancelled' },
+			UPCOMING: { label: t('예정'), class: 'status-upcoming' },
+			CONFIRMED: { label: t('예약 확정'), class: 'status-confirmed' },
+			CHECKED_IN: { label: t('체크인 완료'), class: 'status-checked-in' },
+			PENDING: { label: t('확인 대기중'), class: 'status-pending' },
+			COMPLETED: { label: t('완료'), class: 'status-completed' },
+			CANCELLED: { label: t('취소됨'), class: 'status-cancelled' },
 		};
-		return statusMap[status] || { label: '알 수 없음', class: 'status-confirmed' };
+		return statusMap[status] || { label: t('알 수 없음'), class: 'status-confirmed' };
 	};
 
 	const filteredReservations = allReservations?.filter((reservation) => {
@@ -133,20 +135,20 @@ const ReservationsPage = (props: ReservationsPageProps) => {
 	return (
 		<div className="reservation-page-contanier">
 			<div className="header-actions">
-				<h1 className="page-title">예약 현황</h1>
+				<h1 className="page-title">{t('예약 현황')}</h1>
 			</div>
 
 			<div className="stats-grid stats-grid-3">
 				<div className="stat-card">
-					<p className="stat-label">총 예약수</p>
+					<p className="stat-label">{t('총 예약수')}</p>
 					<p className="stat-value">{allReservations?.length}</p>
 				</div>
 				<div className="stat-card">
-					<p className="stat-label">총 수익</p>
+					<p className="stat-label">{t('총 수익')}</p>
 					<p className="stat-value">${totalRevenue?.toLocaleString()}</p>
 				</div>
 				<div className="stat-card">
-					<p className="stat-label">보류 중인 체크인</p>
+					<p className="stat-label">{t('보류 중인 체크인')}</p>
 					<p className="stat-value">{statusCounts?.CONFIRMED}</p>
 				</div>
 			</div>
@@ -200,13 +202,27 @@ const ReservationsPage = (props: ReservationsPageProps) => {
 							setFilterStatus(e.target.value);
 						}}
 					>
-						<option value="all">전체 ({statusCounts.all})</option>
-						<option value="UPCOMING">예정 ({statusCounts.UPCOMING})</option>
-						<option value="CONFIRMED">확인됨 ({statusCounts.CONFIRMED})</option>
-						<option value="CHECKED_IN">체크인 ({statusCounts.CHECKED_IN})</option>
-						<option value="COMPLETED">완료 ({statusCounts.COMPLETED})</option>
-						<option value="PENDING">보류 중 ({statusCounts.PENDING})</option>
-						<option value="CANCELLED">취소됨 ({statusCounts.CANCELLED})</option>
+						<option value="all">
+							{t('전체')} ({statusCounts.all})
+						</option>
+						<option value="UPCOMING">
+							{t('전체')} ({statusCounts.UPCOMING})
+						</option>
+						<option value="CONFIRMED">
+							{t('확인됨')} ({statusCounts.CONFIRMED})
+						</option>
+						<option value="CHECKED_IN">
+							{t('체크인')} ({statusCounts.CHECKED_IN})
+						</option>
+						<option value="COMPLETED">
+							{t('완료')} ({statusCounts.COMPLETED})
+						</option>
+						<option value="PENDING">
+							{t('보류 중')} ({statusCounts.PENDING})
+						</option>
+						<option value="CANCELLED">
+							{t('취소됨')} ({statusCounts.CANCELLED})
+						</option>
 					</select>
 				</div>
 
@@ -231,12 +247,16 @@ const ReservationsPage = (props: ReservationsPageProps) => {
 											<span>{r.reservationCheckIn}</span>
 											<span className="date-separator">→</span>
 											<span>{r.reservationCheckOut}</span>
-											<span>({r.priceBreakdown?.length} 박)</span>
+											<span>
+												({r.priceBreakdown?.length} {t('박')})
+											</span>
 										</div>
 									</div>
 									<div className="reservation-item-actions">
 										<div className="reservation-amount">${r.reservationTotalPrice!.toLocaleString()}</div>
-										<div className="reservation-room-info">{r.memberInfo?.guestName} 명</div>
+										<div className="reservation-room-info">
+											{r.memberInfo?.guestName} {t('명')}
+										</div>
 									</div>
 								</div>
 							</div>
@@ -245,8 +265,8 @@ const ReservationsPage = (props: ReservationsPageProps) => {
 				) : (
 					<div className="empty-state">
 						<div className="empty-state-icon">🔍</div>
-						<div className="empty-state-title">예약이 없습니다</div>
-						<div className="empty-state-text">검색 또는 필터 기준을 조정해 보세요.</div>
+						<div className="empty-state-title">{t('예약이 없습니다')}</div>
+						<div className="empty-state-text">{t('검색 또는 필터 기준을 조정해 보세요')}.</div>
 					</div>
 				)}
 			</div>
@@ -256,7 +276,7 @@ const ReservationsPage = (props: ReservationsPageProps) => {
 					<div className="modal-content" onClick={(e) => e.stopPropagation()}>
 						<div className="modal-header">
 							<div>
-								<h3>예약 세부 정보</h3>
+								<h3>{t('예약 세부 정보')}</h3>
 								<p className="reservation-id">R_ID: {selectedReservation._id.slice(0, 10)}</p>
 							</div>
 							<button className="close-btn" onClick={() => setSelectedReservation(null)}>
@@ -265,35 +285,37 @@ const ReservationsPage = (props: ReservationsPageProps) => {
 						</div>
 
 						<div className="modal-info-section">
-							<div className="modal-info-title">고객 정보</div>
+							<div className="modal-info-title">{t('고객 정보')}</div>
 							<div className="modal-info-row">
-								<span className="modal-info-label">이름</span>
+								<span className="modal-info-label">{t('이름')}</span>
 								<span className="modal-info-value">{selectedReservation?.memberInfo?.guestName}</span>
 							</div>
 							<div className="modal-info-row">
-								<span className="modal-info-label">이메일</span>
+								<span className="modal-info-label">{t('이메일')}</span>
 								<span className="modal-info-value">{selectedReservation?.memberInfo?.guestEmail ?? ''}</span>
 							</div>
 							<div className="modal-info-row">
-								<span className="modal-info-label">전화번호</span>
+								<span className="modal-info-label">{t('전화번호')}</span>
 								<span className="modal-info-value">{selectedReservation?.memberInfo?.guestPhone}</span>
 							</div>
 							<div className="modal-info-row">
-								<span className="modal-info-label">손님 수</span>
-								<span className="modal-info-value">{selectedReservation.reservationQty} 명</span>
+								<span className="modal-info-label">{t('손님 수')}</span>
+								<span className="modal-info-value">
+									{selectedReservation.reservationQty} {t('명')}
+								</span>
 							</div>
 						</div>
 
 						<div className="modal-info-section">
-							<div className="modal-info-title">숙박 세부 정보</div>
+							<div className="modal-info-title">{t('숙박 세부 정보')}</div>
 							<div className="modal-info-row">
-								<span className="modal-info-label">방</span>
+								<span className="modal-info-label">{t('방')}</span>
 								<span className="modal-info-value">
 									{selectedReservation?.roomData?.[0].roomName} - R_ID: {selectedReservation?.roomTypeId?.slice(0, 10)}
 								</span>
 							</div>
 							<div className="modal-info-row">
-								<span className="modal-info-label">체크인</span>
+								<span className="modal-info-label">{t('체크인')}</span>
 								<span className="modal-info-value">
 									{selectedReservation.reservationPlanType === 'OVERNIGHT'
 										? selectedReservation?.reservationCheckIn
@@ -301,7 +323,7 @@ const ReservationsPage = (props: ReservationsPageProps) => {
 								</span>
 							</div>
 							<div className="modal-info-row">
-								<span className="modal-info-label">체크아웃</span>
+								<span className="modal-info-label">{t('체크아웃')}</span>
 								<span className="modal-info-value">
 									{selectedReservation.reservationPlanType === 'OVERNIGHT'
 										? selectedReservation?.reservationCheckOut
@@ -309,23 +331,25 @@ const ReservationsPage = (props: ReservationsPageProps) => {
 								</span>
 							</div>
 							<div className="modal-info-row">
-								<span className="modal-info-label">지속</span>
-								<span className="modal-info-value">{selectedReservation?.priceBreakdown?.length} 박</span>
+								<span className="modal-info-label">{t('지속')}</span>
+								<span className="modal-info-value">
+									{selectedReservation?.priceBreakdown?.length} {t('박')}
+								</span>
 							</div>
 						</div>
 
 						<div className="modal-info-section">
-							<div className="modal-info-title">예약 정보</div>
+							<div className="modal-info-title">{t('예약 정보')}</div>
 							<div className="modal-info-row">
-								<span className="modal-info-label">예약 날짜</span>
+								<span className="modal-info-label">{t('예약 날짜')}</span>
 								<span className="modal-info-value">{selectedReservation?.reservationDate}</span>
 							</div>
 							<div className="modal-info-row">
-								<span className="modal-info-label">예약 채널</span>
+								<span className="modal-info-label">{t('예약 채널')}</span>
 								<span className="modal-info-value">{'Lunotel'}</span>
 							</div>
 							<div className="modal-info-row">
-								<span className="modal-info-label">상태</span>
+								<span className="modal-info-label">{t('상태')}</span>
 								<span className={`status-badge ${getStatusInfo(selectedReservation.reservationStatus!).class}`}>
 									{getStatusInfo(selectedReservation.reservationStatus).label}
 								</span>
@@ -334,7 +358,7 @@ const ReservationsPage = (props: ReservationsPageProps) => {
 
 						<div className="modal-total">
 							<div className="modal-total-row">
-								<span className="modal-total-label">총액</span>
+								<span className="modal-total-label">{t('총액')}</span>
 								<span className="modal-total-value">
 									${selectedReservation.reservationTotalPrice!.toLocaleString()}
 								</span>
@@ -347,7 +371,7 @@ const ReservationsPage = (props: ReservationsPageProps) => {
 									className="btn btn-secondary"
 									onClick={() => handleUpdateReservation(ReservationStatus.PENDING, selectedReservation)}
 								>
-									예약 승인
+									{t('예약 승인')}
 								</button>
 							)}
 							{selectedReservation.reservationStatus !== ReservationStatus.CANCELLED &&
@@ -356,7 +380,7 @@ const ReservationsPage = (props: ReservationsPageProps) => {
 										className="btn btn-danger"
 										onClick={() => handleUpdateReservation(ReservationStatus.CANCELLED, selectedReservation)}
 									>
-										예약 취소
+										{t('예약 취소')}
 									</button>
 								)}
 						</div>

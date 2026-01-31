@@ -7,8 +7,6 @@ import RoomsPage from '../../../libs/components/mypage/host/RoomsPage';
 import ReservationsPage from '../../../libs/components/mypage/host/ReservationsPage';
 import RevenuePage from '../../../libs/components/mypage/host/RevenuePage';
 import ReviewsPage from '../../../libs/components/mypage/host/ReviewsPage';
-import NotificationsPage from '../../../libs/components/mypage/host/NotificationsPage';
-import CustomerInquiryPage from '../../../libs/components/mypage/host/CustomerInquiryPage';
 import { useRouter } from 'next/router';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import AdminSupportChat from '../../../libs/components/mypage/host/AgentSupportChat';
@@ -39,8 +37,6 @@ const HostMyPage = () => {
 				return <ReviewsPage />;
 			case 'customer-inquiry':
 				return <AdminSupportChat />;
-			// case 'notifications':
-			// 	return <NotificationsPage />;
 		}
 	};
 

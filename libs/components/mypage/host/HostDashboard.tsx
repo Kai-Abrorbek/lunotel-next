@@ -6,6 +6,7 @@ import { GET_AGENT_RESERVATIONS } from '../../../../apollo/user/query';
 import { useQuery } from '@apollo/client';
 import { Reservation } from '../../../types/reservation/reservation';
 import { ReservationStatus } from '../../../enums/reservation';
+import { useTranslation } from 'react-i18next';
 
 type StatItem = {
 	id: string;
@@ -15,11 +16,13 @@ type StatItem = {
 
 const HostDashboard = () => {
 	const router = useRouter();
+	const { t, i18n } = useTranslation('common');
+
 	const [stats, setStats] = useState<StatItem[]>([
-		{ id: 'checkins', label: '오늘의 체크인', value: 0 },
-		{ id: 'checkouts', label: '오늘의 체크아웃', value: 0 },
-		{ id: 'reservations', label: '오늘의 예약', value: 5 },
-		{ id: 'revenue', label: '이번 주 수익', value: 0 },
+		{ id: 'checkins', label: t('오늘의 체크인'), value: 0 },
+		{ id: 'checkouts', label: t('오늘의 체크아웃'), value: 0 },
+		{ id: 'reservations', label: t('오늘의 예약'), value: 5 },
+		{ id: 'revenue', label: t('이번 주 수익'), value: 0 },
 	]);
 	/** APOLLO REQUEST **/
 	const {
@@ -84,7 +87,7 @@ const HostDashboard = () => {
 	return (
 		<div className="dashboard">
 			<div className="dashboard__header">
-				<h1 className="dashboard__title">대시보드</h1>
+				<h1 className="dashboard__title">{t('대시보드')}</h1>
 			</div>
 
 			<section className="dashboard__stats">
@@ -107,7 +110,7 @@ const HostDashboard = () => {
 			<section className="dashboard__main-row">
 				{/* 왼쪽: Recent Reservations */}
 				<div className="dashboard__reservations">
-					<h2 className="dashboard__section-title">최근 예약</h2>
+					<h2 className="dashboard__section-title">{t('최근 예약')}</h2>
 
 					<div className="dashboard__reservation-list">
 						{reservations?.map((r: Reservation) => (
@@ -120,11 +123,11 @@ const HostDashboard = () => {
 
 										<div className="reservation-card__dates">
 											<div className="reservation-card__date-item">
-												<span className="reservation-card__date-label">체크인</span>
+												<span className="reservation-card__date-label">{t('체크인')}</span>
 												<span className="reservation-card__date-value">{r?.reservationCheckIn}</span>
 											</div>
 											<div className="reservation-card__date-item">
-												<span className="reservation-card__date-label">체크아웃</span>
+												<span className="reservation-card__date-label">{t('체크아웃')}</span>
 												<span className="reservation-card__date-value">{r?.reservationCheckOut}</span>
 											</div>
 										</div>
@@ -148,15 +151,15 @@ const HostDashboard = () => {
 										}`}
 									>
 										{r.reservationStatus === 'UPCOMING'
-											? '예정'
+											? t('예정')
 											: r.reservationStatus === 'PENDING'
-											? '대기중'
+											? t('대기중')
 											: r.reservationStatus === 'CANCELLED'
-											? '취소됨'
+											? t('취소됨')
 											: r.reservationStatus === 'COMPLETED'
-											? '완료됨'
+											? t('완료됨')
 											: r.reservationStatus === 'CHECKED_IN'
-											? '두숙중'
+											? t('두숙중')
 											: ''}
 									</span>
 								</div>
@@ -167,20 +170,20 @@ const HostDashboard = () => {
 
 				{/* 오른쪽: Quick Actions */}
 				<div className="dashboard__quick-actions">
-					<h2 className="dashboard__section-title">빠른 작업</h2>
+					<h2 className="dashboard__section-title">{t('빠른 작업')}</h2>
 
 					<div className="quick-card">
 						<Link href={''}>
 							<button className="quick-card__item">
 								<span className="quick-card__icon">＋</span>
-								<span className="quick-card__text">객실 추가</span>
+								<span className="quick-card__text">{t('객실 추가')}</span>
 							</button>
 						</Link>
 						<div className="quick-card__divider" />
 						<Link href={''}>
 							<button className="quick-card__item">
 								<span className="quick-card__icon quick-card__icon--square">▦</span>
-								<span className="quick-card__text">달력 보기</span>
+								<span className="quick-card__text">{t('달력 보기')}</span>
 							</button>
 						</Link>
 					</div>

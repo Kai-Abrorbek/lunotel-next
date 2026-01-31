@@ -14,6 +14,7 @@ import { useQuery } from '@apollo/client';
 import { RoomType } from '../../../types/roomtype/roomtype';
 import { Reservation } from '../../../types/reservation/reservation';
 import { ReservationStatus } from '../../../enums/reservation';
+import { useTranslation } from 'react-i18next';
 
 const dateTypeToString = (date: Date): string => {
 	return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(
@@ -27,6 +28,7 @@ type TabKey = 'all' | RoomStatus;
 const WEEK_DAYS = ['일', '월', '화', '수', '목', '금', '토'];
 
 const RoomsPage: React.FC = () => {
+	const { t, i18n } = useTranslation('common');
 	const router = useRouter();
 	const [activeTab, setActiveTab] = useState<TabKey>('all');
 	const [calendarOpenRoomId, setCalendarOpenRoomId] = useState<string | null>(null);
@@ -106,15 +108,15 @@ const RoomsPage: React.FC = () => {
 	const renderStatusChip = (status: RoomStatus) => {
 		switch (status) {
 			case 'AVAILABLE':
-				return <span className="room-card__status room-card__status--available">예약 가능</span>;
+				return <span className="room-card__status room-card__status--available">{t('예약 가능')}</span>;
 			case 'UNAVAILABLE':
-				return <span className="room-card__status room-card__status--unavailable">예약 불가</span>;
+				return <span className="room-card__status room-card__status--unavailable">{t('예약 불가')}</span>;
 			case 'OCCUPIED':
-				return <span className="room-card__status room-card__status--occupied">투숙중</span>;
+				return <span className="room-card__status room-card__status--occupied">{t('투숙 중')}</span>;
 			case 'CLEANING':
-				return <span className="room-card__status room-card__status--cleaning">청소중</span>;
+				return <span className="room-card__status room-card__status--cleaning">{t('청소 중')}</span>;
 			case 'MAINTENANCE':
-				return <span className="room-card__status room-card__status--maintenance">정비중</span>;
+				return <span className="room-card__status room-card__status--maintenance">{t('정비 중')}</span>;
 		}
 	};
 
@@ -167,7 +169,8 @@ const RoomsPage: React.FC = () => {
 		return false;
 	};
 
-	const formatMonthLabel = (date: Date) => `${date.getFullYear()}년 ${String(date.getMonth() + 1).padStart(2, '0')}월`;
+	const formatMonthLabel = (date: Date) =>
+		`${date.getFullYear()}${t('년')} ${String(date.getMonth() + 1).padStart(2, '0')}${t('월')}`;
 
 	const isPastDate = useCallback(
 		(day: Date, month: Date) => {
@@ -189,7 +192,7 @@ const RoomsPage: React.FC = () => {
 		}
 
 		if (hasReservedBetween(selectedRoom?._id!, checkIn, day)) {
-			await sweetMixinErrorAlert('해당 기간에 이미 예약이 있습니다');
+			await sweetMixinErrorAlert(t('해당 기간에 이미 예약이 있습니다'));
 			return;
 		}
 
@@ -251,7 +254,7 @@ const RoomsPage: React.FC = () => {
 		<Box className="rooms-page">
 			<Box className="rooms-page__header">
 				<Typography variant="h2" className="rooms-page__title">
-					객실
+					{t('객실')}
 				</Typography>
 				<Button
 					onClick={() => setIsOpenAddRoom(true)}
@@ -259,7 +262,7 @@ const RoomsPage: React.FC = () => {
 					size="large"
 					className="rooms-page__add-button"
 				>
-					+ 객실 추가
+					+ {t('객실 추가')}
 				</Button>
 				<RoomAddModal
 					isOpen={isOpenAddRoom}
@@ -282,44 +285,44 @@ const RoomsPage: React.FC = () => {
 						className={`rooms-tab ${activeTab === 'all' ? 'rooms-tab--active' : ''}`}
 						onClick={() => setActiveTab('all')}
 					>
-						전체 ({counts.all})
+						{t('전체')} ({counts.all})
 					</button>
 					<button
 						className={`rooms-tab ${activeTab === RoomStatus.AVAILABLE ? 'rooms-tab--active' : ''}`}
 						onClick={() => setActiveTab(RoomStatus.AVAILABLE)}
 					>
-						예약 가능 ({counts.AVAILABLE})
+						{t('예약 가능')} ({counts.AVAILABLE})
 					</button>
 					<button
 						className={`rooms-tab ${activeTab === RoomStatus.UNAVAILABLE ? 'rooms-tab--active' : ''}`}
 						onClick={() => setActiveTab(RoomStatus.UNAVAILABLE)}
 					>
-						예약 불가 ({counts.UNAVAILABLE})
+						{t('예약 불가')} ({counts.UNAVAILABLE})
 					</button>
 					<button
 						className={`rooms-tab ${activeTab === RoomStatus.OCCUPIED ? 'rooms-tab--active' : ''}`}
 						onClick={() => setActiveTab(RoomStatus.OCCUPIED)}
 					>
-						투숙중 ({counts.OCCUPIED})
+						{t('투숙 중')} ({counts.OCCUPIED})
 					</button>
 					<button
 						className={`rooms-tab ${activeTab === RoomStatus.CLEANING ? 'rooms-tab--active' : ''}`}
 						onClick={() => setActiveTab(RoomStatus.CLEANING)}
 					>
-						청소중 ({counts.CLEANING})
+						{t('청소 중')} ({counts.CLEANING})
 					</button>
 					<button
 						className={`rooms-tab ${activeTab === RoomStatus.MAINTENANCE ? 'rooms-tab--active' : ''}`}
 						onClick={() => setActiveTab(RoomStatus.MAINTENANCE)}
 					>
-						정비중 ({counts.MAINTENANCE})
+						{t('정비 중')} ({counts.MAINTENANCE})
 					</button>
 				</Box>
 				<div className="search-box">
 					<input
 						type="search"
 						className="search-input"
-						placeholder="검색어를 입력하세요"
+						placeholder={t('검색어를 입력하세요')}
 						onChange={(e) => {
 							setSearchTerm(e.target.value);
 						}}
@@ -330,7 +333,7 @@ const RoomsPage: React.FC = () => {
 							setSearchTerm('');
 						}}
 					>
-						검색
+						{t('검색')}
 					</button>
 				</div>
 			</Box>
@@ -360,11 +363,11 @@ const RoomsPage: React.FC = () => {
 										reservationData?.reservationCheckOut && (
 											<Box className="room-card__current-stay">
 												<div className="room-card__stay-line">
-													<span className="room-card__stay-label">투숙객:</span>
+													<span className="room-card__stay-label">{t('투숙객')}:</span>
 													<span className="room-card__stay-value">{reservationData?.memberInfo.guestName}</span>
 												</div>
 												<div className="room-card__stay-line">
-													<span className="room-card__stay-label">체크아웃:</span>
+													<span className="room-card__stay-label">{t('체크아웃')}:</span>
 													<span className="room-card__stay-value">{reservationData?.reservationCheckOut}</span>
 												</div>
 											</Box>
@@ -372,13 +375,19 @@ const RoomsPage: React.FC = () => {
 
 									<Box className="room-card__meta">
 										<div className="room-card__meta-row">
-											<span>층수</span>
-											<span>인원</span>
-											<span>면적</span>
+											<span>{t('층수')}</span>
+											<span>{t('인원')}</span>
+											<span>{t('면적')}</span>
 										</div>
 										<div className="room-card__meta-row room-card__meta-row--bold">
-											<span>{1}층</span>
-											<span>{room.roomMaxPersonal}명</span>
+											<span>
+												{1}
+												{t('층')}
+											</span>
+											<span>
+												{room.roomMaxPersonal}
+												{t('명')}
+											</span>
 											<span>{28}m²</span>
 										</div>
 									</Box>
@@ -391,7 +400,7 @@ const RoomsPage: React.FC = () => {
 
 									<Box className="room-card__footer">
 										<div className="room-card__price">
-											<span className="room-card__price-label">1박 요금</span>
+											<span className="room-card__price-label">{t('1박 요금')}</span>
 											<span className="room-card__price-value">${room.basePriceOvernight.toLocaleString()}</span>
 										</div>
 										<div className="room-card__actions">
@@ -404,7 +413,7 @@ const RoomsPage: React.FC = () => {
 												size="large"
 												className="room-card__reserve-btn"
 											>
-												수정
+												{t('수정')}
 											</Button>
 											{room.roomStatus === RoomStatus.AVAILABLE && (
 												<Button
@@ -413,7 +422,7 @@ const RoomsPage: React.FC = () => {
 													size="large"
 													className="room-card__reserve-btn"
 												>
-													예약
+													{t('예약')}
 												</Button>
 											)}
 										</div>
@@ -442,7 +451,7 @@ const RoomsPage: React.FC = () => {
 								<div className="room-calendar__room-code">
 									{selectedRoom._id.slice(0, 5)} - {selectedRoom.roomName}
 								</div>
-								<div className="room-calendar__room-subtitle">예약 현황 달력</div>
+								<div className="room-calendar__room-subtitle">{t('예약 현황 달력')}</div>
 							</div>
 							<IconButton size="small" onClick={handleCloseCalendar}>
 								<CloseIcon />
@@ -452,11 +461,11 @@ const RoomsPage: React.FC = () => {
 						<Box className="room-calendar__month-nav">
 							<Button variant="outlined" size="small" className="room-calendar__month-btn" onClick={handlePrevMonth}>
 								<ArrowBackIosNewIcon fontSize="small" />
-								이전
+								{t('이전')}
 							</Button>
 							<span className="room-calendar__month-label">{formatMonthLabel(calendarMonth)}</span>
 							<Button variant="outlined" size="small" className="room-calendar__month-btn" onClick={handleNextMonth}>
-								다음
+								{t('다음')}
 								<ArrowForwardIosIcon fontSize="small" />
 							</Button>
 						</Box>
@@ -464,7 +473,7 @@ const RoomsPage: React.FC = () => {
 						<Box className="room-calendar__weekdays">
 							{WEEK_DAYS.map((d) => (
 								<div key={d} className="room-calendar__weekday">
-									{d}
+									{t(d)}
 								</div>
 							))}
 						</Box>
@@ -507,18 +516,18 @@ const RoomsPage: React.FC = () => {
 
 						<Box className="room-calendar__legend">
 							<div style={{ display: 'flex', flexDirection: 'row', gap: '10px' }}>
-								<span className="room-calendar__legend-title">범례</span>
+								<span className="room-calendar__legend-title">{t('범례')}</span>
 								<div className="room-calendar__legend-item">
 									<span className="room-calendar__legend-dot room-calendar__legend-dot--reserved" />
-									<span>예약됨</span>
+									<span>{t('예약됨')}</span>
 								</div>
 								<div className="room-calendar__legend-item">
 									<span className="room-calendar__legend-dot room-calendar__legend-dot--today" />
-									<span>오늘</span>
+									<span>{t('오늘')}</span>
 								</div>
 								<div className="room-calendar__legend-item">
 									<span className="room-calendar__legend-dot room-calendar__legend-dot--available" />
-									<span>예약 가능</span>
+									<span>{t('예약 가능')}</span>
 								</div>
 							</div>
 							<div>
@@ -528,7 +537,7 @@ const RoomsPage: React.FC = () => {
 										onClick={() => handlePushReservationPage(selectedRoom)}
 									>
 										{' '}
-										➕ 예약
+										➕ {t('예약')}
 									</button>
 								) : (
 									''
