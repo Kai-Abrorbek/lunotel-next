@@ -273,3 +273,16 @@ export const locationOptions = [
 	{ value: 'GANGNEUNG', label: '가릉' },
 	{ value: 'GYEONGJU', label: '경주' },
 ];
+
+export const Locations = [
+	{ name: '제주도', image: `/img/${PropertyLocation.JEJU}.jfif`, value: PropertyLocation.GAPYEONG },
+	{ name: '서울', image: `/img/${PropertyLocation.SEOUL}.jfif`, value: PropertyLocation.SEOUL },
+	{ name: '부산', image: `/img/${PropertyLocation.BUSAN}.jfif`, value: PropertyLocation.BUSAN },
+	{ name: '강릉', image: `/img/${PropertyLocation.GANGNEUNG}.jfif`, value: PropertyLocation.GANGNEUNG },
+	{ name: '인천', image: `/img/${PropertyLocation.INCHEON}.jfif`, value: PropertyLocation.INCHEON },
+	{ name: '경주', image: `/img/${PropertyLocation.GYEONGJU}.jfif`, value: PropertyLocation.GYEONGJU },
+	{ name: '해운대', image: `/img/${PropertyLocation.HEUNDE}.jfif`, value: PropertyLocation.HEUNDE },
+	{ name: '가평', image: `/img/${PropertyLocation.GAPYEONG}.jfif`, value: PropertyLocation.GAPYEONG },
+	{ name: '여수', image: `/img/${PropertyLocation.YEOSU}.jfif`, value: PropertyLocation.GAPYEONG },
+	{ name: '속초', image: `/img/${PropertyLocation.SOKCHO}.jfif`, value: PropertyLocation.GAPYEONG },
+];

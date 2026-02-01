@@ -23,6 +23,7 @@ import { userVar } from '../../../apollo/store';
 import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../sweetAlert';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
+import useDateHook from '../../hooks/useDate';
 
 const CATEGORIES_K: PropertyTypeKorean[] = Object.values(PropertyTypeKorean);
 const CATEGORIES_EN: PropertyType[] = Object.values(PropertyType);
@@ -32,23 +33,12 @@ interface PopularStaysProps {
 }
 
 const PopularStays = (props: PopularStaysProps) => {
+	const { checkIn, checkOut } = useDateHook();
 	const router = useRouter();
 	const { t, i18n } = useTranslation('common');
 	const { initialInput } = props;
 	const user = useReactiveVar(userVar);
 	const [activeCategory, setActiveCategory] = useState<PropertyType>(PropertyType.ALL);
-	const checkIn = useMemo(() => {
-		const d = new Date();
-		return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-	}, []);
-	const checkOut = useMemo(() => {
-		const d = new Date();
-		return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate() + 1).padStart(
-			2,
-			'0',
-		)}`;
-	}, []);
-
 	const [likeTargetProperty] = useMutation(LIKE_TARGET_PROPERTY);
 
 	/** APOLLO REQUESTS **/

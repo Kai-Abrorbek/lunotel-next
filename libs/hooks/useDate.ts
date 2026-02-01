@@ -1,6 +1,23 @@
 import { useMemo, useState } from 'react';
 
 function useDateHook() {
+	const checkIn = useMemo(() => {
+		const d = new Date();
+		return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+	}, []);
+	const checkOut = useMemo(() => {
+		const d = new Date();
+		return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate() + 1).padStart(
+			2,
+			'0',
+		)}`;
+	}, []);
+
+	const today = useMemo(() => {
+		const d = new Date();
+		return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+	}, []);
+
 	const formatDate = (date: Date, addDays = 0) => {
 		const d = new Date(date);
 		d.setDate(d.getDate() + addDays);
@@ -10,15 +27,10 @@ function useDateHook() {
 		return `${y}-${m}-${day}`;
 	};
 
-	const today = useMemo(() => {
-		const d = new Date();
-		return new Date(d.getFullYear(), d.getMonth(), d.getDate());
-	}, []);
-
-	function isSameDate(a: Date | undefined, b: Date | undefined) {
+	const isSameDate = (a: Date | undefined, b: Date | undefined) => {
 		if (!a || !b) return false;
 		return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
-	}
+	};
 
 	const toDate = (value: string | undefined): Date | undefined => {
 		return value ? new Date(value) : undefined;
@@ -43,6 +55,8 @@ function useDateHook() {
 		toDate,
 		inRange,
 		isPastDate,
+		checkIn,
+		checkOut,
 	};
 }
 
