@@ -7,6 +7,7 @@ import { logOut } from '../../auth';
 import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../../apollo/store';
 import LogoutButton from './LogoutButton';
+import { useTranslation } from 'react-i18next';
 
 interface MemberQuickMenuProps {
 	open: boolean;
@@ -15,6 +16,7 @@ interface MemberQuickMenuProps {
 }
 export default function MemberQuickMenu({ open, setOpen, notifications }: MemberQuickMenuProps) {
 	const user = useReactiveVar(userVar);
+	const { t, i18n } = useTranslation('common');
 
 	const handleLogOut = async () => {
 		await signOut({ redirect: false });
@@ -44,7 +46,7 @@ export default function MemberQuickMenu({ open, setOpen, notifications }: Member
 									<p className="member-menu__nickname">{user.memberNick}</p>
 									<p className="member-menu__grade">
 										<span className="member-menu__grade-label">{user.memberType}</span>
-										<span className="member-menu__grade-sub">회원</span>
+										<span className="member-menu__grade-sub">{t('회원')}</span>
 									</p>
 								</Box>
 							</Stack>
@@ -75,22 +77,22 @@ export default function MemberQuickMenu({ open, setOpen, notifications }: Member
 					{/* 1차 메뉴 */}
 					<Box className="member-menu__section member-menu__section--border">
 						<Link href={'/mypage/user/?category=reservation-details'}>
-							<button className="member-menu__item">예약 내역</button>
+							<button className="member-menu__item">{t('예약 내역')}</button>
 						</Link>
 						<Link href={'/mypage/user/?category=my-favorits'}>
-							<button className="member-menu__item">찜 목록</button>
+							<button className="member-menu__item">{t('찜 목록')}</button>
 						</Link>
 						<Link href={'/mypage/user/?category=points'}>
-							<button className="member-menu__item">포인트</button>
+							<button className="member-menu__item">{t('포인트')}</button>
 						</Link>
 						<Link href={'/mypage/user/?category=my-info'}>
-							<button className="member-menu__item">내 정보 관리</button>
+							<button className="member-menu__item">{t('내 정보 관리')}</button>
 						</Link>
 						<Link href={'/mypage/user/?category=settings'}>
-							<button className="member-menu__item">설정</button>
+							<button className="member-menu__item">{t('설정')}</button>
 						</Link>
 						<Link href={'/cs'}>
-							<button className="member-menu__item">고객 센터</button>
+							<button className="member-menu__item">{t('고객 센터')}</button>
 						</Link>
 					</Box>
 

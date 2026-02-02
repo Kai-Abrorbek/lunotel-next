@@ -13,8 +13,10 @@ import { useQuery, useReactiveVar } from '@apollo/client';
 import { userVar } from '../../apollo/store';
 import { GET_MY_NOTIFICATIONS } from '../../apollo/user/query';
 import { Notification } from '../types/notification/notification';
-import { useTranslation } from 'react-i18next';
 import { useRouter } from 'next/router';
+
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useTranslation } from 'react-i18next';
 
 const Header = () => {
 	const user = useReactiveVar(userVar);

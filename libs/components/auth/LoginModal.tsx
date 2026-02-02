@@ -1,19 +1,19 @@
-import { Modal } from '@mui/material';
-import React, { useCallback, useState } from 'react';
+import { Checkbox, FormControlLabel, FormGroup, Modal } from '@mui/material';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ClearIcon from '@mui/icons-material/Clear';
-import { LoginInput } from '../../types/member/member.input';
 import { logIn, signUp } from '../../auth';
 import { MemberType } from '../../enums/member.enum';
 import { sweetErrorAlert, sweetMixinErrorAlert } from '../../sweetAlert';
 import { emailRegex, phoneRegex } from '../../config';
-import { AwardIcon } from 'lucide-react';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'react-i18next';
 
 interface LoginModalProps {
 	open: boolean;
 	onClose: (v: boolean) => void;
 }
 const LoginModal = (props: LoginModalProps) => {
+	const { t, i18n } = useTranslation('common');
 	const { onClose, open } = props;
 	const router = useRouter();
 	const [input, setInput] = useState({ name: '', email: '', password: '', phone: '', type: 'USER' });
@@ -24,17 +24,22 @@ const LoginModal = (props: LoginModalProps) => {
 		});
 	}, []);
 
+	useEffect(() => {
+		setInput({ name: '', email: '', password: '', phone: '', type: '' });
+	}, [open]);
+
 	const handleSignupSubmit = useCallback(async () => {
 		try {
-			if (!input.name) return sweetErrorAlert('이름을 입력해주세요');
-			if (!input.email) return sweetErrorAlert('이메일을 입력해주세요');
-			if (!emailRegex.test(input.email)) return sweetErrorAlert('이메일을 올바르게 입력해주세요! (예: test@gmail.com)');
-			if (!input.phone) return sweetErrorAlert('전화번호를 입력해주세요');
-			if (!phoneRegex.test(input.phone)) return sweetErrorAlert('전화번호를 올바르게 입력해주세요!');
-			if (!input.password) return sweetErrorAlert('비밀번호를 입력해주세요');
-			if (input.password.length < 6) return sweetErrorAlert('비밀번호를 6글자 이상 입력해주세요!');
+			if (!input.name) return sweetErrorAlert(t('이름을 입력해주세요'));
+			if (!input.email) return sweetErrorAlert(t('이메일을 입력해주세요'));
+			if (!emailRegex.test(input.email))
+				return sweetErrorAlert(t('이메일을 올바르게 입력해주세요! (예: test@gmail.com)'));
+			if (!input.phone) return sweetErrorAlert(t('전화번호를 입력해주세요'));
+			if (!phoneRegex.test(input.phone)) return sweetErrorAlert(t('전화번호를 올바르게 입력해주세요')!);
+			if (!input.password) return sweetErrorAlert(t('비밀번호를 입력해주세요'));
+			if (input.password.length < 6) return sweetErrorAlert(t('비밀번호를 6글자 이상 입력해주세요')!);
 
-			await signUp(input.name, input.email, input.password, input.phone, MemberType.USER);
+			await signUp(input.name, input.email, input.password, input.phone, input.type);
 			await router.push(`${router.query.referrer ?? '/'}`);
 		} catch (err: any) {
 			await sweetMixinErrorAlert(err.message);
@@ -43,10 +48,11 @@ const LoginModal = (props: LoginModalProps) => {
 
 	const handleLoginSubmit = useCallback(async () => {
 		try {
-			if (!input.email) return sweetErrorAlert('이메일을 입력해주세요');
-			if (!emailRegex.test(input.email)) return sweetErrorAlert('이메일을 올바르게 입력해주세요! (예: test@gmail.com)');
-			if (!input.password) return sweetErrorAlert('비밀번호를 입력해주세요');
-			if (input.password.length < 6) return sweetErrorAlert('비밀번호를 6글자 이상 입력해주세요!');
+			if (!input.email) return sweetErrorAlert(t('이메일을 입력해주세요')!);
+			if (!emailRegex.test(input.email))
+				return sweetErrorAlert(t('이메일을 올바르게 입력해주세요! (예: test@gmail.com)'));
+			if (!input.password) return sweetErrorAlert(t('비밀번호를 입력해주세요'));
+			if (input.password.length < 6) return sweetErrorAlert(t('비밀번호를 6글자 이상 입력해주세요')!);
 
 			const result = await logIn(input.email, input.password);
 			if (result) await router.push(`${router.query.referrer ?? '/'}`);
@@ -58,6 +64,7 @@ const LoginModal = (props: LoginModalProps) => {
 	const handleChangeRegLog = () => {
 		setInput({ name: '', email: '', password: '', phone: '', type: '' });
 	};
+
 	return (
 		<Modal open={open} onClose={onClose}>
 			<div className="auth3d-page">
@@ -96,11 +103,16 @@ const LoginModal = (props: LoginModalProps) => {
 																type="email"
 																name="logemail"
 																className="form-style"
-																placeholder="Your Email"
+																placeholder={t('이메일을 입력해주세요')}
 																id="logemail"
 																autoComplete="off"
 																value={input.email}
 																onChange={(e) => handleInput('email', e.target.value)}
+																onKeyDown={(e) => {
+																	if (e.key === 'Enter') {
+																		handleLoginSubmit();
+																	}
+																}}
 															/>
 															<i className="input-icon uil uil-at" />
 														</div>
@@ -110,7 +122,7 @@ const LoginModal = (props: LoginModalProps) => {
 																type="password"
 																name="logpass"
 																className="form-style"
-																placeholder="Your Password"
+																placeholder={t('비밀번호를 입력해주세요')}
 																id="logpass"
 																autoComplete="off"
 																value={input.password}
@@ -125,18 +137,12 @@ const LoginModal = (props: LoginModalProps) => {
 														</div>
 
 														<button
-															disabled={input.email == '' || input.password == ''}
+															disabled={input.email === '' || input.password === ''}
 															className="btn mt-4"
 															onClick={handleLoginSubmit}
 														>
 															submit
 														</button>
-
-														<p className="mb-0 mt-4 text-center">
-															<a href="#0" className="link">
-																Forgot your password?
-															</a>
-														</p>
 													</div>
 												</div>
 											</div>
@@ -152,7 +158,7 @@ const LoginModal = (props: LoginModalProps) => {
 																type="text"
 																name="logname"
 																className="form-style"
-																placeholder="Your Full Name"
+																placeholder={t('이름을 입력해주세요')}
 																id="logname"
 																autoComplete="off"
 																value={input.name}
@@ -166,7 +172,7 @@ const LoginModal = (props: LoginModalProps) => {
 																type="text"
 																name="logphone"
 																className="form-style"
-																placeholder="Your Phone Number"
+																placeholder={t('전화번호를 입력해주세요')}
 																id="logphone"
 																autoComplete="off"
 																value={input.phone}
@@ -180,7 +186,7 @@ const LoginModal = (props: LoginModalProps) => {
 																type="email"
 																name="logemail"
 																className="form-style"
-																placeholder="Your Email"
+																placeholder={t('이메일을 입력해주세요')}
 																id="logemail-signup"
 																autoComplete="off"
 																value={input.email}
@@ -194,11 +200,16 @@ const LoginModal = (props: LoginModalProps) => {
 																type="password"
 																name="logpass"
 																className="form-style"
-																placeholder="Your Password"
+																placeholder={t('비밀번호를 입력해주세요')}
 																id="logpass-signup"
 																autoComplete="off"
 																value={input.password}
 																onChange={(e) => handleInput('password', e.target.value)}
+																onKeyDown={(e) => {
+																	if (e.key === 'Enter') {
+																		handleSignupSubmit();
+																	}
+																}}
 															/>
 															<i className="input-icon uil uil-lock-alt" />
 														</div>
@@ -212,6 +223,17 @@ const LoginModal = (props: LoginModalProps) => {
 														>
 															submit
 														</button>
+
+														<FormGroup>
+															<FormControlLabel
+																control={<Checkbox />}
+																label="AGENT"
+																sx={{ color: 'black', fontWeight: '600' }}
+																onChange={(e: any) => {
+																	handleInput('type', e.target.checked ? MemberType.AGENT : MemberType.USER);
+																}}
+															/>
+														</FormGroup>
 													</div>
 												</div>
 											</div>
