@@ -12,6 +12,7 @@ import { appWithTranslation } from 'next-i18next';
 import '../scss/app.scss';
 import '../scss/desktop/main.scss';
 import '../scss/mobile/main.scss';
+import Head from 'next/head';
 
 function AuthSyncGate() {
 	useAuthSync();
@@ -27,6 +28,9 @@ const App = ({ Component, pageProps: { session, ...pageProps } }: AppProps) => {
 				<CssBaseline />
 				<SessionProvider session={session}>
 					<AuthSyncGate />
+					<Head>
+						<link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css" />
+					</Head>
 					<Component {...pageProps} />
 				</SessionProvider>
 			</ThemeProvider>
