@@ -61,34 +61,34 @@
 	.time-chip {
 		min-width: 70px;
 		border-radius: 999px !important;
-		border-color: #d1e3ff;
-		color: #2563eb;
-		background-color: #f3f8ff;
+		border-color: #ffe0e2;
+		color: #ff4e5b;
+		background-color: #fff8f8;
 		font-size: 13px;
 	}
 
 	.time-chip--selected {
-		background-color: #2563eb;
+		background-color: #ff4e5b;
 		color: #fff;
-		border-color: #2563eb;
+		border-color: #ff4e5b;
 	}
 
 	.time-chip--range-time {
-		background-color: #a7bdec;
+		background-color: rgba(255, 78, 91, 0.3);
 		color: #fff;
-		border-color: #a7bdec;
+		border-color: rgba(255, 78, 91, 0.3);
 	}
 
 	.time-chip--start-time {
-		background-color: #5f8df1;
+		background-color: #ff4e5b;
 		color: #fff;
-		border-color: #5f8df1;
+		border-color: #ff4e5b;
 	}
 
 	.time-chip--end-time {
-		background-color: #5f8df1;
+		background-color: #ff4e5b;
 		color: #fff;
-		border-color: #5f8df1;
+		border-color: #ff4e5b;
 	}
 
 	.field-group {
@@ -128,9 +128,9 @@
 	}
 
 	.visit-btn--active {
-		border-color: #1d4ed8 !important;
-		color: #1d4ed8 !important;
-		background-color: #e0edff !important;
+		border-color: #ff4e5b !important;
+		color: #ff4e5b !important;
+		background-color: #fff0f1 !important;
 	}
 
 	.divider-lg {
@@ -179,9 +179,9 @@
 	}
 
 	.payment-chip--selected {
-		border-color: #2563eb !important;
-		background-color: #e0edff !important;
-		color: #1d4ed8 !important;
+		border-color: #ff4e5b !important;
+		background-color: #fff0f1 !important;
+		color: #ff4e5b !important;
 	}
 
 	.remember-check {
@@ -283,7 +283,7 @@
 
 	.pay-button {
 		margin-top: 4px !important;
-		background-color: #2563eb !important;
+		background-color: #ff4e5b !important;
 		color: #fff !important;
 		font-weight: 600 !important;
 		padding: 10px 16px !important;
