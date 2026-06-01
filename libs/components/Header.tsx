@@ -43,6 +43,27 @@ const Header = () => {
 		localStorage.setItem('locale', e.target.id);
 		await router.push(router.asPath, router.asPath, { locale: e.target.id });
 	};
+
+	useEffect(() => {
+		const saved = localStorage.getItem('theme');
+		if (saved === 'dark') {
+			setIsDarkMode(true);
+			document.documentElement.classList.add('dark');
+		}
+	}, []);
+
+	// toggleTheme도 localStorage 저장하게 수정
+	const toggleTheme = () => {
+		const next = !isDarkMode;
+		setIsDarkMode(next);
+		localStorage.setItem('theme', next ? 'dark' : 'light');
+		if (next) {
+			document.documentElement.classList.add('dark');
+		} else {
+			document.documentElement.classList.remove('dark');
+		}
+	};
+
 	/** APOLLO REQUESTS **/
 	const {
 		loading: getMyNotificationsLoading,
@@ -65,8 +86,6 @@ const Header = () => {
 	const notifications = getMyNotificationsData?.getMyNotifications?.list.filter(
 		(notif: Notification) => !notif.isRead,
 	).length;
-
-	const toggleTheme = () => setIsDarkMode(!isDarkMode);
 
 	if (device === 'mobile') {
 		return <h1>MOBILE</h1>;

@@ -577,14 +577,14 @@ body::-webkit-scrollbar {
 					.logo-section:hover .logo-text::after {
 						width: 100%;
 					}
-					.app.dark .logo-text {
+					html.dark .logo-text {
 						background: linear-gradient(135deg, #ff8787 0%, #ff6b9d 50%, #da5a87 100%);
 						-webkit-background-clip: text;
 						-webkit-text-fill-color: transparent;
 						background-clip: text;
 						filter: drop-shadow(0 2px 10px rgba(255, 135, 135, 0.5)) drop-shadow(0 4px 20px rgba(255, 107, 157, 0.4));
 					}
-					.app.dark .logo-text::after {
+					html.dark .logo-text::after {
 						background: linear-gradient(90deg, #ff8787 0%, #ff6b9d 50%, #da5a87 100%);
 						box-shadow: 0 2px 10px rgba(255, 135, 135, 0.6);
 					}
@@ -612,7 +612,7 @@ body::-webkit-scrollbar {
 							color: #374151;
 							transition: all 0.2s ease;
 						}
-						.app.dark .language-button {
+						html.dark .language-button {
 							border-color: #4b5563;
 							color: #d1d5db;
 						}
@@ -639,7 +639,7 @@ body::-webkit-scrollbar {
 								font-weight: 500;
 								color: #374151;
 							}
-							.app.dark .language-option {
+							html.dark .language-option {
 								color: #d1d5db;
 							}
 							.language-option:hover {
@@ -652,7 +652,7 @@ body::-webkit-scrollbar {
 								font-weight: 700;
 							}
 						}
-						.app.dark .language-dropdown {
+						html.dark .language-dropdown {
 							background: #1f2937;
 						}
 						@keyframes slideDown {
@@ -723,14 +723,14 @@ body::-webkit-scrollbar {
 						box-shadow: 0 4px 16px rgba(102, 126, 234, 0.25);
 					}
 
-					.navbar.dark .guest-booking-button {
+					html.dark .guest-booking-button {
 						background: rgba(26, 26, 46, 0.5);
 						border-color: #818cf8;
 						color: #818cf8;
 						box-shadow: 0 2px 8px rgba(129, 140, 248, 0.2);
 					}
 
-					.navbar.dark .guest-booking-button:hover {
+					html.dark .guest-booking-button:hover {
 						background: rgba(129, 140, 248, 0.1);
 						box-shadow: 0 4px 16px rgba(129, 140, 248, 0.3);
 					}
@@ -777,7 +777,7 @@ body::-webkit-scrollbar {
 						box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
 					}
 
-					.navbar.dark .login-button {
+					html.dark .login-button {
 						background: rgba(129, 140, 248, 0.1);
 						color: #818cf8;
 						box-shadow: 0 2px 8px rgba(129, 140, 248, 0.15);
@@ -832,13 +832,13 @@ body::-webkit-scrollbar {
 						box-shadow: 0 6px 16px rgba(255, 107, 107, 0.25);
 					}
 
-					.navbar.dark .user-profile {
+					html.dark .user-profile {
 						background: rgba(31, 41, 55, 0.6);
 						border-color: rgba(255, 135, 135, 0.3);
 						box-shadow: 0 4px 12px rgba(255, 135, 135, 0.2);
 					}
 
-					.navbar.dark .user-profile:hover {
+					html.dark .user-profile:hover {
 						background: rgba(31, 41, 55, 0.8);
 						border-color: rgba(255, 135, 135, 0.5);
 						box-shadow: 0 6px 16px rgba(255, 135, 135, 0.3);
@@ -853,7 +853,7 @@ body::-webkit-scrollbar {
 						box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 					}
 
-					.navbar.dark .user-avatar {
+					html.dark .user-avatar {
 						border-color: rgba(255, 255, 255, 0.2);
 					}
 
@@ -871,7 +871,7 @@ body::-webkit-scrollbar {
 						line-height: 1.2;
 					}
 
-					.navbar.dark .user-name {
+					html.dark .user-name {
 						color: #f3f4f6;
 					}
 
@@ -885,7 +885,7 @@ body::-webkit-scrollbar {
 						line-height: 1.2;
 					}
 
-					.navbar.dark .user-type {
+					html.dark .user-type {
 						background: linear-gradient(135deg, #ff8787 0%, #ff6b9d 100%);
 						-webkit-background-clip: text;
 						-webkit-text-fill-color: transparent;
@@ -933,7 +933,7 @@ body::-webkit-scrollbar {
 						box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 					}
 
-					.navbar.dark .menu-button {
+					html.dark .menu-button {
 						background: linear-gradient(135deg, #374151 0%, #1f2937 100%);
 						color: #d1d5db;
 						box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
