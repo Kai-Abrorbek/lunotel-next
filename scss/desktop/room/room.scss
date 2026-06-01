@@ -43,7 +43,7 @@
 			cursor: pointer;
 
 			&--active {
-				color: #1976d2;
+				color: #ff4e5b;
 				font-weight: 600;
 			}
 		}
@@ -54,7 +54,7 @@
 			right: 0;
 			bottom: -6px;
 			height: 2px;
-			background: #1976d2;
+			background: #ff4e5b;
 			border-radius: 999px;
 		}
 
@@ -270,7 +270,7 @@
 
 						.card-link {
 							font-size: 12px;
-							color: #1976d2;
+							color: #ff4e5b;
 						}
 
 						.service-icons {
@@ -313,7 +313,7 @@
 
 						.card-link {
 							font-size: 12px;
-							color: #1976d2;
+							color: #ff4e5b;
 						}
 
 						.location-lines {
@@ -403,7 +403,7 @@
 
 				&__link {
 					font-size: 13px;
-					color: #1976d2;
+					color: #ff4e5b;
 					cursor: pointer;
 				}
 
@@ -466,14 +466,14 @@
 
 				&__button {
 					&--day {
-						background: #0c7eeea3;
+						background: #ff4e5b;
 						color: white;
 						font-size: 12px;
 						font-weight: 500;
 						padding: 10px 10px;
 					}
 					&--stay {
-						background: #0c7eeea3;
+						background: #ff4e5b;
 						color: white;
 						font-size: 12px;
 						font-weight: 500;
@@ -764,7 +764,7 @@
 
 				&__room-name {
 					font-size: 13px;
-					color: #1976d2;
+					color: #ff4e5b;
 					margin-top: 4px;
 				}
 
@@ -844,9 +844,9 @@
 							box-shadow: none !important;
 						}
 						.popular-tab.active {
-							background-color: #1976d2 !important;
+							background-color: #ff4e5b !important;
 							color: #ffffff !important;
-							border-color: #1976d2 !important;
+							border-color: #ff4e5b !important;
 						}
 					}
 				}
@@ -1116,7 +1116,7 @@
 		}
 
 		&--active {
-			border-color: #1976d2;
+			border-color: #ff4e5b;
 		}
 	}
 
@@ -1141,12 +1141,12 @@
 	}
 
 	.reviews-page__sort-menu-text--active {
-		color: #2563eb; // 파란색
+		color: #ff4e5b; // 파란색
 		font-weight: 600;
 	}
 
 	.reviews-page__sort-menu-check {
-		color: #2563eb;
+		color: #ff4e5b;
 		font-size: 18px;
 	}
 }

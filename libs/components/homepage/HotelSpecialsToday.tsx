@@ -9,13 +9,15 @@ import { PropertiesInquiry } from '../../types/property/property.input';
 import { Property } from '../../types/property/property';
 import { usePropertySection } from '../../hooks/usePropertySection';
 import PropertyCard from '../common/PropertyCard';
+import PropertyCardSkeleton from '../common/PropertyCardSkeleton';
 
 interface HotelSpecialsTodayProps {
 	initialInput: PropertiesInquiry;
 }
 
 const HotelSpecialsToday = ({ initialInput }: HotelSpecialsTodayProps) => {
-	const { properties, user, t, likePropertyHandler, handlePushPropertyDetail } = usePropertySection(initialInput);
+	const { properties, user, t, loading, likePropertyHandler, handlePushPropertyDetail } =
+		usePropertySection(initialInput);
 
 	return (
 		<Stack className="container">
@@ -24,7 +26,27 @@ const HotelSpecialsToday = ({ initialInput }: HotelSpecialsTodayProps) => {
 					<Typography className="section-title">{t('오늘 체크인 호텔 특가')}</Typography>
 				</Box>
 
-				{properties.length !== 0 ? (
+				{loading ? (
+					<Box className="section-slider-wrapper">
+						<Swiper
+							className="section-swiper"
+							modules={[Navigation]}
+							spaceBetween={24}
+							breakpoints={{
+								0: { slidesPerView: 1.2, spaceBetween: 16 },
+								768: { slidesPerView: 2.5, spaceBetween: 20 },
+								1024: { slidesPerView: 3, spaceBetween: 22 },
+								1280: { slidesPerView: 4, spaceBetween: 24 },
+							}}
+						>
+							{[1, 2, 3, 4].map((i) => (
+								<SwiperSlide key={i}>
+									<PropertyCardSkeleton />
+								</SwiperSlide>
+							))}
+						</Swiper>
+					</Box>
+				) : properties.length !== 0 ? (
 					<Box className="section-slider-wrapper">
 						<IconButton className="section-arrow section-prev-specials">
 							<ArrowBackIosNewIcon />

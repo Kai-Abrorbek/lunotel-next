@@ -44,15 +44,7 @@ body::-webkit-scrollbar {
 	z-index: 1300;
 }
 #pc-wrap {
-	#top {
-		.hero-search-button {
-			background-color: #ff4e5b !important;
-
-			&:hover {
-				background-color: #e8404c !important;
-			}
-		}
-	}
+	#top,
 	#other-top {
 		.navbar {
 			width: 100%;
@@ -198,7 +190,7 @@ body::-webkit-scrollbar {
 								cursor: pointer;
 							}
 							.hero-tab.active {
-								color: #ff4e5b !important;
+								color: #1976d2;
 								font-weight: 600;
 							}
 							.hero-tab.active::after {
@@ -208,7 +200,7 @@ body::-webkit-scrollbar {
 								bottom: -11px;
 								width: 100%;
 								height: 2px;
-								background-color: #ff4e5b !important;
+								background-color: #1976d2;
 							}
 							.hero-tab-badge {
 								display: inline-block;
@@ -416,15 +408,12 @@ body::-webkit-scrollbar {
 							}
 							/* 검색 버튼 */
 							.hero-search-button {
-								background-color: #ff4e5b !important;
-								color: #fff !important;
+								background-color: #1976d2 !important;
+								color: #ffffff !important;
 								border-radius: 10px !important;
 								font-size: 15px !important;
 								font-weight: 600 !important;
 								text-transform: none !important;
-								&:hover {
-									background-color: #e8404c !important;
-								}
 							}
 						}
 						/* 달력 팝업 */
@@ -494,11 +483,11 @@ body::-webkit-scrollbar {
 								}
 								.hero-datepicker-cell.start,
 								.hero-datepicker-cell.end {
-									background-color: #ff4e5b !important;
-									color: #fff !important;
+									background-color: #1976d2;
+									color: #ffffff;
 								}
 								.hero-datepicker-cell.in-range {
-									background-color: rgba(255, 78, 91, 0.12) !important;
+									background-color: #bae2ff;
 								}
 							}
 						}
@@ -985,83 +974,43 @@ body::-webkit-scrollbar {
 	}
 
 	#footer {
-		background-color: #f8f9fa;
-		border-top: 1px solid #eee;
-
 		.footer-container {
 			width: 100%;
-			padding: 48px 32px 40px;
+			padding: 40px 32px;
 			display: flex;
-			gap: 48px;
-
+			justify-content: space-between;
+			margin-top: 50px;
 			.footer-section {
-				flex: 1;
-
+				display: flex;
+				flex-direction: column;
+				gap: 12px;
 				.footer-title {
-					font-size: 14px;
-					font-weight: 700;
-					color: #111;
-					margin-bottom: 16px;
+					font-size: 18px;
+					font-weight: 600;
 				}
-
 				.footer-sub {
-					font-size: 12px;
+					font-size: 14px;
 					color: #777;
-					line-height: 1.8;
-					margin-bottom: 16px;
+					line-height: 1.5;
 				}
-
 				.footer-btns {
 					display: flex;
-					gap: 8px;
-
-					.footer-call-btn {
-						display: flex;
-						align-items: center;
-						gap: 6px;
-						padding: 8px 16px !important;
-						border-radius: 8px !important;
-						border: 1px solid #ddd !important;
-						background-color: #fff !important;
-						color: #333 !important;
-						font-size: 13px !important;
-						font-weight: 600 !important;
-						text-transform: none !important;
-						transition: all 0.2s ease !important;
-
-						&:hover {
-							border-color: #ff4e5b !important;
-							color: #ff4e5b !important;
-						}
-
-						.footer-btn-icon {
-							font-size: 16px;
-						}
-					}
-
+					gap: 12px;
+					margin-top: 8px;
+					.footer-call-btn,
 					.footer-chat-btn {
-						white-space: nowrap !important;
-						min-width: fit-content !important;
-						display: flex;
-						align-items: center;
-						gap: 6px;
-						padding: 8px 16px !important;
-						border-radius: 8px !important;
 						border: 1px solid #ddd !important;
-						background-color: #fff !important;
-						color: #333 !important;
-						font-size: 13px !important;
-						font-weight: 600 !important;
+						border-radius: 12px !important;
+						background: #fff !important;
+						padding: 10px 18px !important;
+						color: #444 !important;
 						text-transform: none !important;
-						transition: all 0.2s ease !important;
-
-						&:hover {
-							border-color: #ff4e5b !important;
-							color: #ff4e5b !important;
-						}
-
+						font-size: 15px !important;
+						display: flex !important;
+						align-items: center !important;
+						gap: 8px !important;
 						.footer-btn-icon {
-							font-size: 16px;
+							font-size: 20px;
 						}
 					}
 				}
@@ -1070,17 +1019,13 @@ body::-webkit-scrollbar {
 					display: flex;
 					flex-direction: column;
 					gap: 10px;
+					font-size: 14px;
+					color: #555;
+				}
 
-					div {
-						font-size: 13px;
-						color: #666;
-						cursor: pointer;
-						transition: color 0.2s ease;
-
-						&:hover {
-							color: #ff4e5b;
-						}
-					}
+				.footer-links div:hover {
+					text-decoration: underline;
+					cursor: pointer;
 				}
 			}
 		}

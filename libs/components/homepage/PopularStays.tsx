@@ -11,6 +11,7 @@ import { PropertyType, PropertyTypeKorean } from '../../enums/property.enum';
 import { Property } from '../../types/property/property';
 import { usePropertySection } from '../../hooks/usePropertySection';
 import PropertyCard from '../common/PropertyCard';
+import PropertyCardSkeleton from '../common/PropertyCardSkeleton';
 
 const CATEGORIES_K: PropertyTypeKorean[] = Object.values(PropertyTypeKorean);
 const CATEGORIES_EN: PropertyType[] = Object.values(PropertyType);
@@ -21,7 +22,8 @@ interface PopularStaysProps {
 
 const PopularStays = ({ initialInput }: PopularStaysProps) => {
 	const [activeCategory, setActiveCategory] = useState<PropertyType>(PropertyType.ALL);
-	const { properties, user, t, likePropertyHandler, handlePushPropertyDetail } = usePropertySection(initialInput);
+	const { properties, user, loading, t, likePropertyHandler, handlePushPropertyDetail } =
+		usePropertySection(initialInput);
 
 	const filtered =
 		activeCategory === 'ALL' ? properties : properties.filter((p: Property) => p.propertyType === activeCategory);
@@ -44,7 +46,27 @@ const PopularStays = ({ initialInput }: PopularStaysProps) => {
 					</Box>
 				</Box>
 
-				{filtered.length !== 0 ? (
+				{loading ? (
+					<Box className="section-slider-wrapper">
+						<Swiper
+							className="section-swiper"
+							modules={[Navigation]}
+							spaceBetween={24}
+							breakpoints={{
+								0: { slidesPerView: 1.2, spaceBetween: 16 },
+								768: { slidesPerView: 2.5, spaceBetween: 20 },
+								1024: { slidesPerView: 3, spaceBetween: 22 },
+								1280: { slidesPerView: 4, spaceBetween: 24 },
+							}}
+						>
+							{[1, 2, 3, 4].map((i) => (
+								<SwiperSlide key={i}>
+									<PropertyCardSkeleton />
+								</SwiperSlide>
+							))}
+						</Swiper>
+					</Box>
+				) : filtered.length !== 0 ? (
 					<Box className="section-slider-wrapper">
 						<IconButton className="section-arrow section-prev">
 							<ArrowBackIosNewIcon />
@@ -61,7 +83,7 @@ const PopularStays = ({ initialInput }: PopularStaysProps) => {
 								1280: { slidesPerView: 4, spaceBetween: 24 },
 							}}
 						>
-							{properties.map((p: Property) => (
+							{filtered.map((p: Property) => (
 								<SwiperSlide key={p._id}>
 									<PropertyCard
 										property={p}

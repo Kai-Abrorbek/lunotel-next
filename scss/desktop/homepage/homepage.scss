@@ -1103,3 +1103,70 @@
 		}
 	}
 }
+
+@keyframes shimmer {
+	0% {
+		background-position: -468px 0;
+	}
+	100% {
+		background-position: 468px 0;
+	}
+}
+
+.property-card-skeleton {
+	background: #fff;
+	border-radius: 16px;
+	overflow: hidden;
+	box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+
+	.skeleton-image {
+		width: 100%;
+		padding-top: 62%;
+		background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+		background-size: 936px 100%;
+		animation: shimmer 1.2s infinite linear;
+	}
+
+	.skeleton-info {
+		padding: 14px;
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
+
+	.skeleton-line {
+		height: 12px;
+		border-radius: 6px;
+		background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+		background-size: 936px 100%;
+		animation: shimmer 1.2s infinite linear;
+
+		&--short {
+			width: 40%;
+		}
+		&--long {
+			width: 80%;
+			height: 16px;
+		}
+		&--medium {
+			width: 60%;
+		}
+		&--price {
+			width: 50%;
+			height: 18px;
+			margin-top: 4px;
+		}
+	}
+}
+
+.no-data {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	padding: 40px 0;
+
+	img {
+		width: 200px;
+	}
+}

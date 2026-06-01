@@ -9,13 +9,15 @@ import { PropertiesInquiry } from '../../types/property/property.input';
 import { Property } from '../../types/property/property';
 import { usePropertySection } from '../../hooks/usePropertySection';
 import PropertyCard from '../common/PropertyCard';
+import PropertyCardSkeleton from '../common/PropertyCardSkeleton';
 
 interface WeeklyHotPensionsProps {
 	initialInput: PropertiesInquiry;
 }
 
 const WeeklyHotPensions = ({ initialInput }: WeeklyHotPensionsProps) => {
-	const { properties, user, t, likePropertyHandler, handlePushPropertyDetail } = usePropertySection(initialInput);
+	const { properties, user, t, loading, likePropertyHandler, handlePushPropertyDetail } =
+		usePropertySection(initialInput);
 
 	return (
 		<Stack className="container">
@@ -24,7 +26,27 @@ const WeeklyHotPensions = ({ initialInput }: WeeklyHotPensionsProps) => {
 					<Typography className="section-title">{t('이번 주 HOT 인기 펜션')}</Typography>
 				</Box>
 
-				{properties.length !== 0 ? (
+				{loading ? (
+					<Box className="section-slider-wrapper">
+						<Swiper
+							className="section-swiper"
+							modules={[Navigation]}
+							spaceBetween={24}
+							breakpoints={{
+								0: { slidesPerView: 1.2, spaceBetween: 16 },
+								768: { slidesPerView: 2.5, spaceBetween: 20 },
+								1024: { slidesPerView: 3, spaceBetween: 22 },
+								1280: { slidesPerView: 4, spaceBetween: 24 },
+							}}
+						>
+							{[1, 2, 3, 4].map((i) => (
+								<SwiperSlide key={i}>
+									<PropertyCardSkeleton />
+								</SwiperSlide>
+							))}
+						</Swiper>
+					</Box>
+				) : properties.length !== 0 ? (
 					<Box className="section-slider-wrapper">
 						<IconButton className="section-arrow section-prev-pensions">
 							<ArrowBackIosNewIcon />
