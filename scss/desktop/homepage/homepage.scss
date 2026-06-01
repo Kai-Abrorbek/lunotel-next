@@ -4,10 +4,14 @@
 		.hero-section {
 			position: relative;
 			width: 100%;
-			height: 660px;
+			height: 620px;
 			top: 75px;
-			overflow: hidden;
+			overflow: visible; // 변경
+
 			.hero-swiper {
+				position: absolute; // 추가
+				inset: 0; // 추가
+				overflow: hidden; // 여기서 overflow 처리
 				width: 100%;
 				height: 100%;
 			}
@@ -18,60 +22,80 @@
 				background-size: cover;
 				background-position: center;
 			}
+
 			.hero-overlay {
 				position: absolute;
 				inset: 0;
-				background: linear-gradient(to bottom, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.2));
+				background: linear-gradient(to bottom, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0.5) 40%, rgba(0, 0, 0, 0.2) 100%);
 			}
+
 			.hero-inner {
 				position: absolute;
-				inset: 0;
+				top: 0;
+				left: 0;
+				right: 0;
+				bottom: 0;
 				z-index: 2;
 				max-width: 1200px;
 				margin: 0 auto;
-				padding: 40px 24px;
+				padding: 80px 24px 40px;
 				display: flex;
 				flex-direction: column;
 				align-items: center;
-				/* 타이틀 */
+				justify-content: flex-start;
+
 				.hero-title {
-					font-size: 30px;
-					font-weight: 700;
-					margin-bottom: 30px;
-					background-color: white;
-					border-radius: 10px;
-					padding: 10px 40px;
+					font-size: 38px;
+					font-weight: 800;
+					color: #ffffff;
+					text-align: center;
+					margin-bottom: 32px;
+					line-height: 1.3;
+					text-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+					background: none;
+					border-radius: 0;
+					padding: 0;
+
+					.hero-title-brand {
+						color: #ff4e5b;
+						font-weight: 900;
+					}
 				}
-				/* 카드 */
+
 				.hero-card {
 					width: 100%;
 					max-width: 1100px;
 					background-color: #ffffff;
-					border-radius: 28px;
+					border-radius: 20px;
 					padding: 20px 28px 24px;
-					box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+					box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
 					color: #222;
 					z-index: 999;
-					/* 탭 */
+
 					.hero-tabs {
 						display: flex;
 						gap: 24px;
 						border-bottom: 1px solid #eeeeee;
 						padding-bottom: 10px;
 						margin-bottom: 12px;
+
 						.hero-tab {
 							position: relative;
 							border: none;
 							background: none;
 							padding: 0;
-							font-size: 16px;
-							color: #777;
+							font-size: 15px;
+							font-weight: 500;
+							color: #999;
 							cursor: pointer;
+							transition: color 0.2s ease;
 						}
+
 						.hero-tab.active {
-							color: #1976d2;
-							font-weight: 600;
+							color: #ff4e5b;
+							font-weight: 700;
 						}
+
 						.hero-tab.active::after {
 							content: '';
 							position: absolute;
@@ -79,25 +103,26 @@
 							bottom: -11px;
 							width: 100%;
 							height: 2px;
-							background-color: #1976d2;
+							background-color: #ff4e5b;
 						}
+
 						.hero-tab-badge {
 							display: inline-block;
 							margin-left: 4px;
 							font-size: 10px;
-							color: #ff4b5a;
+							color: #ff4e5b;
 						}
 					}
 
-					/* 검색 행 */
 					.hero-search-row {
 						display: grid;
 						grid-template-columns: 2.8fr 2.2fr 1.5fr 1.2fr;
 						gap: 8px;
 						margin-top: 10px;
-						/* 검색 인풋 + 패널 래퍼 */
+
 						.hero-field-wrapper {
 							position: relative;
+
 							.hero-field {
 								display: flex;
 								align-items: center;
@@ -107,18 +132,23 @@
 								border: 1px solid #f1f1f1;
 								transition: all 0.25s ease;
 								cursor: text;
+
 								.hero-field-icon {
 									font-size: 22px;
 									color: #a0a0a0;
 									margin-right: 8px;
 								}
+
 								.input-base-wrapper {
 									position: relative;
 									width: 100%;
 								}
+
 								.hero-input {
 									width: 100%;
-									padding-right: 30px; // X 버튼 공간 확보
+									height: 30px;
+									font-size: 15px;
+									padding-right: 30px;
 								}
 
 								.clear-btn {
@@ -137,24 +167,18 @@
 										color: #666;
 									}
 								}
-								.hero-input {
-									width: 100%;
-									height: 30px;
-									font-size: 16px;
-								}
 							}
+
 							.hero-field:hover {
-								background-color: #e1e8f0;
+								background-color: #f0f4ff;
 							}
+
 							.hero-field:focus-within {
-								border-color: #1976d2;
-								box-shadow: 0 0 0 2px #e3f2fd;
+								border-color: #ff4e5b;
+								box-shadow: 0 0 0 2px rgba(255, 78, 91, 0.12);
 								background-color: #ffffff;
 							}
-							.hero-field-keyword {
-								cursor: text;
-							}
-							/* 패널 전체 */
+
 							.hero-keyword-panel {
 								position: absolute;
 								top: calc(100% + 6px);
@@ -163,13 +187,14 @@
 								max-height: 480px;
 								background-color: #ffffff;
 								border-radius: 16px;
-								box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+								box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
 								padding: 12px 16px 14px;
 								z-index: 40;
 								overflow-y: auto;
-								/* 현재 위치 버튼 */
+
 								.hero-keyword-location {
 									margin-bottom: 12px;
+
 									.hero-location-btn {
 										display: inline-flex;
 										align-items: center;
@@ -177,18 +202,20 @@
 										padding: 6px 12px;
 										border-radius: 999px;
 										border: 1px solid #e0e0e0;
-										background-color: #f8f9ff;
+										background-color: #fff8f8;
 										font-size: 13px;
 										cursor: pointer;
+
 										.hero-location-icon {
 											font-size: 16px;
-											color: #1976d2;
+											color: #ff4e5b;
 										}
 									}
 								}
-								/* 섹션 */
+
 								.hero-keyword-section {
 									margin-bottom: 10px;
+
 									.hero-keyword-section-header {
 										display: flex;
 										align-items: center;
@@ -196,6 +223,7 @@
 										font-size: 13px;
 										color: #777;
 										margin-bottom: 6px;
+
 										.hero-clear-btn {
 											border: none;
 											background: none;
@@ -204,11 +232,12 @@
 											cursor: pointer;
 										}
 									}
-									/* 검색 순위 */
+
 									.hero-ranking-list {
 										display: flex;
 										flex-direction: column;
 										gap: 4px;
+
 										.hero-ranking-item {
 											display: flex;
 											align-items: center;
@@ -218,6 +247,7 @@
 											font-size: 14px;
 											padding: 7px 0;
 											cursor: pointer;
+
 											.hero-ranking-index {
 												width: 14px;
 												text-align: right;
@@ -227,20 +257,23 @@
 										}
 									}
 								}
-								/* 최근 검색 리스트 */
+
 								.hero-recent-list {
 									display: flex;
 									flex-direction: column;
 									gap: 4px;
+
 									.hero-empty-text {
 										font-size: 13px;
 										color: #aaa;
 										padding: 4px 0;
 									}
+
 									.hero-recent-item {
 										display: flex;
 										align-items: center;
 										justify-content: space-between;
+
 										.hero-recent-main {
 											display: inline-flex;
 											align-items: center;
@@ -249,11 +282,13 @@
 											background: none;
 											font-size: 14px;
 											cursor: pointer;
+
 											.hero-recent-icon {
 												font-size: 16px;
 												color: #bbb;
 											}
 										}
+
 										.hero-recent-remove {
 											border: none;
 											background: none;
@@ -263,7 +298,6 @@
 									}
 								}
 
-								/* 구분선 */
 								.hero-keyword-divider {
 									border: none;
 									border-top: 1px solid #f0f0f0;
@@ -271,6 +305,7 @@
 								}
 							}
 						}
+
 						.hero-field-date,
 						.hero-field-guest {
 							cursor: pointer;
@@ -278,26 +313,32 @@
 							align-items: center;
 							justify-content: center;
 							gap: 4px;
+
 							.hero-field-text {
-								font-size: 16px;
-								color: #100e0e;
+								font-size: 15px;
+								color: #111;
 								white-space: nowrap;
 								overflow: hidden;
 								text-overflow: ellipsis;
 								font-weight: 600;
 							}
 						}
-						/* 검색 버튼 */
+
 						.hero-search-button {
-							background-color: #1976d2 !important;
+							background-color: #ff4e5b !important;
 							color: #ffffff !important;
 							border-radius: 10px !important;
 							font-size: 15px !important;
-							font-weight: 600 !important;
+							font-weight: 700 !important;
 							text-transform: none !important;
+							transition: background-color 0.2s ease !important;
+
+							&:hover {
+								background-color: #e8404c !important;
+							}
 						}
 					}
-					/* 달력 팝업 */
+
 					.hero-datepicker {
 						position: relative;
 						right: 10px;
@@ -305,17 +346,20 @@
 						background-color: #ffffff;
 						border-radius: 18px;
 						padding: 16px 18px 18px;
-						box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+						box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
 						width: 420px;
+
 						.hero-datepicker-header {
 							display: flex;
 							align-items: center;
 							justify-content: space-between;
 							margin-bottom: 10px;
+
 							.hero-datepicker-title {
 								font-size: 15px;
 								font-weight: 600;
 							}
+
 							.hero-datepicker-nav {
 								border: none;
 								background-color: transparent;
@@ -326,25 +370,30 @@
 								display: flex;
 								align-items: center;
 								justify-content: center;
-							}
-							.hero-datepicker-nav:hover {
-								background-color: #f3f3f3;
+
+								&:hover {
+									background-color: #f3f3f3;
+								}
 							}
 						}
+
 						.hero-datepicker-weekdays {
 							display: grid;
 							grid-template-columns: repeat(7, 1fr);
 							margin-bottom: 6px;
+
 							.hero-datepicker-weekday {
 								text-align: center;
 								font-size: 12px;
 								color: #999;
 							}
 						}
+
 						.hero-datepicker-grid {
 							display: grid;
 							grid-template-columns: repeat(7, 1fr);
 							row-gap: 4px;
+
 							.hero-datepicker-cell {
 								width: 36px;
 								height: 32px;
@@ -354,28 +403,34 @@
 								cursor: pointer;
 								margin: 2px auto;
 								font-size: 14px;
-							}
-							.hero-datepicker-cell:hover {
-								background-color: #f0f4ff;
+								transition: background-color 0.15s ease;
+
+								&:hover {
+									background-color: #fff0f1;
+								}
 							}
 
 							.hero-datepicker-cell.empty {
 								cursor: default;
 							}
+
 							.hero-datepicker-cell.start,
 							.hero-datepicker-cell.end {
-								background-color: #1976d2;
+								background-color: #ff4e5b;
 								color: #ffffff;
 							}
+
 							.hero-datepicker-cell.in-range {
-								background-color: #bae2ff;
+								background-color: rgba(255, 78, 91, 0.12);
 							}
+
 							.hero-datepicker-cell.past-day {
-								color: rgb(214, 213, 213);
+								color: #ddd;
+								cursor: default;
 							}
 						}
 					}
-					/* 인원 팝업 */
+
 					.hero-guestpicker {
 						position: relative;
 						left: 64%;
@@ -383,37 +438,84 @@
 						background-color: #ffffff;
 						border-radius: 14px;
 						padding: 12px 16px;
-						box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+						box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
 						width: 220px;
+
 						.hero-guest-row {
 							display: flex;
 							align-items: center;
 							justify-content: space-between;
+
 							.hero-guest-label {
 								font-size: 17px;
 							}
+
 							.hero-guest-counter {
 								display: flex;
 								align-items: center;
 								gap: 10px;
-							}
-							.hero-guest-counter button {
-								width: 26px;
-								height: 26px;
-								border-radius: 999px;
-								border: 1px solid #ddd;
-								background-color: #fff;
-								cursor: pointer;
-							}
-							.hero-guest-counter span {
-								width: 24px;
-								text-align: center;
+
+								button {
+									width: 26px;
+									height: 26px;
+									border-radius: 999px;
+									border: 1px solid #ddd;
+									background-color: #fff;
+									cursor: pointer;
+									transition: border-color 0.2s ease;
+
+									&:hover {
+										border-color: #ff4e5b;
+									}
+								}
+
+								span {
+									width: 24px;
+									text-align: center;
+								}
 							}
 						}
 					}
 				}
 			}
 		}
+		/* 모바일 hero */
+		@media (max-width: 768px) {
+			.hero-section {
+				height: 480px;
+				top: 60px;
+
+				.hero-inner {
+					padding: 40px 16px 24px;
+
+					.hero-title {
+						font-size: 24px;
+						margin-bottom: 20px;
+					}
+
+					.hero-card {
+						border-radius: 16px;
+						padding: 16px 16px 20px;
+
+						.hero-search-row {
+							grid-template-columns: 1fr;
+							gap: 10px;
+						}
+
+						.hero-datepicker {
+							width: 100%;
+							right: 0;
+						}
+
+						.hero-guestpicker {
+							left: 0;
+							width: 100%;
+						}
+					}
+				}
+			}
+		}
+
 		.event-container {
 			width: 100%;
 			margin-top: 100px;

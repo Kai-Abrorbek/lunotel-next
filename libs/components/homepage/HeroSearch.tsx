@@ -25,11 +25,11 @@ const HeroSearch = (props: HeroSearchProps) => {
 	return (
 		<Box className="hero-section">
 			<Swiper
-				modules={[Autoplay, EffectCoverflow]}
+				modules={[Autoplay]}
 				effect="coverflow"
 				centeredSlides
 				slidesPerView="auto"
-				autoplay={{ delay: 1000 * 60 * 24 }}
+				autoplay={{ delay: 5000, disableOnInteraction: false }}
 				className="hero-swiper"
 			>
 				{HERO_IMAGES.map((img, index) => (
@@ -41,7 +41,11 @@ const HeroSearch = (props: HeroSearchProps) => {
 
 			<Box className="hero-overlay" />
 			<Box className="hero-inner">
-				<Typography className="hero-title">{t('국내부터 해외까지 루노텔')}</Typography>
+				<Typography className="hero-title">
+					{t('국내부터 해외까지')}
+					<br />
+					<span className="hero-title-brand">루노텔</span>
+				</Typography>
 				<HeroCard setHeroCardOpen={setHeroCardOpen} initialInput={initialInput} refElement={null} propertyName={null} />
 			</Box>
 		</Box>
