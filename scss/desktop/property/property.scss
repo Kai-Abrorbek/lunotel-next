@@ -34,6 +34,8 @@
 						border-radius: 6px;
 						padding: 6px 22px !important;
 						font-weight: 600 !important;
+						background-color: #ff4e5b !important;
+						color: #fff !important;
 					}
 				}
 				.filter-header {
@@ -111,7 +113,7 @@
 							}
 						}
 						.hashtag-chip.active {
-							color: #0080ff;
+							color: #ff4e5b !important;
 						}
 					}
 					.hashtag-list.active {
@@ -153,7 +155,7 @@
 							}
 						}
 						.rating-chip.active {
-							color: #0080ff;
+							color: #ff4e5b !important;
 						}
 					}
 				}
@@ -176,6 +178,8 @@
 						padding: 4px 16px !important;
 					}
 					.sort-trigger {
+						border-radius: 10px !important;
+						border: 1.5px solid #e0e0e0 !important;
 						text-transform: none !important;
 						border-radius: 8px !important;
 						padding: 10px 20px !important;
@@ -248,7 +252,8 @@
 										align-items: center;
 										padding: 2px 8px;
 										border-radius: 999px;
-										background: #eeda22;
+										background: #ff4e5b !important;
+										color: #fff !important;
 										font-size: 13px;
 										font-weight: 600;
 										.rating-star {
@@ -420,7 +425,7 @@
 					margin-top: 8px !important;
 					padding: 0 !important;
 					font-size: 12px !important;
-					color: #0080ff !important;
+					color: #ff4e5b !important;
 					min-width: auto !important;
 				}
 				.section-title {
@@ -509,9 +514,15 @@
 				padding-right: 4px;
 				/* 호텔 카드 */
 				.hotel-card {
-					border-radius: 12px !important;
-					overflow: hidden;
-					margin-bottom: 12px;
+					border-radius: 16px !important;
+					box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06) !important;
+					transition: transform 0.25s ease, box-shadow 0.25s ease !important;
+					cursor: pointer;
+
+					&:hover {
+						transform: translateY(-4px) !important;
+						box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12) !important;
+					}
 					.hotel-card-inner {
 						display: flex;
 						height: 200px;
