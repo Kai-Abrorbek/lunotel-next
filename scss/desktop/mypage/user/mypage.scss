@@ -52,9 +52,9 @@
 								color: white;
 							}
 							&.active {
-								color: #2563eb;
+								color: #ff4e5b;
 								.MuiListItemText-primary {
-									color: #2563eb;
+									color: #ff4e5b;
 									font-weight: 600;
 								}
 							}
@@ -557,7 +557,7 @@
 					/* 상단 요약 카드 */
 					.point-summary {
 						border-radius: 16px;
-						background: #e6effb;
+						background: #fff0f1;
 						padding: 20px 24px;
 						margin-bottom: 20px;
 
@@ -570,7 +570,7 @@
 
 						&__label {
 							font-size: 13px;
-							color: #2563eb;
+							color: #ff4e5b;
 							font-weight: 500;
 						}
 
@@ -588,7 +588,7 @@
 
 						&__divider {
 							height: 1px;
-							background: #dbeafe;
+							background: #ffcdd0;
 							margin-bottom: 8px;
 						}
 
@@ -615,8 +615,8 @@
 							outline: none;
 
 							&--active {
-								background: #2563eb;
-								border-color: #2563eb;
+								background: #ff4e5b;
+								border-color: #ff4e5b;
 								color: #ffffff;
 								font-weight: 600;
 							}
@@ -663,7 +663,7 @@
 							font-weight: 600;
 
 							&--plus {
-								color: #2563eb;
+								color: #ff4e5b;
 							}
 
 							&--minus {
@@ -744,7 +744,7 @@
 							.visibility-text {
 								font-weight: 500;
 								font-size: 15px;
-								color: #2563eb;
+								color: #ff4e5b;
 							}
 						}
 					}
@@ -807,7 +807,7 @@
 						.logout-all {
 							font-size: 13px;
 							text-transform: none;
-							color: #2563eb;
+							color: #ff4e5b;
 						}
 					}
 
@@ -1285,11 +1285,11 @@
 									align-items: center;
 									gap: 6px;
 									padding: 4px 10px;
-									background: #e7f5ff;
-									border: 1px solid #339af0;
+									background: #fff0f1;
+									border: 1px solid #ff4e5b;
 									border-radius: 12px;
 									font-size: 12px;
-									color: #1971c2;
+									color: #ff4e5b;
 								}
 
 								.selected-tag.cons {
@@ -1453,12 +1453,12 @@
 							}
 
 							.btn-primary {
-								background: #2563eb;
+								background: #ff4e5b;
 								color: white;
 							}
 
 							.btn-primary:hover {
-								background: #1d4ed8;
+								background: #ff4e5b;
 							}
 
 							.btn-secondary {
@@ -1468,8 +1468,8 @@
 							}
 
 							.btn-secondary:hover {
-								border-color: #2563eb;
-								color: #2563eb;
+								border-color: #ff4e5b;
+								color: #ff4e5b;
 							}
 						}
 					}
@@ -1524,7 +1524,7 @@
 						}
 
 						.filter-tab.active {
-							background: #2563eb;
+							background: #ff4e5b;
 							color: white;
 						}
 					}
@@ -1543,8 +1543,8 @@
 							transform: translateY(-2px);
 						}
 						&.unread {
-							background: #eff6ff;
-							border-color: #bfdbfe;
+							background: #fff8f8;
+							border-color: #ffb3b8;
 						}
 						&.important {
 							border-left: 4px solid #ef4444;
@@ -1555,7 +1555,7 @@
 							right: 20px;
 							width: 10px;
 							height: 10px;
-							background: #3b82f6;
+							background: #ff4e5b;
 							border-radius: 50%;
 						}
 						.notification-header {
@@ -1635,8 +1635,8 @@
 								}
 
 								.action-btn:hover {
-									border-color: #2563eb;
-									color: #2563eb;
+									border-color: #ff4e5b;
+									color: #ff4e5b;
 								}
 
 								.action-btn.danger:hover {

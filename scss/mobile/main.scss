@@ -1,0 +1,554 @@
+#mobile-wrap {
+	width: 100%;
+	overflow-x: hidden;
+
+	// 모바일 네브바
+	.mobile-navbar {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		height: 56px;
+		background: #fff;
+		border-bottom: 1px solid #f0f0f0;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 0 16px;
+		z-index: 9999;
+		box-shadow: 0 1px 8px rgba(0, 0, 0, 0.06);
+
+		.mobile-logo {
+			display: flex;
+			align-items: center;
+			gap: 6px;
+
+			.logo-text {
+				font-size: 18px;
+				font-weight: 800;
+				background: linear-gradient(135deg, #ff4e5b, #ff8c69);
+				-webkit-background-clip: text;
+				-webkit-text-fill-color: transparent;
+			}
+		}
+
+		.mobile-nav-actions {
+			display: flex;
+			align-items: center;
+			gap: 4px;
+		}
+
+		.mobile-login-btn {
+			font-size: 13px;
+			font-weight: 600;
+			color: #ff4e5b;
+			padding: 6px 12px;
+			border-radius: 8px;
+			border: 1.5px solid #ff4e5b;
+		}
+
+		.theme-button {
+			width: 32px;
+			height: 32px;
+			background: #f5f5f5 !important;
+			border-radius: 50% !important;
+			color: #555 !important;
+		}
+	}
+
+	// 홈페이지
+	.home-page {
+		padding-top: 56px;
+
+		// Hero
+		.hero-section {
+			position: relative;
+			width: 100%;
+			height: 400px;
+			overflow: visible;
+
+			.hero-swiper {
+				position: absolute;
+				inset: 0;
+				overflow: hidden;
+				width: 100%;
+				height: 100%;
+			}
+
+			.hero-bg {
+				width: 100%;
+				height: 100%;
+				background-size: cover;
+				background-position: center;
+			}
+
+			.hero-overlay {
+				position: absolute;
+				inset: 0;
+				background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5));
+			}
+
+			.hero-inner {
+				position: absolute;
+				inset: 0;
+				z-index: 2;
+				padding: 24px 16px 20px;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+
+				.hero-title {
+					font-size: 22px;
+					font-weight: 800;
+					color: #fff;
+					text-align: center;
+					margin-bottom: 16px;
+					line-height: 1.3;
+					text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+					background: none;
+					padding: 0;
+
+					.hero-title-brand {
+						color: #ff4e5b;
+					}
+				}
+
+				.hero-card {
+					width: 100%;
+					background: #fff;
+					border-radius: 16px;
+					padding: 16px;
+					box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+					.hero-datepicker-row {
+						position: fixed !important;
+						bottom: 0;
+						left: 0;
+						right: 0;
+						flex-direction: column !important;
+						background: #fff;
+						border-radius: 20px 20px;
+						box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.15);
+						z-index: 9999;
+						padding: 20px 16px !important;
+						max-height: 60vh;
+						height: 60px;
+						overflow-y: auto;
+						width: 100% !important;
+
+						.hero-datepicker {
+							width: 90% !important;
+							box-shadow: none !important;
+							padding: 0 !important;
+							margin-bottom: 16px;
+							border-radius: 20px !important;
+							padding-top: 16px !important; // 추가
+							margin-left: 22px;
+							margin-top: 15px;
+							.hero-datepicker-header {
+								display: flex;
+								align-items: center;
+								justify-content: space-around;
+								margin-bottom: 12px;
+
+								.hero-datepicker-title {
+									font-size: 16px;
+									font-weight: 700;
+								}
+							}
+
+							.hero-datepicker-weekdays {
+								display: grid !important;
+								grid-template-columns: repeat(7, 1fr) !important;
+								margin-bottom: 6px;
+
+								.hero-datepicker-weekday {
+									text-align: center;
+									font-size: 12px;
+									color: #999;
+								}
+							}
+
+							.hero-datepicker-grid {
+								display: grid !important;
+								grid-template-columns: repeat(7, 1fr) !important;
+								row-gap: 4px;
+
+								.hero-datepicker-cell {
+									width: 100% !important;
+									height: 36px;
+									font-size: 13px;
+									border-radius: 8px;
+									border: none;
+									background: transparent;
+									cursor: pointer;
+									margin: 0 !important;
+									text-align: center;
+
+									&.start,
+									&.end {
+										background-color: #ff4e5b !important;
+										color: #fff !important;
+									}
+
+									&.in-range {
+										background-color: rgba(255, 78, 91, 0.12) !important;
+									}
+
+									&.past-day {
+										color: #ddd;
+									}
+								}
+							}
+						}
+					}
+
+					.hero-tabs {
+						display: flex;
+						gap: 16px;
+						border-bottom: 1px solid #eee;
+						padding-bottom: 8px;
+						margin-bottom: 12px;
+						overflow-x: auto;
+
+						.hero-tab {
+							font-size: 13px;
+							white-space: nowrap;
+							border: none;
+							background: none;
+							padding: 0;
+							color: #999;
+							cursor: pointer;
+						}
+
+						.hero-tab.active {
+							color: #ff4e5b;
+							font-weight: 700;
+						}
+
+						.hero-tab.active::after {
+							background-color: #ff4e5b;
+						}
+					}
+
+					.hero-search-row {
+						display: flex;
+						flex-direction: column;
+						gap: 8px;
+
+						.hero-field-wrapper {
+							position: relative;
+							.hero-field {
+								background: #f9fafb;
+								border-radius: 10px;
+								padding: 10px 14px;
+								border: 1px solid #f0f0f0;
+								display: flex;
+								align-items: center;
+
+								.hero-field-icon {
+									font-size: 18px;
+									color: #aaa;
+									margin-right: 8px;
+								}
+								.hero-input {
+									font-size: 14px;
+									height: 24px;
+								}
+							}
+
+							.hero-keyword-panel {
+								position: absolute;
+								top: calc(100% + 8px);
+								left: 0;
+								right: 0;
+								max-height: 55vh;
+								overflow-y: auto;
+								background: #fff;
+								z-index: 9998;
+								padding: 16px;
+								box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+								border-radius: 16px;
+
+								.hero-keyword-location {
+									margin-bottom: 14px;
+
+									.hero-location-btn {
+										display: inline-flex;
+										align-items: center;
+										gap: 8px;
+										padding: 10px 16px;
+										border-radius: 999px;
+										border: 1.5px solid #ffcdd0;
+										background: #fff8f8;
+										font-size: 14px;
+										font-weight: 600;
+										color: #ff4e5b;
+										cursor: pointer;
+										width: 100%;
+
+										.hero-location-icon {
+											font-size: 18px;
+											color: #ff4e5b;
+										}
+									}
+								}
+
+								.hero-keyword-section-header {
+									display: flex;
+									justify-content: space-between;
+									align-items: center;
+									margin-bottom: 10px;
+									font-size: 12px;
+									color: #aaa;
+									font-weight: 600;
+									letter-spacing: 0.5px;
+
+									.hero-clear-btn {
+										border: none;
+										background: none;
+										font-size: 12px;
+										color: #ff4e5b;
+										cursor: pointer;
+									}
+								}
+
+								.hero-ranking-list {
+									display: flex;
+									flex-direction: column;
+									gap: 0;
+
+									.hero-ranking-item {
+										display: flex;
+										align-items: center;
+										gap: 12px;
+										padding: 10px 8px;
+										border-bottom: 1px solid #f5f5f5;
+										font-size: 14px;
+										width: 100%;
+										cursor: pointer;
+										border-radius: 8px;
+										transition: background 0.15s ease;
+
+										&:hover {
+											background: #fff8f8;
+										}
+
+										.hero-ranking-index {
+											width: 20px;
+											font-size: 12px;
+											font-weight: 700;
+											color: #ff4e5b;
+											flex-shrink: 0;
+											text-align: center;
+										}
+									}
+								}
+
+								.hero-keyword-divider {
+									border: none;
+									border-top: 1px solid #f0f0f0;
+									margin: 12px 0;
+								}
+							}
+						}
+
+						.hero-field-date,
+						.hero-field-guest {
+							background: #f9fafb;
+							border-radius: 10px;
+							padding: 10px 14px;
+							border: 1px solid #f0f0f0;
+							display: flex;
+							align-items: center;
+							gap: 8px;
+							cursor: pointer;
+
+							.hero-field-icon {
+								font-size: 18px;
+								color: #aaa;
+							}
+							.hero-field-text {
+								font-size: 14px;
+								font-weight: 500;
+								color: #111;
+							}
+						}
+
+						.hero-search-button {
+							background-color: #ff4e5b !important;
+							color: #fff !important;
+							border-radius: 10px !important;
+							font-size: 15px !important;
+							font-weight: 700 !important;
+							text-transform: none !important;
+							padding: 12px !important;
+							width: 100% !important;
+						}
+					}
+
+					.hero-datepicker {
+						position: fixed;
+						top: 56px;
+						left: 0;
+						right: 0;
+						width: 100%;
+						background: #fff;
+						border-radius: 0;
+						box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+						z-index: 9998;
+						padding: 16px;
+					}
+
+					.hero-guestpicker {
+						position: fixed;
+						bottom: 0;
+						left: 0;
+						right: 0;
+						width: 100%;
+						border-radius: 16px 16px 0 0;
+						box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.1);
+						z-index: 9998;
+						padding: 20px 16px;
+					}
+				}
+			}
+		}
+
+		// 이벤트
+		.event-container {
+			padding: 24px 16px 0;
+			margin-top: 0;
+
+			.event-header {
+				margin-left: 0;
+				margin-bottom: 12px;
+				.event-title {
+					font-size: 16px;
+					font-weight: 700;
+				}
+			}
+
+			.event-swiper {
+				.event-card {
+					border-radius: 12px;
+					padding: 14px;
+					min-height: 90px;
+					height: 90px;
+
+					.event-card-text {
+						.event-sub {
+							font-size: 11px;
+						}
+						.event-main {
+							font-size: 15px;
+						}
+					}
+
+					.event-card-img-wrapper {
+						width: 60px;
+						height: 60px;
+					}
+				}
+			}
+		}
+
+		// 목적지
+		.dest-container {
+			padding: 24px 16px 0;
+			height: auto;
+			max-height: none;
+
+			.dest-title {
+				font-size: 16px;
+				font-weight: 700;
+				margin-bottom: 14px;
+			}
+
+			.dest-wrapper {
+				.dest-card {
+					.dest-img {
+						width: 100px;
+						height: 100px;
+						border-radius: 14px;
+					}
+					.dest-label {
+						font-size: 12px;
+					}
+				}
+			}
+		}
+
+		// 섹션 공통
+		.section-container {
+			padding: 24px 16px;
+
+			.section-title {
+				font-size: 16px;
+			}
+
+			.section-tabs {
+				flex-wrap: wrap;
+				gap: 6px;
+
+				.section-tab {
+					font-size: 12px !important;
+					padding: 6px 12px !important;
+				}
+			}
+
+			.section-slider-wrapper {
+				.section-arrow {
+					display: none;
+				}
+			}
+		}
+
+		// 블랙픽
+		.blackpick-container {
+			padding: 24px 16px;
+
+			.blackpick-title {
+				font-size: 16px;
+			}
+			.blackpick-sub {
+				font-size: 12px;
+			}
+
+			.blackpick-card {
+				height: 200px;
+			}
+		}
+
+		// 국내 여행지
+		.domestic-container {
+			padding: 24px 16px;
+
+			.domestic-title {
+				font-size: 16px;
+			}
+			.domestic-list {
+				column-gap: 40px;
+				font-size: 13px;
+			}
+		}
+	}
+
+	// 푸터
+	#footer {
+		.footer-container {
+			flex-direction: column;
+			gap: 24px;
+			padding: 32px 16px;
+
+			.footer-section {
+				.footer-title {
+					font-size: 13px;
+				}
+				.footer-links div {
+					font-size: 12px;
+				}
+			}
+		}
+	}
+}

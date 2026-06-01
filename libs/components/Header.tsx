@@ -97,7 +97,39 @@ const Header = () => {
 	).length;
 
 	if (device === 'mobile') {
-		return <h1>MOBILE</h1>;
+		return (
+			<Box className="mobile-navbar">
+				<Link href={'/'}>
+					<ButtonBase className="mobile-logo" disableRipple>
+						<Box className="logo" />
+						<Box className="logo-text">LUNOTEL</Box>
+					</ButtonBase>
+				</Link>
+				<Box className="mobile-nav-actions">
+					<IconButton className="theme-button" onClick={toggleTheme}>
+						{isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
+					</IconButton>
+					{!user._id ? (
+						<Link href={'/login'}>
+							<ButtonBase className="mobile-login-btn" disableRipple>
+								로그인
+							</ButtonBase>
+						</Link>
+					) : (
+						<Link href={'/mypage/user'}>
+							<Avatar
+								src={`${process.env.REACT_APP_API_URL}/${user.memberImage}`}
+								alt={user.memberNick}
+								sx={{ width: 32, height: 32 }}
+							/>
+						</Link>
+					)}
+					<IconButton onClick={() => setOpenMenu(!openMenu)}>
+						<MenuIcon sx={{ fontSize: 24 }} />
+					</IconButton>
+				</Box>
+			</Box>
+		);
 	} else {
 		return (
 			<Box className={`navbar ${isDarkMode ? 'dark' : 'light'} `}>
