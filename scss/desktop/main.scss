@@ -68,6 +68,35 @@ body::-webkit-scrollbar {
 				top: 0;
 				z-index: 1000;
 				transition: all 0.3s ease;
+
+				.nav-categories {
+					display: flex;
+					align-items: center;
+					gap: 4px;
+					flex: 1;
+					padding: 0 32px 0 48px;
+
+					.nav-category {
+						padding: 8px 14px;
+						border-radius: 8px;
+						font-size: 14px;
+						font-weight: 500;
+						color: #444;
+						transition: all 0.2s ease;
+						white-space: nowrap;
+
+						&:hover {
+							background-color: #fff0f1;
+							color: #ff4e5b;
+						}
+
+						&.active {
+							color: #ff4e5b;
+							font-weight: 700;
+						}
+					}
+				}
+
 				.mini-left-header {
 					height: 100%;
 					display: flex;
@@ -784,7 +813,8 @@ body::-webkit-scrollbar {
 					}
 
 					.signup-button {
-						background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+						background: linear-gradient(135deg, #ff4e5b 0%, #e8404c 100%) !important;
+						box-shadow: 0 4px 16px rgba(255, 78, 91, 0.4) !important;
 						color: white;
 						box-shadow: 0 4px 16px rgba(102, 126, 234, 0.4);
 						position: relative;

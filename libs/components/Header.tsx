@@ -28,6 +28,15 @@ const Header = () => {
 	const device = useDeviceDetect();
 	const { t, i18n } = useTranslation('common');
 
+	const CATEGORIES = [
+		{ label: '국내숙소', type: 'ALL' },
+		{ label: '호텔', type: 'HOTEL' },
+		{ label: '펜션', type: 'PENSION' },
+		{ label: '모텔', type: 'MOTEL' },
+		{ label: '캠핑', type: 'CAMPING' },
+		{ label: '글램핑', type: 'GLAMPING' },
+	];
+
 	/** LIFECYCLES **/
 	useEffect(() => {
 		if (localStorage.getItem('locale') === null) {
@@ -100,6 +109,19 @@ const Header = () => {
 								<Box className="logo-text">LUNOTEL</Box>
 							</ButtonBase>
 						</Link>
+						{/* 카테고리 메뉴 추가 */}
+						<Box component="nav" className="nav-categories">
+							{CATEGORIES.map((cat) => (
+								<ButtonBase
+									key={cat.type}
+									className="nav-category"
+									disableRipple
+									onClick={() => router.push(`/property?type=${cat.type}`)}
+								>
+									{cat.label}
+								</ButtonBase>
+							))}
+						</Box>
 						<Box component="nav" className="nav-actions">
 							<Box className="language-selector">
 								<ButtonBase
