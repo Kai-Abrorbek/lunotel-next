@@ -1,5 +1,35 @@
-/** VARIABLES **/
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap');
 
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+$font-kr: 'Noto Sans KR', sans-serif;
+$font-en: 'Poppins', sans-serif;
 
-$font: 'Poppins', sans-serif;
+// 색상 변수
+$primary: #ff4e5b;
+$primary-hover: #e8404c;
+$primary-light: rgba(255, 78, 91, 0.08);
+
+// 텍스트
+$text-primary: #111111;
+$text-secondary: #555555;
+$text-muted: #999999;
+
+// 배경
+$bg-primary: #ffffff;
+$bg-secondary: #f8f9fa;
+$bg-card: #ffffff;
+
+// 보더
+$border-color: #eeeeee;
+
+// 다크모드
+$dark-bg-primary: #111111;
+$dark-bg-secondary: #1a1a1a;
+$dark-bg-card: #1e1e1e;
+$dark-text-primary: #f5f5f5;
+$dark-text-secondary: #aaaaaa;
+$dark-border-color: #2a2a2a;
+
+// 그림자
+$shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+$shadow-md: 0 4px 16px rgba(0, 0, 0, 0.1);
+$shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.14);
