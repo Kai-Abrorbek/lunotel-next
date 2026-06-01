@@ -326,12 +326,13 @@ const MapSearchDialog: React.FC<MapSearchDialogProps> = ({ open, onClose, initia
 					style: {
 						borderRadius: 20,
 						padding: '0px 20px',
-						height: '90%',
-						width: '95%',
-						margin: 'auto 0',
+						height: 'calc(100vh - 106px)',
+						width: 'calc(100% - 100px)',
+						margin: 'auto',
 						position: 'absolute',
 						left: '50px',
 						top: '86px',
+						overflow: 'hidden',
 					},
 				}}
 			>
@@ -569,12 +570,12 @@ const MapSearchDialog: React.FC<MapSearchDialogProps> = ({ open, onClose, initia
 											>
 												<ListItemText
 													primary={opt.label}
-													style={selected ? { color: '#1976d2' } : {}}
+													style={selected ? { color: '#ff4e5b' } : {}}
 													className={selected ? 'selected-text' : ''}
 												/>
 												{selected && (
 													<ListItemIcon className="check-icon">
-														<CheckIcon fontSize="small" style={selected ? { color: '#1976d2' } : {}} />
+														<CheckIcon fontSize="small" style={selected ? { color: '#ff4e5b' } : {}} />
 													</ListItemIcon>
 												)}
 											</MenuItem>
