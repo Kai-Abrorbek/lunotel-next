@@ -2,6 +2,17 @@
 	width: 100%;
 	overflow-x: hidden;
 
+	* {
+		box-sizing: border-box;
+	}
+
+	.container {
+		width: 100% !important;
+		max-width: 100% !important;
+		min-width: 0 !important;
+		padding: 0 !important;
+	}
+
 	// 모바일 네브바
 	.mobile-navbar {
 		position: fixed;
@@ -120,88 +131,6 @@
 					border-radius: 16px;
 					padding: 16px;
 					box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-					.hero-datepicker-row {
-						position: fixed !important;
-						bottom: 0;
-						left: 0;
-						right: 0;
-						flex-direction: column !important;
-						background: #fff;
-						border-radius: 20px 20px;
-						box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.15);
-						z-index: 9999;
-						padding: 20px 16px !important;
-						max-height: 60vh;
-						height: 60px;
-						overflow-y: auto;
-						width: 100% !important;
-
-						.hero-datepicker {
-							width: 90% !important;
-							box-shadow: none !important;
-							padding: 0 !important;
-							margin-bottom: 16px;
-							border-radius: 20px !important;
-							padding-top: 16px !important; // 추가
-							margin-left: 22px;
-							margin-top: 15px;
-							.hero-datepicker-header {
-								display: flex;
-								align-items: center;
-								justify-content: space-around;
-								margin-bottom: 12px;
-
-								.hero-datepicker-title {
-									font-size: 16px;
-									font-weight: 700;
-								}
-							}
-
-							.hero-datepicker-weekdays {
-								display: grid !important;
-								grid-template-columns: repeat(7, 1fr) !important;
-								margin-bottom: 6px;
-
-								.hero-datepicker-weekday {
-									text-align: center;
-									font-size: 12px;
-									color: #999;
-								}
-							}
-
-							.hero-datepicker-grid {
-								display: grid !important;
-								grid-template-columns: repeat(7, 1fr) !important;
-								row-gap: 4px;
-
-								.hero-datepicker-cell {
-									width: 100% !important;
-									height: 36px;
-									font-size: 13px;
-									border-radius: 8px;
-									border: none;
-									background: transparent;
-									cursor: pointer;
-									margin: 0 !important;
-									text-align: center;
-
-									&.start,
-									&.end {
-										background-color: #ff4e5b !important;
-										color: #fff !important;
-									}
-
-									&.in-range {
-										background-color: rgba(255, 78, 91, 0.12) !important;
-									}
-
-									&.past-day {
-										color: #ddd;
-									}
-								}
-							}
-						}
-					}
 
 					.hero-tabs {
 						display: flex;
@@ -210,6 +139,9 @@
 						padding-bottom: 8px;
 						margin-bottom: 12px;
 						overflow-x: auto;
+						&::-webkit-scrollbar {
+							display: none;
+						}
 
 						.hero-tab {
 							font-size: 13px;
@@ -219,15 +151,11 @@
 							padding: 0;
 							color: #999;
 							cursor: pointer;
-						}
 
-						.hero-tab.active {
-							color: #ff4e5b;
-							font-weight: 700;
-						}
-
-						.hero-tab.active::after {
-							background-color: #ff4e5b;
+							&.active {
+								color: #ff4e5b;
+								font-weight: 700;
+							}
 						}
 					}
 
@@ -238,6 +166,7 @@
 
 						.hero-field-wrapper {
 							position: relative;
+
 							.hero-field {
 								background: #f9fafb;
 								border-radius: 10px;
@@ -251,9 +180,11 @@
 									color: #aaa;
 									margin-right: 8px;
 								}
+
 								.hero-input {
 									font-size: 14px;
 									height: 24px;
+									width: 100%;
 								}
 							}
 
@@ -302,7 +233,6 @@
 									font-size: 12px;
 									color: #aaa;
 									font-weight: 600;
-									letter-spacing: 0.5px;
 
 									.hero-clear-btn {
 										border: none;
@@ -316,7 +246,6 @@
 								.hero-ranking-list {
 									display: flex;
 									flex-direction: column;
-									gap: 0;
 
 									.hero-ranking-item {
 										display: flex;
@@ -328,11 +257,6 @@
 										width: 100%;
 										cursor: pointer;
 										border-radius: 8px;
-										transition: background 0.15s ease;
-
-										&:hover {
-											background: #fff8f8;
-										}
 
 										.hero-ranking-index {
 											width: 20px;
@@ -387,17 +311,85 @@
 						}
 					}
 
-					.hero-datepicker {
-						position: fixed;
-						top: 56px;
+					.hero-datepicker-row {
+						position: fixed !important;
+						bottom: 0;
 						left: 0;
 						right: 0;
-						width: 100%;
+						flex-direction: column !important;
 						background: #fff;
-						border-radius: 0;
-						box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-						z-index: 9998;
-						padding: 16px;
+						border-radius: 20px 20px 0 0;
+						box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.15);
+						z-index: 9999;
+						padding: 24px 20px 32px !important;
+						max-height: 80vh;
+						overflow-y: auto;
+						width: 100% !important;
+
+						.hero-datepicker {
+							width: 100% !important;
+							box-shadow: none !important;
+							padding: 0 !important;
+							padding-top: 16px !important;
+							border-radius: 0 !important;
+							margin-bottom: 16px;
+
+							.hero-datepicker-header {
+								display: flex;
+								align-items: center;
+								justify-content: space-between;
+								margin-bottom: 12px;
+
+								.hero-datepicker-title {
+									font-size: 16px;
+									font-weight: 700;
+								}
+							}
+
+							.hero-datepicker-weekdays {
+								display: grid !important;
+								grid-template-columns: repeat(7, 1fr) !important;
+								margin-bottom: 6px;
+
+								.hero-datepicker-weekday {
+									text-align: center;
+									font-size: 12px;
+									color: #999;
+								}
+							}
+
+							.hero-datepicker-grid {
+								display: grid !important;
+								grid-template-columns: repeat(7, 1fr) !important;
+								row-gap: 4px;
+
+								.hero-datepicker-cell {
+									width: 100% !important;
+									height: 36px;
+									font-size: 13px;
+									border-radius: 8px;
+									border: none;
+									background: transparent;
+									cursor: pointer;
+									margin: 0 !important;
+									text-align: center;
+
+									&.start,
+									&.end {
+										background-color: #ff4e5b !important;
+										color: #fff !important;
+									}
+
+									&.in-range {
+										background-color: rgba(255, 78, 91, 0.12) !important;
+									}
+
+									&.past-day {
+										color: #ddd;
+									}
+								}
+							}
+						}
 					}
 
 					.hero-guestpicker {
@@ -410,6 +402,7 @@
 						box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.1);
 						z-index: 9998;
 						padding: 20px 16px;
+						background: #fff;
 					}
 				}
 			}
@@ -421,7 +414,6 @@
 			margin-top: 0;
 
 			.event-header {
-				margin-left: 0;
 				margin-bottom: 12px;
 				.event-title {
 					font-size: 16px;
@@ -430,24 +422,49 @@
 			}
 
 			.event-swiper {
+				padding-bottom: 28px !important;
+
+				.swiper-slide {
+					width: 100% !important;
+				}
+
 				.event-card {
+					display: flex;
+					justify-content: space-between;
+					align-items: center;
 					border-radius: 12px;
-					padding: 14px;
-					min-height: 90px;
-					height: 90px;
+					padding: 16px;
+					min-height: 110px;
+					height: 110px;
 
 					.event-card-text {
+						flex: 1;
 						.event-sub {
 							font-size: 11px;
+							margin-bottom: 4px;
 						}
 						.event-main {
-							font-size: 15px;
+							font-size: 16px;
+							font-weight: 700;
+							line-height: 1.3;
 						}
 					}
 
 					.event-card-img-wrapper {
-						width: 60px;
-						height: 60px;
+						width: 80px !important;
+						height: 80px !important;
+						min-width: 80px;
+						min-height: 80px;
+						border-radius: 50%;
+						overflow: hidden;
+						flex-shrink: 0;
+						margin-left: 12px;
+
+						.event-card-img {
+							width: 100% !important;
+							height: 100% !important;
+							object-fit: cover;
+						}
 					}
 				}
 			}
@@ -456,8 +473,6 @@
 		// 목적지
 		.dest-container {
 			padding: 24px 16px 0;
-			height: auto;
-			max-height: none;
 
 			.dest-title {
 				font-size: 16px;
@@ -466,57 +481,307 @@
 			}
 
 			.dest-wrapper {
+				position: relative;
+
 				.dest-card {
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+					cursor: pointer;
+
 					.dest-img {
-						width: 100px;
-						height: 100px;
-						border-radius: 14px;
+						width: 100px !important;
+						height: 100px !important;
+						border-radius: 16px;
+						object-fit: cover;
+						margin-bottom: 8px;
 					}
+
 					.dest-label {
 						font-size: 12px;
+						font-weight: 500;
+						color: #333;
 					}
+				}
+
+				.dest-nav {
+					position: absolute !important;
+					top: 40px;
+					width: 28px;
+					height: 28px;
+					background: #fff !important;
+					border-radius: 50%;
+					box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					z-index: 20;
+					cursor: pointer;
+
+					svg {
+						font-size: 14px;
+					}
+				}
+
+				.dest-prev {
+					left: -8px;
+				}
+				.dest-next {
+					right: -8px;
 				}
 			}
 		}
 
-		// 섹션 공통
-		.section-container {
+		// 모바일 카드 섹션
+		.mobile-section {
 			padding: 24px 16px;
 
-			.section-title {
-				font-size: 16px;
+			&__header {
+				margin-bottom: 12px;
 			}
 
-			.section-tabs {
-				flex-wrap: wrap;
-				gap: 6px;
+			&__title {
+				font-size: 16px;
+				font-weight: 700;
+				color: #111;
+				margin-bottom: 10px;
+				display: flex;
+				align-items: center;
+				gap: 8px;
 
-				.section-tab {
-					font-size: 12px !important;
-					padding: 6px 12px !important;
+				&::before {
+					content: '';
+					display: inline-block;
+					width: 3px;
+					height: 16px;
+					background: #ff4e5b;
+					border-radius: 2px;
+					flex-shrink: 0;
 				}
 			}
 
-			.section-slider-wrapper {
-				.section-arrow {
+			&__tabs {
+				display: flex;
+				gap: 6px;
+				overflow-x: auto;
+				padding-bottom: 4px;
+				&::-webkit-scrollbar {
 					display: none;
 				}
+
+				.mobile-section__tab {
+					font-size: 12px !important;
+					padding: 5px 12px !important;
+					border-radius: 999px !important;
+					border: 1px solid #e0e0e0 !important;
+					background: #fff !important;
+					color: #555 !important;
+					text-transform: none !important;
+					white-space: nowrap !important;
+					flex-shrink: 0 !important;
+
+					&.active {
+						background: #ff4e5b !important;
+						color: #fff !important;
+						border-color: #ff4e5b !important;
+					}
+				}
+			}
+
+			&__scroll {
+				display: flex;
+				gap: 10px;
+				overflow-x: auto;
+				padding: 4px 0 12px;
+				-webkit-overflow-scrolling: touch;
+				&::-webkit-scrollbar {
+					display: none;
+				}
+			}
+
+			&__card-wrap {
+				flex-shrink: 0;
+				width: 140px;
+			}
+		}
+
+		// 모바일 카드
+		.property-card-mobile {
+			width: 140px;
+			border-radius: 12px;
+			overflow: hidden;
+			background: #fff;
+			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+			cursor: pointer;
+
+			&__img-wrap {
+				position: relative;
+				width: 140px;
+				height: 100px;
+				overflow: hidden;
+			}
+
+			&__img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
+
+			&__fav {
+				position: absolute !important;
+				top: 4px;
+				right: 4px;
+				width: 26px !important;
+				height: 26px !important;
+				background: rgba(255, 255, 255, 0.92) !important;
+				box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1) !important;
+			}
+
+			&__info {
+				padding: 8px;
+			}
+
+			&__type {
+				font-size: 10px !important;
+				color: #aaa !important;
+				text-transform: uppercase;
+				letter-spacing: 0.5px;
+			}
+
+			&__name {
+				font-size: 12px !important;
+				font-weight: 600 !important;
+				color: #111 !important;
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				max-width: 124px;
+			}
+
+			&__location {
+				font-size: 10px !important;
+				color: #888 !important;
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				max-width: 124px;
+				margin-bottom: 4px !important;
+			}
+
+			&__rating {
+				display: flex;
+				align-items: center;
+				gap: 3px;
+				font-size: 11px;
+				font-weight: 600;
+				margin-bottom: 4px;
+			}
+
+			&__count {
+				font-size: 10px;
+				color: #aaa;
+				font-weight: 400;
+			}
+
+			&__price {
+				font-size: 13px !important;
+				font-weight: 700 !important;
+				color: #111 !important;
 			}
 		}
 
 		// 블랙픽
-		.blackpick-container {
+		.mobile-blackpick {
 			padding: 24px 16px;
 
-			.blackpick-title {
-				font-size: 16px;
-			}
-			.blackpick-sub {
-				font-size: 12px;
+			&__header {
+				margin-bottom: 14px;
 			}
 
-			.blackpick-card {
-				height: 200px;
+			&__title {
+				font-size: 16px;
+				font-weight: 700;
+				color: #111;
+				margin-bottom: 4px;
+				display: flex;
+				align-items: center;
+				gap: 8px;
+
+				&::before {
+					content: '';
+					display: inline-block;
+					width: 3px;
+					height: 16px;
+					background: #ff4e5b;
+					border-radius: 2px;
+					flex-shrink: 0;
+				}
+			}
+
+			&__sub {
+				font-size: 12px;
+				color: #888;
+			}
+
+			&__scroll {
+				display: flex;
+				gap: 12px;
+				overflow-x: auto;
+				padding-bottom: 8px;
+				-webkit-overflow-scrolling: touch;
+				&::-webkit-scrollbar {
+					display: none;
+				}
+			}
+
+			&__card {
+				position: relative;
+				flex-shrink: 0;
+				width: 200px;
+				height: 240px;
+				border-radius: 14px;
+				overflow: hidden;
+				cursor: pointer;
+
+				&:hover .mobile-blackpick__img {
+					transform: scale(1.05);
+				}
+			}
+
+			&__img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+				transition: transform 0.4s ease;
+			}
+
+			&__overlay {
+				position: absolute;
+				inset: 0;
+				display: flex;
+				flex-direction: column;
+				justify-content: flex-end;
+				padding: 14px;
+				background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 60%);
+			}
+
+			&__tag {
+				display: inline-block;
+				background: #ff4e5b;
+				color: #fff;
+				font-size: 10px;
+				font-weight: 600;
+				padding: 3px 7px;
+				border-radius: 5px;
+				margin-bottom: 6px;
+				width: fit-content;
+			}
+
+			&__text {
+				font-size: 13px;
+				color: #fff;
+				font-weight: 600;
+				line-height: 1.4;
 			}
 		}
 
@@ -526,27 +791,117 @@
 
 			.domestic-title {
 				font-size: 16px;
+				font-weight: 700;
+				margin-bottom: 14px;
+				display: flex;
+				align-items: center;
+				gap: 8px;
+
+				&::before {
+					content: '';
+					display: inline-block;
+					width: 3px;
+					height: 16px;
+					background: #ff4e5b;
+					border-radius: 2px;
+				}
 			}
+
+			.domestic-tabs {
+				display: flex;
+				gap: 6px;
+				overflow-x: auto;
+				margin-bottom: 16px;
+				&::-webkit-scrollbar {
+					display: none;
+				}
+
+				.domestic-tab {
+					font-size: 12px !important;
+					padding: 5px 12px !important;
+					border-radius: 999px !important;
+					border: 1px solid #e0e0e0 !important;
+					background: #fff !important;
+					color: #555 !important;
+					text-transform: none !important;
+					white-space: nowrap !important;
+					flex-shrink: 0 !important;
+
+					&.active {
+						background: #ff4e5b !important;
+						color: #fff !important;
+						border-color: #ff4e5b !important;
+					}
+				}
+			}
+
 			.domestic-list {
-				column-gap: 40px;
+				display: grid !important;
+				grid-template-columns: repeat(4, 1fr) !important;
+				gap: 10px 0 !important;
 				font-size: 13px;
+
+				.domestic-item {
+					color: #555;
+					cursor: pointer;
+				}
 			}
 		}
 	}
 
 	// 푸터
 	#footer {
+		background-color: #f8f9fa;
+		border-top: 1px solid #eee;
+
 		.footer-container {
 			flex-direction: column;
-			gap: 24px;
-			padding: 32px 16px;
+			gap: 0;
+			padding: 24px 16px 32px;
 
 			.footer-section {
+				padding: 16px 0;
+				border-bottom: 1px solid #f0f0f0;
+
+				&:last-child {
+					border-bottom: none;
+				}
+
 				.footer-title {
 					font-size: 13px;
+					font-weight: 700;
+					color: #111;
+					margin-bottom: 10px;
 				}
-				.footer-links div {
+
+				.footer-sub {
 					font-size: 12px;
+					color: #777;
+					line-height: 1.6;
+					margin-bottom: 12px;
+				}
+
+				.footer-btns {
+					display: flex;
+					gap: 8px;
+
+					.footer-call-btn,
+					.footer-chat-btn {
+						font-size: 12px !important;
+						padding: 6px 12px !important;
+						white-space: nowrap !important;
+					}
+				}
+
+				.footer-links {
+					display: grid;
+					grid-template-columns: repeat(2, 1fr);
+					gap: 8px;
+
+					div {
+						font-size: 12px;
+						color: #666;
+					}
 				}
 			}
 		}

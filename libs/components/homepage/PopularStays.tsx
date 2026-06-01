@@ -12,6 +12,8 @@ import { Property } from '../../types/property/property';
 import { usePropertySection } from '../../hooks/usePropertySection';
 import PropertyCard from '../common/PropertyCard';
 import PropertyCardSkeleton from '../common/PropertyCardSkeleton';
+import useDeviceDetect from '../../hooks/useDeviceDetect';
+import PropertyCardMobile from './PropertyCardMobile';
 
 const CATEGORIES_K: PropertyTypeKorean[] = Object.values(PropertyTypeKorean);
 const CATEGORIES_EN: PropertyType[] = Object.values(PropertyType);
@@ -21,6 +23,7 @@ interface PopularStaysProps {
 }
 
 const PopularStays = ({ initialInput }: PopularStaysProps) => {
+	const device = useDeviceDetect();
 	const [activeCategory, setActiveCategory] = useState<PropertyType>(PropertyType.ALL);
 	const { properties, user, loading, t, likePropertyHandler, handlePushPropertyDetail } =
 		usePropertySection(initialInput);
@@ -28,6 +31,43 @@ const PopularStays = ({ initialInput }: PopularStaysProps) => {
 	const filtered =
 		activeCategory === 'ALL' ? properties : properties.filter((p: Property) => p.propertyType === activeCategory);
 
+	// 모바일 버전
+	if (device === 'mobile') {
+		return (
+			<Box className="mobile-section">
+				<Box className="mobile-section__header">
+					<Typography className="mobile-section__title">{t('인기 추천 숙소')}</Typography>
+					<Box className="mobile-section__tabs">{/* 탭들 */}</Box>
+				</Box>
+				<Box className="mobile-section__scroll">
+					{loading ? (
+						[1, 2, 3, 4].map((i) => (
+							<Box key={i} className="mobile-section__card-wrap">
+								<PropertyCardSkeleton />
+							</Box>
+						))
+					) : filtered.length !== 0 ? (
+						filtered.map((p: Property) => (
+							<Box key={p._id} className="mobile-section__card-wrap">
+								<PropertyCardMobile
+									property={p}
+									user={user}
+									onLike={likePropertyHandler}
+									onClick={handlePushPropertyDetail}
+								/>
+							</Box>
+						))
+					) : (
+						<div style={{ width: '100%', height: '100px', textAlign: 'center' }}>
+							<img src="/img/no-data3.webp" alt="" style={{ width: '100px', height: '100%' }} />
+						</div>
+					)}
+				</Box>
+			</Box>
+		);
+	}
+
+	// 데스크탑 버전
 	return (
 		<Stack className="container">
 			<Box className="section-container">

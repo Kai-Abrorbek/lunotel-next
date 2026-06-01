@@ -48,6 +48,10 @@ export default function PopularDestinations() {
 								prevEl: '.dest-prev',
 								nextEl: '.dest-next',
 							}}
+							breakpoints={{
+								0: { slidesPerView: 3.5, spaceBetween: 12 },
+								768: { slidesPerView: 6, spaceBetween: 10 },
+							}}
 						>
 							{Locations.map((item) => (
 								<SwiperSlide key={item.name}>

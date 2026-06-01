@@ -2,10 +2,10 @@ import { Box, Stack, Typography } from '@mui/material';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-
 import 'swiper/css';
 import 'swiper/css/navigation';
 import { useTranslation } from 'react-i18next';
+import useDeviceDetect from '../../hooks/useDeviceDetect';
 
 const ITEMS = [
 	{
@@ -36,7 +36,33 @@ const ITEMS = [
 ];
 
 export default function BlackPick() {
-	const { t, i18n } = useTranslation('common');
+	const { t } = useTranslation('common');
+	const device = useDeviceDetect();
+
+	// 모바일
+	if (device === 'mobile') {
+		return (
+			<Box className="mobile-blackpick">
+				<Box className="mobile-blackpick__header">
+					<Typography className="mobile-blackpick__title">{t('블랙 PICK')}</Typography>
+					<Typography className="mobile-blackpick__sub">{t('여행 전문가가 경험하고 선별한 숙소 큐레이션')}</Typography>
+				</Box>
+				<Box className="mobile-blackpick__scroll">
+					{ITEMS.map((item, idx) => (
+						<Box key={idx} className="mobile-blackpick__card">
+							<img src={item.image} className="mobile-blackpick__img" alt={item.title} />
+							<Box className="mobile-blackpick__overlay">
+								<span className="mobile-blackpick__tag">{item.tag}</span>
+								<span className="mobile-blackpick__text">{item.title}</span>
+							</Box>
+						</Box>
+					))}
+				</Box>
+			</Box>
+		);
+	}
+
+	// 데스크탑
 	return (
 		<Stack className="container">
 			<Box className="blackpick-container">
@@ -50,15 +76,12 @@ export default function BlackPick() {
 							slidesPerView={4}
 							spaceBetween={20}
 							modules={[Navigation]}
-							navigation={{
-								nextEl: '.blackpick-next',
-							}}
+							navigation={{ nextEl: '.blackpick-next' }}
 						>
 							{ITEMS.map((item, idx) => (
 								<SwiperSlide key={idx}>
 									<Box className="blackpick-card">
 										<img src={item.image} className="blackpick-img" />
-
 										<Box className="blackpick-overlay">
 											<div className="blackpick-tag">{item.tag}</div>
 											<div className="blackpick-text">{item.title}</div>
@@ -67,7 +90,6 @@ export default function BlackPick() {
 								</SwiperSlide>
 							))}
 						</Swiper>
-
 						<div className="blackpick-next">
 							<ArrowForwardIosIcon />
 						</div>

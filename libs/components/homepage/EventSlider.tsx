@@ -61,14 +61,11 @@ const EventSlider = () => {
 				</Box>
 
 				<Swiper
-					slidesPerView={3}
-					slidesPerGroup={3}
-					spaceBetween={20}
-					loop={true}
-					autoplay={{
-						delay: 3000,
-						disableOnInteraction: false,
+					breakpoints={{
+						0: { slidesPerView: 1, slidesPerGroup: 1, spaceBetween: 12 },
+						768: { slidesPerView: 3, slidesPerGroup: 3, spaceBetween: 20 },
 					}}
+					autoplay={{ delay: 3000, disableOnInteraction: false }}
 					pagination={{ clickable: true }}
 					modules={[Autoplay, Pagination]}
 					className="event-swiper"

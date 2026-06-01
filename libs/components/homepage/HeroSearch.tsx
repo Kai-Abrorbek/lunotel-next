@@ -12,9 +12,11 @@ interface HeroSearchProps {
 }
 
 const HERO_IMAGES = [
-	'https://images.pexels.com/photos/258154/pexels-photo-258154.jpeg?auto=compress&cs=tinysrgb&w=800',
-	'https://images.pexels.com/photos/261187/pexels-photo-261187.jpeg?auto=compress&cs=tinysrgb&w=800',
-	'https://images.pexels.com/photos/242246/pexels-photo-242246.jpeg?auto=compress&cs=tinysrgb&w=800',
+	'/img/banners/banner1.jpg',
+	'/img/banners/banner2.jpg',
+	'/img/banners/banner3.jpg',
+	'/img/banners/banner4.jpg',
+	'/img/banners/banner5.jpg',
 ];
 
 const HeroSearch = (props: HeroSearchProps) => {
@@ -34,7 +36,7 @@ const HeroSearch = (props: HeroSearchProps) => {
 			>
 				{HERO_IMAGES.map((img, index) => (
 					<SwiperSlide key={index}>
-						<Box className="hero-bg" sx={{ backgroundImage: `url(${img})` }} />
+						<Box className="hero-bg" sx={{ backgroundImage: `url(${`/img/banners/banner${index + 1}.jpg`})` }} />
 					</SwiperSlide>
 				))}
 			</Swiper>

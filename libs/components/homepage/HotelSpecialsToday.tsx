@@ -10,6 +10,8 @@ import { Property } from '../../types/property/property';
 import { usePropertySection } from '../../hooks/usePropertySection';
 import PropertyCard from '../common/PropertyCard';
 import PropertyCardSkeleton from '../common/PropertyCardSkeleton';
+import useDeviceDetect from '../../hooks/useDeviceDetect';
+import PropertyCardMobile from './PropertyCardMobile';
 
 interface HotelSpecialsTodayProps {
 	initialInput: PropertiesInquiry;
@@ -18,6 +20,42 @@ interface HotelSpecialsTodayProps {
 const HotelSpecialsToday = ({ initialInput }: HotelSpecialsTodayProps) => {
 	const { properties, user, t, loading, likePropertyHandler, handlePushPropertyDetail } =
 		usePropertySection(initialInput);
+	const device = useDeviceDetect();
+
+	if (device === 'mobile') {
+		return (
+			<Box className="mobile-section">
+				<Box className="mobile-section__header">
+					<Typography className="section-title">{t('오늘 체크인 호텔 특가')}</Typography>
+					<Box className="mobile-section__tabs">{/* 탭들 */}</Box>
+				</Box>
+				<Box className="mobile-section__scroll">
+					{loading ? (
+						[1, 2, 3, 4].map((i) => (
+							<Box key={i} className="mobile-section__card-wrap">
+								<PropertyCardSkeleton />
+							</Box>
+						))
+					) : properties.length !== 0 ? (
+						properties.map((p: Property) => (
+							<Box key={p._id} className="mobile-section__card-wrap">
+								<PropertyCardMobile
+									property={p}
+									user={user}
+									onLike={likePropertyHandler}
+									onClick={handlePushPropertyDetail}
+								/>
+							</Box>
+						))
+					) : (
+						<div style={{ width: '100%', height: '100px', textAlign: 'center' }}>
+							<img src="/img/no-data3.webp" alt="" style={{ width: '100px', height: '100%' }} />
+						</div>
+					)}
+				</Box>
+			</Box>
+		);
+	}
 
 	return (
 		<Stack className="container">
@@ -33,7 +71,7 @@ const HotelSpecialsToday = ({ initialInput }: HotelSpecialsTodayProps) => {
 							modules={[Navigation]}
 							spaceBetween={24}
 							breakpoints={{
-								0: { slidesPerView: 1.2, spaceBetween: 16 },
+								0: { slidesPerView: 2.3, spaceBetween: 10 },
 								768: { slidesPerView: 2.5, spaceBetween: 20 },
 								1024: { slidesPerView: 3, spaceBetween: 22 },
 								1280: { slidesPerView: 4, spaceBetween: 24 },

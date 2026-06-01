@@ -16,7 +16,7 @@ const PropertyCard = ({ property, user, onLike, onClick }: PropertyCardProps) =>
 	const isFav = property?.meLiked?.[0]?.myFavorite;
 
 	return (
-		<Box className="property-card" onClick={() => onClick(property)}>
+		<Box className="property-card" onClick={() => onClick(property)} sx={{ minWidth: 0 }}>
 			<Box className="property-card__image-wrapper">
 				<img
 					src={`${process.env.REACT_APP_API_URL}/${property.propertyImages?.[0]}`}
