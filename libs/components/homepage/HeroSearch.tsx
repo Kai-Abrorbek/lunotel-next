@@ -6,7 +6,6 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, EffectCoverflow } from 'swiper';
 import 'swiper/css';
 import { useTranslation } from 'react-i18next';
-import useDateHook from '../../hooks/useDate';
 
 interface HeroSearchProps {
 	initialInput: PropertiesInquiry;
@@ -19,7 +18,6 @@ const HERO_IMAGES = [
 ];
 
 const HeroSearch = (props: HeroSearchProps) => {
-	const { formatDate } = useDateHook();
 	const { initialInput } = props;
 	const [heroCardOpen, setHeroCardOpen] = useState<boolean>(false);
 	const { t, i18n } = useTranslation('common');
@@ -50,16 +48,6 @@ const HeroSearch = (props: HeroSearchProps) => {
 	);
 };
 
-function formatDate(date: Date, addDays = 0) {
-	const d = new Date(date);
-	d.setDate(d.getDate() + addDays);
-
-	const y = d.getFullYear();
-	const m = String(d.getMonth() + 1).padStart(2, '0');
-	const day = String(d.getDate()).padStart(2, '0');
-	return `${y}-${m}-${day}`;
-}
-
 HeroSearch.defaultProps = {
 	initialInput: {
 		page: 1,
@@ -67,10 +55,9 @@ HeroSearch.defaultProps = {
 		sort: 'createdAt',
 		search: {
 			location: '',
-			checkInDate: formatDate(new Date(), 0),
-			checkOutDate: formatDate(new Date(), 1),
+			checkInDate: new Date().toISOString().split('T')[0],
+			checkOutDate: new Date(Date.now() + 86400000).toISOString().split('T')[0],
 			personal: 2,
-			// propertyType: 'ALL',
 		},
 	},
 };

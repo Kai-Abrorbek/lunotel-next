@@ -1,11 +1,12 @@
 #pc-wrap {
 	.guest-lookup-page {
-		min-height: 100vh;
+		margin-top: 75px;
+		// min-height: 100vh;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		background: radial-gradient(circle at top, #eff0f6, #f7f7f7 55%, #f1f2f7 100%);
-		padding: 32px 16px;
+		// padding: 32px 16px;
 		box-sizing: border-box;
 
 		.guest-lookup-wrapper {

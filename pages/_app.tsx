@@ -8,11 +8,14 @@ import React, { useState } from 'react';
 import { SessionProvider } from 'next-auth/react';
 import { useAuthSync } from '../libs/hooks/useAuthSync';
 import { appWithTranslation } from 'next-i18next';
+import Head from 'next/head';
 
 import '../scss/app.scss';
 import '../scss/desktop/main.scss';
 import '../scss/mobile/main.scss';
-import Head from 'next/head';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 
 function AuthSyncGate() {
 	useAuthSync();
