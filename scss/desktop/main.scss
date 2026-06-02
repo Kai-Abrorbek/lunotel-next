@@ -44,6 +44,10 @@ body::-webkit-scrollbar {
 	z-index: 1300;
 }
 #pc-wrap {
+	* {
+		// box-sizing: border-box;
+		color: var(--text-primary) !important;
+	}
 	#top,
 	#other-top {
 		.navbar {
