@@ -1652,3 +1652,608 @@ html.dark {
 		display: flex !important;
 	}
 }
+
+/* ============================================================
+   모바일 — property 상세 페이지
+   ============================================================ */
+#mobile-wrap {
+	.mobile-detail {
+		padding-bottom: 80px;
+		background: var(--bg-primary);
+
+		// 갤러리
+		&__gallery {
+			position: relative;
+			width: 100%;
+			height: 260px;
+			overflow: hidden;
+
+			.mobile-detail__swiper,
+			.swiper {
+				height: 100%;
+			}
+
+			&-img {
+				width: 100%;
+				height: 260px;
+				object-fit: cover;
+				display: block;
+			}
+
+			&-badge {
+				position: absolute;
+				bottom: 40px;
+				left: 12px;
+				background: var(--primary);
+				color: #fff;
+				font-size: 11px;
+				font-weight: 600;
+				padding: 3px 8px;
+				border-radius: 4px;
+				z-index: 5;
+			}
+
+			&-count {
+				position: absolute;
+				bottom: 12px;
+				right: 12px;
+				background: rgba(0, 0, 0, 0.55);
+				color: #fff;
+				font-size: 12px;
+				padding: 3px 8px;
+				border-radius: 6px;
+				z-index: 5;
+				cursor: pointer;
+			}
+		}
+
+		.mob-gal-nav {
+			position: absolute !important;
+			top: 50%;
+			transform: translateY(-50%);
+			z-index: 10;
+			background: rgba(255, 255, 255, 0.85) !important;
+			padding: 4px !important;
+			svg {
+				font-size: 16px;
+				color: #333;
+			}
+		}
+		.mob-gal-prev {
+			left: 8px;
+		}
+		.mob-gal-next {
+			right: 8px;
+		}
+
+		&__fav {
+			position: absolute !important;
+			top: 12px;
+			right: 12px;
+			z-index: 10;
+			background: rgba(0, 0, 0, 0.3) !important;
+			padding: 6px !important;
+		}
+
+		// 기본 정보
+		&__info {
+			padding: 14px 16px 10px;
+			border-bottom: 1px solid var(--border-color);
+
+			&__type {
+				font-size: 11px;
+				color: var(--text-muted);
+				font-weight: 500;
+				margin-bottom: 2px;
+			}
+			&__name {
+				font-size: 18px;
+				font-weight: 700;
+				color: var(--text-primary);
+				margin-bottom: 6px;
+			}
+		}
+
+		&__rating-row {
+			display: flex;
+			align-items: center;
+			gap: 3px;
+			margin-bottom: 4px;
+		}
+		&__rating-score {
+			font-size: 13px;
+			font-weight: 600;
+			color: var(--text-primary);
+		}
+		&__rating-count {
+			font-size: 12px;
+			color: var(--text-muted);
+		}
+
+		&__location-row {
+			display: flex;
+			align-items: center;
+			gap: 3px;
+		}
+		&__location-text {
+			font-size: 12px;
+			color: var(--text-muted);
+		}
+
+		// 탭
+		&__tabs {
+			display: flex;
+			overflow-x: auto;
+			border-bottom: 1px solid var(--border-color);
+			background: var(--bg-primary);
+			position: sticky;
+			top: 58px;
+			z-index: 20;
+			padding: 0 8px;
+			scrollbar-width: none;
+			&::-webkit-scrollbar {
+				display: none;
+			}
+
+			.mobile-detail__tab {
+				flex-shrink: 0;
+				padding: 10px 14px;
+				font-size: 13px;
+				font-weight: 500;
+				color: var(--text-muted);
+				background: none;
+				border: none;
+				border-bottom: 2px solid transparent;
+				cursor: pointer;
+				white-space: nowrap;
+
+				&.active {
+					color: var(--primary);
+					border-bottom-color: var(--primary);
+					font-weight: 700;
+				}
+			}
+		}
+
+		// 요약 카드
+		&__summary {
+			display: flex;
+			gap: 10px;
+			padding: 14px 16px;
+			border-bottom: 1px solid var(--border-color);
+		}
+
+		&__summary-card {
+			flex: 1;
+			background: var(--bg-card);
+			border: 1px solid var(--border-color);
+			border-radius: 12px;
+			padding: 12px;
+			cursor: pointer;
+		}
+
+		&__summary-title {
+			font-size: 12px;
+			font-weight: 600;
+			color: var(--text-primary);
+			margin-bottom: 8px;
+		}
+
+		&__amenit-list {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 6px;
+		}
+
+		&__amenit-item {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 2px;
+			font-size: 10px;
+			color: var(--text-secondary);
+			width: 42px;
+		}
+
+		&__summary-addr {
+			font-size: 11px;
+			color: var(--text-muted);
+			line-height: 1.4;
+		}
+
+		// 섹션 공통
+		&__section {
+			padding: 16px 16px 0;
+			border-bottom: 1px solid var(--border-color);
+			margin-bottom: 4px;
+		}
+
+		&__section-title {
+			font-size: 15px;
+			font-weight: 700;
+			color: var(--text-primary);
+			margin-bottom: 12px;
+		}
+
+		&__divider {
+			border: none;
+			border-top: 1px solid var(--border-color);
+			margin: 14px 0;
+		}
+
+		// 부대시설 그리드
+		&__amenit-grid {
+			display: grid;
+			grid-template-columns: repeat(3, 1fr);
+			gap: 10px;
+			margin-bottom: 16px;
+		}
+
+		&__amenit-item-lg {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 4px;
+			background: var(--bg-secondary);
+			border-radius: 10px;
+			padding: 10px 6px;
+		}
+		&__amenit-icon {
+			font-size: 20px;
+		}
+		&__amenit-name {
+			font-size: 11px;
+			color: var(--text-secondary);
+			text-align: center;
+		}
+
+		&__refund-text {
+			font-size: 13px;
+			color: var(--text-secondary);
+			line-height: 1.5;
+			padding-bottom: 16px;
+		}
+
+		// 위치
+		&__addr {
+			font-size: 12px;
+			color: var(--text-muted);
+			margin-bottom: 10px;
+		}
+
+		// 리뷰
+		&__review-header {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			margin-bottom: 10px;
+		}
+		&__review-star {
+			color: var(--primary);
+			font-size: 14px;
+		}
+		&__review-score {
+			font-size: 15px;
+			font-weight: 700;
+			color: var(--text-primary);
+			margin-left: 4px;
+		}
+		&__review-meta {
+			font-size: 12px;
+			color: var(--text-muted);
+		}
+
+		// 하단 고정 바
+		&__bottom-bar {
+			position: fixed;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			z-index: 100;
+			background: var(--bg-card);
+			border-top: 1px solid var(--border-color);
+			padding: 10px 16px;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.08);
+		}
+
+		&__bottom-price {
+			display: flex;
+			align-items: baseline;
+			gap: 3px;
+		}
+		&__bottom-price-num {
+			font-size: 17px;
+			font-weight: 700;
+			color: var(--text-primary);
+		}
+		&__bottom-price-per {
+			font-size: 11px;
+			color: var(--text-muted);
+		}
+
+		&__bottom-btn {
+			background: var(--primary) !important;
+			color: #fff !important;
+			font-size: 14px !important;
+			font-weight: 600 !important;
+			padding: 10px 24px !important;
+			border-radius: 10px !important;
+		}
+	}
+
+	// 모바일 객실 카드
+	.mobile-room-card {
+		display: flex;
+		gap: 12px;
+		background: var(--bg-card);
+		border: 1px solid var(--border-color);
+		border-radius: 14px;
+		overflow: hidden;
+		margin-bottom: 12px;
+
+		&__img-wrap {
+			position: relative;
+			width: 110px;
+			min-width: 110px;
+			height: 140px;
+			flex-shrink: 0;
+
+			img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
+		}
+
+		&__img-count {
+			position: absolute;
+			bottom: 6px;
+			right: 6px;
+			background: rgba(0, 0, 0, 0.55);
+			color: #fff;
+			font-size: 10px;
+			padding: 2px 5px;
+			border-radius: 4px;
+		}
+
+		&__body {
+			flex: 1;
+			padding: 10px 10px 10px 0;
+		}
+
+		&__name {
+			font-size: 14px;
+			font-weight: 700;
+			color: var(--text-primary);
+			margin-bottom: 2px;
+		}
+		&__persons {
+			font-size: 11px;
+			color: var(--text-muted);
+			margin-bottom: 8px;
+		}
+
+		&__divider {
+			border-top: 1px solid var(--border-color);
+			margin: 6px 0;
+		}
+
+		&__plan {
+			margin-bottom: 8px;
+		}
+
+		&__plan-header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 4px;
+		}
+
+		&__plan-type {
+			font-size: 12px;
+			font-weight: 600;
+			color: var(--text-primary);
+		}
+		&__plan-price {
+			font-size: 13px;
+			font-weight: 700;
+			color: var(--primary);
+		}
+		&__plan-time {
+			font-size: 10px;
+			color: var(--text-muted);
+			margin-bottom: 4px;
+		}
+
+		&__btn {
+			width: 100%;
+			font-size: 12px !important;
+			font-weight: 600 !important;
+			padding: 6px 0 !important;
+			border-radius: 8px !important;
+
+			&--day {
+				background: var(--bg-secondary) !important;
+				color: var(--primary) !important;
+				border: 1px solid var(--primary) !important;
+			}
+			&--stay {
+				background: var(--primary) !important;
+				color: #fff !important;
+			}
+		}
+	}
+
+	// 비슷한 숙소 슬라이더
+	.mobile-similar-swiper {
+		padding-bottom: 16px !important;
+
+		.popular-card {
+			background: var(--bg-card);
+			border-radius: 12px;
+			overflow: hidden;
+			border: 1px solid var(--border-color);
+		}
+
+		.popular-image-wrapper {
+			width: 100%;
+			height: 160px;
+			overflow: hidden;
+			position: relative;
+		}
+
+		.popular-image {
+			width: 100% !important;
+			height: 160px !important;
+			object-fit: cover !important;
+			display: block;
+		}
+
+		.popular-info {
+			padding: 10px;
+		}
+		.popular-category {
+			font-size: 10px;
+			color: var(--text-muted);
+		}
+		.popular-name {
+			font-size: 13px;
+			font-weight: 600;
+			color: var(--text-primary);
+		}
+		.popular-price-current {
+			font-size: 14px;
+			font-weight: 700;
+			color: var(--primary);
+		}
+	}
+}
+
+/* ============================================================
+   모바일 — rv-item (리뷰)
+   ============================================================ */
+#mobile-wrap {
+	.rv-item {
+		padding: 16px 0;
+		border-bottom: 1px solid var(--border-color);
+
+		&__header {
+			display: flex;
+			align-items: flex-start;
+			gap: 10px;
+			margin-bottom: 10px;
+		}
+
+		&__avatar {
+			width: 36px !important;
+			height: 36px !important;
+			font-size: 14px !important;
+			flex-shrink: 0;
+		}
+
+		&__header-info {
+			flex: 1;
+			display: flex;
+			flex-direction: column;
+			gap: 3px;
+		}
+
+		&__name-row {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+		}
+
+		&__name {
+			font-size: 13px !important;
+			font-weight: 600 !important;
+			color: var(--text-primary) !important;
+		}
+		&__date {
+			font-size: 11px !important;
+			color: var(--text-muted) !important;
+		}
+
+		&__rating-row {
+			display: flex;
+			align-items: center;
+			gap: 4px;
+		}
+
+		&__score {
+			font-size: 12px !important;
+			font-weight: 600 !important;
+			color: var(--text-primary) !important;
+		}
+		&__room {
+			font-size: 11px !important;
+			color: var(--primary) !important;
+		}
+
+		&__body {
+			padding-left: 0;
+			margin-bottom: 10px;
+		}
+
+		&__text {
+			font-size: 13px !important;
+			line-height: 1.6 !important;
+			color: var(--text-secondary) !important;
+		}
+		&__more {
+			font-size: 12px !important;
+			color: var(--text-muted) !important;
+			padding: 0 !important;
+		}
+
+		// 이미지 — 가로 스크롤
+		&__imgs {
+			padding-left: 0;
+			margin-bottom: 10px;
+			overflow: hidden;
+		}
+
+		&__swiper {
+			width: 100%;
+		}
+
+		&__img-wrap {
+			width: 120px;
+			height: 90px;
+			border-radius: 8px;
+			overflow: hidden;
+			cursor: pointer;
+
+			img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+				display: block;
+			}
+		}
+
+		&__reply {
+			margin-left: 0;
+			margin-top: 8px;
+			padding: 10px 12px;
+			border-radius: 8px;
+			background: var(--bg-secondary);
+			border-left: 3px solid var(--primary);
+		}
+
+		&__reply-label {
+			font-size: 11px !important;
+			font-weight: 600 !important;
+			color: var(--text-secondary) !important;
+			margin-bottom: 3px !important;
+		}
+		&__reply-text {
+			font-size: 12px !important;
+			color: var(--text-secondary) !important;
+			line-height: 1.5 !important;
+		}
+	}
+}
