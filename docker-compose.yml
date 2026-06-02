@@ -1,8 +1,10 @@
 services:
   lunotel-next:
     container_name: lunotel-next
-    image: node:20.16.0
-    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: on-failure:3
 
     ports:
       - '3000:3000'
@@ -25,8 +27,6 @@ services:
 
     networks:
       - monorepo-network
-
-    command: sh -c "yarn install && yarn build && yarn start"
 
 networks:
   monorepo-network:
