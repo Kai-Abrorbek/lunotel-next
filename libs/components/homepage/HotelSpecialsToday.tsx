@@ -26,7 +26,7 @@ const HotelSpecialsToday = ({ initialInput }: HotelSpecialsTodayProps) => {
 		return (
 			<Box className="mobile-section">
 				<Box className="mobile-section__header">
-					<Typography className="section-title">{t('오늘 체크인 호텔 특가')}</Typography>
+					<Typography className="mobile-section__title">{t('오늘 체크인 호텔 특가')}</Typography>
 					<Box className="mobile-section__tabs">{/* 탭들 */}</Box>
 				</Box>
 				<Box className="mobile-section__scroll">

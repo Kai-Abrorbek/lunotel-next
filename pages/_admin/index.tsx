@@ -1,7 +1,7 @@
 import { Home, Hotel, Menu, MessageSquare, UserCheck, Users, X } from 'lucide-react';
 import { useState } from 'react';
 import CSCenter from '../../libs/components/admin/CScenter';
-import HostManagement from '../../libs/components/admin/HostManagement ';
+import HostManagement from '../../libs/components/admin/HostManagement';
 import UserManagement from '../../libs/components/admin/UserManagement';
 import Dashboard from '../../libs/components/admin/Dashboard';
 import PropertyManagement from '../../libs/components/admin/PropertyManagement';
