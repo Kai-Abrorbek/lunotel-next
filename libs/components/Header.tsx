@@ -15,8 +15,8 @@ import { GET_MY_NOTIFICATIONS } from '../../apollo/user/query';
 import { Notification } from '../types/notification/notification';
 import { useRouter } from 'next/router';
 
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useTranslation } from 'react-i18next';
+import MemberQuickMenuMobile from './common/MemberQuickMenuMobile';
 
 const Header = () => {
 	const user = useReactiveVar(userVar);
@@ -101,8 +101,7 @@ const Header = () => {
 			<Box className="mobile-navbar">
 				<Link href={'/'}>
 					<ButtonBase className="mobile-logo" disableRipple>
-						<Box className="logo" />
-						<Box className="logo-text">LUNOTEL</Box>
+						<img src="/img/logo.png" alt="logo" style={{ width: 58, height: 58, marginLeft: 10 }} />
 					</ButtonBase>
 				</Link>
 				<Box className="mobile-nav-actions">
@@ -125,8 +124,23 @@ const Header = () => {
 						</Link>
 					)}
 					<IconButton onClick={() => setOpenMenu(!openMenu)}>
-						<MenuIcon sx={{ fontSize: 24 }} />
+						<Badge
+							badgeContent={notifications}
+							color="error"
+							overlap="circular"
+							sx={{
+								'& .MuiBadge-badge': {
+									fontSize: '11px',
+									height: '16px',
+									minWidth: '16px',
+									padding: '0 3px',
+								},
+							}}
+						>
+							<MenuIcon sx={{ fontSize: 24 }} />
+						</Badge>
 					</IconButton>
+					{user._id && <MemberQuickMenuMobile open={openMenu} setOpen={setOpenMenu} notifications={notifications} />}
 				</Box>
 			</Box>
 		);

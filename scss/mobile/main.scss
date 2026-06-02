@@ -38,7 +38,6 @@
 				font-size: 18px;
 				font-weight: 800;
 				background: linear-gradient(135deg, #ff4e5b, #ff8c69);
-				-webkit-background-clip: text;
 				-webkit-text-fill-color: transparent;
 			}
 		}
@@ -904,6 +903,100 @@
 					}
 				}
 			}
+		}
+	}
+}
+
+.mobile-quick-menu {
+	display: none;
+	position: fixed;
+	top: 56px;
+	right: 1%;
+	z-index: 9999;
+
+	&.active {
+		display: block;
+	}
+
+	&__card {
+		width: 240px;
+		border-radius: 0 0 0 16px !important;
+		padding: 12px 0 !important;
+		box-shadow: -4px 8px 24px rgba(0, 0, 0, 0.12) !important;
+		border: 1px solid #f1f3f5;
+	}
+
+	&__header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 10px 12px;
+		cursor: pointer;
+		border-bottom: 1px solid #f0f0f0;
+		background: linear-gradient(135deg, #fff5f5, #fff0f1);
+	}
+
+	&__avatar {
+		width: 34px;
+		height: 34px;
+		border-radius: 50%;
+		background: #ffe8e8;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin-right: 8px;
+		font-size: 18px;
+	}
+
+	&__profile {
+		display: flex;
+		flex-direction: column;
+	}
+
+	&__nickname {
+		font-size: 13px;
+		font-weight: 700;
+		color: #111;
+		margin-bottom: 2px;
+	}
+
+	&__grade {
+		font-size: 11px;
+		color: #ff4e5b;
+	}
+	&__grade-label {
+		font-weight: 600;
+	}
+	&__grade-sub {
+		margin-left: 4px;
+		color: #ff6b6b;
+	}
+
+	&__section {
+		padding: 4px 0;
+		&--border {
+			border-top: 1px solid #f1f3f5;
+			border-bottom: 1px solid #f1f3f5;
+			margin: 4px 0;
+		}
+		&--last {
+			padding: 4px 12px 4px;
+		}
+	}
+
+	&__item {
+		width: 100%;
+		text-align: left;
+		padding: 10px 16px;
+		font-size: 13px;
+		border: none;
+		background: transparent;
+		color: #212529;
+		cursor: pointer;
+
+		&:hover {
+			background: #fff8f8;
+			color: #ff4e5b;
 		}
 	}
 }
