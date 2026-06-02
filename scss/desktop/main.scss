@@ -1412,3 +1412,114 @@ body::-webkit-scrollbar {
 .lamp-scene--on .lamp__light-cone {
 	opacity: 1;
 }
+
+/* ============================================================
+   다크모드 오버라이드 — main (navbar, footer, common)
+   ============================================================ */
+html.dark {
+	#pc-wrap {
+		#top,
+		#other-top {
+			.navbar {
+				background-color: var(--bg-navbar) !important;
+				border-bottom-color: #2a2a2a !important;
+
+				.header {
+					background: var(--bg-navbar) !important;
+
+					.nav-categories .nav-category {
+						color: #ccc;
+						&:hover {
+							background-color: rgba(255, 78, 91, 0.12);
+							color: #ff4e5b;
+						}
+						&.active {
+							color: #ff4e5b;
+						}
+					}
+
+					.mini-left-header {
+						background-color: var(--bg-primary) !important;
+
+						.mini-header-center .mini-search-bar {
+							background-color: var(--bg-input) !important;
+							border-color: var(--border-input) !important;
+							.mini-search-text {
+								color: var(--text-primary) !important;
+							}
+						}
+
+						.hero-card {
+							background-color: var(--bg-card) !important;
+							color: var(--text-primary) !important;
+							border-bottom-color: rgba(255, 78, 91, 0.2) !important;
+							.hero-tabs {
+								border-bottom-color: var(--border-color) !important;
+							}
+							.hero-field {
+								background-color: var(--bg-input) !important;
+								border-color: var(--border-input) !important;
+								color: var(--text-primary) !important;
+							}
+							.hero-keyword-panel {
+								background-color: var(--bg-card) !important;
+								.hero-location-btn {
+									background-color: var(--bg-input) !important;
+									border-color: var(--border-color) !important;
+								}
+								.hero-ranking-item,
+								.hero-recent-main {
+									color: var(--text-primary) !important;
+								}
+							}
+							.hero-datepicker,
+							.hero-guestpicker {
+								background-color: var(--bg-card) !important;
+								color: var(--text-primary) !important;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		#footer {
+			background-color: var(--bg-secondary);
+			border-top: 1px solid var(--border-color);
+
+			.footer-container .footer-section {
+				.footer-title {
+					color: var(--text-primary);
+				}
+				.footer-sub {
+					color: var(--text-secondary);
+				}
+				.footer-links div {
+					color: var(--text-secondary);
+				}
+				.footer-call-btn,
+				.footer-chat-btn {
+					background: var(--bg-card) !important;
+					border-color: var(--border-color) !important;
+					color: var(--text-primary) !important;
+				}
+			}
+		}
+	}
+
+	.member-menu {
+		&__card {
+			background: var(--bg-card);
+			border-color: var(--border-color);
+		}
+		&__nickname {
+			color: var(--text-primary);
+		}
+		&__item {
+			color: var(--text-primary);
+			&:hover {
+				background: rgba(255, 78, 91, 0.08);
+			}
+		}
+	}
+}

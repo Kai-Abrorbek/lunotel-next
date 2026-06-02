@@ -4,6 +4,7 @@
 
 	* {
 		box-sizing: border-box;
+		color: var(--text-primary) !important;
 	}
 
 	.container {
@@ -477,6 +478,7 @@
 				font-size: 16px;
 				font-weight: 700;
 				margin-bottom: 14px;
+				color: var(--text-primary) !important;
 			}
 
 			.dest-wrapper {
@@ -499,7 +501,7 @@
 					.dest-label {
 						font-size: 12px;
 						font-weight: 500;
-						color: #333;
+						color: var(--text-primary) !important;
 					}
 				}
 
@@ -531,9 +533,20 @@
 			}
 		}
 
+		// 이벤트 타이틀
+		.event-container {
+			.event-header .event-title {
+				color: var(--text-primary) !important;
+			}
+			.event-title {
+				color: var(--text-primary) !important;
+			}
+		}
+
 		// 모바일 카드 섹션
 		.mobile-section {
 			padding: 24px 16px;
+			background-color: var(--bg-primary);
 
 			&__header {
 				margin-bottom: 12px;
@@ -700,7 +713,7 @@
 			&__title {
 				font-size: 16px;
 				font-weight: 700;
-				color: #111;
+				color: #fcf4f4;
 				margin-bottom: 4px;
 				display: flex;
 				align-items: center;
@@ -997,6 +1010,212 @@
 		&:hover {
 			background: #fff8f8;
 			color: #ff4e5b;
+		}
+	}
+}
+
+/* ============================================================
+   다크모드 오버라이드 — mobile
+   ============================================================ */
+html.dark {
+	#mobile-wrap {
+		background-color: var(--bg-primary);
+
+		.mobile-navbar {
+			background: var(--bg-navbar) !important;
+			border-bottom-color: var(--border-color) !important;
+			.theme-button {
+				background: #2a2a2a !important;
+				color: #f0f0f0 !important;
+			}
+			.mobile-login-btn {
+				color: var(--primary) !important;
+				border-color: var(--primary) !important;
+			}
+		}
+
+		.home-page {
+			background-color: var(--bg-primary);
+
+			.hero-card {
+				background: var(--bg-card) !important;
+				.hero-tabs {
+					border-bottom-color: var(--border-color) !important;
+					.hero-tab {
+						color: var(--text-muted) !important;
+					}
+					.hero-tab.active {
+						color: var(--primary) !important;
+					}
+				}
+				.hero-field {
+					background: var(--bg-input) !important;
+					border-color: var(--border-input) !important;
+					.hero-input {
+						color: var(--text-primary) !important;
+						background: transparent !important;
+					}
+					.hero-field-text {
+						color: var(--text-primary) !important;
+					}
+				}
+				.hero-keyword-panel {
+					background: var(--bg-card) !important;
+					.hero-ranking-item {
+						color: var(--text-primary) !important;
+					}
+				}
+				.hero-datepicker-row {
+					background: var(--bg-card) !important;
+					.hero-datepicker-cell {
+						color: var(--text-primary) !important;
+					}
+					.hero-datepicker-cell.start,
+					.hero-datepicker-cell.end {
+						background-color: var(--primary) !important;
+						color: #fff !important;
+					}
+					.hero-datepicker-cell.in-range {
+						background-color: rgba(255, 78, 91, 0.15) !important;
+					}
+				}
+				.hero-guestpicker {
+					background: var(--bg-card) !important;
+					color: var(--text-primary) !important;
+				}
+			}
+
+			// 이벤트 카드
+			.event-container {
+				.event-header .event-title {
+					color: var(--text-primary) !important;
+				}
+				.event-card {
+					background: linear-gradient(135deg, #2a1a1b 0%, #251519 100%) !important;
+					border-color: rgba(255, 78, 91, 0.15) !important;
+					.event-sub {
+						color: #aaa !important;
+					}
+					.event-main {
+						color: #f0f0f0 !important;
+					}
+				}
+			}
+
+			// section-container (인기 추천 숙소, 오늘 체크인 등)
+			.section-container {
+				.section-header .section-title {
+					color: var(--text-primary) !important;
+				}
+				.section-sub {
+					color: var(--text-secondary) !important;
+				}
+			}
+
+			.mobile-section {
+				background-color: var(--bg-primary);
+				&__title {
+					color: var(--text-primary);
+				}
+				&__tab {
+					background: var(--bg-card) !important;
+					color: var(--text-secondary) !important;
+					border-color: var(--border-color) !important;
+					&.active {
+						background: var(--primary) !important;
+						color: #fff !important;
+					}
+				}
+			}
+
+			.property-card-mobile {
+				background: var(--bg-card) !important;
+				&__name {
+					color: var(--text-primary) !important;
+				}
+				&__location {
+					color: var(--text-secondary) !important;
+				}
+				&__type {
+					color: var(--text-muted) !important;
+				}
+				&__price {
+					color: var(--text-primary) !important;
+				}
+			}
+
+			.mobile-blackpick {
+				background-color: var(--bg-secondary);
+				&__title {
+					color: var(--text-primary);
+				}
+				&__sub {
+					color: var(--text-secondary);
+				}
+			}
+
+			.domestic-container {
+				background-color: var(--bg-primary);
+				.domestic-title {
+					color: var(--text-primary);
+				}
+				.domestic-item {
+					color: var(--text-secondary);
+				}
+				.domestic-tab {
+					background: var(--bg-card) !important;
+					color: var(--text-secondary) !important;
+					border-color: var(--border-color) !important;
+					&.active {
+						background: var(--primary) !important;
+						color: #fff !important;
+						border-color: var(--primary) !important;
+					}
+				}
+			}
+		}
+
+		#footer {
+			background-color: var(--bg-secondary) !important;
+			border-top-color: var(--border-color) !important;
+			.footer-title {
+				color: var(--text-primary) !important;
+			}
+			.footer-sub {
+				color: var(--text-secondary) !important;
+			}
+			.footer-section {
+				border-bottom-color: var(--border-color) !important;
+			}
+			.footer-links div {
+				color: var(--text-secondary) !important;
+			}
+			.footer-call-btn,
+			.footer-chat-btn {
+				background: var(--bg-card) !important;
+				border-color: var(--border-color) !important;
+				color: var(--text-primary) !important;
+			}
+		}
+
+		.mobile-quick-menu {
+			&__card {
+				background: var(--bg-card) !important;
+				border-color: var(--border-color) !important;
+			}
+			&__header {
+				background: linear-gradient(135deg, #1e1e1e, #252525) !important;
+			}
+			&__nickname {
+				color: var(--text-primary) !important;
+			}
+			&__item {
+				color: var(--text-primary) !important;
+				&:hover {
+					background: rgba(255, 78, 91, 0.1) !important;
+					color: var(--primary) !important;
+				}
+			}
 		}
 	}
 }

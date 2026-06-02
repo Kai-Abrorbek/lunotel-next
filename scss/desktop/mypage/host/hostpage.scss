@@ -1770,3 +1770,41 @@
 		font-size: 16px;
 	}
 }
+
+/* ============================================================
+   다크모드 오버라이드 — 호스트 마이페이지
+   ============================================================ */
+html.dark {
+	#pc-wrap {
+		.host-page,
+		.host-layout {
+			background-color: var(--bg-primary);
+
+			.host-card,
+			.stat-card,
+			.dashboard-card {
+				background: var(--bg-card) !important;
+				border-color: var(--border-color) !important;
+				.stat-label {
+					color: var(--text-secondary) !important;
+				}
+				.stat-value {
+					color: var(--text-primary) !important;
+				}
+			}
+
+			.section-title,
+			.page-title {
+				color: var(--text-primary) !important;
+			}
+
+			.table-row {
+				border-color: var(--border-color) !important;
+				color: var(--text-primary) !important;
+				&:hover {
+					background: var(--bg-secondary) !important;
+				}
+			}
+		}
+	}
+}

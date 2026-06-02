@@ -269,3 +269,40 @@
 		}
 	}
 }
+
+/* ============================================================
+   다크모드 오버라이드 — 비회원 예약조회
+   ============================================================ */
+html.dark {
+	#pc-wrap {
+		.check-page,
+		.guest-lookup-page,
+		.reservation-check-page {
+			background-color: var(--bg-primary);
+
+			.check-card,
+			.guest-lookup-card,
+			.check-form {
+				background: var(--bg-card) !important;
+				border-color: var(--border-color) !important;
+				.check-title {
+					color: var(--text-primary) !important;
+				}
+				.check-sub {
+					color: var(--text-secondary) !important;
+				}
+
+				.MuiOutlinedInput-root {
+					background: var(--bg-input) !important;
+					color: var(--text-primary) !important;
+					.MuiOutlinedInput-notchedOutline {
+						border-color: var(--border-color) !important;
+					}
+				}
+				.MuiInputLabel-root {
+					color: var(--text-secondary) !important;
+				}
+			}
+		}
+	}
+}

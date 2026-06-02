@@ -1702,3 +1702,85 @@
 		}
 	}
 }
+
+/* ============================================================
+   다크모드 오버라이드 — 유저 마이페이지
+   ============================================================ */
+html.dark {
+	#pc-wrap {
+		.mypage,
+		.user-page,
+		.mypage-layout {
+			background-color: var(--bg-primary);
+
+			.mypage-sidebar,
+			.sidebar {
+				background: var(--bg-card);
+				border-color: var(--border-color);
+				.sidebar-user-name,
+				.user-name {
+					color: var(--text-primary);
+				}
+				.nav-item,
+				.sidebar-item {
+					color: var(--text-secondary);
+					&:hover {
+						background: rgba(255, 78, 91, 0.08);
+						color: var(--primary);
+					}
+					&.active {
+						color: var(--primary);
+					}
+				}
+			}
+
+			.content-card,
+			.info-card,
+			.reservation-item,
+			.review-item,
+			.point-item,
+			.favorite-item {
+				background: var(--bg-card) !important;
+				border-color: var(--border-color) !important;
+				.card-title,
+				.item-title {
+					color: var(--text-primary) !important;
+				}
+				.card-sub,
+				.item-sub {
+					color: var(--text-secondary) !important;
+				}
+				.card-date,
+				.item-date {
+					color: var(--text-muted) !important;
+				}
+			}
+
+			.MuiOutlinedInput-root {
+				background: var(--bg-input) !important;
+				color: var(--text-primary) !important;
+				.MuiOutlinedInput-notchedOutline {
+					border-color: var(--border-color) !important;
+				}
+			}
+			.MuiInputLabel-root {
+				color: var(--text-secondary) !important;
+			}
+
+			.section-title,
+			.page-title {
+				color: var(--text-primary) !important;
+			}
+
+			.MuiTab-root {
+				color: var(--text-secondary) !important;
+			}
+			.MuiTab-root.Mui-selected {
+				color: var(--primary) !important;
+			}
+			.MuiTabs-indicator {
+				background-color: var(--primary) !important;
+			}
+		}
+	}
+}

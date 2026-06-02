@@ -3,33 +3,51 @@
 $font-kr: 'Noto Sans KR', sans-serif;
 $font-en: 'Poppins', sans-serif;
 
-// 색상 변수
+// SCSS 변수 (정적)
 $primary: #ff4e5b;
 $primary-hover: #e8404c;
 $primary-light: rgba(255, 78, 91, 0.08);
 
-// 텍스트
-$text-primary: #111111;
-$text-secondary: #555555;
-$text-muted: #999999;
+// CSS 커스텀 프로퍼티 — 라이트 기본값
+:root {
+	--bg-primary: #ffffff;
+	--bg-secondary: #f8f9fa;
+	--bg-card: #ffffff;
+	--bg-input: #f9fafb;
+	--bg-navbar: rgba(255, 255, 255, 0.95);
 
-// 배경
-$bg-primary: #ffffff;
-$bg-secondary: #f8f9fa;
-$bg-card: #ffffff;
+	--text-primary: #111111;
+	--text-secondary: #555555;
+	--text-muted: #999999;
 
-// 보더
-$border-color: #eeeeee;
+	--border-color: #eeeeee;
+	--border-input: #f0f0f0;
 
-// 다크모드
-$dark-bg-primary: #111111;
-$dark-bg-secondary: #1a1a1a;
-$dark-bg-card: #1e1e1e;
-$dark-text-primary: #f5f5f5;
-$dark-text-secondary: #aaaaaa;
-$dark-border-color: #2a2a2a;
+	--shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+	--shadow-md: 0 4px 16px rgba(0, 0, 0, 0.1);
+	--shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.14);
 
-// 그림자
-$shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
-$shadow-md: 0 4px 16px rgba(0, 0, 0, 0.1);
-$shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.14);
+	--primary: #ff4e5b;
+	--primary-hover: #e8404c;
+	--primary-light: rgba(255, 78, 91, 0.08);
+}
+
+// 다크모드 오버라이드
+html.dark {
+	--bg-primary: #111111;
+	--bg-secondary: #1a1a1a;
+	--bg-card: #1e1e1e;
+	--bg-input: #252525;
+	--bg-navbar: rgba(17, 17, 17, 0.97);
+
+	--text-primary: #f0f0f0;
+	--text-secondary: #aaaaaa;
+	--text-muted: #666666;
+
+	--border-color: #2a2a2a;
+	--border-input: #333333;
+
+	--shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+	--shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+	--shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+}

@@ -727,3 +727,61 @@
 		}
 	}
 }
+
+/* ============================================================
+   다크모드 오버라이드 — property 목록
+   ============================================================ */
+html.dark {
+	#pc-wrap {
+		.search-page {
+			background-color: var(--bg-primary);
+
+			.filter-panel {
+				.filter-title {
+					color: var(--text-primary);
+				}
+				.section-title {
+					color: var(--text-primary);
+				}
+				.MuiFormControlLabel-label {
+					color: var(--text-primary) !important;
+				}
+			}
+
+			.result-panel {
+				.result-title {
+					color: var(--text-primary);
+				}
+				.result-count {
+					color: var(--text-secondary);
+				}
+
+				.property-card,
+				.property-card-h {
+					background: var(--bg-card) !important;
+					border-color: var(--border-color) !important;
+					.card-name,
+					.property-name {
+						color: var(--text-primary) !important;
+					}
+					.card-location,
+					.property-location {
+						color: var(--text-secondary) !important;
+					}
+					.card-price,
+					.property-price {
+						color: var(--text-primary) !important;
+					}
+				}
+
+				.MuiPaginationItem-root {
+					color: var(--text-primary) !important;
+					&.Mui-selected {
+						background: var(--primary) !important;
+						color: #fff !important;
+					}
+				}
+			}
+		}
+	}
+}

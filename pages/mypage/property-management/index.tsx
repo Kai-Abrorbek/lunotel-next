@@ -4,7 +4,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import StarIcon from '@mui/icons-material/Star';
 import LayoutHome from '../../../libs/components/layout/LayoutHome';
 import Link from 'next/link';
-import PropertyUpdateModal from '../../../libs/components/mypage/property-management/PropertyUpdateData ';
+import PropertyUpdateModal from '../../../libs/components/mypage/property-management/PropertyUpdateData';
 import { PropertyStatus } from '../../../libs/enums/property.enum';
 import { Property } from '../../../libs/types/property/property';
 import PropertyAddModal from '../../../libs/components/mypage/property-management/PropertyAddData';

@@ -2643,3 +2643,33 @@
 		}
 	}
 }
+
+/* ============================================================
+   다크모드 오버라이드 — 호스트 사이드바
+   ============================================================ */
+html.dark {
+	#pc-wrap {
+		.host-sidebar,
+		.host-side {
+			background: var(--bg-card);
+			border-color: var(--border-color);
+
+			.host-name,
+			.sidebar-name {
+				color: var(--text-primary);
+			}
+
+			.nav-item,
+			.sidebar-item {
+				color: var(--text-secondary);
+				&:hover {
+					color: var(--primary);
+					background: rgba(255, 78, 91, 0.08);
+				}
+				&.active {
+					color: var(--primary);
+				}
+			}
+		}
+	}
+}

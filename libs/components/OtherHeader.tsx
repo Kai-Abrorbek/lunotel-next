@@ -19,6 +19,7 @@ import { userVar } from '../../apollo/store';
 import { GET_MY_NOTIFICATIONS } from '../../apollo/user/query';
 import { Notification } from '../types/notification/notification';
 import { useTranslation } from 'react-i18next';
+import MemberQuickMenuMobile from './common/MemberQuickMenuMobile';
 
 interface MiniHeaderProps {
 	initialInput: PropertiesInquiry;
@@ -123,6 +124,25 @@ const OtherHeader = (props: MiniHeaderProps) => {
 		};
 	}, [refElement]);
 
+	useEffect(() => {
+		const saved = localStorage.getItem('theme');
+		if (saved === 'dark') {
+			setIsDarkMode(true);
+			document.documentElement.classList.add('dark');
+		}
+	}, []);
+
+	const toggleThemeWithPersist = () => {
+		const next = !isDarkMode;
+		setIsDarkMode(next);
+		localStorage.setItem('theme', next ? 'dark' : 'light');
+		if (next) {
+			document.documentElement.classList.add('dark');
+		} else {
+			document.documentElement.classList.remove('dark');
+		}
+	};
+
 	/**HANDLERS**/
 	const openHeroCardHandler = () => {
 		setHeroCardOpen(true);
@@ -130,7 +150,79 @@ const OtherHeader = (props: MiniHeaderProps) => {
 	const toggleTheme = () => setIsDarkMode(!isDarkMode);
 
 	if (device === 'mobile') {
-		return <h1>MOBILE</h1>;
+		return (
+			<Box className="mobile-navbar">
+				<Link href={'/'}>
+					<ButtonBase className="mobile-logo" disableRipple>
+						<img src="/img/logo.png" alt="logo" style={{ width: 58, height: 58, marginLeft: 10 }} />
+					</ButtonBase>
+				</Link>
+
+				<Box
+					onClick={openHeroCardHandler}
+					sx={{
+						flex: 1,
+						mx: 1,
+						display: 'flex',
+						alignItems: 'center',
+						gap: '6px',
+						background: 'var(--bg-input)',
+						border: '1px solid var(--border-input)',
+						borderRadius: '10px',
+						padding: '6px 10px',
+						cursor: 'pointer',
+						overflow: 'hidden',
+					}}
+				>
+					<Box component="span" sx={{ fontSize: '16px', color: '#aaa', flexShrink: 0 }}>
+						🔍
+					</Box>
+					<Box
+						sx={{
+							fontSize: '12px',
+							color: 'var(--text-secondary)',
+							whiteSpace: 'nowrap',
+							overflow: 'hidden',
+							textOverflow: 'ellipsis',
+						}}
+					>
+						{property.propertyName ? property.propertyName : locationLabel || '어디로 가세요?'}
+					</Box>
+				</Box>
+
+				<Box className="mobile-nav-actions">
+					<IconButton className="theme-button" onClick={toggleThemeWithPersist}>
+						{isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
+					</IconButton>
+					{!user._id ? (
+						<Link href={'/login'}>
+							<ButtonBase className="mobile-login-btn" disableRipple>
+								로그인
+							</ButtonBase>
+						</Link>
+					) : (
+						<Link href={'/mypage/user'}>
+							<Avatar
+								src={`${process.env.REACT_APP_API_URL}/${user.memberImage}`}
+								alt={user.memberNick}
+								sx={{ width: 32, height: 32 }}
+							/>
+						</Link>
+					)}
+					<IconButton onClick={() => setOpenMenu(!openMenu)}>
+						<Badge
+							badgeContent={notifications}
+							color="error"
+							overlap="circular"
+							sx={{ '& .MuiBadge-badge': { fontSize: '11px', height: '16px', minWidth: '16px', padding: '0 3px' } }}
+						>
+							<MenuIcon sx={{ fontSize: 24 }} />
+						</Badge>
+					</IconButton>
+					{user._id && <MemberQuickMenuMobile open={openMenu} setOpen={setOpenMenu} notifications={notifications} />}
+				</Box>
+			</Box>
+		);
 	} else {
 		return (
 			<Box className={`navbar ${isDarkMode ? 'dark' : 'light'} `}>
@@ -231,7 +323,7 @@ const OtherHeader = (props: MiniHeaderProps) => {
 								)}
 							</Box>
 
-							<IconButton className="theme-button" onClick={toggleTheme}>
+							<IconButton className="theme-button" onClick={toggleThemeWithPersist}>
 								{isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
 							</IconButton>
 

@@ -305,3 +305,80 @@
 		}
 	}
 }
+
+/* ============================================================
+   다크모드 오버라이드 — 예약 페이지
+   ============================================================ */
+html.dark {
+	#pc-wrap {
+		.reservation-page,
+		.checkout-page {
+			background-color: var(--bg-primary);
+		}
+
+		.reservation-layout,
+		.checkout-layout {
+			.reservation-main,
+			.checkout-main {
+				.reservation-title,
+				.checkout-title {
+					color: var(--text-primary);
+				}
+				.section-title {
+					color: var(--text-primary);
+				}
+				.section-sub {
+					color: var(--text-secondary);
+				}
+
+				.MuiOutlinedInput-root {
+					background: var(--bg-input) !important;
+					color: var(--text-primary) !important;
+					.MuiOutlinedInput-notchedOutline {
+						border-color: var(--border-color) !important;
+					}
+				}
+				.MuiInputLabel-root {
+					color: var(--text-secondary) !important;
+				}
+
+				.time-chip {
+					background-color: var(--bg-input) !important;
+					border-color: var(--border-color) !important;
+					color: var(--primary) !important;
+				}
+				.time-chip--selected {
+					background-color: var(--primary) !important;
+					color: #fff !important;
+				}
+			}
+
+			.reservation-sidebar,
+			.checkout-sidebar {
+				.summary-card,
+				.booking-summary {
+					background: var(--bg-card) !important;
+					border-color: var(--border-color) !important;
+					.summary-title {
+						color: var(--text-primary) !important;
+					}
+					.summary-label {
+						color: var(--text-secondary) !important;
+					}
+					.summary-value {
+						color: var(--text-primary) !important;
+					}
+					.summary-total {
+						color: var(--text-primary) !important;
+					}
+					.property-name {
+						color: var(--text-primary) !important;
+					}
+					.property-location {
+						color: var(--text-secondary) !important;
+					}
+				}
+			}
+		}
+	}
+}

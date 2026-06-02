@@ -598,6 +598,20 @@
 			}
 		}
 
+		// 이벤트 섹션
+		.event-container {
+			.event-header .event-title {
+				color: var(--text-primary) !important;
+			}
+		}
+
+		// 인기추천숙소 / 오늘 체크인 / HOT 인기 펜션 등
+		.section-container {
+			.section-header .section-title {
+				color: var(--text-primary) !important;
+			}
+		}
+
 		.dest-container {
 			width: 100%;
 			padding: 40px 32px 10px;
@@ -1168,5 +1182,181 @@
 
 	img {
 		width: 200px;
+	}
+}
+
+/* ============================================================
+   다크모드 오버라이드 — homepage
+   ============================================================ */
+html.dark {
+	#pc-wrap {
+		.home-page {
+			background-color: var(--bg-primary);
+
+			.hero-card {
+				background-color: var(--bg-card) !important;
+				color: var(--text-primary) !important;
+
+				.hero-tabs {
+					border-bottom-color: var(--border-color) !important;
+					.hero-tab {
+						color: var(--text-muted) !important;
+					}
+					.hero-tab.active {
+						color: var(--primary) !important;
+					}
+				}
+				.hero-field {
+					background-color: var(--bg-input) !important;
+					border-color: var(--border-input) !important;
+					.hero-field-icon {
+						color: #666 !important;
+					}
+					.hero-input {
+						color: var(--text-primary) !important;
+						background: transparent !important;
+					}
+					.hero-field-text {
+						color: var(--text-primary) !important;
+					}
+				}
+				.hero-keyword-panel {
+					background-color: var(--bg-card) !important;
+					.hero-keyword-section-header,
+					.hero-ranking-item,
+					.hero-recent-main {
+						color: var(--text-primary) !important;
+					}
+					.hero-keyword-divider {
+						border-top-color: var(--border-color) !important;
+					}
+				}
+				.hero-datepicker,
+				.hero-guestpicker {
+					background-color: var(--bg-card) !important;
+					color: var(--text-primary) !important;
+					.hero-datepicker-cell {
+						color: var(--text-primary) !important;
+					}
+					.hero-datepicker-cell.start,
+					.hero-datepicker-cell.end {
+						background-color: var(--primary) !important;
+						color: #fff !important;
+					}
+					.hero-datepicker-cell.in-range {
+						background-color: rgba(255, 78, 91, 0.18) !important;
+					}
+				}
+			}
+
+			// 이벤트 카드
+			.event-container {
+				.event-header .event-title {
+					color: var(--text-primary) !important;
+				}
+				.event-card {
+					background: linear-gradient(135deg, #2a1a1b 0%, #251519 100%) !important;
+					border-color: rgba(255, 78, 91, 0.15) !important;
+					.event-sub {
+						color: #aaa !important;
+					}
+					.event-main {
+						color: #f0f0f0 !important;
+					}
+				}
+			}
+
+			// 인기추천숙소 / 오늘 체크인 / HOT 인기 펜션 등 section-container
+			.section-container {
+				.section-header .section-title {
+					color: var(--text-primary) !important;
+				}
+				.section-sub {
+					color: var(--text-secondary) !important;
+				}
+			}
+
+			.dest-container {
+				.dest-title {
+					color: var(--text-primary);
+				}
+				.dest-card .dest-label {
+					color: var(--text-secondary);
+				}
+				.dest-nav {
+					background: var(--bg-card) !important;
+					color: var(--text-primary) !important;
+				}
+			}
+
+			.blackpick-section,
+			.blackpick-container {
+				background-color: var(--bg-secondary);
+				.blackpick-title {
+					color: var(--text-primary);
+				}
+				.blackpick-sub {
+					color: var(--text-secondary);
+				}
+			}
+
+			.domestic-section,
+			.domestic-container {
+				background-color: var(--bg-primary);
+				.domestic-title {
+					color: var(--text-primary);
+				}
+				.domestic-item {
+					color: var(--text-secondary);
+				}
+				.domestic-tab {
+					background: var(--bg-card) !important;
+					color: var(--text-secondary) !important;
+					border-color: var(--border-color) !important;
+					&.active {
+						background: var(--primary) !important;
+						color: #fff !important;
+						border-color: var(--primary) !important;
+					}
+				}
+			}
+		}
+	}
+
+	.property-card {
+		background-color: var(--bg-card) !important;
+		box-shadow: var(--shadow-sm) !important;
+
+		&__name {
+			color: var(--text-primary) !important;
+		}
+		&__location {
+			color: var(--text-secondary) !important;
+		}
+		&__type {
+			color: var(--text-muted) !important;
+		}
+		&__coupon-text {
+			color: var(--text-muted) !important;
+		}
+		&__price-current {
+			color: var(--text-primary) !important;
+		}
+		&__rating-count {
+			color: var(--text-muted) !important;
+		}
+		&__fav-btn {
+			background-color: rgba(30, 30, 30, 0.85) !important;
+			.property-card__fav-icon {
+				color: #666 !important;
+			}
+			.property-card__fav-icon.active {
+				color: #ff4e5b !important;
+			}
+		}
+	}
+
+	.property-card-skeleton {
+		background: var(--bg-card) !important;
 	}
 }

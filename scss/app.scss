@@ -2,11 +2,17 @@
 @import 'variables.scss';
 @import 'reset.scss';
 @import url('https://unicons.iconscout.com/release/v2.1.5/css/unicons.css');
+
 a {
 	white-space: nowrap;
 	text-decoration: none;
 	color: #212121;
 }
+
+html.dark a {
+	color: var(--text-primary);
+}
+
 button {
 	text-transform: none;
 	box-shadow: none;
@@ -22,8 +28,13 @@ span,
 p {
 	line-height: 1.2;
 }
+
 body {
-	font-family: $font;
+	font-family: $font-kr;
+	background-color: var(--bg-primary);
+	color: var(--text-primary);
+	transition: background-color 0.2s ease, color 0.2s ease;
+
 	&::-webkit-scrollbar {
 		width: 9px;
 	}
@@ -39,15 +50,24 @@ body {
 	.MuiPopover-paper {
 		box-shadow: none;
 	}
-
 	.css-zw3mfo-MuiModal-root-MuiDialog-root {
 		z-index: 1000;
 	}
 }
+
+html.dark body {
+	&::-webkit-scrollbar-thumb {
+		background: #444;
+	}
+	&::-webkit-scrollbar-track {
+		background: #1a1a1a;
+	}
+}
+
 hr {
 	border-width: 0;
 	border-bottom-width: thin;
-	border-color: #eee;
+	border-color: var(--border-color);
 	margin: auto;
 }
 
@@ -56,6 +76,8 @@ hr {
 	width: 100%;
 	height: 100%;
 	zoom: 0.85;
+	background-color: var(--bg-primary);
+	color: var(--text-primary);
 	.container {
 		position: relative;
 		width: 1300px;

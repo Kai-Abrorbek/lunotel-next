@@ -309,3 +309,63 @@
 		}
 	}
 }
+
+/* ============================================================
+   다크모드 오버라이드 — 로그인
+   ============================================================ */
+html.dark {
+	#pc-wrap {
+		.login-page,
+		.auth-page {
+			background-color: var(--bg-secondary);
+
+			.login-card,
+			.auth-card {
+				background: var(--bg-card) !important;
+				border-color: var(--border-color) !important;
+				.login-title,
+				.auth-title {
+					color: var(--text-primary) !important;
+				}
+				.login-sub,
+				.auth-sub {
+					color: var(--text-secondary) !important;
+				}
+
+				.MuiOutlinedInput-root {
+					background: var(--bg-input) !important;
+					color: var(--text-primary) !important;
+					.MuiOutlinedInput-notchedOutline {
+						border-color: var(--border-color) !important;
+					}
+				}
+				.MuiInputLabel-root {
+					color: var(--text-secondary) !important;
+				}
+				.social-btn {
+					background: var(--bg-input) !important;
+					border-color: var(--border-color) !important;
+					color: var(--text-primary) !important;
+				}
+			}
+		}
+
+		.login-modal,
+		.auth-modal {
+			.MuiDialog-paper {
+				background: var(--bg-card) !important;
+				color: var(--text-primary) !important;
+				.MuiOutlinedInput-root {
+					background: var(--bg-input) !important;
+					color: var(--text-primary) !important;
+					.MuiOutlinedInput-notchedOutline {
+						border-color: var(--border-color) !important;
+					}
+				}
+				.MuiInputLabel-root {
+					color: var(--text-secondary) !important;
+				}
+			}
+		}
+	}
+}

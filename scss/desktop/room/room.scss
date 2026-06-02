@@ -1150,3 +1150,76 @@
 		font-size: 18px;
 	}
 }
+
+/* ============================================================
+   다크모드 오버라이드 — room (상세 페이지)
+   ============================================================ */
+html.dark {
+	#pc-wrap {
+		.room-page,
+		.property-detail-page {
+			background-color: var(--bg-primary);
+
+			.room-title,
+			.property-title {
+				color: var(--text-primary);
+			}
+			.room-location,
+			.property-location {
+				color: var(--text-secondary);
+			}
+
+			.room-section,
+			.detail-section,
+			.info-card,
+			.review-card {
+				background: var(--bg-card);
+				border-color: var(--border-color);
+				.section-title {
+					color: var(--text-primary);
+				}
+			}
+
+			.amenity-item {
+				background: var(--bg-secondary);
+				color: var(--text-primary);
+				border-color: var(--border-color);
+			}
+
+			.review-item {
+				background: var(--bg-card);
+				border-color: var(--border-color);
+				.reviewer-name {
+					color: var(--text-primary);
+				}
+				.review-text {
+					color: var(--text-secondary);
+				}
+				.review-date {
+					color: var(--text-muted);
+				}
+			}
+
+			.sticky-bar,
+			.booking-card,
+			.room-sticky-bar {
+				background: var(--bg-card) !important;
+				border-color: var(--border-color) !important;
+				color: var(--text-primary) !important;
+				.price-main,
+				.price-night {
+					color: var(--text-primary) !important;
+				}
+				.price-label {
+					color: var(--text-secondary) !important;
+				}
+				.date-input,
+				.guest-input {
+					background: var(--bg-input) !important;
+					border-color: var(--border-input) !important;
+					color: var(--text-primary) !important;
+				}
+			}
+		}
+	}
+}
