@@ -1708,79 +1708,517 @@
    ============================================================ */
 html.dark {
 	#pc-wrap {
-		.mypage,
-		.user-page,
-		.mypage-layout {
+		.my-res-page {
 			background-color: var(--bg-primary);
+		}
 
-			.mypage-sidebar,
-			.sidebar {
-				background: var(--bg-card);
-				border-color: var(--border-color);
-				.sidebar-user-name,
-				.user-name {
-					color: var(--text-primary);
+		// 사이드 메뉴
+		.my-res-side-menu {
+			background: var(--bg-card) !important;
+			border-color: var(--border-color) !important;
+
+			.my-res-side-menu-box {
+				background: var(--bg-card) !important;
+				border-left-color: var(--primary) !important;
+
+				&:hover {
+					background: rgba(255, 78, 91, 0.08) !important;
 				}
-				.nav-item,
-				.sidebar-item {
-					color: var(--text-secondary);
-					&:hover {
-						background: rgba(255, 78, 91, 0.08);
-						color: var(--primary);
-					}
-					&.active {
-						color: var(--primary);
+
+				&--special {
+					background: rgba(255, 78, 91, 0.06) !important;
+					border-left-color: var(--primary) !important;
+
+					&::after {
+						background: rgba(255, 78, 91, 0.15) !important;
+						color: var(--primary) !important;
 					}
 				}
 			}
 
-			.content-card,
-			.info-card,
-			.reservation-item,
-			.review-item,
-			.point-item,
-			.favorite-item {
-				background: var(--bg-card) !important;
-				border-color: var(--border-color) !important;
-				.card-title,
-				.item-title {
-					color: var(--text-primary) !important;
+			.my-res-side-menu-item {
+				color: var(--text-secondary) !important;
+				&.active {
+					color: var(--primary) !important;
 				}
-				.card-sub,
-				.item-sub {
+				&:hover {
+					color: var(--primary) !important;
+				}
+			}
+		}
+
+		// 메인 영역 공통
+		.my-res-main {
+			background: var(--bg-primary);
+
+			.my-res-main-title {
+				color: var(--text-primary) !important;
+			}
+
+			// 예약내역
+			.my-res-tabs {
+				border-bottom-color: var(--border-color) !important;
+				.MuiTab-root {
 					color: var(--text-secondary) !important;
 				}
-				.card-date,
-				.item-date {
+				.MuiTab-root.Mui-selected {
+					color: var(--primary) !important;
+				}
+				.MuiTabs-indicator {
+					background-color: var(--primary) !important;
+				}
+			}
+
+			.my-res-card {
+				background: var(--bg-card) !important;
+				border-color: var(--border-color) !important;
+			}
+
+			.my-res-empty-title {
+				color: var(--text-primary) !important;
+			}
+			.my-res-empty-sub {
+				color: var(--text-secondary) !important;
+			}
+
+			.my-res-item-box {
+				background: var(--bg-card) !important;
+				border-color: var(--border-color) !important;
+			}
+			.my-res-item-title {
+				color: var(--text-primary) !important;
+			}
+			.my-res-item-meta {
+				color: var(--text-secondary) !important;
+			}
+
+			.my-res-history-title {
+				color: var(--text-primary) !important;
+			}
+
+			// 찜 목록
+			.room-card {
+				background: var(--bg-card) !important;
+				border-color: var(--border-color) !important;
+				.room-card-type {
+					color: var(--text-muted) !important;
+				}
+				.room-card-title {
+					color: var(--text-primary) !important;
+				}
+				.room-card-location {
+					color: var(--text-secondary) !important;
+				}
+				.room-card-rating-text {
+					color: var(--text-muted) !important;
+				}
+				.room-card-line-label {
 					color: var(--text-muted) !important;
 				}
 			}
 
+			// 포인트
+			.point-page {
+				background: var(--bg-primary) !important;
+			}
+			.point-page__title {
+				color: var(--text-primary) !important;
+			}
+			.point-page__inner {
+				padding: 20px;
+			}
+			.point-summary {
+				background: var(--bg-card) !important;
+				border-color: var(--border-color) !important;
+				&__label {
+					color: var(--text-secondary) !important;
+				}
+				&__amount {
+					color: var(--text-primary) !important;
+				}
+				&__expire {
+					color: var(--text-muted) !important;
+				}
+				&__divider {
+					border-color: var(--border-color) !important;
+				}
+			}
+
+			.point-filter__chip {
+				background: var(--bg-input) !important;
+				border-color: var(--border-color) !important;
+				color: var(--text-secondary) !important;
+				&--active {
+					background: var(--primary) !important;
+					color: #fff !important;
+					border-color: var(--primary) !important;
+				}
+			}
+
+			.point-history__item {
+				border-color: var(--border-color) !important;
+				color: var(--text-primary) !important;
+				background: var(--bg-secondary);
+			}
+
+			// 내 정보
+			.myinfo-title {
+				color: var(--text-primary) !important;
+			}
+			.myinfo-subtitle {
+				color: var(--text-primary) !important;
+			}
+			.myinfo-text {
+				color: var(--text-secondary) !important;
+			}
+
+			.myinfo-visibility-card {
+				background: var(--bg-card) !important;
+				border-color: var(--border-color) !important;
+				.visibility-text {
+					color: var(--text-secondary) !important;
+				}
+			}
+
+			.form-label {
+				color: var(--text-primary) !important;
+			}
 			.MuiOutlinedInput-root {
 				background: var(--bg-input) !important;
 				color: var(--text-primary) !important;
 				.MuiOutlinedInput-notchedOutline {
 					border-color: var(--border-color) !important;
 				}
+				&:hover .MuiOutlinedInput-notchedOutline {
+					border-color: var(--primary) !important;
+				}
 			}
 			.MuiInputLabel-root {
 				color: var(--text-secondary) !important;
 			}
 
-			.section-title,
-			.page-title {
+			// 설정
+			.settings-title {
 				color: var(--text-primary) !important;
 			}
-
-			.MuiTab-root {
+			.settings-subtitle {
 				color: var(--text-secondary) !important;
 			}
-			.MuiTab-root.Mui-selected {
-				color: var(--primary) !important;
+
+			.settings-info {
+				background: var(--bg-card) !important;
+				border-color: var(--border-color) !important;
+				&__text {
+					color: var(--text-secondary) !important;
+				}
 			}
-			.MuiTabs-indicator {
-				background-color: var(--primary) !important;
+
+			.settings-marketing__parent-label {
+				color: var(--text-primary) !important;
+			}
+			.settings-marketing__child-label {
+				color: var(--text-secondary) !important;
+			}
+
+			// 알림
+			.page-header {
+				background: var(--bg-secondary);
+			}
+			.notifications-container {
+				background: var(--bg-primary);
+				.page-title {
+					color: var(--text-primary) !important;
+				}
+			}
+
+			.stat-card {
+				background: var(--bg-card) !important;
+				border-color: var(--border-color) !important;
+				.stat-label {
+					color: var(--text-secondary) !important;
+				}
+				.stat-value {
+					color: var(--text-primary) !important;
+				}
+			}
+
+			// 리뷰 작성 모달
+			.review-page {
+				.modal {
+					background: var(--bg-card) !important;
+					.modal-title {
+						color: var(--text-primary) !important;
+					}
+				}
+				.booking-info-card {
+					background: var(--bg-secondary) !important;
+					border-color: var(--border-color) !important;
+					.property-name {
+						color: var(--text-primary) !important;
+					}
+				}
+				.modal-overlay {
+					background: rgba(0, 0, 0, 0.6) !important;
+				}
 			}
 		}
+	}
+	// 예약내역
+	.my-res-tabs {
+		border-bottom-color: var(--border-color) !important;
+		.MuiTab-root {
+			color: var(--text-secondary) !important;
+		}
+		.MuiTab-root.Mui-selected {
+			color: var(--primary) !important;
+		}
+		.MuiTabs-indicator {
+			background-color: var(--primary) !important;
+		}
+	}
+
+	.my-res-card {
+		background: var(--bg-card) !important;
+		border-color: var(--border-color) !important;
+	}
+
+	.my-res-empty-title {
+		color: var(--text-primary) !important;
+	}
+	.my-res-empty-sub {
+		color: var(--text-secondary) !important;
+	}
+
+	.my-res-item-box {
+		background: var(--bg-card) !important;
+		border-color: var(--border-color) !important;
+		box-shadow: var(--shadow-sm) !important;
+	}
+	.my-res-item-title {
+		color: var(--text-primary) !important;
+	}
+	.my-res-item-meta {
+		color: var(--text-secondary) !important;
+	}
+	.my-res-history-title {
+		color: var(--text-primary) !important;
+	}
+
+	// 찜 목록
+	.room-page {
+		background: var(--bg-primary) !important;
+	}
+	.room-card {
+		background: var(--bg-card) !important;
+		border-color: var(--border-color) !important;
+		box-shadow: var(--shadow-sm) !important;
+		.room-card-type {
+			color: var(--text-muted) !important;
+		}
+		.room-card-title {
+			color: var(--text-primary) !important;
+		}
+		.room-card-location {
+			color: var(--text-secondary) !important;
+		}
+		.room-card-rating-text {
+			color: var(--text-muted) !important;
+		}
+		.room-card-line-label {
+			color: var(--text-muted) !important;
+		}
+		.room-card-line-value {
+			color: var(--text-primary) !important;
+		}
+		.room-card-date-link {
+			color: var(--primary) !important;
+		}
+		.room-card-price {
+			color: var(--text-primary) !important;
+		}
+		.room-card-price-unit {
+			color: var(--text-muted) !important;
+		}
+		.room-card-remaining {
+			color: var(--text-muted) !important;
+		}
+	}
+
+	// 포인트
+	.point-page__title {
+		color: var(--text-primary) !important;
+	}
+
+	.point-summary {
+		background: rgba(255, 78, 91, 0.08) !important;
+		&__label {
+			color: var(--primary) !important;
+		}
+		&__amount {
+			color: var(--text-primary) !important;
+		}
+		&__expire {
+			color: var(--text-muted) !important;
+		}
+		&__divider {
+			background: rgba(255, 78, 91, 0.2) !important;
+		}
+	}
+
+	.point-filter__chip {
+		background: var(--bg-input) !important;
+		border-color: var(--border-color) !important;
+		color: var(--text-secondary) !important;
+		&--active {
+			background: var(--primary) !important;
+			color: #fff !important;
+			border-color: var(--primary) !important;
+		}
+	}
+
+	.point-history__item {
+		border-color: var(--border-color) !important;
+		color: var(--text-primary) !important;
+		&.blue {
+			border-left-color: #4a9eff !important;
+			border-right-color: #4a9eff !important;
+		}
+		&.red {
+			border-left-color: #ff4e5b !important;
+			border-right-color: #ff4e5b !important;
+		}
+	}
+
+	// 내 정보
+	.myinfo-title {
+		color: var(--text-primary) !important;
+	}
+	.myinfo-subtitle {
+		color: var(--text-primary) !important;
+	}
+	.myinfo-text {
+		color: var(--text-secondary) !important;
+	}
+
+	.myinfo-visibility-card {
+		background: var(--bg-card) !important;
+		border-color: var(--border-color) !important;
+		.visibility-text {
+			color: var(--text-secondary) !important;
+		}
+	}
+
+	.form-label {
+		color: var(--text-primary) !important;
+	}
+	.MuiOutlinedInput-root {
+		background: var(--bg-input) !important;
+		color: var(--text-primary) !important;
+		.MuiOutlinedInput-notchedOutline {
+			border-color: var(--border-color) !important;
+		}
+	}
+	.MuiInputLabel-root {
+		color: var(--text-secondary) !important;
+	}
+
+	// 설정
+	.settings-page {
+		background: var(--bg-primary) !important;
+	}
+	.settings-title {
+		color: var(--text-primary) !important;
+	}
+	.settings-subtitle {
+		color: var(--text-secondary) !important;
+	}
+
+	.settings-info {
+		background: var(--bg-card) !important;
+		border-color: var(--border-color) !important;
+		&__text {
+			color: var(--text-secondary) !important;
+		}
+	}
+
+	.settings-marketing__parent-label {
+		color: var(--text-primary) !important;
+	}
+	.settings-marketing__child-label {
+		color: var(--text-secondary) !important;
+	}
+	.MuiFormControlLabel-label {
+		color: var(--text-primary) !important;
+	}
+
+	// 알림센터
+	.notifications-container {
+		background: var(--bg-primary) !important;
+	}
+	.page-title {
+		color: var(--text-primary) !important;
+	}
+
+	.stats-grid .stat-card {
+		background: var(--bg-card) !important;
+		border-color: var(--border-color) !important;
+		.stat-label {
+			color: var(--text-secondary) !important;
+		}
+		.stat-value {
+			color: var(--text-primary) !important;
+		}
+	}
+
+	.filter-tabs {
+		background: var(--bg-card) !important;
+		border-color: var(--border-color) !important;
+	}
+	.filter-tab {
+		color: var(--text-secondary) !important;
+		&.active {
+			background: var(--primary) !important;
+			color: #fff !important;
+		}
+	}
+
+	.notification-card {
+		background: var(--bg-card) !important;
+		border-color: var(--border-color) !important;
+		&.unread {
+			background: rgba(255, 78, 91, 0.06) !important;
+			border-color: rgba(255, 78, 91, 0.2) !important;
+		}
+		.notification-title {
+			color: var(--text-primary) !important;
+		}
+		.notification-message {
+			color: var(--text-secondary) !important;
+		}
+		.notification-time {
+			color: var(--text-muted) !important;
+		}
+	}
+
+	.empty-state {
+		background: var(--bg-card) !important;
+		.empty-state-title {
+			color: var(--text-primary) !important;
+		}
+		.empty-state-text {
+			color: var(--text-secondary) !important;
+		}
+	}
+
+	.btn-secondary {
+		background: var(--bg-input) !important;
+		border-color: var(--border-color) !important;
+		color: var(--text-primary) !important;
+	}
+
+	// MUI Paper 공통
+	.MuiPaper-root {
+		background: var(--bg-card) !important;
+		color: var(--text-primary) !important;
 	}
 }
