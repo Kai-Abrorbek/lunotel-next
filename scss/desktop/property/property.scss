@@ -738,39 +738,127 @@ html.dark {
 
 			.filter-panel {
 				.filter-title {
-					color: var(--text-primary);
+					color: var(--text-primary) !important;
 				}
 				.section-title {
-					color: var(--text-primary);
+					color: var(--text-primary) !important;
+				}
+				.section-sub {
+					color: var(--text-muted) !important;
+				}
+				.price-range {
+					color: var(--text-secondary) !important;
+				}
+				.filter-divider {
+					border-color: var(--border-color) !important;
 				}
 				.MuiFormControlLabel-label {
 					color: var(--text-primary) !important;
 				}
+				.MuiRadio-root {
+					color: var(--text-muted) !important;
+				}
+				.soldout-checkbox .MuiFormControlLabel-label {
+					color: var(--text-primary) !important;
+				}
+
+				.rating-chip {
+					background: var(--bg-input) !important;
+					border-color: var(--border-color) !important;
+					color: var(--text-primary) !important;
+					&.active {
+						background: var(--primary) !important;
+						color: #fff !important;
+						border-color: var(--primary) !important;
+					}
+				}
+
+				.hashtag-chip {
+					background: var(--bg-input) !important;
+					border-color: var(--border-color) !important;
+					color: var(--text-primary) !important;
+					&.active {
+						background: var(--primary) !important;
+						color: #fff !important;
+						border-color: var(--primary) !important;
+					}
+				}
+
+				.more-link {
+					color: var(--text-muted) !important;
+				}
 			}
 
-			.result-panel {
-				.result-title {
-					color: var(--text-primary);
-				}
-				.result-count {
-					color: var(--text-secondary);
+			.results-panel {
+				.results-header {
+					.results-count {
+						color: var(--text-primary) !important;
+					}
+
+					.sort-trigger {
+						color: var(--text-primary) !important;
+						border-color: var(--border-color) !important;
+					}
 				}
 
-				.property-card,
-				.property-card-h {
-					background: var(--bg-card) !important;
-					border-color: var(--border-color) !important;
-					.card-name,
-					.property-name {
-						color: var(--text-primary) !important;
-					}
-					.card-location,
-					.property-location {
-						color: var(--text-secondary) !important;
-					}
-					.card-price,
-					.property-price {
-						color: var(--text-primary) !important;
+				.hotel-card-box {
+					.hotel-card {
+						background: var(--bg-card) !important;
+						border-color: var(--border-color) !important;
+						box-shadow: var(--shadow-sm) !important;
+
+						.hotel-card-inner {
+							.hotel-info {
+								background: var(--bg-card) !important;
+
+								.hotel-header-row {
+									.hotel-type {
+										color: var(--text-muted) !important;
+									}
+									.hotel-title {
+										color: var(--text-primary) !important;
+									}
+									.hotel-location {
+										color: var(--text-secondary) !important;
+									}
+
+									.favorite-btn {
+										.popular-fav-icon {
+											color: #666 !important;
+										}
+										.popular-fav-icon.active {
+											color: #ff4e5b !important;
+										}
+									}
+								}
+
+								.hotel-rating-row {
+									.rating-score {
+										color: var(--text-primary) !important;
+									}
+									.rating-count {
+										color: var(--text-muted) !important;
+									}
+								}
+
+								.hotel-checkin {
+									color: var(--text-secondary) !important;
+								}
+
+								.hotel-price-row {
+									.price-label {
+										color: var(--text-muted) !important;
+									}
+									.price-value {
+										color: var(--text-primary) !important;
+									}
+								}
+
+								.price-warning {
+									color: var(--text-muted) !important;
+								}
+							}
+						}
 					}
 				}
 
@@ -781,7 +869,186 @@ html.dark {
 						color: #fff !important;
 					}
 				}
+
+				.no-data {
+					h1 {
+						color: var(--text-primary) !important;
+					}
+					p {
+						color: var(--text-secondary) !important;
+					}
+				}
 			}
 		}
+	}
+
+	// sort 드롭다운 메뉴
+	.sort-menu {
+		.MuiPaper-root {
+			background: var(--bg-card) !important;
+			border: 1px solid var(--border-color) !important;
+		}
+		.sort-menu-item {
+			color: var(--text-primary) !important;
+			&:hover {
+				background: var(--bg-secondary) !important;
+			}
+		}
+		.selected-text {
+			color: var(--primary) !important;
+		}
+		.check-icon svg {
+			color: var(--primary) !important;
+		}
+	}
+
+	// 지도 다이얼로그
+	.map-dialog {
+		background: var(--bg-card) !important;
+
+		.map-dialog-header {
+			border-bottom-color: var(--border-color) !important;
+			.map-dialog-title {
+				color: var(--text-primary) !important;
+			}
+			.MuiIconButton-root svg {
+				color: var(--text-primary) !important;
+			}
+		}
+
+		.map-dialog-body {
+			.filter-column {
+				border-right-color: var(--border-color) !important;
+				background: var(--bg-card) !important;
+
+				.filter-top {
+					.filter-title {
+						color: var(--text-primary) !important;
+					}
+					.filter-reset {
+						color: var(--text-muted) !important;
+					}
+				}
+
+				.column-divider {
+					border-color: var(--border-color) !important;
+				}
+				.soldout-checkbox .MuiFormControlLabel-label {
+					color: var(--text-primary) !important;
+				}
+
+				.section-title {
+					color: var(--text-primary) !important;
+				}
+				.section-sub {
+					color: var(--text-muted) !important;
+				}
+				.price-range {
+					color: var(--text-secondary) !important;
+				}
+				.MuiFormControlLabel-label {
+					color: var(--text-primary) !important;
+				}
+
+				.rating-chip {
+					background: var(--bg-input) !important;
+					border-color: var(--border-color) !important;
+					color: var(--text-primary) !important;
+					&.active {
+						background: var(--primary) !important;
+						color: #fff !important;
+						border-color: var(--primary) !important;
+					}
+				}
+
+				.hashtag-chip {
+					background: var(--bg-input) !important;
+					border-color: var(--border-color) !important;
+					color: var(--text-primary) !important;
+					&.active {
+						background: var(--primary) !important;
+						color: #fff !important;
+						border-color: var(--primary) !important;
+					}
+				}
+
+				.more-link {
+					color: var(--text-muted) !important;
+				}
+			}
+
+			.list-column {
+				border-right-color: var(--border-color) !important;
+				background: var(--bg-card) !important;
+
+				.list-header {
+					border-bottom-color: var(--border-color) !important;
+					.results-count {
+						color: var(--text-primary) !important;
+					}
+					.sort-trigger {
+						color: var(--text-primary) !important;
+						border-color: var(--border-color) !important;
+					}
+				}
+
+				.hotel-card {
+					background: var(--bg-card) !important;
+					border-color: var(--border-color) !important;
+
+					.hotel-info {
+						background: var(--bg-card) !important;
+					}
+					.hotel-type {
+						color: var(--text-muted) !important;
+					}
+					.hotel-title {
+						color: var(--text-primary) !important;
+					}
+					.hotel-location {
+						color: var(--text-secondary) !important;
+					}
+					.rating-score {
+						color: var(--text-primary) !important;
+					}
+					.rating-count {
+						color: var(--text-muted) !important;
+					}
+					.hotel-checkin {
+						color: var(--text-secondary) !important;
+					}
+					.price-label {
+						color: var(--text-muted) !important;
+					}
+					.price-value {
+						color: var(--text-primary) !important;
+					}
+					.price-warning {
+						color: var(--text-muted) !important;
+					}
+					.popular-fav-icon {
+						color: #666 !important;
+					}
+					.popular-fav-icon.active {
+						color: #ff4e5b !important;
+					}
+				}
+
+				.no-data {
+					h1 {
+						color: var(--text-primary) !important;
+					}
+					p {
+						color: var(--text-secondary) !important;
+					}
+				}
+			}
+		}
+	}
+
+	// MUI Dialog paper 배경
+	.MuiDialog-paper {
+		background-color: var(--bg-card) !important;
+		color: var(--text-primary) !important;
 	}
 }

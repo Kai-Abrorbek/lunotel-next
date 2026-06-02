@@ -92,7 +92,7 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 	const currentLabel = SORT_OPTIONS.find((o) => o.value === sort)?.label ?? '정렬';
 	const open = Boolean(anchorEl);
 	const [lang, setLang] = useState<string | null>(null);
-
+	const [filterOpen, setFilterOpen] = useState(false);
 	const [likeTargetProperty] = useMutation(LIKE_TARGET_PROPERTY);
 
 	/** APOLLO REQUESTS **/
@@ -472,15 +472,16 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 	};
 
 	return (
-		<Stack className="container">
+		<Stack className="property-page-wrap">
 			{properties.length !== 0 && (
 				<MapSearchDialog open={mapOpen} onClose={() => setMapOpen(false)} initialInput={searchFilter} />
 			)}
-			<Box className="search-page" ref={locationRef}>
+
+			{/* ======================== PC ======================== */}
+			<Box className="search-page pc-only">
 				<Box className="search-layout">
 					{/* LEFT : FILTER */}
 					<Box className="filter-panel">
-						{/* Map */}
 						<Box className="map-card">
 							<Box component={'img'} src="/img/map.webp" className="map-image" />
 							<Button variant="contained" className="map-button" onClick={() => setMapOpen(true)}>
@@ -488,7 +489,6 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 							</Button>
 						</Box>
 
-						{/* Filter title */}
 						<Box className="filter-header">
 							<Typography className="filter-title">{t('필터')}</Typography>
 							<Button className="filter-reset" disableRipple onClick={resetSearchFilter}>
@@ -505,7 +505,6 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 
 						<Divider className="filter-divider" />
 
-						{/* 숙소 유형 */}
 						<Box className="section">
 							<Typography className="section-title">{t('숙소유형')}</Typography>
 							<RadioGroup
@@ -531,7 +530,6 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 							</RadioGroup>
 						</Box>
 
-						{/* Price */}
 						<Box className="section">
 							<Typography className="section-title">
 								가격 <span className="section-sub">1{t('박 기준')}</span>
@@ -556,7 +554,7 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 								{t('원 이상')}
 							</Typography>
 						</Box>
-						{/* Rating */}
+
 						<Box className="section">
 							<Typography className="section-title">{t('등급')}</Typography>
 							<Box className="rating-list">
@@ -564,37 +562,22 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 									const isInc = selectRatingIds.includes(rating);
 									return (
 										<div key={rating}>
-											{isInc ? (
-												<Chip
-													key={rating}
-													label={rating + t('성급')}
-													className="rating-chip active"
-													onClick={() => {
-														selectStarsHandler(rating, isInc);
-														setSelectRatingIds((prev) =>
-															prev.includes(rating) ? prev.filter((x) => x !== rating) : [...prev, rating],
-														);
-													}}
-												/>
-											) : (
-												<Chip
-													key={rating}
-													label={rating + t('성급')}
-													className="rating-chip"
-													onClick={() => {
-														selectStarsHandler(rating, isInc);
-														setSelectRatingIds((prev) =>
-															prev.includes(rating) ? prev.filter((x) => x !== rating) : [...prev, rating],
-														);
-													}}
-												/>
-											)}
+											<Chip
+												label={rating + t('성급')}
+												className={`rating-chip ${isInc ? 'active' : ''}`}
+												onClick={() => {
+													selectStarsHandler(rating, isInc);
+													setSelectRatingIds((prev) =>
+														prev.includes(rating) ? prev.filter((x) => x !== rating) : [...prev, rating],
+													);
+												}}
+											/>
 										</div>
 									);
 								})}
 							</Box>
 						</Box>
-						{/* Tags */}
+
 						<Box className="section">
 							<Typography className="section-title">{t('시설')}</Typography>
 							<Box className={`hashtag-list ${openMoreTags ? 'active' : ''}`}>
@@ -602,31 +585,16 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 									const isInc = selectTagIds.includes(tag);
 									return (
 										<div key={tag}>
-											{isInc ? (
-												<Chip
-													key={tag}
-													label={lang === 'en' ? `#${tag}` : `#${tags_KR[idx]}`}
-													className="hashtag-chip active"
-													onClick={() => {
-														selectAmenityListHandler(tag, isInc);
-														setSelectTagIds((prev) =>
-															prev.includes(tag) ? prev.filter((x) => x !== tag) : [...prev, tag],
-														);
-													}}
-												/>
-											) : (
-												<Chip
-													key={tag}
-													label={lang === 'en' ? `#${tag}` : `#${tags_KR[idx]}`}
-													className="hashtag-chip"
-													onClick={() => {
-														selectAmenityListHandler(tag, isInc);
-														setSelectTagIds((prev) =>
-															prev.includes(tag) ? prev.filter((x) => x !== tag) : [...prev, tag],
-														);
-													}}
-												/>
-											)}
+											<Chip
+												label={lang === 'en' ? `#${tag}` : `#${tags_KR[idx]}`}
+												className={`hashtag-chip ${isInc ? 'active' : ''}`}
+												onClick={() => {
+													selectAmenityListHandler(tag, isInc);
+													setSelectTagIds((prev) =>
+														prev.includes(tag) ? prev.filter((x) => x !== tag) : [...prev, tag],
+													);
+												}}
+											/>
 										</div>
 									);
 								})}
@@ -641,31 +609,16 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 									const isInc = selectOtheragIds.includes(tag);
 									return (
 										<div key={tag}>
-											{isInc ? (
-												<Chip
-													key={tag}
-													label={lang === 'en' ? `#${tag}` : `#${otherTags_KR[idx]}`}
-													className="hashtag-chip active"
-													onClick={() => {
-														selectOtehrAmenityListHandler(tag, isInc);
-														setSelectOtherTagIds((prev) =>
-															prev.includes(tag) ? prev.filter((x) => x !== tag) : [...prev, tag],
-														);
-													}}
-												/>
-											) : (
-												<Chip
-													key={tag}
-													label={lang === 'en' ? `#${tag}` : `#${otherTags_KR[idx]}`}
-													className="hashtag-chip"
-													onClick={() => {
-														selectOtehrAmenityListHandler(tag, isInc);
-														setSelectOtherTagIds((prev) =>
-															prev.includes(tag) ? prev.filter((x) => x !== tag) : [...prev, tag],
-														);
-													}}
-												/>
-											)}
+											<Chip
+												label={lang === 'en' ? `#${tag}` : `#${otherTags_KR[idx]}`}
+												className={`hashtag-chip ${isInc ? 'active' : ''}`}
+												onClick={() => {
+													selectOtehrAmenityListHandler(tag, isInc);
+													setSelectOtherTagIds((prev) =>
+														prev.includes(tag) ? prev.filter((x) => x !== tag) : [...prev, tag],
+													);
+												}}
+											/>
 										</div>
 									);
 								})}
@@ -678,7 +631,6 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 
 					{/* RIGHT : RESULTS */}
 					<Box className="results-panel">
-						{/* header */}
 						<Box className="results-header">
 							<Typography className="results-count">
 								{searchFilter.search?.location} {t('검색 결과')} {total}
@@ -716,7 +668,7 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 											/>
 											{selected && (
 												<ListItemIcon className="check-icon">
-													<CheckIcon fontSize="small" style={selected ? { color: '#1976d2' } : {}} />
+													<CheckIcon fontSize="small" style={{ color: '#1976d2' }} />
 												</ListItemIcon>
 											)}
 										</MenuItem>
@@ -733,7 +685,6 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 										property.rooms?.[0]?.stayPlans?.[1]?.inventories?.length !== 0
 											? property.rooms?.[0]?.stayPlans?.[1]?.stayPlanRules?.checkInFrom
 											: property.rooms?.[0]?.stayPlans?.[0]?.stayPlanRules?.windowStart;
-
 									return (
 										<Card
 											key={property._id}
@@ -744,7 +695,7 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 											<Box className="hotel-card-inner">
 												<CardMedia
 													component="img"
-													image={`${process.env.REACT_APP_API_URL}/${property.propertyImages[0]}`} // 여기 나중에 실제 이미지로 교체
+													image={`${process.env.REACT_APP_API_URL}/${property.propertyImages[0]}`}
 													alt="room"
 													className="hotel-image"
 												/>
@@ -769,7 +720,6 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 															)}
 														</IconButton>
 													</Box>
-
 													<Box className="hotel-rating-row">
 														<Box className="rating-badge">
 															<StarIcon className="rating-star" fontSize="small" />
@@ -779,9 +729,7 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 															{property.propertyComments!.toLocaleString()}명 평가
 														</Typography>
 													</Box>
-
 													<Typography className="hotel-checkin">숙박 {String(checkin)} 체크인</Typography>
-
 													<Box className="hotel-price-row">
 														<Typography className="price-label">쿠폰 적용 시</Typography>
 														<Typography className="price-value">
@@ -802,7 +750,7 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 							)}
 						</Box>
 
-						{properties.length !== 0 ? ( // 나중에 실제 데이터랑 변경
+						{properties.length !== 0 && (
 							<Stack className="result-pagination">
 								<Pagination
 									count={Math.ceil(total / searchFilter?.limit!) || 1}
@@ -812,11 +760,277 @@ const SearchResultPage = (props: SearchResultPageProps) => {
 									onChange={paginationHandler}
 								/>
 							</Stack>
-						) : (
-							''
 						)}
 					</Box>
 				</Box>
+			</Box>
+
+			{/* ======================== MOBILE ======================== */}
+			<Box className="mobile-search-page mobile-only">
+				{properties.length !== 0 && (
+					<MapSearchDialog open={mapOpen} onClose={() => setMapOpen(false)} initialInput={searchFilter} />
+				)}
+				{/* 상단 바 */}
+				<Box className="mobile-search-topbar">
+					<Typography className="mobile-search-count">
+						{searchFilter.search?.location ? `"${searchFilter.search.location}"` : '전체'} {total}
+						{t('개')}
+					</Typography>
+					<Box className="mobile-search-actions">
+						<Button
+							className="mobile-filter-btn"
+							onClick={() => setFilterOpen(true)}
+							startIcon={<span style={{ fontSize: 16 }}>⚙</span>}
+						>
+							{t('필터')}
+						</Button>
+						<Button
+							className="mobile-filter-btn"
+							onClick={() => setMapOpen(true)}
+							startIcon={<span style={{ fontSize: 16 }}>🗺</span>}
+						>
+							{t('지도')}
+						</Button>
+						<Button
+							variant="outlined"
+							onClick={handleOpen}
+							className="mobile-sort-btn"
+							endIcon={<KeyboardArrowDownIcon />}
+						>
+							{t(`${currentLabel}`)}
+						</Button>
+						<Menu
+							anchorEl={anchorEl}
+							open={open}
+							onClose={handleClose}
+							className="sort-menu"
+							anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+							transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+						>
+							{SORT_OPTIONS.map((opt) => {
+								const selected = opt.value === sort;
+								return (
+									<MenuItem
+										key={opt.value}
+										onClick={() => selectSortTypeHandler(opt.value, opt.sort, opt.direc)}
+										selected={selected}
+										className="sort-menu-item"
+									>
+										<ListItemText primary={t(`${opt.label}`)} style={selected ? { color: '#ff4e5b' } : {}} />
+										{selected && (
+											<ListItemIcon className="check-icon">
+												<CheckIcon fontSize="small" style={{ color: '#ff4e5b' }} />
+											</ListItemIcon>
+										)}
+									</MenuItem>
+								);
+							})}
+						</Menu>
+					</Box>
+				</Box>
+
+				{/* 카드 리스트 */}
+				<Box className="mobile-card-list">
+					{properties.length !== 0 ? (
+						properties.map((property: Property) => {
+							const isFav = property?.meLiked?.[0]?.myFavorite;
+							const checkin =
+								property.rooms?.[0]?.stayPlans?.[1]?.inventories?.length !== 0
+									? property.rooms?.[0]?.stayPlans?.[1]?.stayPlanRules?.checkInFrom
+									: property.rooms?.[0]?.stayPlans?.[0]?.stayPlanRules?.windowStart;
+							return (
+								<Box
+									key={property._id}
+									className="mobile-hotel-card"
+									onClick={() => pushPropertyDetailHandler(property)}
+								>
+									<Box className="mobile-hotel-img-wrap">
+										<Box
+											component="img"
+											src={`${process.env.REACT_APP_API_URL}/${property.propertyImages[0]}`}
+											alt="room"
+											className="mobile-hotel-img"
+										/>
+										<IconButton
+											className="mobile-fav-btn"
+											onClick={(e) => {
+												e.stopPropagation();
+												likePropertyHandler(user, property._id);
+											}}
+										>
+											{isFav ? (
+												<FavoriteIcon style={{ color: '#ff4e5b', fontSize: 20 }} />
+											) : (
+												<FavoriteBorderIcon style={{ color: '#fff', fontSize: 20 }} />
+											)}
+										</IconButton>
+										<Box className="mobile-hotel-type-badge">{property.propertyType}</Box>
+									</Box>
+									<Box className="mobile-hotel-info">
+										<Typography className="mobile-hotel-name">{property.propertyName}</Typography>
+										<Typography className="mobile-hotel-location">{property.propertyLocation}</Typography>
+										<Box className="mobile-hotel-rating">
+											<StarIcon style={{ fontSize: 13, color: '#ff4e5b' }} />
+											<span className="mobile-rating-score">{property.propertyRank!.toFixed(1)}</span>
+											<span className="mobile-rating-count">({property.propertyComments!.toLocaleString()})</span>
+										</Box>
+										<Box className="mobile-hotel-price-row">
+											<Typography className="mobile-hotel-price">
+												{property.propertyPrice!.toLocaleString()}원
+											</Typography>
+											<Typography className="mobile-hotel-per">/1박</Typography>
+										</Box>
+									</Box>
+								</Box>
+							);
+						})
+					) : (
+						<Box className="mobile-no-data">
+							<Typography>검색 결과가 없어요.</Typography>
+							<Typography className="mobile-no-data-sub">
+								'{searchFilter?.search?.location}' 철자를 확인해보세요.
+							</Typography>
+						</Box>
+					)}
+				</Box>
+
+				{properties.length !== 0 && (
+					<Stack className="result-pagination">
+						<Pagination
+							count={Math.ceil(total / searchFilter?.limit!) || 1}
+							page={currentPage}
+							shape="circular"
+							color="primary"
+							onChange={paginationHandler}
+						/>
+					</Stack>
+				)}
+
+				{/* 필터 바텀시트 */}
+				{filterOpen && (
+					<Box className="mobile-filter-overlay" onClick={() => setFilterOpen(false)}>
+						<Box className="mobile-filter-sheet" onClick={(e) => e.stopPropagation()}>
+							<Box className="mobile-filter-handle" />
+							<Box className="mobile-filter-header">
+								<Typography className="mobile-filter-title">{t('필터')}</Typography>
+								<Button
+									className="filter-reset"
+									disableRipple
+									onClick={() => {
+										resetSearchFilter();
+										setFilterOpen(false);
+									}}
+								>
+									<RestartAltIcon className={spin ? 'rotate-once' : ''} />
+									{t('초기화')}
+								</Button>
+							</Box>
+
+							<Box className="mobile-filter-body">
+								<Box className="section">
+									<Typography className="section-title">{t('숙소유형')}</Typography>
+									<RadioGroup
+										value={type}
+										onChange={(e) => {
+											setType(e.target.value);
+											selectPropertyTypeHandler(e.target.value);
+										}}
+										row
+									>
+										{Object.values(PropertyType).map((t_val, idx) => (
+											<FormControlLabel
+												key={idx}
+												value={t_val}
+												control={<Radio size="small" />}
+												label={t(`${Object.values(PropertyTypeKorean)[idx]}`)}
+											/>
+										))}
+									</RadioGroup>
+								</Box>
+
+								<Divider sx={{ my: 1 }} />
+
+								<Box className="section">
+									<Typography className="section-title">
+										가격 <span className="section-sub">1{t('박 기준')}</span>
+									</Typography>
+									<Slider
+										value={price}
+										onChange={(_, newValue) => {
+											if (Array.isArray(newValue)) {
+												setPrice(newValue as [number, number]);
+												selectRangePriceHandler(newValue as [number, number]);
+											}
+										}}
+										min={0}
+										max={500000}
+										step={10000}
+									/>
+									<Typography className="price-range">
+										{price[0].toLocaleString()}
+										{t('원')} ~ {price[1].toLocaleString()}
+										{t('원 이상')}
+									</Typography>
+								</Box>
+
+								<Divider sx={{ my: 1 }} />
+
+								<Box className="section">
+									<Typography className="section-title">{t('등급')}</Typography>
+									<Box className="rating-list">
+										{[5, 4, 3, 2].map((rating) => {
+											const isInc = selectRatingIds.includes(rating);
+											return (
+												<Chip
+													key={rating}
+													label={rating + t('성급')}
+													className={`rating-chip ${isInc ? 'active' : ''}`}
+													onClick={() => {
+														selectStarsHandler(rating, isInc);
+														setSelectRatingIds((prev) =>
+															prev.includes(rating) ? prev.filter((x) => x !== rating) : [...prev, rating],
+														);
+													}}
+												/>
+											);
+										})}
+									</Box>
+								</Box>
+
+								<Divider sx={{ my: 1 }} />
+
+								<Box className="section">
+									<Typography className="section-title">{t('시설')}</Typography>
+									<Box className="hashtag-list active">
+										{tags_EN.map((tag, idx) => {
+											const isInc = selectTagIds.includes(tag);
+											return (
+												<Chip
+													key={tag}
+													label={lang === 'en' ? `#${tag}` : `#${tags_KR[idx]}`}
+													className={`hashtag-chip ${isInc ? 'active' : ''}`}
+													onClick={() => {
+														selectAmenityListHandler(tag, isInc);
+														setSelectTagIds((prev) =>
+															prev.includes(tag) ? prev.filter((x) => x !== tag) : [...prev, tag],
+														);
+													}}
+												/>
+											);
+										})}
+									</Box>
+								</Box>
+							</Box>
+
+							<Box className="mobile-filter-footer">
+								<Button className="mobile-filter-apply-btn" onClick={() => setFilterOpen(false)}>
+									{total}
+									{t('개')} 숙소 보기
+								</Button>
+							</Box>
+						</Box>
+					</Box>
+				)}
 			</Box>
 		</Stack>
 	);
