@@ -1680,28 +1680,28 @@
 /* ===========================
       RESPONSIVE
    =========================== */
-@media (max-width: 960px) {
-	.my-res-inner {
-		grid-template-columns: 1fr !important;
-	}
+// @media (max-width: 960px) {
+// 	.my-res-inner {
+// 		grid-template-columns: 1fr !important;
+// 	}
 
-	.my-res-side-menu {
-		display: none !important;
-	}
+// 	.my-res-side-menu {
+// 		display: none !important;
+// 	}
 
-	.my-res-card {
-		padding: 18px;
-	}
+// 	.my-res-card {
+// 		padding: 18px;
+// 	}
 
-	.my-res-empty {
-		flex-direction: column;
+// 	.my-res-empty {
+// 		flex-direction: column;
 
-		.my-res-empty-illust {
-			margin: 12px 0 0;
-			width: 100%;
-		}
-	}
-}
+// 		.my-res-empty-illust {
+// 			margin: 12px 0 0;
+// 			width: 100%;
+// 		}
+// 	}
+// }
 
 /* ============================================================
    다크모드 오버라이드 — 유저 마이페이지

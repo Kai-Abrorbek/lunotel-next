@@ -2257,3 +2257,207 @@ html.dark {
 		}
 	}
 }
+/* ============================================================
+   모바일 — 마이페이지
+   ============================================================ */
+#mobile-wrap {
+	.my-res-page {
+		margin-top: 0 !important;
+		background: var(--bg-primary);
+		padding-bottom: 40px;
+	}
+
+	.my-res-inner {
+		display: flex !important;
+		flex-direction: column !important;
+		gap: 0 !important;
+		margin: 0 !important;
+		width: 100% !important;
+		max-width: 100% !important;
+	}
+
+	// 사이드메뉴 → 가로 스크롤 탭바
+	.my-res-side-menu {
+		width: 100% !important;
+		height: auto !important;
+		border-radius: 0 !important;
+		border: none !important;
+		border-bottom: 1px solid var(--border-color) !important;
+		background: var(--bg-card) !important;
+		position: sticky !important;
+		top: 58px !important;
+		z-index: 20 !important;
+		overflow-x: auto !important;
+		overflow-y: hidden !important;
+		scrollbar-width: none !important;
+		&::-webkit-scrollbar {
+			display: none !important;
+		}
+
+		.my-res-side-menu-list {
+			flex-direction: row !important;
+			flex-wrap: nowrap !important;
+			padding: 0 4px !important;
+			width: max-content !important;
+		}
+
+		.MuiDivider-root {
+			display: none !important;
+		}
+
+		.my-res-side-menu-box {
+			width: auto !important;
+			flex-direction: row !important;
+			border-left: none !important;
+			border-bottom: 2px solid transparent !important;
+			background: transparent !important;
+			padding: 0 !important;
+
+			&:hover {
+				background: transparent !important;
+				border-radius: 0 !important;
+			}
+
+			.MuiSvgIcon-root {
+				display: none !important;
+			}
+
+			.my-res-side-menu-item {
+				padding: 12px 12px !important;
+				font-size: 13px !important;
+				font-weight: 500 !important;
+				color: var(--text-muted) !important;
+				white-space: nowrap !important;
+				min-width: auto !important;
+				text-transform: none !important;
+
+				&:hover {
+					color: var(--primary) !important;
+					background: transparent !important;
+				}
+				&.active {
+					color: var(--primary) !important;
+					font-weight: 700 !important;
+				}
+			}
+		}
+
+		.my-res-side-menu-box--special {
+			border-left: none !important;
+			background: transparent !important;
+			&::after {
+				display: none !important;
+			}
+			.my-res-side-menu-item {
+				color: var(--primary) !important;
+			}
+		}
+	}
+
+	// 메인 컨텐츠
+	.my-res-main {
+		width: 100% !important;
+		height: auto !important;
+		overflow: visible !important;
+		padding: 16px !important;
+
+		.my-res-main-title {
+			font-size: 16px !important;
+			font-weight: 700 !important;
+			color: var(--text-primary) !important;
+			margin-bottom: 12px !important;
+		}
+
+		.my-res-card {
+			background: var(--bg-card) !important;
+			border-color: var(--border-color) !important;
+			border-radius: 12px !important;
+			padding: 14px !important;
+			margin-bottom: 12px !important;
+		}
+
+		.my-res-tabs .MuiTab-root {
+			font-size: 12px !important;
+			min-width: auto !important;
+			padding: 8px 10px !important;
+		}
+
+		.my-res-item-box {
+			background: var(--bg-card) !important;
+			border-color: var(--border-color) !important;
+			border-radius: 12px !important;
+			margin-bottom: 10px !important;
+		}
+
+		.my-res-item-title {
+			font-size: 14px !important;
+			color: var(--text-primary) !important;
+		}
+		.my-res-item-meta {
+			font-size: 12px !important;
+			color: var(--text-secondary) !important;
+		}
+		.my-res-empty-title {
+			font-size: 15px !important;
+			color: var(--text-primary) !important;
+		}
+		.my-res-empty-sub {
+			font-size: 13px !important;
+			color: var(--text-secondary) !important;
+		}
+
+		.room-card {
+			background: var(--bg-card) !important;
+			border-color: var(--border-color) !important;
+			border-radius: 12px !important;
+			margin-bottom: 12px !important;
+		}
+
+		.point-summary {
+			border-radius: 14px !important;
+			padding: 16px !important;
+		}
+		.point-summary__amount {
+			font-size: 26px !important;
+		}
+		.point-filter {
+			flex-wrap: wrap !important;
+		}
+		.point-filter__chip {
+			font-size: 12px !important;
+			padding: 5px 12px !important;
+		}
+
+		.myinfo-title {
+			font-size: 16px !important;
+			color: var(--text-primary) !important;
+		}
+		.settings-title {
+			font-size: 16px !important;
+		}
+
+		.page-title {
+			font-size: 18px !important;
+		}
+		.stats-grid {
+			gap: 8px !important;
+		}
+		.stat-card {
+			border-radius: 12px !important;
+			padding: 12px !important;
+		}
+		.notification-card {
+			border-radius: 12px !important;
+			padding: 10px 12px !important;
+			margin-bottom: 8px !important;
+		}
+		.filter-tab {
+			font-size: 12px !important;
+			padding: 8px 10px !important;
+		}
+		.empty-state {
+			border-radius: 14px !important;
+			padding: 40px 20px !important;
+		}
+	}
+}
