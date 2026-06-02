@@ -1152,74 +1152,343 @@
 }
 
 /* ============================================================
-   다크모드 오버라이드 — room (상세 페이지)
+   다크모드 오버라이드 — property 상세 페이지
    ============================================================ */
 html.dark {
 	#pc-wrap {
-		.room-page,
-		.property-detail-page {
-			background-color: var(--bg-primary);
+		// 스티키 예약 바
+		.room-sticky-bar {
+			background: var(--bg-card) !important;
+			border-bottom-color: var(--border-color) !important;
+			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4) !important;
+		}
 
-			.room-title,
-			.property-title {
-				color: var(--text-primary);
-			}
-			.room-location,
-			.property-location {
-				color: var(--text-secondary);
-			}
+		.property-detail-main {
+			background: var(--bg-primary);
 
-			.room-section,
-			.detail-section,
-			.info-card,
-			.review-card {
-				background: var(--bg-card);
-				border-color: var(--border-color);
-				.section-title {
-					color: var(--text-primary);
+			// 갤러리
+			.property-gallery {
+				&__more {
+					background: rgba(0, 0, 0, 0.65) !important;
+					color: #fff !important;
+				}
+				&__badge {
+					background: var(--primary) !important;
+					color: #fff !important;
 				}
 			}
 
-			.amenity-item {
-				background: var(--bg-secondary);
-				color: var(--text-primary);
-				border-color: var(--border-color);
+			// 숙소 이름/타입/가격
+			.property-info {
+				&__type {
+					color: var(--text-muted) !important;
+				}
+				&__name {
+					color: var(--text-primary) !important;
+				}
+				&__basic-price {
+					color: var(--text-primary) !important;
+				}
+				&__favorite {
+					background: rgba(30, 30, 30, 0.8) !important;
+					svg {
+						color: #888 !important;
+					}
+					svg.active {
+						color: #ff4e5b !important;
+					}
+				}
 			}
 
-			.review-item {
-				background: var(--bg-card);
-				border-color: var(--border-color);
-				.reviewer-name {
-					color: var(--text-primary);
+			// 요약 카드 3개
+			.property-summary {
+				&__card {
+					background: var(--bg-card) !important;
+					border-color: var(--border-color) !important;
+					box-shadow: var(--shadow-sm) !important;
 				}
-				.review-text {
-					color: var(--text-secondary);
+
+				.rating-chip {
+					background: var(--primary) !important;
+					color: #fff !important;
 				}
-				.review-date {
-					color: var(--text-muted);
+				.rating-chip__count {
+					color: var(--text-muted) !important;
+				}
+				.rating-snippet {
+					color: var(--text-secondary) !important;
+				}
+
+				.card-title {
+					color: var(--text-primary) !important;
+				}
+				.card-link {
+					color: var(--primary) !important;
+				}
+
+				.amenit-box {
+					background: rgba(255, 255, 255, 0.06) !important;
+					border-color: rgba(255, 255, 255, 0.1) !important;
+					color: var(--text-primary) !important;
+					span {
+						color: var(--text-secondary) !important;
+					}
+				}
+
+				.location-line {
+					color: var(--text-secondary) !important;
 				}
 			}
 
-			.sticky-bar,
-			.booking-card,
-			.room-sticky-bar {
+			// 객실 선택 카드
+			.room-card {
+				background: var(--bg-card) !important;
+				border-color: var(--border-color) !important;
+				box-shadow: var(--shadow-sm) !important;
+
+				&__title {
+					color: var(--text-primary) !important;
+				}
+				&__link {
+					color: var(--primary) !important;
+				}
+				&__section-title {
+					color: var(--text-primary) !important;
+				}
+				&__sub {
+					color: var(--text-secondary) !important;
+				}
+
+				.coupon-label {
+					color: var(--text-muted) !important;
+				}
+				.original-price {
+					color: var(--text-muted) !important;
+				}
+				.final-price {
+					color: var(--text-primary) !important;
+				}
+				.per-night {
+					color: var(--text-muted) !important;
+				}
+
+				&__divider {
+					border-color: var(--border-color) !important;
+				}
+
+				&__info {
+					background: var(--bg-secondary) !important;
+					border-color: var(--border-color) !important;
+					color: var(--text-secondary) !important;
+				}
+			}
+
+			// 구분선
+			.room-amenities__divider {
+				border-color: var(--border-color) !important;
+			}
+
+			// 서비스/부대시설
+			.amenities-card {
+				&__title {
+					color: var(--text-primary) !important;
+				}
+
+				.amenit-box {
+					background: rgba(255, 255, 255, 0.06) !important;
+					border-color: rgba(255, 255, 255, 0.1) !important;
+					color: var(--text-primary) !important;
+					span {
+						color: var(--text-secondary) !important;
+					}
+				}
+			}
+
+			// 위치
+			.section-location_title {
+				color: var(--text-primary) !important;
+			}
+
+			// 리뷰
+			.reviews-page__header {
+				&-star {
+					color: var(--primary) !important;
+				}
+				&-title {
+					color: var(--text-primary) !important;
+				}
+				&-score {
+					color: var(--text-primary) !important;
+				}
+				&-meta {
+					color: var(--text-muted) !important;
+				}
+				&-divider {
+					border-color: var(--border-color) !important;
+				}
+			}
+
+			.reviews-page__sort-trigger {
 				background: var(--bg-card) !important;
 				border-color: var(--border-color) !important;
 				color: var(--text-primary) !important;
-				.price-main,
-				.price-night {
+			}
+
+			.review-item {
+				background: var(--bg-card) !important;
+				border-color: var(--border-color) !important;
+
+				// reviewer 이름, 날짜, 텍스트 — room.scss 안에 실제 클래스명 그대로
+				* {
 					color: var(--text-primary) !important;
 				}
-				.price-label {
-					color: var(--text-secondary) !important;
+				// 날짜/메타만 muted
+				time,
+				.review-date,
+				.review-meta {
+					color: var(--text-muted) !important;
 				}
-				.date-input,
-				.guest-input {
-					background: var(--bg-input) !important;
-					border-color: var(--border-input) !important;
+			}
+
+			.reviews-pagination {
+				.MuiPaginationItem-root {
+					color: var(--text-primary) !important;
+					&.Mui-selected {
+						background: var(--primary) !important;
+						color: #fff !important;
+					}
+				}
+			}
+
+			// 비슷한 숙소 섹션
+			.hotelspecials-container {
+				background: var(--bg-primary);
+
+				.popular-title {
+					color: var(--text-primary) !important;
+				}
+
+				.popular-card {
+					background: var(--bg-card) !important;
+					box-shadow: var(--shadow-sm) !important;
+
+					.popular-category {
+						color: var(--text-muted) !important;
+					}
+					.popular-name {
+						color: var(--text-primary) !important;
+					}
+					.popular-location {
+						color: var(--text-secondary) !important;
+					}
+					.popular-rating-score {
+						color: var(--text-primary) !important;
+					}
+					.popular-rating-count {
+						color: var(--text-muted) !important;
+					}
+					.popular-coupon-text {
+						color: var(--text-muted) !important;
+					}
+					.popular-price-current {
+						color: var(--text-primary) !important;
+					}
+					.popular-price-origin {
+						color: var(--text-muted) !important;
+					}
+				}
+
+				.hotelspecials-arrow {
+					background: var(--bg-card) !important;
+					border-color: var(--border-color) !important;
 					color: var(--text-primary) !important;
 				}
 			}
+
+			.no-data {
+				h1 {
+					color: var(--text-primary) !important;
+				}
+				p {
+					color: var(--text-secondary) !important;
+				}
+			}
+		}
+
+		// 리뷰 정렬 드롭다운
+		.reviews-page__sort-menu {
+			.MuiPaper-root {
+				background: var(--bg-card) !important;
+				border: 1px solid var(--border-color) !important;
+			}
+			.reviews-page__sort-menu-item {
+				color: var(--text-primary) !important;
+				&:hover {
+					background: var(--bg-secondary) !important;
+				}
+			}
+			.reviews-page__sort-menu-check {
+				color: var(--primary) !important;
+			}
+		}
+	}
+
+	// 이미지 갤러리 모달
+	.image-modal {
+		background: #1e1e1e !important;
+
+		&-header {
+			border-bottom-color: var(--border-color) !important;
+			background: #1e1e1e !important;
+		}
+
+		&-title {
+			color: var(--text-primary) !important;
+		}
+
+		&-close svg {
+			color: var(--text-primary) !important;
+		}
+
+		&-tabs {
+			.MuiTab-root {
+				color: var(--text-secondary) !important;
+			}
+			.MuiTab-root.Mui-selected {
+				color: var(--primary) !important;
+			}
+			.MuiTabs-indicator {
+				background-color: var(--primary) !important;
+			}
+		}
+
+		&-main {
+			background: #111 !important;
+		}
+
+		&-nav {
+			background: rgba(40, 40, 40, 0.9) !important;
+			svg {
+				color: #f0f0f0 !important;
+			}
+		}
+
+		&-thumbs-bar {
+			background: #1a1a1a !important;
+			border-top-color: var(--border-color) !important;
+		}
+
+		&-thumb {
+			border-color: transparent !important;
+			opacity: 0.6;
+			&--active {
+				border-color: var(--primary) !important;
+				opacity: 1;
+			}
+		}
+
+		&-counter {
+			color: var(--text-muted) !important;
 		}
 	}
 }
