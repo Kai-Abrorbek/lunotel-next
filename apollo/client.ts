@@ -29,88 +29,86 @@ const tokenRefreshLink = new TokenRefreshLink({
 	},
 });
 
-// Custom WebSocket client
-class LoggingWebSocket {
-	private socket: WebSocket;
-	constructor(url: string) {
-		this.socket = new WebSocket(`${url}?token=${getJwtToken()}`);
-		socketVar(this.socket);
+// // Custom WebSocket client
+// class LoggingWebSocket {
+// 	private socket: WebSocket;
+// 	constructor(url: string) {
+// 		this.socket = new WebSocket(`${url}?token=${getJwtToken()}`);
+// 		socketVar(this.socket);
 
-		// this.socket.onopen = () => {
-		// 	console.log('WebSocket Connection');
-		// };
+// 		// this.socket.onopen = () => {
+// 		// 	console.log('WebSocket Connection');
+// 		// };
 
-		// this.socket.onmessage = (msg) => {
-		// 	console.log('WebSocket Message:', msg.data);
-		// };
+// 		// this.socket.onmessage = (msg) => {
+// 		// 	console.log('WebSocket Message:', msg.data);
+// 		// };
 
-		// this.socket.onopen = (error) => {
-		// 	console.log('WebSocket Error: ', error);
-		// };
-	}
+// 		// this.socket.onopen = (error) => {
+// 		// 	console.log('WebSocket Error: ', error);
+// 		// };
+// 	}
 
-	send(data: string | ArrayBuffer | SharedArrayBuffer | Blob | ArrayBufferView) {
-		this.socket.send(data);
-	}
+// 	send(data: string | ArrayBuffer | SharedArrayBuffer | Blob | ArrayBufferView) {
+// 		this.socket.send(data);
+// 	}
 
-	close() {
-		this.socket.close();
-	}
-}
+// 	close() {
+// 		this.socket.close();
+// 	}
+// }
 
 function createIsomorphicLink() {
-	if (typeof window !== 'undefined') {
-		const authLink = new ApolloLink((operation, forward) => {
-			operation.setContext(({ headers = {} }) => ({
-				headers: {
-					...headers,
-					...getHeaders(),
-				},
-			}));
-			// console.warn('requesting.. ', operation);
-			return forward(operation);
-		});
-
-		// @ts-ignore
-		const link = new createUploadLink({
-			uri: process.env.REACT_APP_API_GRAPHQL_URL,
-		});
-		/* WEBSOCKET SUBSCRIPTION LINK */
-		const wsLink = new WebSocketLink({
-			uri: process.env.REACT_APP_API_WS ?? 'ws://127.0.0.1:3007',
-			options: {
-				reconnect: false,
-				timeout: 30000,
-				connectionParams: () => {
-					return { headers: getHeaders() };
-				},
-			},
-			webSocketImpl: LoggingWebSocket,
-		});
-
-		const errorLink = onError(({ graphQLErrors, networkError, response }) => {
-			if (graphQLErrors) {
-				graphQLErrors.map(({ message, locations, path, extensions }) => {
-					console.log(`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`);
-					if (!message.includes('input')) sweetErrorAlert(message);
-				});
-			}
-			if (networkError) console.log(`[Network error]: ${networkError}`);
-			// @ts-ignore
-			if (networkError?.statusCode === 401) {
-			}
-		});
-
-		const splitLink = split(
-			({ query }) => {
-				const definition = getMainDefinition(query);
-				return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
-			},
-			wsLink,
-			authLink.concat(link),
-		);
-		return from([errorLink, tokenRefreshLink, splitLink]);
+	if (typeof window === 'undefined') {
+		// SSR: HTTP only
+		const { HttpLink } = require('@apollo/client');
+		return new HttpLink({ uri: process.env.LUNOTEL_API_GRAPHQL_URL });
 	}
+
+	const authLink = new ApolloLink((operation, forward) => {
+		operation.setContext(({ headers = {} }) => ({
+			headers: { ...headers, ...getHeaders() },
+		}));
+		return forward(operation);
+	});
+
+	// @ts-ignore
+	const link = new createUploadLink({
+		uri: process.env.REACT_APP_API_GRAPHQL_URL,
+	});
+
+	const wsLink = new WebSocketLink({
+		uri: process.env.REACT_APP_API_WS ?? 'ws://127.0.0.1:3007',
+		options: {
+			reconnect: false,
+			timeout: 30000,
+			connectionParams: () => ({ headers: getHeaders() }),
+		},
+	});
+
+	const errorLink = onError(({ graphQLErrors, networkError }) => {
+		if (graphQLErrors) {
+			graphQLErrors.forEach(({ message, locations, path }) => {
+				console.log(`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`);
+				const ignore = ['input', 'NO_DATA_FOUND', 'jwt', 'Unauthorized', 'forbidden', 'not found'];
+				if (!ignore.some((k) => message.toLowerCase().includes(k.toLowerCase()))) {
+					sweetErrorAlert(message);
+				}
+			});
+		}
+		if (networkError) console.log(`[Network error]: ${networkError}`);
+	});
+
+	const splitLink = split(
+		({ query }) => {
+			const definition = getMainDefinition(query);
+			return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
+		},
+		wsLink,
+		authLink.concat(link),
+	);
+
+	return from([errorLink, tokenRefreshLink, splitLink]);
 }
 
 function createApolloClient() {

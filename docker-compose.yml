@@ -4,30 +4,26 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    restart: on-failure:3
-
+    restart: unless-stopped
     ports:
       - '3000:3000'
-
     working_dir: /usr/src/lunotel-next
-    volumes:
-      - ./:/usr/src/lunotel-next
-      - /usr/src/lunotel-next/node_modules
-
     environment:
-      - PORT=3000
-      - NEXTAUTH_URL=https://lunotel.cloud
-      - NEXTAUTH_SECRET=8f3a1c9d2e4b7a6c9f0d1e2a3b4c5d6e
-      - LUNOTEL_API_GRAPHQL_URL=http://lunotel-api:3001/graphql
-      - REACT_APP_API_GRAPHQL_URL=https://lunotel.cloud/graphql
-      - KAKAO_JAVASCRIPT_KEY_MAP=5695263fbc5fdbf1b714d88bf87de922
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      - KAKAO_CLIENT_ID=${KAKAO_CLIENT_ID}
+      - KAKAO_CLIENT_SECRET=${KAKAO_CLIENT_SECRET}
+      - NAVER_CLIENT_ID=${NAVER_CLIENT_ID}
+      - NAVER_CLIENT_SECRET=${NAVER_CLIENT_SECRET}
+      - REACT_APP_API_URL=${REACT_APP_API_URL}
+    env_file:
+      - .env.vps
+
     dns:
       - 8.8.8.8
       - 1.1.1.1
-
     networks:
       - monorepo-network
-
 networks:
   monorepo-network:
     external: true

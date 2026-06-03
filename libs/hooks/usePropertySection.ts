@@ -20,7 +20,6 @@ export function usePropertySection(initialInput: PropertiesInquiry) {
 	const { loading, data, error, refetch } = useQuery(GET_PROPERTIES, {
 		fetchPolicy: 'cache-and-network',
 		variables: { input: initialInput },
-		notifyOnNetworkStatusChange: true,
 	});
 
 	const properties: Property[] = data?.getProperties?.list ?? [];
