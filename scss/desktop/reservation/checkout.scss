@@ -307,75 +307,152 @@
 }
 
 /* ============================================================
-   다크모드 오버라이드 — 예약 페이지
+   다크모드 오버라이드 — 예약(checkout) 페이지
    ============================================================ */
 html.dark {
 	#pc-wrap {
-		.reservation-page,
-		.checkout-page {
-			background-color: var(--bg-primary);
-		}
+		.reservation-layout {
+			background: var(--bg-primary);
 
-		.reservation-layout,
-		.checkout-layout {
-			.reservation-main,
-			.checkout-main {
-				.reservation-title,
-				.checkout-title {
-					color: var(--text-primary);
-				}
-				.section-title {
-					color: var(--text-primary);
-				}
-				.section-sub {
-					color: var(--text-secondary);
-				}
-
-				.MuiOutlinedInput-root {
-					background: var(--bg-input) !important;
+			// 메인 영역
+			.reservation-main {
+				.reservation-title {
 					color: var(--text-primary) !important;
-					.MuiOutlinedInput-notchedOutline {
-						border-color: var(--border-color) !important;
+				}
+
+				.section-header {
+					.section-title {
+						color: var(--text-primary) !important;
+					}
+					.section-sub {
+						color: var(--text-secondary) !important;
 					}
 				}
-				.MuiInputLabel-root {
-					color: var(--text-secondary) !important;
+
+				// 시간 칩
+				.time-chip-wrap {
+					.time-chip {
+						background: var(--bg-input) !important;
+						border-color: var(--border-color) !important;
+						color: var(--text-secondary) !important;
+
+						&--selected {
+							background: var(--primary) !important;
+							color: #fff !important;
+							border-color: var(--primary) !important;
+						}
+					}
 				}
 
-				.time-chip {
-					background-color: var(--bg-input) !important;
-					border-color: var(--border-color) !important;
-					color: var(--primary) !important;
+				// 폼 필드
+				.field-group {
+					.field-label {
+						color: var(--text-primary) !important;
+					}
+					.field-help {
+						color: var(--text-muted) !important;
+					}
+
+					.MuiOutlinedInput-root {
+						background: var(--bg-input) !important;
+						color: var(--text-primary) !important;
+						.MuiOutlinedInput-notchedOutline {
+							border-color: var(--border-color) !important;
+						}
+						&:hover .MuiOutlinedInput-notchedOutline {
+							border-color: var(--primary) !important;
+						}
+					}
+					.MuiInputLabel-root {
+						color: var(--text-secondary) !important;
+					}
+					.MuiInputBase-input {
+						color: var(--text-primary) !important;
+					}
 				}
-				.time-chip--selected {
-					background-color: var(--primary) !important;
-					color: #fff !important;
+
+				// 방문 방법 버튼
+				.visit-btn {
+					background: var(--bg-input) !important;
+					border-color: var(--border-color) !important;
+					color: var(--text-secondary) !important;
+
+					&--active {
+						background: var(--primary) !important;
+						color: #fff !important;
+						border-color: var(--primary) !important;
+					}
+				}
+
+				// 결제 수단
+				.payment-chip {
+					background: var(--bg-input) !important;
+					border-color: var(--border-color) !important;
+					color: var(--text-secondary) !important;
+
+					&--selected {
+						background: rgba(255, 78, 91, 0.1) !important;
+						border-color: var(--primary) !important;
+						color: var(--primary) !important;
+					}
+				}
+
+				.remember-check {
+					.MuiFormControlLabel-label {
+						color: var(--text-secondary) !important;
+					}
+				}
+
+				.divider-lg,
+				.divider-sm {
+					border-color: var(--border-color) !important;
+				}
+
+				// 특이사항
+				.MuiInputBase-multiline {
+					background: var(--bg-input) !important;
+					color: var(--text-primary) !important;
 				}
 			}
 
-			.reservation-sidebar,
-			.checkout-sidebar {
-				.summary-card,
-				.booking-summary {
+			// 사이드바
+			.reservation-sidebar {
+				.room-card {
 					background: var(--bg-card) !important;
 					border-color: var(--border-color) !important;
-					.summary-title {
+
+					.room-title {
 						color: var(--text-primary) !important;
 					}
-					.summary-label {
+					.room-meta-label {
+						color: var(--text-muted) !important;
+					}
+					.room-meta-value {
+						color: var(--text-primary) !important;
+					}
+				}
+
+				.payment-card {
+					background: var(--bg-card) !important;
+					border-color: var(--border-color) !important;
+
+					.section-title {
+						color: var(--text-primary) !important;
+					}
+					.payment-label {
 						color: var(--text-secondary) !important;
 					}
-					.summary-value {
+					.payment-value {
 						color: var(--text-primary) !important;
 					}
-					.summary-total {
+					.payment-total {
 						color: var(--text-primary) !important;
 					}
-					.property-name {
-						color: var(--text-primary) !important;
+					.payment-divider {
+						border-color: var(--border-color) !important;
 					}
-					.property-location {
-						color: var(--text-secondary) !important;
+					.divider-sm {
+						border-color: var(--border-color) !important;
 					}
 				}
 			}

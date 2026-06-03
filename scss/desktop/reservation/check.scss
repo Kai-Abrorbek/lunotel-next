@@ -275,32 +275,77 @@
    ============================================================ */
 html.dark {
 	#pc-wrap {
-		.check-page,
-		.guest-lookup-page,
-		.reservation-check-page {
-			background-color: var(--bg-primary);
+		.guest-lookup-page {
+			background: radial-gradient(circle at top, #1a1a1a, #111 55%, #161616 100%) !important;
 
-			.check-card,
-			.guest-lookup-card,
-			.check-form {
+			.guest-lookup-card {
 				background: var(--bg-card) !important;
-				border-color: var(--border-color) !important;
-				.check-title {
+				box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+
+				.guest-lookup-icon-circle {
+					background: rgba(255, 78, 91, 0.12) !important;
+				}
+
+				.guest-lookup-title {
 					color: var(--text-primary) !important;
 				}
-				.check-sub {
+				.guest-lookup-sub {
 					color: var(--text-secondary) !important;
 				}
 
-				.MuiOutlinedInput-root {
-					background: var(--bg-input) !important;
+				.guest-lookup-divider {
+					border-color: var(--border-color) !important;
+				}
+
+				.guest-label {
 					color: var(--text-primary) !important;
-					.MuiOutlinedInput-notchedOutline {
-						border-color: var(--border-color) !important;
+				}
+
+				.guest-input {
+					background: var(--bg-input) !important;
+					border-color: var(--border-color) !important;
+					color: var(--text-primary) !important;
+
+					&:focus {
+						border-color: var(--primary) !important;
+					}
+
+					.guest-input-icon {
+						color: var(--text-muted) !important;
 					}
 				}
-				.MuiInputLabel-root {
+
+				.clear-btn {
+					color: var(--text-muted) !important;
+				}
+
+				.required-dot {
+					background: var(--primary) !important;
+				}
+			}
+		}
+	}
+
+	// MUI Modal/Dialog
+	#mobile-wrap {
+		.guest-lookup-page {
+			background: var(--bg-secondary) !important;
+
+			.guest-lookup-card {
+				background: var(--bg-card) !important;
+				.guest-lookup-title {
+					color: var(--text-primary) !important;
+				}
+				.guest-lookup-sub {
 					color: var(--text-secondary) !important;
+				}
+				.guest-label {
+					color: var(--text-primary) !important;
+				}
+				.guest-input {
+					background: var(--bg-input) !important;
+					border-color: var(--border-color) !important;
+					color: var(--text-primary) !important;
 				}
 			}
 		}
