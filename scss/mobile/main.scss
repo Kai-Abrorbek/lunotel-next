@@ -2903,3 +2903,369 @@ html.dark {
 		}
 	}
 }
+
+/* ============================================================
+   모바일 — 예약(checkout) 페이지
+   ============================================================ */
+#mobile-wrap {
+	.reservation-layout {
+		flex-direction: column !important;
+		padding: 0 !important;
+		gap: 0 !important;
+		margin-top: 58px !important;
+		background: var(--bg-secondary) !important;
+		min-height: 100vh;
+		padding-bottom: 100px !important;
+
+		// 메인
+		.reservation-main {
+			width: 100% !important;
+			padding: 16px !important;
+
+			.reservation-title {
+				font-size: 18px !important;
+				font-weight: 700 !important;
+				color: var(--text-primary) !important;
+				margin-bottom: 16px !important;
+				padding-bottom: 16px !important;
+				border-bottom: 1px solid var(--border-color) !important;
+			}
+
+			.section {
+				background: var(--bg-card) !important;
+				border-radius: 16px !important;
+				padding: 16px !important;
+				margin-bottom: 12px !important;
+
+				.section-header {
+					margin-bottom: 12px !important;
+					.section-title {
+						font-size: 14px !important;
+						font-weight: 600 !important;
+						color: var(--text-primary) !important;
+					}
+					.section-sub {
+						font-size: 12px !important;
+						color: var(--text-muted) !important;
+					}
+				}
+			}
+
+			.section--half {
+				width: 100% !important;
+				max-width: 100% !important;
+				background: var(--bg-card) !important;
+				border-radius: 16px !important;
+				padding: 16px !important;
+				margin-bottom: 12px !important;
+
+				.section-title {
+					font-size: 14px !important;
+					font-weight: 600 !important;
+					color: var(--text-primary) !important;
+					margin-bottom: 12px !important;
+				}
+			}
+
+			// 시간 칩
+			.time-chip-wrap {
+				display: flex !important;
+				flex-wrap: wrap !important;
+				gap: 8px !important;
+
+				.time-chip {
+					font-size: 12px !important;
+					padding: 6px 14px !important;
+					border-radius: 999px !important;
+					background: var(--bg-input) !important;
+					border: 1px solid var(--border-color) !important;
+					color: var(--text-secondary) !important;
+				}
+
+				.time-chip--selected {
+					background: var(--primary) !important;
+					border-color: var(--primary) !important;
+					color: #fff !important;
+				}
+			}
+
+			// 폼 필드
+			.field-group {
+				margin-bottom: 12px !important;
+				border-radius: 0 !important;
+
+				.field-label {
+					font-size: 13px !important;
+					font-weight: 500 !important;
+					color: var(--text-primary) !important;
+					margin-bottom: 6px !important;
+					display: block;
+				}
+
+				.field-help {
+					font-size: 11px !important;
+					color: var(--text-muted) !important;
+					margin-top: 4px !important;
+				}
+
+				.MuiOutlinedInput-root {
+					background: var(--bg-input) !important;
+					border-radius: 10px !important;
+					color: var(--text-primary) !important;
+					.MuiOutlinedInput-notchedOutline {
+						border-color: var(--border-color) !important;
+					}
+				}
+				.MuiInputLabel-root {
+					color: var(--text-secondary) !important;
+					font-size: 13px !important;
+				}
+				.MuiInputBase-input {
+					color: var(--text-primary) !important;
+					font-size: 14px !important;
+				}
+			}
+
+			// 방문 방법
+			.visit-method-wrap {
+				display: flex !important;
+				gap: 8px !important;
+				height: auto !important;
+
+				.visit-btn {
+					flex: 1 !important;
+					font-size: 13px !important;
+					padding: 12px 8px !important;
+					border-radius: 12px !important;
+					background: var(--bg-input) !important;
+					border: 1px solid var(--border-color) !important;
+					color: var(--text-secondary) !important;
+					font-weight: 500 !important;
+				}
+
+				.visit-btn--active {
+					background: rgba(255, 78, 91, 0.08) !important;
+					border-color: var(--primary) !important;
+					color: var(--primary) !important;
+				}
+			}
+
+			// 결제 수단
+			.payment-grid {
+				display: flex !important;
+				flex-wrap: wrap !important;
+				gap: 8px !important;
+				width: 100% !important;
+				margin-top: 12px !important;
+				grid-template-columns: unset !important;
+
+				.payment-chip {
+					flex: 0 0 auto !important;
+					font-size: 13px !important;
+					padding: 10px 16px !important;
+					border-radius: 999px !important;
+					background: var(--bg-input) !important;
+					border: 1px solid var(--border-color) !important;
+					color: var(--text-secondary) !important;
+					white-space: nowrap !important;
+				}
+
+				.payment-chip--selected {
+					background: rgba(255, 78, 91, 0.08) !important;
+					border-color: var(--primary) !important;
+					color: var(--primary) !important;
+					font-weight: 600 !important;
+				}
+			}
+
+			.remember-check {
+				.MuiFormControlLabel-label {
+					font-size: 12px !important;
+					color: var(--text-secondary) !important;
+				}
+			}
+
+			.divider-lg {
+				margin: 8px 0 !important;
+				border: none !important;
+			}
+		}
+
+		// 사이드바 → 아래
+		.reservation-sidebar {
+			width: 100% !important;
+			padding: 0 16px !important;
+			gap: 12px !important;
+
+			.room-card {
+				background: var(--bg-card) !important;
+				border-color: var(--border-color) !important;
+				border-radius: 16px !important;
+				padding: 16px !important;
+
+				.room-title {
+					font-size: 15px !important;
+					font-weight: 700 !important;
+					color: var(--text-primary) !important;
+					margin-bottom: 12px !important;
+				}
+
+				.room-info {
+					flex-direction: row !important;
+					height: auto !important;
+					gap: 12px !important;
+					align-items: flex-start !important;
+
+					.room-thumb {
+						width: 100px !important;
+						height: 80px !important;
+						border-radius: 10px !important;
+						object-fit: cover !important;
+					}
+				}
+
+				.room-meta {
+					flex: 1 !important;
+				}
+				.room-meta-row {
+					font-size: 12px !important;
+					margin-bottom: 6px !important;
+				}
+				.room-meta-label {
+					color: var(--text-muted) !important;
+					width: 36px !important;
+				}
+				.room-meta-value {
+					color: var(--text-primary) !important;
+					font-size: 12px !important;
+					margin-left: 8px !important;
+				}
+			}
+
+			.payment-card {
+				background: var(--bg-card) !important;
+				border-color: var(--border-color) !important;
+				border-radius: 16px !important;
+				padding: 16px !important;
+
+				.section-title {
+					font-size: 14px !important;
+					font-weight: 600 !important;
+					color: var(--text-primary) !important;
+				}
+				.payment-row {
+					font-size: 13px !important;
+				}
+				.payment-label {
+					color: var(--text-secondary) !important;
+				}
+				.payment-value {
+					color: var(--text-primary) !important;
+				}
+				.payment-total {
+					font-size: 17px !important;
+					font-weight: 700 !important;
+					color: var(--primary) !important;
+				}
+				.divider-sm {
+					border-color: var(--border-color) !important;
+					margin: 10px 0 !important;
+				}
+
+				.agree-wrap {
+					span {
+						font-size: 12px !important;
+						color: var(--text-secondary) !important;
+					}
+				}
+
+				.pay-button {
+					font-size: 15px !important;
+					font-weight: 700 !important;
+					padding: 14px !important;
+					border-radius: 12px !important;
+					background: var(--primary) !important;
+					color: #fff !important;
+					margin-top: 12px !important;
+				}
+			}
+		}
+	}
+
+	// 비회원 예약조회
+	.guest-lookup-page {
+		padding: 80px 16px 40px !important;
+		background: var(--bg-secondary) !important;
+		min-height: 100vh;
+		display: flex !important;
+		align-items: center !important;
+
+		.guest-lookup-wrapper {
+			width: 100% !important;
+		}
+
+		.guest-lookup-card {
+			border-radius: 20px !important;
+			padding: 24px 20px !important;
+			background: var(--bg-card) !important;
+			box-shadow: var(--shadow-md) !important;
+
+			.guest-lookup-header {
+				margin-bottom: 16px !important;
+			}
+			.guest-lookup-icon-circle {
+				width: 44px !important;
+				height: 44px !important;
+			}
+			.guest-lookup-title {
+				font-size: 16px !important;
+				font-weight: 700 !important;
+				color: var(--text-primary) !important;
+			}
+			.guest-lookup-sub {
+				font-size: 12px !important;
+				color: var(--text-secondary) !important;
+			}
+
+			.guest-lookup-divider {
+				margin: 14px 0 !important;
+				border-color: var(--border-color) !important;
+			}
+
+			.guest-lookup-row {
+				flex-direction: column !important;
+				gap: 14px !important;
+			}
+
+			.guest-field {
+				width: 100% !important;
+			}
+
+			.guest-label {
+				font-size: 13px !important;
+				font-weight: 500 !important;
+				color: var(--text-primary) !important;
+				margin-bottom: 6px !important;
+				display: flex !important;
+				align-items: center !important;
+				gap: 4px !important;
+			}
+
+			.guest-input {
+				width: 100% !important;
+				font-size: 14px !important;
+				padding: 12px 14px !important;
+				border-radius: 10px !important;
+				background: var(--bg-input) !important;
+				border: 1px solid var(--border-color) !important;
+				color: var(--text-primary) !important;
+				box-sizing: border-box !important;
+
+				&:focus {
+					border-color: var(--primary) !important;
+					outline: none !important;
+				}
+			}
+		}
+	}
+}
