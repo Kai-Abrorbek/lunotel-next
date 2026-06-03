@@ -753,10 +753,13 @@
 
 			.section-slider-wrapper {
 				position: relative;
+				overflow: hidden;
+				width: 100%;
 
 				.section-swiper {
 					padding: 4px 8px 8px 0;
-					overflow: visible;
+					overflow: hidden;
+					width: 100%;
 				}
 
 				.section-arrow {

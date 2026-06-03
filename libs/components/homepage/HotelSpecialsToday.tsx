@@ -70,6 +70,8 @@ const HotelSpecialsToday = ({ initialInput }: HotelSpecialsTodayProps) => {
 							className="section-swiper"
 							modules={[Navigation]}
 							spaceBetween={24}
+							observer={true}
+							observeParents={true}
 							breakpoints={{
 								0: { slidesPerView: 2.3, spaceBetween: 10 },
 								768: { slidesPerView: 2.5, spaceBetween: 20 },
@@ -94,6 +96,8 @@ const HotelSpecialsToday = ({ initialInput }: HotelSpecialsTodayProps) => {
 							modules={[Navigation]}
 							navigation={{ prevEl: '.section-prev-specials', nextEl: '.section-next-specials' }}
 							spaceBetween={24}
+							observer={true}
+							observeParents={true}
 							breakpoints={{
 								0: { slidesPerView: 1.2, spaceBetween: 16 },
 								768: { slidesPerView: 2.5, spaceBetween: 20 },

@@ -14,6 +14,8 @@ import PropertyCard from '../common/PropertyCard';
 import PropertyCardSkeleton from '../common/PropertyCardSkeleton';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import PropertyCardMobile from './PropertyCardMobile';
+import { useEffect, useRef } from 'react';
+import { Swiper as SwiperType } from 'swiper';
 
 const CATEGORIES_K: PropertyTypeKorean[] = Object.values(PropertyTypeKorean);
 const CATEGORIES_EN: PropertyType[] = Object.values(PropertyType);
@@ -27,6 +29,15 @@ const PopularStays = ({ initialInput }: PopularStaysProps) => {
 	const [activeCategory, setActiveCategory] = useState<PropertyType>(PropertyType.ALL);
 	const { properties, user, loading, t, likePropertyHandler, handlePushPropertyDetail } =
 		usePropertySection(initialInput);
+
+	const swiperRef = useRef<SwiperType | null>(null);
+
+	useEffect(() => {
+		const timer = setTimeout(() => {
+			swiperRef.current?.update();
+		}, 100);
+		return () => clearTimeout(timer);
+	}, []);
 
 	const filtered =
 		activeCategory === 'ALL' ? properties : properties.filter((p: Property) => p.propertyType === activeCategory);
@@ -92,6 +103,12 @@ const PopularStays = ({ initialInput }: PopularStaysProps) => {
 							className="section-swiper"
 							modules={[Navigation]}
 							spaceBetween={24}
+							onSwiper={(swiper) => {
+								swiperRef.current = swiper;
+							}}
+							observer={true}
+							observeParents={true}
+							resizeObserver={true}
 							breakpoints={{
 								0: { slidesPerView: 1.2, spaceBetween: 16 },
 								768: { slidesPerView: 2.5, spaceBetween: 20 },
@@ -116,6 +133,12 @@ const PopularStays = ({ initialInput }: PopularStaysProps) => {
 							modules={[Navigation]}
 							navigation={{ prevEl: '.section-prev', nextEl: '.section-next' }}
 							spaceBetween={24}
+							onSwiper={(swiper) => {
+								swiperRef.current = swiper;
+							}}
+							observer={true}
+							observeParents={true}
+							resizeObserver={true}
 							breakpoints={{
 								0: { slidesPerView: 1.2, spaceBetween: 16 },
 								768: { slidesPerView: 2.5, spaceBetween: 20 },

@@ -70,6 +70,8 @@ const WeeklyHotPensions = ({ initialInput }: WeeklyHotPensionsProps) => {
 							className="section-swiper"
 							modules={[Navigation]}
 							spaceBetween={24}
+							observer={true}
+							observeParents={true}
 							breakpoints={{
 								0: { slidesPerView: 2.3, spaceBetween: 10 },
 								768: { slidesPerView: 2.5, spaceBetween: 20 },
@@ -94,6 +96,8 @@ const WeeklyHotPensions = ({ initialInput }: WeeklyHotPensionsProps) => {
 							modules={[Navigation]}
 							navigation={{ prevEl: '.section-prev-pensions', nextEl: '.section-next-pensions' }}
 							spaceBetween={24}
+							observer={true}
+							observeParents={true}
 							breakpoints={{
 								0: { slidesPerView: 1.2, spaceBetween: 16 },
 								768: { slidesPerView: 2.5, spaceBetween: 20 },
