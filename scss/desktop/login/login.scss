@@ -1,7 +1,7 @@
 #pc-wrap {
 	.login-page {
 		height: 100%;
-		min-height: 100vh;
+		min-height: 109vh;
 		margin-top: 75px;
 		display: flex;
 		align-items: center;
@@ -315,57 +315,201 @@
    ============================================================ */
 html.dark {
 	#pc-wrap {
-		.login-page,
-		.auth-page {
-			background-color: var(--bg-secondary);
+		// 로그인 페이지
+		.login-page {
+			background: radial-gradient(circle at top, #1a1a1a, #111 55%, #161616 100%) !important;
 
-			.login-card,
-			.auth-card {
+			&__card {
 				background: var(--bg-card) !important;
-				border-color: var(--border-color) !important;
-				.login-title,
-				.auth-title {
-					color: var(--text-primary) !important;
-				}
-				.login-sub,
-				.auth-sub {
-					color: var(--text-secondary) !important;
-				}
+				box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+			}
 
-				.MuiOutlinedInput-root {
-					background: var(--bg-input) !important;
-					color: var(--text-primary) !important;
-					.MuiOutlinedInput-notchedOutline {
-						border-color: var(--border-color) !important;
-					}
+			&__title {
+				color: var(--text-primary) !important;
+			}
+			&__subtitle {
+				color: var(--text-secondary) !important;
+			}
+
+			&__btn {
+				background: var(--bg-input) !important;
+				border-color: var(--border-color) !important;
+				color: var(--text-primary) !important;
+
+				&--kakao {
+					background: #fee500 !important;
+					color: #000 !important;
+					border-color: #fee500 !important;
 				}
-				.MuiInputLabel-root {
-					color: var(--text-secondary) !important;
+				&--naver {
+					background: #03c75a !important;
+					color: #fff !important;
+					border-color: #03c75a !important;
 				}
-				.social-btn {
+				&--google {
 					background: var(--bg-input) !important;
 					border-color: var(--border-color) !important;
 					color: var(--text-primary) !important;
 				}
+				&--email {
+					background: var(--primary) !important;
+					color: #fff !important;
+					border-color: var(--primary) !important;
+				}
+			}
+
+			&__business {
+				color: var(--text-muted) !important;
 			}
 		}
 
-		.login-modal,
-		.auth-modal {
-			.MuiDialog-paper {
+		// MUI Dialog paper
+		.MuiDialog-paper {
+			background: var(--bg-card) !important;
+			color: var(--text-primary) !important;
+		}
+	}
+
+	#mobile-wrap {
+		.login-page {
+			background: radial-gradient(circle at top, #1a1a1a, #111 55%, #161616 100%) !important;
+
+			&__card {
 				background: var(--bg-card) !important;
+				box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+			}
+
+			&__title {
 				color: var(--text-primary) !important;
-				.MuiOutlinedInput-root {
-					background: var(--bg-input) !important;
-					color: var(--text-primary) !important;
-					.MuiOutlinedInput-notchedOutline {
-						border-color: var(--border-color) !important;
-					}
+			}
+			&__subtitle {
+				color: var(--text-secondary) !important;
+			}
+
+			&__btn {
+				background: var(--bg-input) !important;
+				border-color: var(--border-color) !important;
+				color: var(--text-primary) !important;
+
+				&--kakao {
+					background: #fee500 !important;
+					color: #000 !important;
 				}
-				.MuiInputLabel-root {
-					color: var(--text-secondary) !important;
+				&--naver {
+					background: #03c75a !important;
+					color: #fff !important;
+				}
+				&--email {
+					background: var(--primary) !important;
+					color: #fff !important;
 				}
 			}
+
+			&__business {
+				color: var(--text-muted) !important;
+			}
+		}
+
+		.login-modal {
+			background: var(--bg-card) !important;
+			&__title {
+				color: var(--text-primary) !important;
+			}
+			&__tabs {
+				.MuiTab-root {
+					color: var(--text-secondary) !important;
+				}
+				.MuiTab-root.Mui-selected {
+					color: var(--primary) !important;
+				}
+				.MuiTabs-indicator {
+					background-color: var(--primary) !important;
+				}
+			}
+			.MuiOutlinedInput-root {
+				background: var(--bg-input) !important;
+				color: var(--text-primary) !important;
+				.MuiOutlinedInput-notchedOutline {
+					border-color: var(--border-color) !important;
+				}
+			}
+			.MuiInputLabel-root {
+				color: var(--text-secondary) !important;
+			}
+			&__submit {
+				background: var(--primary) !important;
+				color: #fff !important;
+			}
+		}
+
+		.MuiDialog-paper {
+			background: var(--bg-card) !important;
+			color: var(--text-primary) !important;
+		}
+	}
+
+	// 로그인 모달
+	.login-modal {
+		background: var(--bg-card) !important;
+
+		&__header {
+			border-bottom-color: var(--border-color) !important;
+		}
+
+		&__title {
+			color: var(--text-primary) !important;
+		}
+
+		&__close {
+			color: var(--text-secondary) !important;
+			svg {
+				color: var(--text-secondary) !important;
+			}
+		}
+
+		&__tabs {
+			border-bottom-color: var(--border-color) !important;
+			.MuiTab-root {
+				color: var(--text-secondary) !important;
+			}
+			.MuiTab-root.Mui-selected {
+				color: var(--primary) !important;
+			}
+			.MuiTabs-indicator {
+				background-color: var(--primary) !important;
+			}
+		}
+
+		&__body {
+			background: var(--bg-card) !important;
+		}
+
+		&__input {
+			background: var(--bg-input) !important;
+
+			.MuiOutlinedInput-root {
+				background: var(--bg-input) !important;
+				color: var(--text-primary) !important;
+				.MuiOutlinedInput-notchedOutline {
+					border-color: var(--border-color) !important;
+				}
+				&:hover .MuiOutlinedInput-notchedOutline {
+					border-color: var(--primary) !important;
+				}
+			}
+			.MuiInputLabel-root {
+				color: var(--text-secondary) !important;
+			}
+		}
+
+		&__submit {
+			background: var(--primary) !important;
+			color: #fff !important;
+		}
+
+		&__agent {
+			color: var(--text-muted) !important;
+			border-color: var(--border-color) !important;
 		}
 	}
 }
