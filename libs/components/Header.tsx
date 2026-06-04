@@ -23,6 +23,7 @@ const Header = () => {
 	const router = useRouter();
 	const [openMenu, setOpenMenu] = useState<boolean>(false);
 	const [isDarkMode, setIsDarkMode] = useState(false);
+	const [mounted, setMounted] = useState(false);
 	const [language, setLanguage] = useState<string | null>('en');
 	const [isLanguageOpen, setIsLanguageOpen] = useState(false);
 	const device = useDeviceDetect();
@@ -46,6 +47,10 @@ const Header = () => {
 			setLanguage(localStorage.getItem('locale'));
 		}
 	}, [router]);
+
+	useEffect(() => {
+		setMounted(true);
+	}, []);
 
 	const langChoice = async (e: any) => {
 		setLanguage(e.target.id);
@@ -106,7 +111,7 @@ const Header = () => {
 				</Link>
 				<Box className="mobile-nav-actions">
 					<IconButton className="theme-button" onClick={toggleTheme}>
-						{isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
+						{mounted && (isDarkMode ? <Sun size={18} /> : <Moon size={18} />)}
 					</IconButton>
 					{!user._id ? (
 						<Link href={'/login'}>
