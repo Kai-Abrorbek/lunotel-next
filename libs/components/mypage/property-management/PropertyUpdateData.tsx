@@ -205,16 +205,17 @@ const PropertyUpdateModal = (props: PropertyUpdateModalProps) => {
 			oncomplete: (data: any) => {
 				const address = data.roadAddress || data.jibunAddress;
 				handleChange('propertyAddress', ` ${address}`);
-				window.kakao.maps.load(() => {
-					const geocoder = new window.kakao.maps.services.Geocoder();
-					geocoder.addressSearch(address, (result: any, status: any) => {
-						if (status === window.kakao.maps.services.Status.OK) {
-							const { x, y } = result[0]; // x: lng, y: lat
-							console.log('좌표', x, y);
-							handleChange('propertyLat', y);
-							handleChange('propertyLng', x);
-						}
-					});
+				if (!window.kakao?.maps?.services) {
+					console.error('카카오맵 로드 안됨');
+					return;
+				}
+				const geocoder = new window.kakao.maps.services.Geocoder();
+				geocoder.addressSearch(address, (result: any, status: any) => {
+					if (status === window.kakao.maps.services.Status.OK) {
+						const { x, y } = result[0];
+						handleChange('propertyLat', y);
+						handleChange('propertyLng', x);
+					}
 				});
 			},
 		}).open();
